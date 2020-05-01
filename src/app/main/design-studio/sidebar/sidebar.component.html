@@ -1,0 +1,202 @@
+
+<!-- FOR LOOP FOR THE HEXAGON MENU THAT THE USER HAS SET -->
+<div class="hexagon" 
+	 *ngFor="let menuitem of designData['menu']; let i=index;"
+	 [ngStyle]="{'position':'absolute', 'left':designData['menuLocations'][i][0]+'px', 'top':designData['menuLocations'][i][1]+'px'}" 
+	 (click)="menuClick(i)">
+
+	<span>
+		<mat-icon style="position:relative; left:12px; top:-5px" 
+				  class="w-30 text-center mat-display-1">{{menuitem.icon}}
+		</mat-icon>
+	</span>
+
+</div>
+
+
+
+
+
+<!-- THE SIDEBAR MENU THAT DEPENDS UPON WHAT IS SELECTED -->
+<fuse-sidebar id="mainSidebar" 
+              class="sidebar" 
+              position="left" 
+              lockedOpen="gt-sm"
+              style="position:absolute; left:220px; top:100px;"
+              *ngFor="let menuitem of designData['menu']; let i=index;">
+
+
+	<div *ngIf="designData['menuShow'][i]">
+	
+
+		<!-- The icon to close the left menus -->
+		<div style="position:absolute; top:6px; right:6px; cursor:pointer;"
+			 (click)="onMenuClose()">
+			<span>
+				<mat-icon style="" 
+						  class="text-right font-size-14">close
+				</mat-icon>
+			</span>	
+		</div>
+
+
+		<!-- The label for the side menu -->
+		<h2 class="mat-title text-center pt-20">{{menuitem.label}}</h2>
+
+		<mat-divider class="mb-20"></mat-divider>
+
+
+		<!-- Loop through the items and set them accordingly -->
+		<div *ngFor="let valItem of menuitem['items']; let j=index;">
+
+
+
+			<!-- The top design panel -->
+			<div *ngIf="valItem['type']=='makButtonSet'">
+
+				<mat-grid-list cols="3" rowHeight="60px" class="mb-40">
+				 
+
+				 	<mat-grid-tile *ngFor="let buttonItem of valItem['buttons']; let k=index;" 
+				 				   [matTooltip]="buttonItem['tooltip']">
+				    	<a mat-button routerLink="."><img [src]="buttonItem['icon']"></a>
+				  	</mat-grid-tile>
+
+				</mat-grid-list>
+
+
+			</div>
+
+
+
+
+			<!-- The cost item -->
+			<div *ngIf="valItem['type']=='makCost'">
+
+				<div class="w-300">
+					<div style="margin-top:10px; padding:5px 0px"
+						 class="text-center primary-900 w-120 ml-80">
+						$3000
+					</div>
+				</div>
+
+
+
+				<div class="w-300 mb-40">
+					<div style="margin-top:10px; padding:5px 0px; color:#CCC"
+						 class="text-center primary-A100 w-120 ml-80 mt-20 heading-2">
+						Finish Quote
+					</div>
+				</div>
+
+			</div>
+
+
+
+
+			<!-- The drop down items -->
+			<div *ngIf="valItem['type']=='dropdown'"
+				 class="w-280 mt-20">
+
+				<div class="h3 text-center">{{valItem['label']}}</div>
+
+				<div class="w-240 ml-20">
+					<mat-form-field>
+					  <mat-select class="w-240">
+					    <mat-option *ngFor="let option of valItem.options" [value]="option.value">
+					      {{option.label}}
+					    </mat-option>
+					  </mat-select>
+					</mat-form-field>
+				</div>
+
+			</div>
+
+
+
+			<!-- The slider items -->
+			<div *ngIf="valItem['type']=='slider'"
+				 class="w-280 mt-20">
+
+				<div class="h3 text-center">{{valItem['label']}}</div>
+
+				<mat-slider id="" 
+							class="sliderItem w-180 ml-16"
+							(input)="onSliderChange($event)" 
+							[min]="valItem['minValue']" 
+							[max]="valItem['maxValue']" 
+							[step]="valItem['stepValue']"
+							[tickInterval]="valItem['tickIntervalValue']"
+							[value]="valItem['value']"
+							thumbLabel 
+							[tickLabel]="valItem[tickLabelValue]"
+							[(ngModel)]="this[valItem.modelID]">
+								
+				</mat-slider>
+
+
+				<input matInput 
+					   id=""
+					   style="width:70px; border:1px solid #ACACAC" 
+					   class="inputItem w-70 mat-subheading-2 pt-5 pb-5 text-center" 
+					   [(ngModel)]="this[valItem.modelID]"
+					   (input)="onInputChange($event)">
+
+
+			</div>
+
+
+
+
+			<!-- The text items -->
+			<div *ngIf="valItem['type']=='text'">
+
+				<div class="h3 text-center mt-12">{{valItem['label']}}</div>
+				<div class="w-280 text-center" layout="row">
+				
+					<input matInput 
+						   id=""
+						   style="width:200px; border:1px solid #ACACAC" 
+						   class="inputItem w-70 mat-subheading-2 pt-5 pb-5 text-center" 
+						   [(ngModel)]="valItem.modelID"
+						   (input)="onInputChange($event)">
+
+				</div>
+
+			</div>
+
+
+
+
+			<!-- The toggle items -->
+			<div *ngIf="valItem['type']=='toggle'">
+
+
+				<div class="h3 text-center mt-12">{{valItem['label']}}</div>
+
+				<div class="w-280 text-center" layout="row">
+
+					<mat-slide-toggle
+						  [(ngModel)]="valItem.value"
+						  class="w-50 ml-20"
+						  color="accent-900">
+					</mat-slide-toggle>
+
+				</div>
+
+			</div>
+
+
+
+		</div>
+
+
+
+	</div>
+
+
+
+</fuse-sidebar>
+
+
+

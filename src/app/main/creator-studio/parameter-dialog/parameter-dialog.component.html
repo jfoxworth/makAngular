@@ -1,0 +1,182 @@
+<div class="dialog-content-wrapper">
+    <mat-toolbar class="mat-accent m-0">
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="title dialog-title">Edit Parameter</span>
+            <button mat-icon-button (click)="dialogRef.close()" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <div mat-dialog-content class="p-24 m-0" 
+    	 fusePerfectScrollbar
+    	 fxLayout="column"
+    	 fxFlex="100%">
+
+
+    	<!-- The label for the parameter -->
+		<mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+			<mat-label>Parameter Label</mat-label>
+			<input matInput placeholder="Parameter Label"
+				   name="parameterLabel"
+				   [(ngModel)]="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['label']"
+				   required>
+		</mat-form-field>
+
+
+
+
+    	<!-- The Shapediver name -->
+		<mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+			<mat-label>Shapediver Name</mat-label>
+			<input matInput placeholder="Shapediver Name"
+				   name="shapediverLabel"
+				   [(ngModel)]="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['shapediver']"
+				   required>
+		</mat-form-field>
+
+
+
+
+
+    	<!-- The type of the parameter -->
+		<mat-form-field appearance="outline"
+						floatLabel="always"
+						class="w-100-p">
+		  <mat-label>Parameter Type</mat-label>
+		  <mat-select  [(ngModel)]="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['type']">
+			<mat-option *ngFor="let type of data.parameterTypes; index as x" [value]="type">
+			  {{type}}
+			</mat-option>
+		  </mat-select>
+		</mat-form-field>
+
+
+
+
+    	<!-- The Limits for the slider -->
+    	<div *ngIf="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['type']=='slider'"
+    		 fxFlex="100%" fxLayout="row">
+
+    		<div fxFlex="30%" style="margin:0px 4% 0px 0px">
+				<mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+					<mat-label>Lower Limit</mat-label>
+					<input matInput placeholder="Lower Limit"
+						   name="sliderLow"
+						   [(ngModel)]="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['min']"
+						   required>
+				</mat-form-field>
+			</div>
+
+    		<div fxFlex="30%">
+				<mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+					<mat-label>Upper Limit</mat-label>
+					<input matInput placeholder="Lower Limit"
+						   name="sliderLow"
+						   [(ngModel)]="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['max']"
+						   required>
+				</mat-form-field>
+			</div>
+
+    		<div fxFlex="30%" style="margin:0px 0px 0px 4%">
+				<mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+					<mat-label>Slider Steps</mat-label>
+					<input matInput placeholder="Slider Steps"
+						   name="sliderSteps"
+						   [(ngModel)]="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['step']"
+						   required>
+				</mat-form-field>
+			</div>
+
+		</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    	<!-- The select options -->
+    	<div *ngIf="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['type']=='dropdown'"
+    		 fxFlex="100%" fxLayout="column">
+
+    		<div class="text-center mb-40" fxFlex=100>
+	    		<button mat-raised-button 
+	    				color="primary" 
+	    				(click)="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['options'].push({'label':'New Option', 'value':'newOption'})">
+	    			Add Select Options
+	    		</button>
+	    	</div>
+
+    		<div fxFlex="100%"
+    			 *ngFor="let thisOption of data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['options']; index as x">
+
+
+				<mat-form-field appearance="outline" 
+								floatLabel="always" 
+								class="w-100-p"
+								fxFlex="45%"
+								style="margin:0px 3% 0px 2%">
+					<mat-label>Label</mat-label>
+					<input matInput placeholder="Label"
+						   [(ngModel)]="thisOption['label']"
+						   required>
+				</mat-form-field>
+
+
+				<mat-form-field appearance="outline" 
+								floatLabel="always" 
+								class="w-100-p"
+								fxFlex="45%"
+								style="margin:0px 2% 0px 3%">
+					<mat-label>Value</mat-label>
+					<input matInput placeholder="Value"
+						   [(ngModel)]="thisOption['value']"
+						   required>
+				</mat-form-field>
+
+
+			</div>
+
+		</div>
+
+
+
+
+
+
+
+
+ 
+    </div>
+
+
+
+
+    <div mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="space-between center">
+        <div>
+            <button mat-raised-button
+                    color="accent"
+                    (click)="dialogRef.close(data.currentDesign)"
+                    class="save-button"
+                    aria-label="Save Changes">
+                SAVE CHANGES
+            </button>
+
+        </div>
+
+        <button mat-icon-button (click)="dialogRef.close()"
+                aria-label="Cancel"
+                matTooltip="Cancel">
+            <mat-icon>delete</mat-icon>
+        </button>
+    </div>
+</div>

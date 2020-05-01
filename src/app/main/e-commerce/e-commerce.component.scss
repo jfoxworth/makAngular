@@ -1,0 +1,102 @@
+#projects, #products {
+
+    .header {
+
+        background-image: url('https://makstudio.s3.us-east-2.amazonaws.com/Backgrounds/wallPanelFossil.png');
+        height:15px;
+        min-height:15px;
+        max-height:15px;
+
+        .product-image {
+            overflow: hidden;
+            width: 56px;
+            min-width: 56px;
+            max-width: 56px;
+            height: 56px;
+            min-height: 56px;
+            max-height: 56px;
+            border-radius: 4px;
+
+            img {
+                height: 100%;
+                width: auto;
+                max-width: none;
+            }
+        }
+
+        .subtitle {
+            margin: 6px 0 0 0;
+        }
+    }
+
+    .content {
+
+
+        .currentItem {
+            color: #039be5;
+        }
+
+
+        .mat-tab-group,
+        .mat-tab-body-wrapper,
+        .tab-content{
+            flex: 1 1 auto;
+            max-width: 100%;
+        }
+
+        .mat-tab-body-content {
+            display: flex;
+        }
+
+        .mat-tab-label {
+            height: 64px;
+        }
+
+        .product-image {
+            overflow: hidden;
+            width: 128px;
+            height: 128px;
+            margin-right: 16px;
+            margin-bottom: 16px;
+            border-radius: 4px;
+
+            img {
+                height: 100%;
+                width: auto;
+                max-width: none;
+            }
+        }
+
+        .projectDetailLeft {
+            font-size:1.3em;
+            width:130px;
+            text-align:right;
+            padding:0px 5px 0px 0px;
+            margin:5px 0px;
+        }
+
+        .projectDetailCenter {
+            font-size:1.3em;
+            width:10px;
+            text-align:center;
+            margin:5px 0px;
+        }
+
+        .projectDetailRight {
+            font-size:1.3em;
+            width:130px;
+            text-align:left;
+            padding:0px 0px 0px 5px;
+            margin:5px 0px;
+        }
+
+
+
+        // Temporary prefix alignment fix
+        .mat-form-field-appearance-outline .mat-form-field-prefix,
+        .mat-form-field-appearance-outline .mat-form-field-suffix {
+            top: 0;
+        }
+    }
+
+}

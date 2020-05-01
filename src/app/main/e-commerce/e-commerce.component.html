@@ -1,0 +1,282 @@
+<div id="projects" style="background-color:#FFF" class="page-layout simple left-sidebar inner-sidebar inner-scroll">
+
+	<!-- HEADER -->
+	<div class="header accent" fxLayout="row"></div>
+	<!-- / HEADER -->
+
+	<!-- CONTENT -->
+	<div class="content">
+
+		<!-- SIDEBAR -->
+		<fuse-sidebar class="sidebar left-positioned open locked-open" 
+					  name="simple-left-sidebar-4" position="left" lockedOpen="gt-md">
+
+			<!-- SIDEBAR CONTENT -->
+			<div class="content p-24" fusePerfectScrollbar>
+				<div class="demo-sidebar text-center ml-20">
+					<mat-list class="" style="">
+
+						<h2 style="color:#777;">My Projects</h2>
+
+						<mat-list-item *ngFor="let project of productsData;" style="padding:0px !important">
+							<span (click)="currentProject=project; 
+								 			currentVersion=currentProject.versions[currentProject.versions.length-1]; 
+								 			currentProject.currentVersionId=currentProject.versions[currentProject.versions.length-1].id"
+								  [ngClass]="{'currentItem' : project==currentProject}"
+								  style="font-size:1em; padding:5px 0px;">{{project.name}}</span>
+						</mat-list-item>
+
+						<mat-divider class="mt-12 mb-12" style="color:#000"></mat-divider>
+
+					</mat-list>
+				</div>
+			</div>
+			<!-- / SIDEBAR CONTENT -->
+
+		</fuse-sidebar>
+		<!-- / SIDEBAR -->
+
+		<!-- CENTER -->
+		<div class="center p-24" fusePerfectScrollbar>
+
+			<!-- CONTENT -->
+			<div class="content p-24" style="box-shadow:0px 0px 0px rgba(0,0,0,0) !important;">
+
+				<h2 *ngIf="currentProject===undefined">Select a project to edit or purchase it</h2>
+
+				<mat-tab-group flex="100%" *ngIf="currentProject !== undefined">
+					
+					<mat-tab label="Project Data" flex="100%">
+
+						<div flex="100%" layout="column" style="width:100%">
+
+							<h2 class="mt-32 mb-20">Project Data</h2>
+					  
+
+							<!-- TOP ROW OF PROJECT DATA -->
+							<div fxLayout="row" fxLayoutAlign="center" flex="100%">
+
+								<div fxFlex="50%"fxLayout="column" class="text-center">
+									<mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+										<mat-label>Project Name</mat-label>
+										<input matInput placeholder="Product Name"
+											   name="name"
+											   [(ngModel)]="currentProject['name']"
+											   required>
+									</mat-form-field>
+
+									<mat-form-field style="min-height:190px" appearance="outline" floatLabel="always" class="w-100-p">
+										<mat-label>Project Description</mat-label>
+										<textarea style="min-height:190px"
+												  matInput placeholder="Product Description"
+												  name="description"
+												   [(ngModel)]="currentProject['description']"
+												  rows="5">
+										</textarea>
+									</mat-form-field>
+
+								</div>
+
+
+								<div fxFlex="50%" fxLayout="column" fxLayoutAlign="center center">
+									
+									<img width="190px" [src]="currentProject.designIcon">
+
+									<div fxLayout="row">
+										<div class="projectDetailLeft">Status</div>
+										<div class="projectDetailCenter">:</div>
+										<div class="projectDetailRight">{{currentProject.status}}</div>
+									</div>
+
+									<div fxLayout="row">
+										<div class="projectDetailLeft">Design Format</div>
+										<div class="projectDetailCenter">:</div>
+										<div class="projectDetailRight">{{currentProject.designType}}</div>
+									</div>
+
+									<div fxLayout="row">
+										<div class="projectDetailLeft">Date Created</div>
+										<div class="projectDetailCenter">:</div>
+										<div class="projectDetailRight">{{currentProject.dateCreated}}</div>
+									</div>
+								
+								</div>
+
+							</div>
+
+						</div>
+						<!-- / TOP ROW OF PROJECT DATA -->
+					  	
+					</mat-tab>
+
+
+
+
+
+					<mat-tab label="Design and Purchase Status">  
+
+
+						<div flex="100%" layout="column"  style="width:100%">
+
+
+							<h2 class="mt-32 mb-20">Design and Purchase Status</h2>
+
+
+							<mat-vertical-stepper linear #stepper flex="100%">
+							  <mat-step>
+								  <ng-template matStepLabel>Design</ng-template>
+									<h4>Submit design version to recieve an invoice and start the design process</h4>
+							  </mat-step>
+							  <mat-step>
+								  <ng-template matStepLabel>Deposit</ng-template>
+							  </mat-step>
+							  <mat-step>
+								<ng-template matStepLabel>Approval</ng-template>
+							  </mat-step>
+							  <mat-step>
+								<ng-template matStepLabel>Fabrication</ng-template>
+							  </mat-step>
+							  <mat-step>
+								<ng-template matStepLabel>Balance</ng-template>
+							  </mat-step>
+							  <mat-step>
+								<ng-template matStepLabel>Delivery</ng-template>
+							  </mat-step>
+							  <mat-step>
+								<ng-template matStepLabel>Feedback</ng-template>
+							  </mat-step>
+							</mat-vertical-stepper>
+							<!-- / THE DESIGN STEP PROCESS -->
+
+						</div>
+
+					</mat-tab>
+					  
+
+
+
+
+
+					<mat-tab label="Version Data">
+
+
+						<div layout="column" flex="100%" style="width:100%">
+
+							<h2 class="mt-32 mb-20">Version Data</h2>
+
+
+							<div fxLayout="row" fxLayoutAlign="center" flex="100%">
+
+								<mat-form-field class="w-80-p ml-10-p mt-20">
+								  <mat-label>Select a version to see the details</mat-label>
+								  <mat-select  (selectionChange)="onVersionSelected()"
+											  [(ngModel)]="currentProject.currentVersionId">
+									<mat-option *ngFor="let version of currentProject['versions']; index as i" [value]="version.id">
+									  {{i+1}} - {{version.name}}
+									</mat-option>
+								  </mat-select>
+								</mat-form-field>
+
+							</div>
+
+
+							<div fxLayout="row" fxLayoutAlign="center" flex="100%">
+
+								<!-- VERSIONS DATA -->
+								<div fxLayout="column" 
+									 class="mt-32"
+									 flex="45%"
+									 style="width:40%; margin:0px 5%">
+
+									 <h3>Data</h3>
+
+									<mat-form-field appearance="outline" 
+													floatLabel="always" 
+													class="w-100-p">
+										<mat-label>Version Name</mat-label>
+										<input matInput placeholder="Product Name"
+											   name="name"
+											   [(ngModel)]="currentVersion.name"
+											   required>
+									</mat-form-field>
+
+									<mat-form-field appearance="outline" 
+													floatLabel="always" 
+													class="w-100-p">
+										<mat-label>Project Description</mat-label>
+										<textarea matInput placeholder="Product Description"
+												  name="description"
+												   [(ngModel)]="currentVersion.description"
+												  rows="5">
+										</textarea>
+									</mat-form-field>
+
+
+									<mat-form-field appearance="outline" 
+													floatLabel="always" 
+													class="w-100-p">
+										<mat-label>Estimated Price</mat-label>
+										<textarea matInput disabled=true
+												  name="price"
+												   [(ngModel)]="currentVersion.price"
+												  rows="5">
+										</textarea>
+									</mat-form-field>
+
+
+									<button mat-button class="red-900" *ngIf="currentVersion.latest">Submit for purchase</button>
+									<button mat-button class="primary" *ngIf="!currentVersion.latest">Recreate as latest version</button>
+
+								</div>
+								<!--/  VERSION DATA -->
+
+
+
+								<!-- MEASUREMENT LIST -->
+								<div fxLayout="column" 
+									 class="mt-32"
+									 flex="45%"
+									 style="width:40%; margin:0px 5%">
+
+									 <h3>Measurements</h3>
+
+									<table mat-table [dataSource]="currentVersion.measurements" 
+										   class="mat-elevation-z8"
+										   style="box-shadow:none;">
+
+									  <ng-container matColumnDef="name">
+										<th mat-header-cell *matHeaderCellDef> Name </th>
+										<td mat-cell *matCellDef="let meas"> {{meas.name}} </td>
+									  </ng-container>
+
+									  <ng-container matColumnDef="value">
+										<th mat-header-cell *matHeaderCellDef> Value </th>
+										<td mat-cell *matCellDef="let meas"> {{meas.value}} </td>
+									  </ng-container>
+
+									  <tr mat-header-row *matHeaderRowDef="columnsToDisplayMeas"></tr>
+									  <tr mat-row *matRowDef="let row; columns: columnsToDisplayMeas;"></tr>
+									</table>
+
+								</div>
+								<!--/  MEASUREMENT LIST -->
+
+							</div>
+
+						</div>
+					
+					</mat-tab>
+
+				</mat-tab-group>
+
+
+			</div>
+			<!-- / CONTENT -->
+
+		</div>
+		<!-- / CENTER -->
+
+	</div>
+	<!-- / CONTENT -->
+
+</div>

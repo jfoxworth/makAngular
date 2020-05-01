@@ -1,0 +1,56 @@
+
+#store-product, #projects {
+
+    .content {
+
+
+        .itemTypeText {
+            color:#039be5;
+            font-weight:bold;
+            letter-spacing: 0.1em;
+            font-size: 1em;
+            text-transform:uppercase;
+        }
+
+
+        .itemTypeTitle {
+            text-transform : uppercase;
+            letter-spacing : 0.07em;
+            margin-bottom : 40px;
+        }
+
+
+        .itemDescription {
+            min-height : 100px;
+            color : #898989;
+            letter-spacing : 0.08em;
+        }
+
+
+        .itemCompanySection {
+
+            margin:50px 0px;
+
+            .itemCompanyLogo {
+                width : 75px;
+                margin : 0px 30px 0px 10px;
+            }
+
+            .itemCompanyDetails {
+
+            }
+
+            .itemCompanyName {
+                margin-bottom:10px;
+            }
+
+            .itemCompanyLocation {
+
+            }
+
+        }
+
+
+    }
+
+}

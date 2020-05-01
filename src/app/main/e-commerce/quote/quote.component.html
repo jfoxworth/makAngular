@@ -1,0 +1,179 @@
+<div id="invoice" class="compact page-layout blank" fxLayout="row">
+
+    <div class="invoice-container" style="width:90%; margin:5%">
+
+        <!-- INVOICE -->
+        <div class="card">
+
+            <div class="header">
+                <div class="invoice-date">{{quote.date}}</div>
+
+                <div fxLayout="row" fxLayoutAlign="space-between stretch">
+                    <div class="client">
+                        <div class="invoice-number" fxLayout="row" fxLayoutAlign="start center">
+                            <span class="title">INVOICE</span>
+                            <span class="number">{{quote.number}}</span>
+                        </div>
+
+                        <div class="due-date" fxLayout="row" fxLayoutAlign="start center">
+                            <span class="title">DUE DATE</span>
+                            <span class="date">{{quote.dueDate}}</span>
+                        </div>
+
+                        <div class="info">
+                            <div class="title">{{quote.client.title}}</div>
+                            <div *ngIf="quote?.client.address" class="address">{{quote.client.address}}</div>
+                            <div *ngIf="quote?.client.phone" class="phone">{{quote.client.phone}}</div>
+                            <div *ngIf="quote?.client.email" class="email">{{quote.client.email}}</div>
+                            <div *ngIf="quote?.client.website" class="website">{{quote.client.website}}</div>
+                        </div>
+                    </div>
+
+                    <div class="issuer accent" fxLayout="row" fxLayoutAlign="start center">
+                        <div class="logo">
+                            <img src="assets/images/logos/makTextWhite.png">
+                        </div>
+
+                        <div class="info">
+                            <div class="title">{{quote.from.title}}</div>
+                            <div *ngIf="quote?.from.address" class="address">{{quote.from.address}}</div>
+                            <div *ngIf="quote?.from.phone" class="phone">{{quote.from.phone}}</div>
+                            <div *ngIf="quote?.from.email" class="email">{{quote.from.email}}</div>
+                            <div *ngIf="quote?.from.website" class="website">{{quote.from.website}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content mt-40">
+                <table class="simple invoice-table">
+                    <thead>
+                        <tr>
+                            <th>SERVICE</th>
+                            <th>UNIT</th>
+                            <th class="text-right">UNIT PRICE</th>
+                            <th class="text-right">QUANTITY</th>
+                            <th class="text-right">TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let service of quote.services">
+                            <td>
+                                <div class="title">
+                                    {{service.title}}
+                                </div>
+                            </td>
+                            <td>
+                                {{service.unit}}
+                            </td>
+                            <td class="text-right">
+                                {{service.unitPrice | currency:'USD':'symbol'}}
+                            </td>
+                            <td class="text-right">
+                                {{service.quantity}}
+                            </td>
+                            <td class="text-right">
+                                {{service.total | currency:'USD':'symbol'}}
+                            </td>
+                        </tr>
+                        <!-- Double the invoice data for demo purposes -->
+                        <tr *ngFor="let service of quote.services">
+                            <td>
+                                <div class="title">
+                                    {{service.title}}
+                                </div>
+                            </td>
+                            <td>
+                                {{service.unit}}
+                            </td>
+                            <td class="text-right">
+                                {{service.unitPrice | currency:'USD':'symbol'}}
+                            </td>
+                            <td class="text-right">
+                                {{service.quantity}}
+                            </td>
+                            <td class="text-right">
+                                {{service.total | currency:'USD':'symbol'}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="simple invoice-table-footer">
+                    <tbody>
+                        <tr class="subtotal">
+                            <td>SUBTOTAL</td>
+                            <td>{{quote.subtotal | currency:'USD':'symbol'}}</td>
+                        </tr>
+                        <tr class="tax">
+                            <td>TAX</td>
+                            <td>{{quote.tax | currency:'USD':'symbol'}}</td>
+                        </tr>
+                        <tr class="discount">
+                            <td>DISCOUNT</td>
+                            <td>-{{quote.discount | currency:'USD':'symbol'}}</td>
+                        </tr>
+                        <tr class="total">
+                            <td>TOTAL</td>
+                            <td>{{quote.total | currency:'USD':'symbol'}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="footer">
+                <div class="note mt-20 mb-20">This quote is only an estimate and is subject to change.</div>
+                <div fxLayout="row" fxLayoutAlign="start start">
+                    <div class="logo">
+                        <img src="assets/images/logos/makTextBlack.png">
+                    </div>
+                    <div class="small-note">
+                        In condimentum malesuada efficitur. Mauris volutpat placerat auctor. Ut ac congue dolor. Quisque
+                        scelerisque lacus sed feugiat fermentum. Cras aliquet facilisis pellentesque. Nunc hendrerit
+                        quam at leo commodo, a suscipit tellus dapibus. Etiam at felis volutpat est mollis lacinia.
+                        Mauris placerat sem sit amet velit mollis, in porttitor ex finibus. Proin eu nibh id libero
+                        tincidunt lacinia et eget eros.
+                    </div>
+                </div>
+            </div>
+
+            <!--
+
+            Use the following elements to add breaks to your pages. This will make sure that the section in between
+            these elements will be printed on a new page. The following two elements must be used before and after the
+            page content that you want to show as a new page. So, you have to wrap your content with them.
+
+            Elements:
+            ---------
+            <div class="page-break-after"></div>
+            <div class="page-break-before"></div>
+
+            -->
+
+            <!--
+
+            Example:
+            --------
+
+            Initial page content!
+
+            <div class="page-break-after"></div>
+            <div class="page-break-before"></div>
+
+            This is the second page!
+
+            <div class="page-break-after"></div>
+            <div class="page-break-before"></div>
+
+            This is the third page!
+
+            <div class="page-break-after"></div>
+            <div class="page-break-before"></div>
+
+            -->
+
+        </div>
+        <!-- / INVOICE -->
+
+    </div>
+</div>

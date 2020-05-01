@@ -1,0 +1,36 @@
+@import "src/@fuse/scss/fuse";
+
+
+
+#designStudio {
+
+    .content {
+        overflow: hidden;
+
+
+
+        #mainSidebar {
+
+            background: white;
+            position : absolute;
+            left:200px;
+            top:50px;
+            opacity:100%;
+            width : 320px;
+
+        }
+    /*
+        #mainSidebar:not( :hover )
+        {
+        	opacity : 0%;
+        }
+
+        #mainSidebar:hover 
+        {
+        	opacity : 100%;
+        }
+
+        */
+
+    }
+}

@@ -1,0 +1,726 @@
+<div id="projects" style="background-color:#FFF" class="page-layout simple left-sidebar inner-sidebar inner-scroll">
+
+	<!-- HEADER -->
+	<div class="header accent" fxLayout="row"></div>
+	<!-- / HEADER -->
+
+	<!-- CONTENT -->
+	<div class="content">
+
+		<!-- SIDEBAR -->
+		<fuse-sidebar class="sidebar left-positioned open locked-open" 
+					  name="simple-left-sidebar-4" position="left" lockedOpen="gt-md">
+
+			<!-- SIDEBAR CONTENT -->
+			<div class="content p-24" fusePerfectScrollbar>
+				<div class="demo-sidebar text-center  ml-20">
+					<mat-list class="" style="">
+
+						<h2 style="color:#777;">Creator Studio</h2>
+
+
+						<button mat-button class="primary mb-40" (click)="newDesign()">Create New Design</button>
+
+
+						<mat-list-item *ngFor="let design of designList;" 
+									   (click)="currentDesign=design;"
+									   [ngClass]="{'currentItem' : design.id==currentDesign.id}"
+								  	   style="font-size:1em; padding:5px 15px;">
+							{{design.title}} 
+						</mat-list-item>
+
+						<mat-divider class="mt-12 mb-12" style="color:#000"></mat-divider>
+
+					</mat-list>
+				</div>
+			</div>
+			<!-- / SIDEBAR CONTENT -->
+
+		</fuse-sidebar>
+		<!-- / SIDEBAR -->
+
+
+
+
+		<!-- CENTER -->
+		<div class="center p-24" fusePerfectScrollbar>
+
+			<!-- CONTENT -->
+			<div class="content p-24" style="box-shadow:0px 0px 0px rgba(0,0,0,0) !important;">
+
+				<div *ngIf="currentDesign===undefined">
+					<h1 class="text-center">Select a design to edit it's properties</h1>
+				</div>
+
+
+				<mat-tab-group flex="100%"
+							   *ngIf="currentDesign!==undefined">
+					
+					<mat-tab label="Design Data" flex="100%">
+
+						<div flex="100%" 
+							 layout="column" 
+							 style="width:100%">
+					  
+
+							<!-- TOP ROW OF PROJECT DATA -->
+							<div fxLayout="row" fxLayoutAlign="center" flex="100%">
+
+
+
+								<div fxFlex="45%" fxLayout="column" class="text-center" style="margin-right:5%">
+
+
+									<h2 class="mt-32 mb-20">General Design Data</h2>
+
+									<!-- THE DESIGN NAME -->
+									<mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+										<mat-label>Design Name</mat-label>
+										<input matInput placeholder="Design Name"
+											   name="title"
+											   [(ngModel)]="currentDesign['title']"
+											   required>
+									</mat-form-field>
+
+
+									<!-- THE DESIGN DESCRIPTION -->
+									<mat-form-field style="min-height:190px" appearance="outline" floatLabel="always" class="w-100-p">
+										<mat-label>Design Description</mat-label>
+										<textarea style="min-height:190px"
+												  matInput placeholder="Product Description"
+												  name="description"
+												   [(ngModel)]="currentDesign['marketplace']['description']"
+												  rows="5">
+										</textarea>
+									</mat-form-field>
+
+
+
+									<!-- THE SHAPEDIVER TICKET NUMBER -->
+									<mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+										<mat-label>Shapediver Ticket Number</mat-label>
+										<input matInput placeholder="Shapediver ticket"
+											   name="ticket"
+											   [(ngModel)]="currentDesign['shapediverTicket']"
+											   required>
+									</mat-form-field>
+
+
+									<!-- THE STATUS OF THE ITEM IN THE MARKETPLACE -->
+									<mat-form-field class="mb-40">
+										<mat-label>Status of Item</mat-label>
+										<mat-select 
+											  [(ngModel)]="currentDesign.status">
+									  		<mat-option [value]="0">
+												Disabled
+											</mat-option>
+									  		<mat-option [value]="1">
+												Active
+											</mat-option>
+										</mat-select>
+									</mat-form-field>
+
+
+								</div>
+
+
+								<div fxFlex="45%" fxLayout="column" class="text-center" style="margin-right:5%">
+
+
+									<h2 class="mt-32 mb-20">Marketplace Data</h2>
+
+									<!-- THE TYPE -->
+									<mat-form-field class="mb-40">
+										<mat-label>Category of design</mat-label>
+										<mat-select 
+											  [(ngModel)]="currentDesign.category">
+									  		<mat-option *ngFor="let thisType of designType" [value]="thisType">
+												{{thisType}}
+											</mat-option>
+										</mat-select>
+									</mat-form-field>
+
+
+
+									<!-- THE COMPANY -->
+									<mat-form-field class="mb-40">
+										<mat-label>Company selling design</mat-label>
+										<mat-select (selectionChange)="setCompany()"
+											  [(ngModel)]="currentDesign.companyId">
+									  		<mat-option *ngFor="let thisCompany of companies" [value]="thisCompany.id">
+												{{thisCompany.name}}
+											</mat-option>
+										</mat-select>
+									</mat-form-field>
+
+
+									<!-- BACKGROUND URL -->
+									<mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+										<mat-label>URL of Background Image</mat-label>
+										<input matInput placeholder="URL"
+											   name="mainImage"
+											   [(ngModel)]="currentDesign['marketplace']['mainImage']"
+											   required>
+									</mat-form-field>
+
+
+
+
+									<!-- IMAGES FOR THE MARKETPLACE -->
+									<h4>Images for the marketplace description
+										<button class="ml-20" 
+												mat-mini-fab color="primary" 
+												aria-label="Add_image">
+		  									<mat-icon>add</mat-icon>
+										</button>
+									</h4>
+									<mat-form-field floatLabel="always" class="w-100-p"
+													*ngFor="let thisImage of currentDesign.marketplace.images; let i=index">
+										<input matInput placeholder="URL"
+											   [(ngModel)]="currentDesign['marketplace']['images'][i]"
+											   required>
+									</mat-form-field>
+
+								</div>
+
+
+							</div>
+
+						</div>
+						<!-- / TOP ROW OF PROJECT DATA -->
+					  	
+					</mat-tab>
+
+
+
+
+
+
+
+
+
+
+
+
+					<!-- THE DESIGN PARAMETERS -->
+					<mat-tab label="Design Parameters">
+
+
+						<div fxLayout="column" 
+							 fxFlex="100%" 
+							 style="width:100%"
+							 *ngIf="currentDesign!==undefined">
+
+
+							<h2 class="mt-32 mb-20">Design Parameters</h2>
+
+							<div fxFlex="100%" class="mr-52">
+								<div class="mt-20 mat-subheading-2" style="color:#898989">The list below holds the items that will be displayed as icons and have submenus. For each design, there is an initial menu where the user can pick a different design and a final menu that displays the cost. Click on the green plus to add a new submenu and then add individual items and move them from menu to menu.</div>	
+							</div>
+								
+							<div fxFlex="100%">
+
+								<div class="example-container"
+									 fxLayout="row" >
+									
+									<button mat-fab color="primary" 
+											class="ml-8 mr-12 add_button_reverse"
+											aria-label="Add new submenu"
+											(click)="addSubmenu()" >
+          								<mat-icon>add_circle</mat-icon>
+        							</button>
+
+									<div
+										cdkDropList
+										cdkDropListOrientation="horizontal"
+										class="example-list-hor"
+										[cdkDropListData]="currentDesign['parameterMenus']"
+										(cdkDropListDropped)="drop($event)">
+									
+										<div class="example-box-hor" 
+											 fxLayout="row"
+											 *ngFor="let item of currentDesign['parameterMenus']; index as i" cdkDrag>
+											<div class="menuDelete">
+												<mat-icon class="ml-20" style="position:relative; top:5px">cancel</mat-icon>
+											</div>
+											<div class="menuName">{{item.label}}</div>
+											<!--<div class="menuIcon"><mat-icon>{{item.icon}}</mat-icon></div>-->
+											<div class="">
+												<button mat-icon-button color="primary" 
+														class="add_button"
+														aria-label="Add new parameter"
+														(click)="addMenuItem(i)" >
+			          								<mat-icon>add_circle</mat-icon>
+			        							</button>
+												<button mat-icon-button aria-label="" (click)="openSubmenuDialog(i)" >
+													<mat-icon>more_vert</mat-icon>
+												</button>
+											</div>
+										</div>
+									</div>
+
+
+								</div>
+
+
+								<!-- List of Menus -->
+								<div cdkDropListGroup class="" style="margin-left:76px">
+
+									<div fxLayout="row" style="margin-bottom:40px; flex-flow:row wrap">
+
+										<div class="example-container" 
+											 *ngFor="let menuItem of currentDesign['parameterMenus']; index as i">
+
+											<div class="example-container" 
+												 fxLayout="column">
+
+												<!--
+												<button mat-button class="add_menu mb-20 text-center" 
+														(click)="addMenuItem(i)">
+													<div class="">Add menu item<mat-icon class="ml-20" style="position:relative; top:5px">add_circle</mat-icon></div>
+												</button>
+											-->
+
+												<div class="example-container" 
+													 fxLayout="column">
+
+													<div cdkDropList
+														 #paramList[i]="cdkDropList"
+														 [cdkDropListData]="menuItem['parameters']"
+														 class="example-list"
+														 (cdkDropListDropped)="drop($event)">
+													
+														<div class="example-box" 
+															 *ngFor="let parameter of menuItem.parameters, index as j"
+															 cdkDrag
+															 fxLayout="column">
+
+															
+															<!-- Top row with delete and dots -->
+															<div fxLayout="row"
+																 fxFlex="100%"
+																 style="width:100%"
+																 fxLayoutAlign="space-between">
+																<div class="menuDelete">
+																	<mat-icon class="ml-20" style="position:relative; top:5px">cancel</mat-icon>
+																</div>
+																<button mat-icon-button aria-label="" (click)="openDialog(i, j)" >
+	        														<mat-icon>more_vert</mat-icon>
+	      														</button>
+	      													</div>
+
+
+	      													<!-- Slider row -->
+															<div fxLayout="row"
+																 *ngIf="parameter.type=='slider'">
+																<div class="h3 text-center mb-12">{{parameter.label}}</div>
+	      													</div>
+	      													<div *ngIf="parameter.type=='slider'"
+	      														 class="w-280 mb-20 text-center"
+	      														 fxLayout="row">
+
+
+																<mat-slider id="" 
+																			class="sliderItem w-180 ml-16"
+																			[min]="parameter['min']" 
+																			[max]="parameter['max']" 
+																			[step]="parameter['step']"
+																			[tickInterval]="parameter['tickInterval']"
+																			[value]="parameter['value']"
+																			thumbLabel 
+																			[tickLabel]="parameter[tickLabel]">
+																				
+																</mat-slider>
+
+
+																<input matInput 
+																	   id=""
+
+																	   style="width:70px; border:1px solid #ACACAC" 
+																	   class="inputItem w-70 mat-subheading-2 pt-5 pb-5 text-center" >
+
+	      													</div>
+
+
+
+
+	      													<!-- Select row -->
+															<div fxLayout="row"
+																 *ngIf="parameter.type=='dropdown'">
+																<div class="h3 text-center mb-12">{{parameter.label}}</div>
+	      													</div>
+
+	      													<div *ngIf="parameter.type=='dropdown'"
+	      														 class="w-280 mb-20 text-center"
+	      														 fxLayout="row">
+
+																<mat-form-field appearance="outline"
+																				floatLabel="always"
+																				class="w-100-p">
+																	<mat-label>Select Options</mat-label>
+																	<mat-select>
+																		<mat-option *ngFor="let thisOption of parameter['options']" [value]="thisOption['value']">
+																			{{thisOption['label']}}
+																		</mat-option>
+																	</mat-select>
+																</mat-form-field>
+
+	      													</div>
+
+
+
+
+	      													<!-- Text row -->
+															<div fxLayout="row"
+																 *ngIf="parameter.type=='text'">
+																<div class="h3 text-center mb-12">{{parameter.label}}</div>
+	      													</div>
+	      													<div *ngIf="parameter.type=='text'"
+	      														 class="w-280 mb-20 text-center"
+	      														 fxLayout="column">
+
+																<input matInput 
+																	   id=""
+																	   style="width:200px; border:1px solid #ACACAC" 
+																	   class="inputItem mat-subheading-2 pt-8 pb-8 ml-40 text-center" 
+																	   [(ngModel)]="parameter.text">
+
+															</div>
+
+
+															<!-- The toggle items -->
+															<div *ngIf="parameter['type']=='toggle'">
+
+																<div class="w-280 text-center mt-20 mb-20" fxLayout="row">
+
+																	<div class="h3 text-center mb-12 w-200">{{parameter.label}}</div>
+
+																	<mat-slide-toggle
+																		  [(ngModel)]="parameter.value"
+																		  class="w-50 ml-20 mt-12"
+																		  color="accent-900">
+																	</mat-slide-toggle>
+
+																</div>
+
+															</div>
+
+
+
+															<!-- The bloc items -->
+															<div *ngIf="parameter['type']=='blob'">
+
+																<div class="w-280 text-center mt-20 mb-20" fxLayout="row">
+
+																	<div class="h3 text-center mb-12 mt-12 w-200">{{parameter.label}}</div>
+
+																	<mat-slide-toggle
+																		  [(ngModel)]="parameter.value"
+																		  class="w-50 ml-20 mt-12"
+																		  color="accent-900">
+																	</mat-slide-toggle>
+
+																</div>
+
+
+															</div>
+
+
+														</div>
+												
+													</div>
+
+												</div>
+
+											</div>
+
+										</div>
+
+									</div>
+
+								</div>
+
+							</div>
+							<!-- / List of menus -->
+
+						</div>
+					
+					</mat-tab>
+					<!-- / THE DESIGN PARAMETERS -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					<!-- PRICING DATA -->
+					<mat-tab label="Pricing Data">
+
+
+						<div layout="column" 
+							 flex="100%" 
+							 style="width:100%"
+							 *ngIf="currentDesign!==undefined">
+
+							<h2 class="mt-32 mb-20">Pricing Data</h2>
+
+							<div fxLayout="column" 
+								 fxLayoutAlign="center" 
+								 flex="100%">
+
+								<div class="mat-subheading-1" style="color:#898989">The first box below holds the price that will be shown to the user in the marketplace before any alterations are made. It is an estimation of what the typical customer would pay if they altered little.</div>
+
+								<!-- INITIAL PRICE -->
+								<mat-form-field appearance="outline" 
+												floatLabel="always" 
+												class="w-40-p mt-20 mb-32"
+												style="margin-left:30%">
+									<mat-label>Initial Price</mat-label>
+									<input matInput placeholder="Shapediver ticket"
+										   name="price"
+										   [(ngModel)]="currentDesign['initialPrice']"
+										   required>
+								</mat-form-field>
+
+								<div class="mat-subheading-1" style="color:#898989">The box below lets the designer establish how the price for each item is calculated. Typically, this is multiplying a length times a width times a cost per square inch or foot or multiplying a length times price per foot or inch.</div>
+
+								<div class="mat-subheading-1" style="color:#898989">Type the formula to calculate the cost in the box. Use the names of the desired parameters. As you type, the recognized parameters, operators, and numbers will appear below in grey, green, and blue. Unrecognized elements will appear in red. Formulas with unrecognized elements cannot be used to calculate price.</div>
+
+
+								<!-- PRICE FORMULA -->
+								<mat-form-field appearance="outline" floatLabel="always" 
+												class="w-80-p mt-20 mb-32"
+												style="margin-left:10%">
+									<mat-label>Price Formula</mat-label>
+									<input matInput placeholder="Formula for price"
+										   name="price"
+										   [(ngModel)]="currentDesign['priceFormula']"
+										   (keyup)="checkPriceFormula()"
+										   required>
+								</mat-form-field>
+
+
+								<!-- PRICE COMPONENTS -->
+								<div fxLayout="row"
+									 class="w-80-p"
+									 style="margin:0px 10%">
+									<div *ngFor="let pi of currentDesign.priceArray; let i = index">
+										<div [ngClass]="pi.status">{{pi.text}}</div>
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+					
+					</mat-tab>
+					<!-- / PRICING DATA -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+					<!-- MARKETPLACE DEMO -->
+					<mat-tab label="Marketplace Demo">
+
+
+						<div layout="column" 
+							 flex="100%" 
+							 style="width:100%"
+							 *ngIf="currentDesign!==undefined">
+
+							<!-- TOP ROW SHOWING MAIN STORE PAGE DEMO -->
+							<h2 class="mt-32 mb-20">Marketplace Demonstration</h2>
+
+							<div fxLayout="row" fxLayoutAlign="center" flex="100%">
+
+								<div fxFlex="33%" fxLayout="column" class="text-center ml-25-p">
+
+									<div class="mat-subheading-2 pr-50" style="color:#898989">The column to the right shows how the product will appear on the main store page. It displays the background image as well as the title and company name. The section below shows the detailed view that a user will see if they click on the product on the store page.</div>
+								</div>
+
+
+								<div fxFlex="17%"></div>
+
+								<div fxFlex="50%" fxLayout="column" class="text-center ml-25-p" fxLayoutAlign="center right">
+
+
+									<div class="storeitem" fxFlex="100">
+
+										<div class="storeitem-content" 
+											 fxLayout="column" 
+											 fxFlex="1 1 auto">
+
+											<div class="content mainImage" 
+												 fxLayout="column" 
+												 fxLayoutAlign="center right" 
+												 fxFlex="1 1 auto"
+												 style="width:300px; height:200px;"
+												 [style.background]="'url(' + currentDesign.marketplace.mainImage + ')'">
+
+												<div style="background-color:#ccc; width:60%; padding:5px 10px">	 
+													<div class="h1">{{currentDesign.title}}</div>
+													<div class="description">{{currentDesign.company.name}}</div>
+												</div>
+											</div>
+
+										</div>
+
+									</div>
+
+								</div>
+
+							</div>
+
+
+							<mat-divider class="mt-52 mb-52"></mat-divider>
+
+							<!-- TOP ROW SHOWING MAIN STORE PAGE DEMO -->
+							<h2 class="mt-32 mb-20">Marketplace Demonstration</h2>
+
+							<div fxLayout="row" fxLayoutAlign="center" flex="100%">
+
+
+							<!-- STORE DATA -->
+							<div fxLayout="column" 
+								 class="mt-32"
+								 flex="45%"
+								 style="width:40%; margin:0px 5%">
+
+
+								<div class="itemTypeText">{{currentDesign.category}}</div>
+
+
+								<div class="mat-display-2 itemTypeTitle">{{currentDesign.title}}</div>
+
+
+								<div class="mat-title itemDescription">{{currentDesign.marketplace.description}}</div>
+
+
+								<div class="itemCompanySection" fxLayout="row">
+
+									<img class="itemCompanyLogo" [src]="currentDesign.company.logo">
+
+									<div class="itemCompanyDetails" fxLayout="column">
+
+										<div class="mat-title itemCompanyName">{{currentDesign.company.name}}</div>
+										<div class="mat-subheading-1 itemCompanyLocation">{{currentDesign.company.location}}</div>
+
+									</div>
+
+								</div>
+
+							</div>
+							<!--/  STORE DATA -->
+
+
+
+							<!-- IMAGES -->
+							<div fxLayout="column" 
+								 class="mt-32"
+								 flex="45%"
+								 style="width:40%; margin:0px 5%">
+
+								<mat-carousel
+									timings="250ms ease-in"
+									[autoplay]="true"
+									interval="5000"
+									color="accent"
+									maxWidth="auto"
+									proportion="100"
+									[slides]="currentDesign.marketplace.images.length"
+									[loop]="true"
+									[hideArrows]="false"
+									[hideIndicators]="false"
+									[useKeyboard]="true"
+									[useMouseWheel]="false"
+									orientation="ltr"
+									>
+									
+									<mat-carousel-slide
+										#matCarouselSlide
+										*ngFor="let slide of currentDesign.marketplace.images; let i = index"
+										[image]="slide"
+										overlayColor="#00000040"
+										[hideOverlay]="false"
+									  ></mat-carousel-slide>
+								</mat-carousel> 
+
+							</div>
+							<!--/  IMAGES -->
+
+							</div>
+
+						</div>
+					
+					</mat-tab>
+					<!-- / MARKETPLACE DEMO -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					<!-- DESIGN STUDIO DEMO -->
+					<mat-tab label="Design Studio Demo">
+
+
+						<div layout="column" 
+							 flex="100%" 
+							 style="width:100%"
+							 *ngIf="currentDesign!==undefined">
+
+							<h2 class="mt-32 mb-20">Design Studio Demo</h2>
+
+							<div class="">To see a demo of this product in the design studio, click on this link. The product will not be displayed within the marketplace until the status is changed to 'active'.</div>
+
+
+						</div>
+					
+					</mat-tab>
+					<!-- / DESIGN STUDIO DEMO -->
+
+
+
+
+
+				</mat-tab-group>
+
+
+			</div>
+			<!-- / CONTENT -->
+
+		</div>
+		<!-- / CENTER -->
+
+	</div>
+	<!-- / CONTENT -->
+
+</div>
