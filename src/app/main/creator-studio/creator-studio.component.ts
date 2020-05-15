@@ -79,7 +79,19 @@ export class CreatorStudioComponent implements OnInit {
 
 
 	ngOnInit(): void {
-	
+
+		// Pull the list of existing designs for this user	
+		this.designList = this.FirebaseService.getDocsByUserId('designs', 'designerId')
+		.then(function(querySnapshot) {
+        	var designList = [];
+        	querySnapshot.forEach(function(doc) {
+    	        console.log(doc.data());
+        	    designList.push(doc.data());
+        	});
+        	return designList;
+    	})
+
+
 	}
 
 

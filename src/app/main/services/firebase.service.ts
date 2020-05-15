@@ -57,6 +57,24 @@ export class FirebaseService {
 
 	/*
 	* 
+	* Function used to pull documents from a collection where a given  
+	* parameter is equal to the user ID
+	*
+	*/
+	getDocsByUserId( collection, getParam ) {
+		const user = JSON.parse(localStorage.getItem('user'));
+		console.log('Retreiving the documents with with the parameter : '+getParam+' equal to the user id of '+user.uid+' from collection : '+collection);
+		var docRef = this.afs.collection(collection, ref => ref.where(getParam, '==', user.uid));
+		return docRef.ref.get();
+	}
+
+
+
+
+
+
+	/*
+	* 
 	* Update a document from a given collection with the given data
 	*
 	*/

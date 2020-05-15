@@ -61,8 +61,11 @@ export class LoginComponent implements OnInit
     ngOnInit(): void
     {
         const user = JSON.parse(localStorage.getItem('user'));
-        this.isLoggedIn = (user !== null && user.emailVerified !== false) ? true : false;
-        this.currentUser = user.email;
+        if ( ( user !== undefined ) && ( user !== null ) )
+        {
+            this.isLoggedIn = (user !== null && user.emailVerified !== false) ? true : false;
+            this.currentUser = user.email;
+        }
 
 
         this.loginForm = this._formBuilder.group({

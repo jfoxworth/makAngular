@@ -86,7 +86,10 @@ export class ProfileComponent implements OnInit
 			});
 		}else
 		{
-			this.userInfo = this.FirebaseService.getDocById( 'users', this.userId );			
+			this.userInfo = this.FirebaseService.getDocById( 'users', this.userId ).then(response=> {
+				this.userInfo=response.data();
+				this.dataFlag=true;
+			});		
 		}
 
 
