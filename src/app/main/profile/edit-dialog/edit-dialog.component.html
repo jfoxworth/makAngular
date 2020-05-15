@@ -22,7 +22,7 @@
 						class="w-100-p"
 						name='gender'>
 			<mat-label>Gender</mat-label>
-			<mat-select  [(ngModel)]="data['userData']['info']['gender']">
+			<mat-select  [(ngModel)]="data['userInfo']['gender']">
 				<mat-option value='Male'>Male</mat-option>
 				<mat-option value='Female'>Female</mat-option>
 			</mat-select>
@@ -40,19 +40,8 @@
 							style="margin-right:3%"
 							name='bmonth'>
 				<mat-label>Birth Month</mat-label>
-				<mat-select  [(ngModel)]="data['userData']['info']['birthmonth']">
-					<mat-option value="1">1</mat-option>
-					<mat-option value="2">2</mat-option>
-					<mat-option value="3">3</mat-option>
-					<mat-option value="4">4</mat-option>
-					<mat-option value="5">5</mat-option>
-					<mat-option value="6">6</mat-option>
-					<mat-option value="7">7</mat-option>
-					<mat-option value="8">8</mat-option>
-					<mat-option value="9">9</mat-option>
-					<mat-option value="10">10</mat-option>
-					<mat-option value="11">11</mat-option>
-					<mat-option value="12">12</mat-option>
+				<mat-select  [(ngModel)]="data['userInfo']['birthmonth']">
+					<mat-option *ngFor="let month of monthList; index as i" [value]="i">{{month}}</mat-option>
 				</mat-select>
 			</mat-form-field>
 
@@ -62,7 +51,7 @@
 							style="margin-right:3%"
 							name='bday'>
 				<mat-label>Birth Day</mat-label>
-				<mat-select  [(ngModel)]="data['userData']['info']['birthdate']">
+				<mat-select  [(ngModel)]="data['userInfo']['birthdate']">
 					<mat-option value="1">1</mat-option>
 					<mat-option value="2">2</mat-option>
 					<mat-option value="3">3</mat-option>
@@ -102,8 +91,8 @@
 							class="w-30-p"
 							name='byear'>
 				<mat-label>Birth Year</mat-label>
-				<mat-select  [(ngModel)]="data['userData']['info']['birthyear']">
-					<mat-option *ngFor="let year of [].constructor(100); let i = index">{{2010-i}}</mat-option>
+				<mat-select  [(ngModel)]="data['userInfo']['birthyear']">
+					<mat-option *ngFor="let year of yearList" [value]="year">{{year}}</mat-option>
 				</mat-select>
 			</mat-form-field>
 
@@ -115,13 +104,13 @@
     	<button fxFlex="80%" 
     			style="margin:0px 10%;" 
     			mat-raised-button color="primary" 
-    			(click)="data['userData']['info']['locations'].push('New Location')">
+    			(click)="(data['userInfo']['locations'] = data['userInfo']['locations'] || []).push('New Location');">
     		Add Location
     	</button>
 
    		<div fxFlex="100%"
    			 class="mt-20"
-    		 *ngFor="let myloc of data['userData']['info']['locations']; index as i">
+    		 *ngFor="let myloc of data['userInfo']['locations']; index as i">
 
 
 			<div fxLayout="row">
@@ -137,7 +126,7 @@
 						   required>
 				</mat-form-field>
 
-		        <button mat-icon-button (click)="data['userData']['info']['locations'].splice(i,1)"
+		        <button mat-icon-button (click)="data['userInfo']['locations'].splice(i,1)"
 		                matTooltip="Delete">
 		            <mat-icon class="mt-16">cancel</mat-icon>
 		        </button>
@@ -157,7 +146,7 @@
 			<textarea style="min-height:190px"
 					  matInput placeholder="About"
 					  name="about"
-					   [(ngModel)]="data['userData']['info']['about']"
+					   [(ngModel)]="data['userInfo']['about']"
 					  rows="5">
 			</textarea>
 		</mat-form-field>
@@ -198,7 +187,7 @@
 							style="margin:0px 10% 0px 10%">
 				<mat-label>Occupation</mat-label>
 				<input matInput placeholder="Occupation"
-					   [ngModel]="data['userData']['info']['occupation']"
+					   [ngModel]="data['userInfo']['occupation']"
 					   required>
 			</mat-form-field>
 
@@ -218,7 +207,7 @@
 							style="margin:0px 10% 0px 10%">
 				<mat-label>Skills</mat-label>
 				<input matInput placeholder="Skills"
-					   [ngModel]="data['userData']['info']['skills']"
+					   [ngModel]="data['userInfo']['skills']"
 					   required>
 			</mat-form-field>
 
@@ -231,14 +220,14 @@
     	<button fxFlex="80%" 
     			style="margin:0px 10%;" 
     			mat-raised-button color="primary" 
-    			(click)="data['userData']['info']['jobs'].push({'title' : 'New Job', 'startdate':'2020', 'enddate':'Present'})">
+    			(click)="(data['userInfo']['jobs'] = data['userInfo']['jobs'] || []).push({'title' : 'New Job', 'startdate':'2020', 'enddate':'Present'});">
     		Add Job
     	</button>
 
    		<div fxFlex="100%"
    			 class="mt-20"
    			 fxLayout="row"
-    		 *ngFor="let myjob of data['userData']['info']['jobs']; index as i">
+    		 *ngFor="let myjob of data['userInfo']['jobs']; index as i">
 
 
 			<mat-form-field appearance="outline" 
@@ -304,7 +293,7 @@
 			<textarea style="min-height:190px"
 					  matInput placeholder="About"
 					  name="about"
-					   [(ngModel)]="data['userData']['info']['address']"
+					   [(ngModel)]="data['userInfo']['address']"
 					  rows="5">
 			</textarea>
 		</mat-form-field>
@@ -316,13 +305,13 @@
     	<button fxFlex="80%" 
     			style="margin:0px 10%;" 
     			mat-raised-button color="primary" 
-    			(click)="data['userData']['info']['telephone'].push('123-456-7890')">
+    			(click)="(data['userInfo']['telephone'] = data['userInfo']['telephone'] || []).push('123-456-7890');">
     		Add Telephone Number
     	</button>
 
    		<div fxFlex="100%"
    			 class="mt-20"
-    		 *ngFor="let mynum of data['userData']['info']['telephone']; index as i">
+    		 *ngFor="let mynum of data['userInfo']['telephone']; index as i">
 
 
 			<mat-form-field appearance="outline" 
@@ -347,13 +336,13 @@
     	<button fxFlex="80%" 
     			style="margin:0px 10%;" 
     			mat-raised-button color="primary" 
-    			(click)="data['userData']['info']['telephone'].push('www.mywebsite.com')">
+    			(click)="(data['userInfo']['website'] = data['userInfo']['website'] || []).push('www.mydomain.com');">
     		Add Website
     	</button>
 
    		<div fxFlex="100%"
    			 class="mt-20"
-    		 *ngFor="let mysite of data['userData']['info']['website']; index as i">
+    		 *ngFor="let mysite of data['userInfo']['website']; index as i">
 
 
 			<mat-form-field appearance="outline" 
@@ -364,38 +353,6 @@
 				<mat-label>Website</mat-label>
 				<input matInput placeholder="Website"
 					   [ngModel]="mysite"
-					   required>
-			</mat-form-field>
-
-		</div>
-
-
-
-
-
-
-    	<!-- Emails -->
-    	<h3>Emails</h3>
-    	<button fxFlex="80%" 
-    			style="margin:0px 10%;" 
-    			mat-raised-button color="primary" 
-    			(click)="data['userData']['info']['telephone'].push('myemail@domain.com')">
-    		Add Email
-    	</button>
-
-   		<div fxFlex="100%"
-   			 class="mt-20"
-    		 *ngFor="let myemail of data['userData']['info']['email']; index as i">
-
-
-			<mat-form-field appearance="outline" 
-							floatLabel="always" 
-							class="w-100-p"
-							fxFlex="80%"
-							style="margin:0px 10% 0px 10%">
-				<mat-label>Email</mat-label>
-				<input matInput placeholder="Email"
-					   [ngModel]="myemail"
 					   required>
 			</mat-form-field>
 
@@ -422,7 +379,7 @@
         <div>
             <button mat-raised-button
                     color="accent"
-                    (click)="dialogRef.close(data['userData'])"
+                    (click)="dialogRef.close(data['userInfo'])"
                     class="save-button"
                     aria-label="Save Changes">
                 SAVE CHANGES

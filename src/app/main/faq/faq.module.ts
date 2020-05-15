@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { FuseSharedModule } from '@fuse/shared.module';
 
-import { FaqService } from 'app/main/faq/faq.service';
+import { FaqService } from 'app/main/services/faq.service';
 import { FaqComponent } from 'app/main/faq/faq.component';
 
 const routes = [

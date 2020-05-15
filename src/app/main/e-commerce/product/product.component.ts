@@ -9,7 +9,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseUtils } from '@fuse/utils';
 
 import { Product } from 'app/main/e-commerce/product/product.model';
-import { EcommerceProductService } from 'app/main/e-commerce/product/product.service';
+import { EcommerceProductService } from 'app/main/services/product.service';
 
 import { QuoteComponent } from 'app/main/e-commerce/quote/quote.component';
 

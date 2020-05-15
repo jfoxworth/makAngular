@@ -6,6 +6,8 @@ import { takeUntil } from 'rxjs/internal/operators';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
 
+import { AuthService } from 'app/main/services/auth.service';
+
 @Component({
     selector     : 'register',
     templateUrl  : './register.component.html',
@@ -22,7 +24,8 @@ export class RegisterComponent implements OnInit, OnDestroy
 
     constructor(
         private _fuseConfigService: FuseConfigService,
-        private _formBuilder: FormBuilder
+        private _formBuilder: FormBuilder,
+        public authService: AuthService
     )
     {
         // Configure the layout
@@ -46,6 +49,8 @@ export class RegisterComponent implements OnInit, OnDestroy
         // Set the private defaults
         this._unsubscribeAll = new Subject();
     }
+
+
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks

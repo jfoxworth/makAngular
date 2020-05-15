@@ -27,7 +27,7 @@ import { FuseConfirmDialogModule, FuseSidebarModule } from '@fuse/components';
 import { BrowserModule } from '@angular/platform-browser';
 import { FuseSharedModule } from '@fuse/shared.module';
 
-import { DesignStudioService } from 'app/main/design-studio/design-studio.service';
+import { DesignStudioService } from 'app/main/services/design-studio.service';
 import { DesignStudioComponent } from 'app/main/design-studio/design-studio.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 

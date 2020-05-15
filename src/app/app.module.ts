@@ -35,9 +35,9 @@ import {MatSliderModule} from '@angular/material/slider';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 
 
-import { DesignStudioService } from 'app/main/design-studio/design-studio.service';
-import { KnowledgeBaseService } from 'app/main/knowledge-base/knowledge-base.service';
-import { DesignService } from 'app/main/design-service.service';
+import { DesignStudioService } from 'app/main/services/design-studio.service';
+import { KnowledgeBaseService } from 'app/main/services/knowledge-base.service';
+import { DesignService } from 'app/main/services/design-service.service';
 
 
 import { EcommerceModule } from 'app/main/e-commerce/e-commerce.module';
@@ -48,9 +48,19 @@ import { ChatModule } from 'app/main/chat/chat.module';
 import { KnowledgeBaseModule } from 'app/main/knowledge-base/knowledge-base.module';
 import { StoreModule } from 'app/main/store/store.module';
 import { CreatorStudioModule } from 'app/main/creator-studio/creator-studio.module';
+import { MailConfirmModule } from 'app/main/mail-confirm/mail-confirm.module';
 
 import { MatDialogModule } from '@angular/material/dialog';
 
+
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuthModule } from "@angular/fire/auth";
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { environment } from '../environments/environment';
+
+
+import { AuthService } from 'app/main/services/auth.service';
+import { FirebaseService } from 'app/main/services/firebase.service';
 
 
 const appRoutes: Routes = [
@@ -62,7 +72,7 @@ const appRoutes: Routes = [
 
 @NgModule({
     declarations: [
-        AppComponent,
+        AppComponent
     ],
     imports     : [
         BrowserModule,
@@ -110,6 +120,13 @@ const appRoutes: Routes = [
         StoreModule,
         CreatorStudioModule,
         DragDropModule,
+        MailConfirmModule,
+
+
+        // Firestore Auth Modules
+        AngularFireModule.initializeApp(environment.firebase),
+        AngularFireAuthModule,
+        AngularFirestoreModule,
 
 
     ],
@@ -117,6 +134,8 @@ const appRoutes: Routes = [
         DesignStudioService,
         KnowledgeBaseService,
         DesignService,
+        AuthService,
+        FirebaseService,
     ],
     exports : [
     ],

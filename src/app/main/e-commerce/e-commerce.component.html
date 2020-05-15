@@ -1,4 +1,4 @@
-<div id="projects" style="background-color:#FFF" class="page-layout simple left-sidebar inner-sidebar inner-scroll">
+<div id="projects" style="background-color:#FFF" class="page-layout simple inner-scroll">
 
 	<!-- HEADER -->
 	<div class="header accent" fxLayout="row"></div>
@@ -7,11 +7,11 @@
 	<!-- CONTENT -->
 	<div class="content">
 
-		<!-- SIDEBAR -->
+		<!-- SIDEBAR --
 		<fuse-sidebar class="sidebar left-positioned open locked-open" 
 					  name="simple-left-sidebar-4" position="left" lockedOpen="gt-md">
 
-			<!-- SIDEBAR CONTENT -->
+			<!-- SIDEBAR CONTENT --
 			<div class="content p-24" fusePerfectScrollbar>
 				<div class="demo-sidebar text-center ml-20">
 					<mat-list class="" style="">
@@ -31,7 +31,7 @@
 					</mat-list>
 				</div>
 			</div>
-			<!-- / SIDEBAR CONTENT -->
+			<!-- / SIDEBAR CONTENT --
 
 		</fuse-sidebar>
 		<!-- / SIDEBAR -->
@@ -42,13 +42,57 @@
 			<!-- CONTENT -->
 			<div class="content p-24" style="box-shadow:0px 0px 0px rgba(0,0,0,0) !important;">
 
-				<h2 *ngIf="currentProject===undefined">Select a project to edit or purchase it</h2>
-
-				<mat-tab-group flex="100%" *ngIf="currentProject !== undefined">
+				<mat-tab-group fxFlex="80%"
+							   style="margin:0px 10%">
 					
+					<mat-tab label="Project Selection">
+
+
+						<div fxFlex="80%" 
+							 fxLayout="column"
+							 style="margin:0px 10%">
+
+							<h1 class="mt-32 mb-20">Select a Project</h1>
+
+							<mat-divider></mat-divider>
+
+
+							<div *ngIf="productsData.length==0">You currently have no designs. Go to the marketplace and select a design to add to your list of projects.</div>
+
+							<table class="displayTable">
+
+
+							    <tr	(click)="currentProject=project;
+							    			 currentVersion=currentProject.versions[currentProject.versions.length-1]; 
+							    			 currentProject.currentVersionId=currentProject.versions[currentProject.versions.length-1].id"
+							       target="_blank"
+							       [ngClass]="{'currentItem' : project==currentProject}"
+							       *ngFor="let project of productsData;">
+
+							    	<td class="mat-subheading-2" style="width:35%">{{ project.name }}</td>
+
+							    	<td class="mat-body-1" style="color:#898989"> 
+							    		<span style="font-weight:bold; margin-right:10px;">Type : {{project.designType}}</span> 
+										<span style="font-weight:bold; margin-right:10px;">Versions : {{project.versions.length}}</span>
+										{{ project.description }}
+									</td>
+
+								</tr>
+
+
+							</table>
+
+						</div>
+
+					</mat-tab>
+
+
 					<mat-tab label="Project Data" flex="100%">
 
-						<div flex="100%" layout="column" style="width:100%">
+						<div flex="100%" 
+							 layout="column" 
+							 style="width:100%"
+							 *ngIf="currentProject !== undefined">
 
 							<h2 class="mt-32 mb-20">Project Data</h2>
 					  
@@ -116,7 +160,10 @@
 					<mat-tab label="Design and Purchase Status">  
 
 
-						<div flex="100%" layout="column"  style="width:100%">
+						<div flex="100%" 
+							 layout="column"
+							 style="width:100%"
+							 *ngIf="currentProject !== undefined">
 
 
 							<h2 class="mt-32 mb-20">Design and Purchase Status</h2>
@@ -160,7 +207,10 @@
 					<mat-tab label="Version Data">
 
 
-						<div layout="column" flex="100%" style="width:100%">
+						<div layout="column" 
+							 flex="100%" 
+							 style="width:100%"
+							 *ngIf="currentProject !== undefined">
 
 							<h2 class="mt-32 mb-20">Version Data</h2>
 

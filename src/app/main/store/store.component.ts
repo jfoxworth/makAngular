@@ -7,7 +7,7 @@ import { MatSelectModule } from '@angular/material/select';
 
 import { FuseSharedModule } from '@fuse/shared.module';
 
-import { DesignService } from 'app/main/design-service.service';
+import { DesignService } from 'app/main/services/design-service.service';
 
 
 @Component({

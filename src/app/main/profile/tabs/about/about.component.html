@@ -2,67 +2,118 @@
 
 	<div class="about-content" fxLayout="column" fxFlex="100" fxFlex.gt-sm="50" fxFlex.gt-md="65" fxLayout="center center">
 
-		<div class="profile-box info-box general" fxLayout="column">
+		<div class="profile-box info-box general" 
+			 fxLayout="column"
+			 fxFlex="100%">
 
 			<header class="accent" fxLayout="space-between">
 				<div class="title mt-8" fxFlex="95%">General Information</div>
-				<button mat-icon-button aria-label="Open dialog" (click)="openDialog('about')">
+				
+				<button mat-icon-button 
+						aria-label="Open dialog" 
+						(click)="openDialog('about')"
+						*ngIf="userData.uid == userInfo.uid">
 					<mat-icon>more_vert</mat-icon>
 				</button>
 			</header>
 
 			<div class="content">
+
 				<div class="info-line">
+					<div class="title">Email</div>
+					<div class="info">{{userData.email}}</div>
+				</div>
+
+
+				<div class="info-line" *ngIf="(userData.displayName !== null) && (userData.uid !== userInfo.uid)">
+					<div class="title">Display Name</div>
+					<div class="info">{{userData.displayName}}</div>
+				</div>
+
+				<div class="info-line">
+					<mat-form-field appearance="outline" 
+									floatLabel="always" 
+									class="w-100-p"
+									fxFlex="80%"
+									style="margin:0px 10% 0px 10%"
+									*ngIf="userData.uid === userInfo.uid">
+						<mat-label>Display Name</mat-label>
+						<input matInput placeholder="Display Name"
+								[ngModel] = userData.displayName						
+							   (keyup.enter)="updateDisplayName(displayName.value)"
+							   required
+							   #displayName>
+					</mat-form-field>
+				</div>
+
+
+				<div class="info-line" *ngIf="userInfo.gender !== undefined">
 					<div class="title">Gender</div>
-					<div class="info">{{userData.info.gender}}</div>
+					<div class="info">{{userInfo.gender}}</div>
 				</div>
 
-				<div class="info-line">
+				<div class="info-line" *ngIf="userInfo.birthmonth !== undefined">
 					<div class="title">Birthday</div>
-					<div class="info">{{userData.info.birthmonth}} - {{userData.info.birthdate}} - {{userData.info.birthyear}}</div>
+					<div class="info">{{monthList[userInfo.birthmonth]}} {{userInfo.birthdate}}, {{userInfo.birthyear}}</div>
 				</div>
 
-				<div class="info-line">
+				<div class="info-line" *ngIf="userInfo.locations !== undefined">
 					<div class="title">Locations</div>
 					<div class="info location" fxLayout="row" fxLayoutAlign="start center"
-						 *ngFor="let location of userData.info.locations">
+						 *ngFor="let location of userInfo.locations">
 						<span>{{location}}</span>
 						<mat-icon class="s-16 ml-4">location_on</mat-icon>
 					</div>
 				</div>
 
-				<div class="info-line">
+				<div class="info-line" *ngIf="userInfo.about !== undefined">
 					<div class="title">About Me</div>
-					<div class="info">{{userData.info.about}}</div>
+					<div class="info">{{userInfo.about}}</div>
 				</div>
 			</div>
 
 		</div>
 
-		<div class="profile-box info-box work" fxLayout="column" fxFlex="100%">
+
+
+
+		<div class="profile-box info-box work"
+			 fxLayout="column" 
+			 fxFlex="100%"
+			 *ngIf="(userInfo.skills !== undefined &&
+			 		( ( userInfo.occupation !== undefined ) || (userInfo.occupation.length >0) ) &&
+			 		( ( userInfo.jobs !== undefined ) && (userInfo.jobs.length > 0) ) ) ||
+			 		userData.uid == userInfo.uid">
 
 			<header class="accent" fxLayout="space-between">
 				<div class="title mt-8" fxFlex="95%">Work</div>
-				<button mat-icon-button aria-label="Open dialog" (click)="openDialog('work')">
+				<button mat-icon-button 
+						aria-label="Open dialog" 
+						(click)="openDialog('work')"
+						*ngIf="userData.uid == userInfo.uid">
 					<mat-icon>more_vert</mat-icon>
 				</button>
 			</header>
 
 			<div class="content">
-				<div class="info-line">
+
+				<div class="info-line"
+					 *ngIf="userInfo.occupation!==undefined">
 					<div class="title">Occupation</div>
-					<div class="info">{{userData.info.occupation}}</div>
+					<div class="info">{{userInfo.occupation}}</div>
 				</div>
 
-				<div class="info-line">
+				<div class="info-line"
+					 *ngIf="userInfo.skills!==undefined">
 					<div class="title">Skills</div>
-					<div class="info">{{userData.info.skills}}</div>
+					<div class="info">{{userInfo.skills}}</div>
 				</div>
 
-				<div class="info-line">
+				<div class="info-line"
+					 *ngIf="userInfo.jobs!==undefined && userInfo.jobs.length>0">
 					<div class="title">Jobs</div>
 					<table class="info jobs">
-						<tr class="job" *ngFor="let job of userData.info.jobs">
+						<tr class="job" *ngFor="let job of userInfo.jobs">
 							<td class="company">{{job.title}}</td>
 							<td class="date">{{job.startdate}}-{{job.enddate}}</td>
 						</tr>
@@ -71,36 +122,47 @@
 			</div>
 		</div>
 
-		<div class="profile-box info-box contact" fxLayout="column">
+
+
+
+
+		<div class="profile-box info-box contact" 
+			 fxLayout="column"
+			 fxFlex="100%"
+			 *ngIf="( userInfo.address !== undefined &&
+			 		( userInfo.telephone !== undefined && userInfo.telephone.length > 0 ) &&
+			 		( userInfo.website !== undefined && userInfo.website.length > 0 ) ) ||
+			 		userData.uid == userInfo.uid">
 
 			<header class="accent" fxLayout="space-between">
 				<div class="title mt-8" fxFlex="95%">Contact</div>
-				<button mat-icon-button aria-label="Open dialog"  (click)="openDialog('contact')">
+				<button mat-icon-button 
+						aria-label="Open dialog"
+						(click)="openDialog('contact')"
+						*ngIf="userData.uid == userInfo.uid">
 					<mat-icon>more_vert</mat-icon>
 				</button>
 			</header>
 
 			<div class="content">
-				<div class="info-line">
+
+				<div class="info-line"
+					 *ngIf="userInfo.address!==undefined">
 					<div class="title">Address</div>
-					<div class="info">{{userData.info.address}}</div>
+					<div class="info">{{userInfo.address}}</div>
 				</div>
-				<div class="info-line">
+				<div class="info-line"
+					 *ngIf="userInfo.telephone!==undefined && userInfo.telephone.length>0">
 					<div class="title">Tel.</div>
-					<div class="info" *ngFor="let tel of userData.info.telephone">
+					<div class="info" *ngFor="let tel of userInfo.telephone">
 						<span>{{tel}}</span>
 					</div>
 				</div>
-				<div class="info-line">
+				<div class="info-line"
+					*ngIf="userInfo.website!==undefined && userInfo.website.length>0">
 					<div class="title">Website</div>
-					<div class="info" *ngFor="let website of userData.info.website">
+					<div class="info" *ngFor="let website of userInfo.website">
 						<span>{{website}}</span>
-					</div>
-				</div>
-				<div class="info-line">
-					<div class="title">Emails</div>
-					<div class="info" *ngFor="let email of userData.info.email">
-						<span>{{email}}</span>
 					</div>
 				</div>
 			</div>

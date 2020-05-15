@@ -9,6 +9,11 @@ import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 
 import { navigation } from 'app/navigation/navigation';
 
+
+import { AuthService } from 'app/main/services/auth.service';
+
+
+
 @Component({
     selector     : 'toolbar',
     templateUrl  : './toolbar.component.html',
@@ -39,9 +44,14 @@ export class ToolbarComponent implements OnInit, OnDestroy
     constructor(
         private _fuseConfigService: FuseConfigService,
         private _fuseSidebarService: FuseSidebarService,
-        private _translateService: TranslateService
+        private _translateService: TranslateService,
+        public authService: AuthService,
     )
     {
+
+
+
+
         // Set the defaults
         this.userStatusOptions = [
             {

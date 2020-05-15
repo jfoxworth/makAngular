@@ -32,6 +32,20 @@
     .content {
 
 
+        .displayTable {
+
+        }
+
+        .displayTable > tr {
+            border-bottom:1px solid #898989;
+        }
+
+        .displayTable > tr > td {
+            padding:32px;
+        
+        }
+
+
         .currentItem {
             color: #039be5;
         }
@@ -45,7 +59,7 @@
         }
 
         .mat-tab-body-content {
-            display: flex;
+            // display: flex;
         }
 
         .mat-tab-label {

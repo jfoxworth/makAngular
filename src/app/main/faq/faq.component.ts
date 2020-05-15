@@ -5,7 +5,7 @@ import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
 import { FuseUtils } from '@fuse/utils';
 
-import { FaqService } from 'app/main/faq/faq.service';
+import { FaqService } from 'app/main/services/faq.service';
 
 @Component({
     selector     : 'faq',

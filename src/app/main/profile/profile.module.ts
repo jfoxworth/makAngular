@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -13,31 +13,36 @@ import { MatSelectModule } from '@angular/material/select';
 
 import { FuseSharedModule } from '@fuse/shared.module';
 
-import { ProfileService } from 'app/main/profile/profile.service';
 import { ProfileComponent } from './profile.component';
 import { ProfileAboutComponent } from 'app/main/profile/tabs/about/about.component';
-import { ProfileTimelineComponent } from 'app/main/profile/tabs/timeline/timeline.component';
-import { ProfilePhotosVideosComponent } from 'app/main/profile/tabs/photos-videos/photos-videos.component';
 import { CompaniesComponent } from './tabs/companies/companies.component';
 import { EditBioDialog } from 'app/main/profile/edit-dialog/edit-dialog.component';
 
+import { CommonModule } from '@angular/common';
 
-const routes = [
+
+
+
+const routes: Routes = [
     {
         path     : 'profile',
         component: ProfileComponent,
         resolve  : {
-            profile: ProfileService
+        }
+    },
+    {
+        path     : 'profile/:id',
+        component: ProfileComponent,
+        resolve  : {
         }
     }
 ];
+
 
 @NgModule({
     declarations: [
         ProfileComponent,
         ProfileAboutComponent,
-        ProfileTimelineComponent,
-        ProfilePhotosVideosComponent,
         CompaniesComponent,
         EditBioDialog,
     ],
@@ -55,6 +60,7 @@ const routes = [
         MatFormFieldModule,
         MatInputModule,
         MatSelectModule,
+        CommonModule,
 
 
         FuseSharedModule
@@ -63,7 +69,7 @@ const routes = [
         ProfileComponent
     ],
     providers   : [
-        ProfileService
+
     ]
 })
 

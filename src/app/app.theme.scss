@@ -84,6 +84,7 @@ $typography: mat-typography-config(
 @import "src/app/main/register/register.theme";
 @import "src/app/main/chat/chat.theme";
 @import "src/app/main/store/store.theme";
+@import "src/app/main/mail-confirm/mail-confirm.theme";
 
 // Define a mixin for easier access
 @mixin components-theme($theme) {

@@ -8,8 +8,15 @@
              fxLayoutAlign.gt-sm="start center">
             <img class="profile-image avatar huge" src="assets/images/avatars/Velazquez.jpg"
                  [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
-            <div class="name" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
-                {{userData.info.firstname}} {{userData.info.lastname}}
+            <div class="name" 
+                 [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}"
+                 *ngIf="userData.displayName===null">
+                {{userData.email}}
+            </div>
+            <div class="name" 
+                 [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}"
+                 *ngIf="userData.displayName!==null">
+                {{userData.displayName}}
             </div>
         </div>
 
@@ -23,23 +30,55 @@
     </div>
     <!-- / HEADER -->
 
-    <!-- CONTENT -->
+    <!-- CONTENT --
     <div class="content">
 
-        <mat-tab-group dynamicHeight="true"
-                       style="width:60%; margin:0px 20%;">
+        <ng-container *ngIf="(userInfo | async)?.data() as info">
 
-            <mat-tab label="Bio">
-                <profile-about [userData]='userData'></profile-about>
-            </mat-tab>
+            <mat-tab-group dynamicHeight="true"
+                           style="width:60%; margin:0px 20%;">
 
-            <mat-tab label="Companies">
-                <profile-companies [userData]='userData'></profile-companies>
-            </mat-tab>
+                <mat-tab label="Bio">
+                    <profile-about [userData]='userData' [userInfo]="info"></profile-about>
+                </mat-tab>
 
-        </mat-tab-group>
+                <mat-tab label="Companies">
+                    <profile-companies [userData]='userData' [userInfo]="info"></profile-companies>
+                </mat-tab>
+
+            </mat-tab-group>
+
+        </ng-container>
 
     </div>
     <!-- / CONTENT -->
+
+
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <ng-container *ngIf="dataFlag">
+
+            <mat-tab-group dynamicHeight="true"
+                           style="width:60%; margin:0px 20%;">
+
+                <mat-tab label="Bio">
+                    <profile-about [userData]='userData' [userInfo]="userInfo"></profile-about>
+                </mat-tab>
+
+                <mat-tab label="Companies">
+                    <profile-companies [userData]='userData' [userInfo]="userInfo"></profile-companies>
+                </mat-tab>
+
+            </mat-tab-group>
+
+        </ng-container>
+
+    </div>
+    <!-- / CONTENT -->
+
+
+
 
 </div>

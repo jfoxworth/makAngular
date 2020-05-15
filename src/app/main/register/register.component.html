@@ -21,6 +21,8 @@
                     </mat-error>
                 </mat-form-field>
 
+
+
                 <mat-form-field appearance="outline">
                     <mat-label>Email</mat-label>
                     <input matInput formControlName="email">
@@ -63,7 +65,8 @@
                 </div>
 
                 <button mat-raised-button color="accent" class="submit-button" aria-label="CREATE AN ACCOUNT"
-                        [disabled]="registerForm.invalid">
+                        [disabled]="registerForm.invalid"
+                        (click)="authService.SignUp( registerForm.get('email').value, registerForm.get('password').value);">
                     CREATE AN ACCOUNT
                 </button>
 

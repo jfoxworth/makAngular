@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "makstudio-78a40"
+  },
+  "targets": {
+    "makstudio-78a40": {
+      "hosting": {
+        "fuse": [
+          "makstudio-78a40"
+        ]
+      }
+    }
+  }
+}

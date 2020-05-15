@@ -4,7 +4,7 @@ import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { QuoteService } from 'app/main/e-commerce/quote/quote.service';
+import { QuoteService } from 'app/main/services/quote.service';
 
 @Component({
     selector     : 'app-quote',

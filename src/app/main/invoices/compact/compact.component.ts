@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { InvoiceService } from 'app/main/invoices/invoice.service';
+import { InvoiceService } from 'app/main/services/invoice.service';
 
 @Component({
     selector     : 'invoice-compact',

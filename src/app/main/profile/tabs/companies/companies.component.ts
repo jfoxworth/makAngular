@@ -8,6 +8,7 @@ import { Component, OnInit, Input } from '@angular/core';
 export class CompaniesComponent implements OnInit {
 
     @Input() userData:any;
+    @Input() userInfo:any;
 
   constructor() { }
 

@@ -6,7 +6,10 @@ import { editParameterDialog } from './parameter-dialog/parameter-dialog.compone
 import { SubmenuDialog } from './submenu-dialog/submenu-dialog.component';
 import { MatSelectModule } from '@angular/material/select';
 
-import { DesignService } from 'app/main/design-service.service';
+// Services
+import { DesignService } from 'app/main/services/design-service.service';
+import { AuthService } from 'app/main/services/auth.service';
+import { FirebaseService } from 'app/main/services/firebase.service';
 
 
 export interface DialogData {
@@ -25,7 +28,11 @@ export interface DialogData {
 })
 export class CreatorStudioComponent implements OnInit {
 
-	constructor(public dialog: MatDialog, private DesignService : DesignService) {
+	constructor(public dialog: MatDialog, 
+				private DesignService : DesignService,
+				private AuthService : AuthService,
+				private FirebaseService : FirebaseService) 
+	{
 
 		this.designList		= [];
 		this.designType		= this.DesignService.getDesignTypes();
@@ -88,6 +95,7 @@ export class CreatorStudioComponent implements OnInit {
 	{
 		this.designList.push(this.DesignService.getNewDesign());
 		this.currentDesign = this.designList[this.designList.length-1];
+		this.FirebaseService.createDocInCollection( 'designs', this.DesignService.getNewDesign() )
 		console.log(this.designList);
 	}
 

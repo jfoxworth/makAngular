@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 
 import { FuseSharedModule } from '@fuse/shared.module';
 
-import { InvoiceService } from 'app/main/invoices/invoice.service';
+import { InvoiceService } from 'app/main/services/invoice.service';
 import { InvoiceCompactComponent } from 'app/main/invoices/compact/compact.component';
 
 const routes = [

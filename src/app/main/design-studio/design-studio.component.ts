@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 
-import { DesignStudioService } from 'app/main/design-studio/design-studio.service';
+import { DesignStudioService } from 'app/main/services/design-studio.service';
 
 
 
