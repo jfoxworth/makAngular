@@ -4,12 +4,17 @@ import { MatSort } from '@angular/material/sort';
 import { DataSource } from '@angular/cdk/collections';
 import { BehaviorSubject, fromEvent, merge, Observable, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 import { fuseAnimations } from '@fuse/animations';
 import { FuseUtils } from '@fuse/utils';
 
-import { EcommerceProductsService } from 'app/main/services/products.service';
 import { takeUntil } from 'rxjs/internal/operators';
+
+
+import { EcommerceProductsService } from 'app/main/services/products.service';
+import { FirebaseService } from 'app/main/services/firebase.service';
 
 
 @Component({
@@ -22,18 +27,20 @@ import { takeUntil } from 'rxjs/internal/operators';
 export class EcommerceComponent implements OnInit
 {
 
-    productsData : any;
+    projectList : any;
     columnsToDisplayMeas = ['name', 'value'];
-    currentProject : any;
+    currentProject : any = {};
     currentVersion : any = {'id':''}; 
-
+    userData : any;
 
 
     // Private
     private _unsubscribeAll: Subject<any>;
 
     constructor(
-        private _ecommerceProductsService: EcommerceProductsService
+        private _ecommerceProductsService: EcommerceProductsService,
+        private FirebaseService : FirebaseService,
+        private SnackBar: MatSnackBar
     )
     {
         // Set the private defaults
@@ -50,17 +57,23 @@ export class EcommerceComponent implements OnInit
     ngOnInit(): void
     {
 
-        this._ecommerceProductsService.onProductsChanged
-        .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe(response => {
-            this.productsData = response;
+        // Scrape the user data
+        this.userData = JSON.parse(localStorage.getItem('user'));
 
-            console.log('The project data is ...');
-            console.log(this.productsData);
-
-        });
+        // Get the projects that this user has with this design
+        this.projectList = this.FirebaseService.getCollection('projects', 'creatorId', this.userData.uid);
 
     }
+
+
+    /**
+     * Get versions for a project
+     */
+    getVersions( projectId ): void
+    {
+        this.currentProject.versions = this.FirebaseService.getCollection('versions', 'projectId', projectId);
+    }
+
 
 
     /**

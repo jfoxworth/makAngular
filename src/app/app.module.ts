@@ -56,11 +56,16 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from "@angular/fire/auth";
 import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireStorageModule } from '@angular/fire/storage';
 import { environment } from '../environments/environment';
 
 
 import { AuthService } from 'app/main/services/auth.service';
 import { FirebaseService } from 'app/main/services/firebase.service';
+
+
+// New ng5 slider
+import { Ng5SliderModule } from 'ng5-slider';
 
 
 const appRoutes: Routes = [
@@ -127,6 +132,10 @@ const appRoutes: Routes = [
         AngularFireModule.initializeApp(environment.firebase),
         AngularFireAuthModule,
         AngularFirestoreModule,
+        AngularFireStorageModule,
+
+
+        Ng5SliderModule,
 
 
     ],

@@ -31,10 +31,34 @@ import { DesignStudioService } from 'app/main/services/design-studio.service';
 import { DesignStudioComponent } from 'app/main/design-studio/design-studio.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 
+// New ng5 slider
+import { Ng5SliderModule } from 'ng5-slider';
+
 
 
 
 const routes = [
+    {
+        path     : 'designStudio/design/:designId',
+        component: DesignStudioComponent,
+        resolve  : {
+            designData: DesignStudioService
+        }
+    },
+    {
+        path     : 'designStudio/project/:projectId',
+        component: DesignStudioComponent,
+        resolve  : {
+            designData: DesignStudioService
+        }
+    },
+    {
+        path     : 'designStudio/:designId',
+        component: DesignStudioComponent,
+        resolve  : {
+            designData: DesignStudioService
+        }
+    },
     {
         path     : 'designStudio',
         component: DesignStudioComponent,
@@ -68,6 +92,8 @@ const routes = [
         MatSelectModule,
         MatGridListModule,
 
+
+        Ng5SliderModule
 
 
     ],

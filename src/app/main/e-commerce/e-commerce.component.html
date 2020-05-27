@@ -57,17 +57,15 @@
 							<mat-divider></mat-divider>
 
 
-							<div *ngIf="productsData.length==0">You currently have no designs. Go to the marketplace and select a design to add to your list of projects.</div>
+							<div *ngIf="projectList.length==0">You currently have no designs. Go to the marketplace and select a design to add to your list of projects.</div>
 
 							<table class="displayTable">
 
 
-							    <tr	(click)="currentProject=project;
-							    			 currentVersion=currentProject.versions[currentProject.versions.length-1]; 
-							    			 currentProject.currentVersionId=currentProject.versions[currentProject.versions.length-1].id"
+							    <tr	(click)="currentProject=project; getVersions( currentProject.uid )"
 							       target="_blank"
 							       [ngClass]="{'currentItem' : project==currentProject}"
-							       *ngFor="let project of productsData;">
+							       *ngFor="let project of (projectList | async)">
 
 							    	<td class="mat-subheading-2" style="width:35%">{{ project.name }}</td>
 
@@ -244,7 +242,7 @@
 													floatLabel="always" 
 													class="w-100-p">
 										<mat-label>Version Name</mat-label>
-										<input matInput placeholder="Product Name"
+										<input matInput placeholder="Version Name"
 											   name="name"
 											   [(ngModel)]="currentVersion.name"
 											   required>
@@ -254,7 +252,7 @@
 													floatLabel="always" 
 													class="w-100-p">
 										<mat-label>Project Description</mat-label>
-										<textarea matInput placeholder="Product Description"
+										<textarea matInput placeholder="Version Description"
 												  name="description"
 												   [(ngModel)]="currentVersion.description"
 												  rows="5">

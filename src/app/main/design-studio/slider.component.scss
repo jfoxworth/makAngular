@@ -1,0 +1,56 @@
+@import "src/@fuse/scss/fuse";
+
+// We need to use ::ng-deep to overcome view encapsulation
+::ng-deep {
+  .custom-slider .ng5-slider .ng5-slider-bar {
+    background: #aaaaaa;
+    height: 2px;
+  }
+  .custom-slider .ng5-slider .ng5-slider-selection {
+    background: orange;
+  }
+
+  .custom-slider .ng5-slider .ng5-slider-pointer {
+    width: 8px;
+    height: 16px;
+    top: auto; /* to remove the default positioning */
+    bottom: 0;
+    background-color: #0b4f6c;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+
+  .custom-slider .ng5-slider .ng5-slider-pointer:after {
+    display: none;
+  }
+
+  .custom-slider .ng5-slider .ng5-slider-bubble {
+    bottom: 14px;
+  }
+
+  .custom-slider .ng5-slider .ng5-slider-limit {
+    font-weight: bold;
+    color: #aaaaaa;
+  }
+
+  .custom-slider .ng5-slider .ng5-slider-tick {
+    width: 1px;
+    height: 10px;
+    margin-left: 4px;
+    border-radius: 0;
+    background: #aaaaaa;
+    top: -1px;
+  }
+
+  .custom-slider .ng5-slider .ng5-slider-tick.ng5-slider-selected {
+    background: #e0503f;
+  }
+}
+
+
+// Copenhagen color scheme
+// blue - #0b4f6c
+// white - #f6f7e8
+// black - #252627
+// red - #e0503f
+// grey - #aaaaaa

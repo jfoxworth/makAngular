@@ -13,18 +13,17 @@ export class DesignService {
 	/**
 	 * A clean design object
 	 */
-	getNewDesign() {
+	getNewDesign( thisId ) {
+		
 		return {
-		    'id'      				: this.makeRandom(12),
+		    'id'      				: thisId,
+		    'uid'      				: thisId,
 		    'title'   				: 'New Design',
 		    'slug'    				: '',
 		    'category'				: '',
 		    'marketplace'			: {
-		    							'images' : ['https://makstudio.s3.us-east-2.amazonaws.com/EighthWonder1.jpg',
-		    										'https://makstudio.s3.us-east-2.amazonaws.com/EighthWonder2.jpg',
-		    										'https://makstudio.s3.us-east-2.amazonaws.com/EighthWonder3.jpg',
-		    										'https://makstudio.s3.us-east-2.amazonaws.com/EighthWonder4.jpg'],
-		    							'mainImage' : 'https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png',
+		    							'images' : [],
+		    							'mainImage' : 'https://makstudio.s3.us-east-2.amazonaws.com/Marketplace/background/001.png',
 		    							'description' : 'Description of the product'
 		    							},
 		    'shapediverTicket' 		: '',
@@ -58,7 +57,7 @@ export class DesignService {
 	 * An empty submenu item
 	 */
 	getNewSubmenu(){
-		return {'label': 'TempTitle', 'icon':'settings', 'parameters':[{'label':'temp1', 'icon':'hot_tub'}] }
+		return {'label': 'TempTitle', 'icon':'settings', 'parameters':[this.getNewParameter()] }
 	}
 
 
@@ -105,7 +104,7 @@ export class DesignService {
 	 * The parameter types
 	 */
 	getParameterTypes(){
-		return [ 'slider', 'text', 'dropdown', 'toggle', 'blob']
+		return [ 'slider', 'text', 'dropdown', 'toggle', 'upload', 'blob']
 	}
 
 
@@ -136,6 +135,8 @@ export class DesignService {
 			'step'			: 5,					// Step value for the slider
 			'tickInterval'	: 5,
 			'tickLabel'		: 5,
+			'showTicks'		: false,
+			'showTicksValues':false,
 			'text'			: 'Text Here',			// Text for an input
 			'status'		: false,				// Boolean status
 			'options'		: []					// Options for the select item

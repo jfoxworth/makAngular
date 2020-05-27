@@ -2,6 +2,9 @@ import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { DialogData } from 'app/main/creator-studio/creator-studio.component';
 
+// New ng5 slider
+import { Ng5SliderModule } from 'ng5-slider';
+import { Options } from 'ng5-slider';
 
 
 @Component({

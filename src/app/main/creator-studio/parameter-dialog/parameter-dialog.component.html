@@ -58,7 +58,7 @@
     	<div *ngIf="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['type']=='slider'"
     		 fxFlex="100%" fxLayout="row">
 
-    		<div fxFlex="30%" style="margin:0px 4% 0px 0px">
+    		<div fxFlex="30%" style="margin:0px 0% 0px 0%">
 				<mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
 					<mat-label>Lower Limit</mat-label>
 					<input matInput placeholder="Lower Limit"
@@ -68,7 +68,7 @@
 				</mat-form-field>
 			</div>
 
-    		<div fxFlex="30%">
+    		<div fxFlex="30%" style="margin:0px 4% 0px 4%">
 				<mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
 					<mat-label>Upper Limit</mat-label>
 					<input matInput placeholder="Lower Limit"
@@ -78,17 +78,43 @@
 				</mat-form-field>
 			</div>
 
-    		<div fxFlex="30%" style="margin:0px 0px 0px 4%">
+    		<div fxFlex="30%" style="margin:0px 0% 0px 0%">
 				<mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
-					<mat-label>Slider Steps</mat-label>
-					<input matInput placeholder="Slider Steps"
-						   name="sliderSteps"
+					<mat-label>Slider Step</mat-label>
+					<input matInput placeholder="Slider Step"
+						   name="sliderStep"
 						   [(ngModel)]="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['step']"
 						   required>
 				</mat-form-field>
 			</div>
 
 		</div>
+
+    	<div *ngIf="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['type']=='slider'"
+    		 fxFlex="100%" fxLayout="row"
+    		 class="mt-20 mb-40">
+
+    		<div fxFlex="40%" style="margin:0px 5% 0px 15%">
+	    		<mat-slide-toggle class="md-primary" 
+	    				   aria-label="Switch No Ink" 
+	    				   [checked]="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['showTicks'] === 'true' ? true : false"
+	    				   (change)="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['showTicks']=!data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['showTicks']">
+	    			Show Tick Marks
+				</mat-slide-toggle>
+			</div>
+
+    		<div fxFlex="40%" style="margin:0px 0% 0px 0%">
+	    		<mat-slide-toggle class="md-primary" 
+	    				   aria-label="Switch No Ink" 
+	    				   [checked]="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['showTicksValues'] === 'true' ? true : false"
+	    				   (change)="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['showTicksValues']=!data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['showTicksValues']">
+	    			Show Tick Mark Values
+				</mat-slide-toggle>
+			</div>
+
+		</div>
+
+
 
 
 
@@ -124,11 +150,13 @@
 								floatLabel="always" 
 								class="w-100-p"
 								fxFlex="45%"
+								fxLayout="row"
 								style="margin:0px 3% 0px 2%">
 					<mat-label>Label</mat-label>
 					<input matInput placeholder="Label"
 						   [(ngModel)]="thisOption['label']"
 						   required>
+					<span matSuffix><mat-icon (click)="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['options'].splice(x,1)">cancel</mat-icon></span>
 				</mat-form-field>
 
 
@@ -136,11 +164,13 @@
 								floatLabel="always" 
 								class="w-100-p"
 								fxFlex="45%"
+								fxLayout="row"
 								style="margin:0px 2% 0px 3%">
 					<mat-label>Value</mat-label>
 					<input matInput placeholder="Value"
 						   [(ngModel)]="thisOption['value']"
 						   required>
+					<span matSuffix><mat-icon (click)="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['options'].splice(x,1)">cancel</mat-icon></span>
 				</mat-form-field>
 
 

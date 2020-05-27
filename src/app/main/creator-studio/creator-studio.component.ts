@@ -5,11 +5,18 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { editParameterDialog } from './parameter-dialog/parameter-dialog.component';
 import { SubmenuDialog } from './submenu-dialog/submenu-dialog.component';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatGridListModule } from '@angular/material/grid-list';
+
 
 // Services
 import { DesignService } from 'app/main/services/design-service.service';
 import { AuthService } from 'app/main/services/auth.service';
 import { FirebaseService } from 'app/main/services/firebase.service';
+
+import { AngularFireStorage } from '@angular/fire/storage';
+
+import { finalize } from 'rxjs/operators';
 
 
 export interface DialogData {
@@ -24,21 +31,27 @@ export interface DialogData {
 @Component({
   selector: 'app-creator-studio',
   templateUrl: './creator-studio.component.html',
-  styleUrls: ['./creator-studio.component.scss', '../e-commerce/e-commerce.component.scss', '../store/product/product.component.scss', '../design-studio/sidebar/sidebar.component.scss']
+  styleUrls: ['./creator-studio.component.scss', 
+  			  '../e-commerce/e-commerce.component.scss', 
+  			  '../store/product/product.component.scss', 
+  			  '../design-studio/sidebar/sidebar.component.scss',
+  			  '../design-studio/slider.component.scss']
 })
 export class CreatorStudioComponent implements OnInit {
 
 	constructor(public dialog: MatDialog, 
 				private DesignService : DesignService,
 				private AuthService : AuthService,
-				private FirebaseService : FirebaseService) 
+				private FirebaseService : FirebaseService,
+				private SnackBar: MatSnackBar,
+				private afStorage : AngularFireStorage ) 
 	{
 
 		this.designList		= [];
 		this.designType		= this.DesignService.getDesignTypes();
 		this.companies		= this.DesignService.getCompanies();
 		this.menuLocations	= this.DesignService.getMenuLocations();
-
+		this.carouselUrls 	= [];
 	 }
 
 
@@ -49,6 +62,13 @@ export class CreatorStudioComponent implements OnInit {
 	currentDesign : any;
 	companies : any;
 	menuLocations : any;
+	dataFlag : boolean = false;
+	dataFlag2 : boolean = false;
+	changesExist : boolean = false;
+
+	// Variables needed for the BG image
+	carouselUrls : Array<any>;
+	imageUrls : Array<any>;
 
 
 
@@ -56,14 +76,14 @@ export class CreatorStudioComponent implements OnInit {
 	  drop(event: CdkDragDrop<string[]>) {
 	  	console.log(event.container);
 	  	console.log(event.previousContainer);
-	    if (event.previousContainer === event.container) {
-	      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-	    } else {
-	      transferArrayItem(event.previousContainer.data,
-	                        event.container.data,
-	                        event.previousIndex,
-	                        event.currentIndex);
-	    }
+		if (event.previousContainer === event.container) {
+		  moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+		} else {
+		  transferArrayItem(event.previousContainer.data,
+							event.container.data,
+							event.previousIndex,
+							event.currentIndex);
+		}
 	  }
 
 
@@ -81,16 +101,26 @@ export class CreatorStudioComponent implements OnInit {
 	ngOnInit(): void {
 
 		// Pull the list of existing designs for this user	
-		this.designList = this.FirebaseService.getDocsByUserId('designs', 'designerId')
-		.then(function(querySnapshot) {
-        	var designList = [];
-        	querySnapshot.forEach(function(doc) {
-    	        console.log(doc.data());
-        	    designList.push(doc.data());
-        	});
-        	return designList;
-    	})
-
+		this.FirebaseService.getDocsByUserId( 'designs', 'designerId' )
+			.then((snapshot) => {
+				var tempArray = [];
+				var docData;
+				snapshot.forEach((doc) => {
+					docData=doc.data();
+					docData.uid=doc.id;
+					console.log(doc.id, '=>', doc.data());
+					tempArray.push(docData);
+				});
+				this.designList = tempArray;
+				if (this.designList.length>0)
+				{
+					this.currentDesign = this.designList[0];
+					this.formatDesignData();
+				}
+			})
+			.catch((err) => {
+			  console.log('Error getting documents', err);
+			});
 
 	}
 
@@ -103,11 +133,11 @@ export class CreatorStudioComponent implements OnInit {
 	/**
 	 * When a new design is added
 	 */
-	newDesign(): void
+	newDesign( ): void
 	{
-		this.designList.push(this.DesignService.getNewDesign());
+		var newId = this.FirebaseService.createDocInCollection( 'designs', this.DesignService.getNewDesign( '' ) )
+		this.designList.push(this.DesignService.getNewDesign( newId ));
 		this.currentDesign = this.designList[this.designList.length-1];
-		this.FirebaseService.createDocInCollection( 'designs', this.DesignService.getNewDesign() )
 		console.log(this.designList);
 	}
 
@@ -182,17 +212,17 @@ export class CreatorStudioComponent implements OnInit {
 	openDialog(i,j) {
 		console.log('In the open dialog with '+i+' - '+j);
 		const dialogRef = this.dialog.open( editParameterDialog, {
-            panelClass: 'parameter-dialog',
-	    	data: { currentDesign: this.currentDesign, 
-	    			i:i, 
-	    			j:j, 
-	    			parameterTypes: this.DesignService.getParameterTypes() }
+			panelClass: 'parameter-dialog',
+			data: { currentDesign: this.currentDesign, 
+					i:i, 
+					j:j, 
+					parameterTypes: this.DesignService.getParameterTypes() }
 		});
 
-	    dialogRef.afterClosed().subscribe(result => {
-	      console.log('The dialog was closed');
-	      console.log(result);
-	    });
+		dialogRef.afterClosed().subscribe(result => {
+		  console.log('The dialog was closed');
+		  console.log(result);
+		});
 
 	}
 
@@ -206,17 +236,17 @@ export class CreatorStudioComponent implements OnInit {
 	openSubmenuDialog(i) {
 		console.log('In the open submenu dialog with '+i);
 		const dialogRef = this.dialog.open( SubmenuDialog, {
-            panelClass: 'submenu-dialog',
-	    	data: { currentDesign: this.currentDesign, 
-	    			i:i,
-	    			iconOptions : this.DesignService.getIconOptions()
-	    		  }
+			panelClass: 'submenu-dialog',
+			data: { currentDesign: this.currentDesign, 
+					i:i,
+					iconOptions : this.DesignService.getIconOptions()
+				  }
 		});
 
-	    dialogRef.afterClosed().subscribe(result => {
-	      console.log('The dialog was closed');
-	      console.log(result);
-	    });
+		dialogRef.afterClosed().subscribe(result => {
+		  console.log('The dialog was closed');
+		  console.log(result);
+		});
 
 	}
 
@@ -227,6 +257,28 @@ export class CreatorStudioComponent implements OnInit {
 
 
 
+
+
+
+
+	/**
+	 * When a user makes a change to a design and those changes are saved
+	 */
+	saveDesignChanges( ) {
+
+		console.log('Saving design changes for '+this.currentDesign.uid);
+		console.log(this.currentDesign);
+	
+		this.FirebaseService.updateDocDataUsingId( 'designs', this.currentDesign.uid, this.currentDesign )
+		.then((snapshot) => {
+			this.SnackBar.open('Design is updated','', {duration: 4000});
+		})
+		.catch((err) => {
+		  console.log('Error getting documents', err);
+		});
+
+
+	}
 
 
 
@@ -275,8 +327,10 @@ export class CreatorStudioComponent implements OnInit {
 
 				for (let k = 0; k < this.currentDesign.parameterMenus[j].parameters.length; k++) {
 
-					if ( splitString[i] == this.currentDesign.parameterMenus[j].parameters[k]['label'] )
+					console.log('Comparing '+splitString[i]+' to '+this.currentDesign.parameterMenus[j].parameters[k]['shapediver']);
+					if ( splitString[i] == this.currentDesign.parameterMenus[j].parameters[k]['shapediver'] )
 					{
+						console.log('Match');
 						this.currentDesign.priceArray[i] = { 'status' : 'parameter', 'text' : splitString[i] }	
 
 					}else if ( ( /^\d.+$/.test(splitString[i]) ) && ( !( /[a-zA-Z]+$/.test(splitString[i]) ) ) )
@@ -294,14 +348,169 @@ export class CreatorStudioComponent implements OnInit {
 
 					}else
 					{
-						this.currentDesign.priceArray[i] = { 'status' : 'invalid', 'text' : splitString[i]};						
+						if ( this.currentDesign.priceArray[i] === undefined )
+						{
+							this.currentDesign.priceArray[i] = { 'status' : 'invalid', 'text' : splitString[i]};						
+						}
 					}
 				}
 	  		}
 	  	}
+
+		for (let i = 0; i < this.currentDesign.priceArray.length; i++) {
+			var priceValid = true;
+			if ( this.currentDesign.priceArray[i].status == 'invalid' )
+			{
+				priceValid = false;
+			}
+		}
+		this.currentDesign.priceValid = priceValid;
+
+		if (priceValid) { this.setPrice(); }else { this.currentDesign.price = 'NA'; } 
+
 	}
 
 
+
+
+
+	/*
+	*
+	* Set the price
+	*
+	*/
+	setPrice() {
+		console.log('In the set price formula function');
+
+
+		let priceString = '';
+		for (let i = 0; i < this.currentDesign.priceArray.length; i++) {
+
+			if ( this.currentDesign.priceArray[i].status == 'parameter' )
+			{
+				for (let j = 0; j < this.currentDesign.parameterMenus.length; j++) {
+
+					for (let k = 0; k < this.currentDesign.parameterMenus[j].parameters.length; k++) {
+
+						if ( this.currentDesign.parameterMenus[j].parameters[k]['shapediver'] == this.currentDesign.priceArray[i]['text'] )
+						{
+							priceString = priceString+this.currentDesign.parameterMenus[j].parameters[k]['value'];
+						}
+					}
+
+				}
+
+			}else
+			{
+				priceString = priceString + this.currentDesign.priceArray[i].text;				
+			}
+		}
+
+		this.currentDesign.priceString = priceString;
+		this.currentDesign.price = eval(priceString);
+
+		console.log('The current object is ');
+		console.log(this.currentDesign);
+
+	}
+
+
+
+
+
+	/*
+	*
+	* When the background image is uploaded
+	*
+	*/
+	onBGUpload(event) {
+
+
+		// Grab the background image
+		const file = event.target.files[0];
+		console.log('The target is ...');
+		console.log(event.target.files);
+
+		var imageType = file.type.replace('image/','');
+
+
+		let text = "";
+		let possible = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+		for (let i = 0; i < 6; i++) {
+			text += possible.charAt(Math.floor(Math.random() * possible.length));
+  		}
+		var path = '/marketplace/carousel/'+this.currentDesign.uid+'-'+text+'.'+imageType;			
+
+
+		// Get URL
+		const ref = this.afStorage.ref(path);
+
+		// Upload file and subscribe to results
+		const task = this.afStorage.upload(path, event.target.files[0]);
+		task.snapshotChanges().pipe(
+        	finalize(() => this.carouselUrls.push(ref.getDownloadURL()) )
+    	 )
+    	.subscribe()
+
+
+
+		this.currentDesign.marketplace.images.push({ 'path': path, 'mainImage':false });
+		this.saveDesignChanges( );
+
+  	}
+
+
+
+
+
+
+
+
+  	/*
+  	*
+  	*	This function formats the image data necessary
+  	*
+  	*/
+	formatDesignData(){
+
+		this.carouselUrls = [];
+
+		for (var b=0; b<this.currentDesign.marketplace.images.length; b++)
+		{
+
+			const ref = this.afStorage.ref(this.currentDesign.marketplace.images[b]['path']);
+			this.carouselUrls.push(ref.getDownloadURL());
+		}
+		this.dataFlag=true;
+
+		console.log('The carousel URLs are ...');
+		console.log(this.carouselUrls);
+
+	}
+
+
+
+
+
+
+
+  	/*
+  	*
+  	*	This function simply sets the main image
+  	*
+  	*/
+	setMainImage(thisIndex){
+		for (var a=0; a<this.currentDesign.marketplace.images.length; a++)
+		{
+			if ( a == thisIndex )
+			{
+				this.currentDesign.marketplace.images[a]['mainImage']=true;
+			}else
+			{
+				this.currentDesign.marketplace.images[a]['mainImage']=false;
+			}
+		}
+	}
 
 
 

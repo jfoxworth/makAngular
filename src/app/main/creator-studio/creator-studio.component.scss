@@ -1,3 +1,24 @@
+.ng-hide {
+  display:none;
+}
+
+
+.alert-danger {
+    background-color: #f4dcda;
+    color : #81453f;
+    border:1px solid #e5d1d4;
+    border-radius:5px;
+    font-size:1.3em;
+}
+.alert-success {
+    background-color: #36f456;  
+} 
+.alert{
+    padding: 10px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
 .example-container{
 
 }

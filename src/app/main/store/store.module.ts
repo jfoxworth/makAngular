@@ -15,6 +15,7 @@ import { FuseSharedModule } from '@fuse/shared.module';
 
 import { StoreComponent } from 'app/main/store/store.component';
 import { StoreProductComponent } from './product/product.component';
+import { CarouselComponent } from 'app/main/store/carousel/carousel.component';
 
 import { MatCarouselModule } from '@ngmodule/material-carousel';
 
@@ -42,6 +43,7 @@ const routes = [
     declarations: [
         StoreComponent,
         StoreProductComponent,
+        CarouselComponent,
     ],
     imports     : [
         RouterModule.forChild(routes),

@@ -57,6 +57,58 @@ export class FirebaseService {
 
 	/*
 	* 
+	* Function used to pull documents from a collection where is given  
+	* parameter is equal to a given value
+	*
+	*/
+	getCollection( collection, paramName, paramValue ) {
+		console.log('Retreiving the documents from collection : '+collection);
+		return this.afs.collection( collection, ref => ref.where( paramName, '==', paramValue )).valueChanges();
+	}
+
+
+
+
+
+
+	/*
+	* 
+	* Function used to pull documents from a collection where is given  
+	* parameter is equal to a given value
+	*
+	*/
+	getCollectionTwoParams( collection, paramName, paramValue, paramName2, paramValue2 ) {
+		console.log('Retreiving the documents from collection : '+collection);
+		console.log(paramName+'=='+paramValue);
+		console.log(paramName2+'=='+paramValue2);
+		return this.afs.collection( collection, ref => ref.where( paramName, '==', paramValue ).where(paramName2, '==', paramValue2)).valueChanges();
+	}
+
+
+
+
+
+
+
+	/*
+	* 
+	* Function used to pull document from a collection by Id
+	*
+	*
+	*/
+	getCollectionById( collection, Id ) {
+		console.log('Retreiving the documents from collection : '+collection);
+		return this.afs.collection( collection, ref => ref.where( 'uid', '==', Id )).valueChanges();
+	}
+
+
+
+
+
+
+
+	/*
+	* 
 	* Function used to pull documents from a collection where a given  
 	* parameter is equal to the user ID
 	*
@@ -65,7 +117,9 @@ export class FirebaseService {
 		const user = JSON.parse(localStorage.getItem('user'));
 		console.log('Retreiving the documents with with the parameter : '+getParam+' equal to the user id of '+user.uid+' from collection : '+collection);
 		var docRef = this.afs.collection(collection, ref => ref.where(getParam, '==', user.uid));
-		return docRef.ref.get();
+		return docRef.ref.get()
+
+		//return this.afs.collection(collection, ref => ref.where(getParam, '==', user.uid)).valueChanges();
 	}
 
 
@@ -82,7 +136,7 @@ export class FirebaseService {
 		console.log('Updating the document with id : '+docId+' from collection : '+collection);
 		console.log(itemData);
 		var docRef = this.afs.collection(collection).doc(docId);
-		docRef.update(itemData);
+		return docRef.update(itemData);
 	}
 
 
@@ -98,7 +152,10 @@ export class FirebaseService {
 	createDocInCollection( collection, itemData ) {
 		console.log('Creating a document in collection : '+collection);
 		console.log(itemData);
-		var docRef = this.afs.collection(collection).add(itemData);
+		var docRef = this.afs.collection(collection).add(itemData)
+		.then(function(docRef) {
+    		return docRef.id
+		});
 	}
 
 

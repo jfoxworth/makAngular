@@ -56,7 +56,7 @@
 
 			<div class="storeitems" fxLayout="row wrap" fxLayoutAlign="center" >
 				
-				<ng-container *ngFor="let si of storeItems">
+				<ng-container *ngFor="let si of storeList">
 
 					<div class="storeitem" 
 						 [ngClass]="si.category" 
@@ -64,18 +64,18 @@
 						 fxFlex.gt-sm="33" 
 						 *ngIf="(si.category==selectedType || selectedType=='All')">
 
-						<a [routerLink]="'/store/' + si.id + '/' + si.slug">
+						<a [routerLink]="'/store/' + si.uid + '/' + si.title">
 
 							<div class="storeitem-content" 
 								 fxLayout="column" 
 								 fxFlex="1 1 auto">
 
 								<div class="content" fxLayout="column" fxLayoutAlign="center right" fxFlex="1 1 auto"
-									 [style.background]="'url(' + si.background + ')'" [style.background-size]="'cover'">
+									 [style.background]="'url(' + (si.background | async) + ')'" >
 
 									<div style="background-color:#ccc; width:60%; padding:5px 10px">	 
 										<div class="h1">{{si.title}}</div>
-										<div class="description">Mak Studio</div>
+										<div class="description">{{si.company.name}}</div>
 									</div>
 								</div>
 

@@ -1,42 +1,65 @@
 <div class="dialog-content-wrapper">
-    <mat-toolbar class="mat-accent m-0">
-        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
-            <span class="title dialog-title">Edit Submenu</span>
-            <button mat-icon-button (click)="dialogRef.close()" aria-label="Close dialog">
-                <mat-icon>close</mat-icon>
-            </button>
-        </mat-toolbar-row>
-    </mat-toolbar>
 
-    <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
+	<div class="dialog-content">
 
-		<mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
-			<mat-label>Submenu Label</mat-label>
-			<input matInput placeholder="Submenu Label"
-				   name="submenuLabel"
-				   [(ngModel)]="data.currentDesign.parameterMenus[data.i]['label']"
-				   required>
+	    <mat-toolbar class="mat-accent m-0">
+	        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+	            <span class="title dialog-title">Edit Submenu</span>
+	            <button mat-icon-button (click)="dialogRef.close()" aria-label="Close dialog">
+	                <mat-icon>close</mat-icon>
+	            </button>
+	        </mat-toolbar-row>
+	    </mat-toolbar>
+
+
+
+
+	    <!-- The shape diver label -->
+	    <div mat-dialog-content class="p-24 m-0">
+			<mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+				<mat-label>Submenu Label</mat-label>
+				<input matInput placeholder="Submenu Label"
+					   name="submenuLabel"
+					   [(ngModel)]="data.currentDesign.parameterMenus[data.i]['label']"
+					   required>
+			</mat-form-field>
+	    </div>
+
+
+
+
+		<!-- The Icon for the submenu -->
+		<div style="max-height=200px">
+			<h3 class="text-center">Icon for submenu</h3>
+		    <mat-grid-list cols="6" rowHeight="45px">
+		    	<mat-grid-tile
+		        	*ngFor="let icon of data.iconOptions; index as x"
+		        	[colspan]="1"
+		        	[rowspan]="1"
+		        	(click)="data.currentDesign.parameterMenus[data.i]['icon']=icon" >
+		        	<mat-icon>{{icon}}</mat-icon>
+		    	</mat-grid-tile>
+		    </mat-grid-list>
+		</div>
+
+
+
+
+		<!-- The Icon for the submenu --
+		<mat-form-field appearance="outline"
+						floatLabel="always"
+						fxFlex="90%"
+						style="margin:0px 5%">
+		  <mat-label>Icon for Submenu</mat-label>
+		  <mat-select  [(ngModel)]="data.currentDesign.parameterMenus[data.i]['icon']">
+			<mat-option *ngFor="let icon of data.iconOptions; index as x" [value]="icon">
+			  {{icon}} - <mat-icon>{{icon}}</mat-icon>
+			</mat-option>
+		  </mat-select>
 		</mat-form-field>
+	-->
 
- 
-    </div>
-
-
-
-	<!-- The Icon for the submenu -->
-	<mat-form-field appearance="outline"
-					floatLabel="always"
-					fxFlex="90%"
-					style="margin:0px 5%">
-	  <mat-label>Icon for Submenu</mat-label>
-	  <mat-select  [(ngModel)]="data.currentDesign.parameterMenus[data.i]['icon']">
-		<mat-option *ngFor="let icon of data.iconOptions; index as x" [value]="icon">
-		  {{icon}} - <mat-icon>{{icon}}</mat-icon>
-		</mat-option>
-	  </mat-select>
-	</mat-form-field>
-
-
+	</div>
 
     <div mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="space-between center">
         <div>
@@ -56,4 +79,5 @@
             <mat-icon>delete</mat-icon>
         </button>
     </div>
+
 </div>

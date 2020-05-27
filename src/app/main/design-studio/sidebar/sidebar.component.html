@@ -1,7 +1,7 @@
 
 <!-- FOR LOOP FOR THE HEXAGON MENU THAT THE USER HAS SET -->
 <div class="hexagon" 
-	 *ngFor="let menuitem of designData['menu']; let i=index;"
+	 *ngFor="let menuitem of designData['parameterMenus']; let i=index;"
 	 [ngStyle]="{'position':'absolute', 'left':designData['menuLocations'][i][0]+'px', 'top':designData['menuLocations'][i][1]+'px'}" 
 	 (click)="menuClick(i)">
 
@@ -16,14 +16,13 @@
 
 
 
-
 <!-- THE SIDEBAR MENU THAT DEPENDS UPON WHAT IS SELECTED -->
 <fuse-sidebar id="mainSidebar" 
               class="sidebar" 
               position="left" 
               lockedOpen="gt-sm"
               style="position:absolute; left:220px; top:100px;"
-              *ngFor="let menuitem of designData['menu']; let i=index;">
+              *ngFor="let menuitem of designData['parameterMenus']; let i=index;">
 
 
 	<div *ngIf="designData['menuShow'][i]">
@@ -47,7 +46,7 @@
 
 
 		<!-- Loop through the items and set them accordingly -->
-		<div *ngFor="let valItem of menuitem['items']; let j=index;">
+		<div *ngFor="let valItem of menuitem['parameters']; let j=index;">
 
 
 
@@ -64,19 +63,61 @@
 
 				</mat-grid-list>
 
-
 			</div>
 
 
 
+			<!-- The top design panel -->
+			<div *ngIf="valItem['type']=='makText'">
+
+				<div>{{valItem['text']}}</div>
+
+			</div>
+
+
+			<!-- The top design panel -->
+			<div *ngIf="valItem['type']=='makProjectVersions'"
+				 fxLayoutAlign="center center"
+				 fxLayout="column">
+
+
+				<button mat-stroked-button 
+						color="accent"
+						(click)="createNewVersion.emit()">
+					Create New Version
+				</button>
+
+				<div class="p-20"
+					 fxFlex="100">
+					<mat-selection-list>
+						<mat-list-option  *ngFor="let version of versionList; let i=index"
+					  					  (click)="setVersionData.emit(version)"
+					  				      fxLayout="row"
+					  				      [ngClass]="{'current' : version==versionData}">
+							<div>Version {{version.version}}</div>
+							<div>{{version.name}}</div>
+					  	</mat-list-option>
+					</mat-selection-list>
+				</div>
+			</div>
+
+
 
 			<!-- The cost item -->
-			<div *ngIf="valItem['type']=='makCost'">
+			<div *ngIf="valItem['type']=='makCostDesign'">
+
+				<div class="p-20">When this design is active, the user will see the initial price. When a project is created, the user will see a price quote based upon the formula entered in the creator studio.</div>
+
+			</div>
+
+
+			<!-- The cost item -->
+			<div *ngIf="valItem['type']=='makCostStudio'">
 
 				<div class="w-300">
 					<div style="margin-top:10px; padding:5px 0px"
 						 class="text-center primary-900 w-120 ml-80">
-						$3000
+						{{designData['initialPrice']}}
 					</div>
 				</div>
 
@@ -84,8 +125,24 @@
 
 				<div class="w-300 mb-40">
 					<div style="margin-top:10px; padding:5px 0px; color:#CCC"
-						 class="text-center primary-A100 w-120 ml-80 mt-20 heading-2">
-						Finish Quote
+						 class="text-center primary-A100 w-120 ml-80 mt-20 heading-2"
+						 (click)=addMyProject(designData.uid)>
+						Create Project with this Design
+					</div>
+				</div>
+
+			</div>
+
+
+
+
+			<!-- The cost item -->
+			<div *ngIf="valItem['type']=='makCostProject'">
+
+				<div class="w-300">
+					<div style="margin-top:10px; padding:5px 0px"
+						 class="text-center primary-900 w-120 ml-80">
+						{{designData['price']}}
 					</div>
 				</div>
 
@@ -102,7 +159,9 @@
 
 				<div class="w-240 ml-20">
 					<mat-form-field>
-					  <mat-select class="w-240">
+					  <mat-select class="w-240"
+					  			  [(ngModel)]="valItem['value']"
+					  			  (selectionChange)="updateParameter.emit({'name':valItem['shapediver'], 'value':valItem['value']});">
 					    <mat-option *ngFor="let option of valItem.options" [value]="option.value">
 					      {{option.label}}
 					    </mat-option>
@@ -120,27 +179,32 @@
 
 				<div class="h3 text-center">{{valItem['label']}}</div>
 
-				<mat-slider id="" 
-							class="sliderItem w-180 ml-16"
-							(input)="onSliderChange($event)" 
-							[min]="valItem['minValue']" 
-							[max]="valItem['maxValue']" 
-							[step]="valItem['stepValue']"
-							[tickInterval]="valItem['tickIntervalValue']"
-							[value]="valItem['value']"
-							thumbLabel 
-							[tickLabel]="valItem[tickLabelValue]"
-							[(ngModel)]="this[valItem.modelID]">
-								
-				</mat-slider>
+
+				<div fxLayout="row">
+
+					<div class="custom-slider w-160 mr-20 ml-20">
+						<ng5-slider [(value)]="valItem['value']" 
+									[options]="{floor: valItem['min'], 
+												ceil: valItem['max'], 
+												step: valItem['step'], 
+												showTicks: valItem['showTicks'], 
+												showTicksValues: valItem['showTicksValues']}"
+									(valueChange)="updateParameter.emit({'name':valItem['shapediver'], 'value':valItem['value']});">
+						</ng5-slider>
+					</div>
 
 
-				<input matInput 
-					   id=""
-					   style="width:70px; border:1px solid #ACACAC" 
-					   class="inputItem w-70 mat-subheading-2 pt-5 pb-5 text-center" 
-					   [(ngModel)]="this[valItem.modelID]"
-					   (input)="onInputChange($event)">
+
+
+
+					<input matInput 
+						   id=""
+						   style="width:70px; border:1px solid #ACACAC;" 
+						   class="inputItem w-70 mat-subheading-2 pt-5 pb-5 text-center mt-20" 
+						   [(ngModel)]="valItem['value']"
+						   (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'value':valItem['value']});">
+
+				</div>
 
 
 			</div>
@@ -159,7 +223,7 @@
 						   style="width:200px; border:1px solid #ACACAC" 
 						   class="inputItem w-70 mat-subheading-2 pt-5 pb-5 text-center" 
 						   [(ngModel)]="valItem.modelID"
-						   (input)="onInputChange($event)">
+						   (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'value':valItem['value']});">
 
 				</div>
 
@@ -169,22 +233,57 @@
 
 
 			<!-- The toggle items -->
-			<div *ngIf="valItem['type']=='toggle'">
+			<div *ngIf="valItem['type']=='toggle'"
+				 fxLayout="row"
+				 fxFlex="100%"
+				 class="mt-8 mb-8">
 
 
-				<div class="h3 text-center mt-12">{{valItem['label']}}</div>
-
-				<div class="w-280 text-center" layout="row">
-
-					<mat-slide-toggle
-						  [(ngModel)]="valItem.value"
-						  class="w-50 ml-20"
-						  color="accent-900">
-					</mat-slide-toggle>
-
+				<div class="h3 text-center mt-12"
+					 fxFlex="80%">
+					{{valItem['label']}}
 				</div>
 
+				<mat-slide-toggle
+					  fxFlex="20%"
+					  [(ngModel)]="valItem.value"
+					  (toggleChange)="updateParameter.emit({'name':valItem['shapediver'], 'value':valItem['value']});"
+					  class="mt-12"
+					  color="accent-900">
+				</mat-slide-toggle>
+
+
 			</div>
+
+
+
+
+
+			<!-- The upload items -->
+			<div *ngIf="valItem['type']=='upload'"
+				 fxLayout="row"
+				 fxFlex="100%"
+				 fxLayoutAlign="center center"
+				 class="mt-8 mb-8">
+
+
+				<input class="ng-hide"
+					   style="display:none" 
+			   		   id="uploadItem" 
+					   multiple type="file"
+					   accept=".png,.jpg,.jpeg,.gif"
+					   (change)="updateParameter.emit({'name':valItem['shapediver'], 'value': $('#uploadItem')[0]['files'][0]})" />
+
+				<label for="uploadItem" 
+					   style="background-color:#456382; cursor:pointer; border-radius:8px; padding:10px; margin:10px 0px 0px 0px; color: white;"
+					   color="primary" 
+					   class="md-button md-raised md-primary">
+					{{valItem['label']}}
+				</label>
+
+
+			</div>
+
 
 
 

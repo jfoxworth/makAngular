@@ -8,20 +8,51 @@
         <!-- / SELECTION MENU -->
 
 
-        <!-- SIDEBAR -->
-        <design-sidebar [designData]="designData"></design-sidebar>
-        <!-- / SIDEBAR -->
+
+        <ng-container *ngIf="dataFlag else Loading">
+
+            <!-- SIDEBAR -->
+            <design-sidebar [designData]="designData" 
+                            [versionList]="versionList"
+                            (createNewVersion)="createNewVersion()"
+                            (setVersionData)="setVersionData($event)"
+                            (updateParameter)="updateParameter($event)">
+                                
+            </design-sidebar>
+            <!-- / SIDEBAR -->
+
+        </ng-container>
 
         <!-- CENTER -->
         <div class="center" >
 
             <!-- CONTENT -->
-            <div class="content" id="modelDiv" style="position:absolute; top:0px; left:0px; width:100%; height:100%;">
+            <div class="content" 
+                 id="modelDiv" 
+                 style="position:absolute; top:0px; left:0px; width:100%; height:100%;">
             </div>
             <!-- / CONTENT -->
 
         </div>
         <!-- / CENTER -->
+
+
+
+        <ng-template #Loading>
+            <div style="display: block;
+                width: 100%;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                left:48%;">
+
+                <div class="logo">
+                    <img style="animation: rotation 2s infinite linear;" width="128px" src="assets/images/makLogo.png"><br>
+                    <h1>Loading ...</h1>
+                </div>
+
+            </div>
+        </ng-template>
 
     </div>
     <!-- / CONTENT-->

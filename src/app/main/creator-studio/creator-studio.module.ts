@@ -24,6 +24,10 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
+import { FormsModule }   from '@angular/forms';
+import { MatGridListModule } from '@angular/material/grid-list';
+
+
 
 import { MatCarouselModule } from '@ngmodule/material-carousel';
 
@@ -37,6 +41,9 @@ import { CreatorStudioComponent } from 'app/main/creator-studio/creator-studio.c
 import { FuseSidebarModule } from '@fuse/components';
 import { editParameterDialog } from './parameter-dialog/parameter-dialog.component';
 import { SubmenuDialog } from './submenu-dialog/submenu-dialog.component';
+
+// New ng5 slider
+import { Ng5SliderModule } from 'ng5-slider';
 
 
 const routes: Routes = [
@@ -80,6 +87,9 @@ const routes: Routes = [
         MatSliderModule,
         MatSlideToggleModule,
 
+        FormsModule,
+        MatGridListModule,
+
         DragDropModule,
 
         NgxChartsModule,
@@ -89,7 +99,13 @@ const routes: Routes = [
 
         FuseSharedModule,
         FuseSidebarModule,
-        FuseWidgetModule
+        FuseWidgetModule,
+
+        Ng5SliderModule
+
+
+
+
     ],
     providers   : [
     ]
