@@ -18,6 +18,7 @@ import { AgmCoreModule } from '@agm/core';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatListModule} from '@angular/material/list';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 
@@ -87,6 +88,7 @@ const routes: Routes = [
         MatDividerModule,
         MatStepperModule,
         MatListModule,
+        MatTooltipModule,
 
         NgxChartsModule,
         AgmCoreModule.forRoot({

@@ -5,7 +5,7 @@ import { DataSource } from '@angular/cdk/collections';
 import { BehaviorSubject, fromEvent, merge, Observable, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { fuseAnimations } from '@fuse/animations';
 import { FuseUtils } from '@fuse/utils';
@@ -15,6 +15,9 @@ import { takeUntil } from 'rxjs/internal/operators';
 
 import { EcommerceProductsService } from 'app/main/services/products.service';
 import { FirebaseService } from 'app/main/services/firebase.service';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { MarketplaceService } from 'app/main/services/marketplace.service';
+import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 
 
 @Component({
@@ -28,19 +31,28 @@ export class EcommerceComponent implements OnInit
 {
 
     projectList : any;
+    versionList : any;
     columnsToDisplayMeas = ['name', 'value'];
     currentProject : any = {};
-    currentVersion : any = {'id':''}; 
+    currentVersion : any = {'id':''};
+    currentDesign : any; 
     userData : any;
+    designImageUrl : any;
+
+    changesExist : boolean = false;
+    versionChangesExist : boolean = false;
 
 
     // Private
     private _unsubscribeAll: Subject<any>;
 
     constructor(
-        private _ecommerceProductsService: EcommerceProductsService,
+        private EcommerceProductsService: EcommerceProductsService,
         private FirebaseService : FirebaseService,
-        private SnackBar: MatSnackBar
+        private MarketplaceService : MarketplaceService,
+        public afs: AngularFirestore,
+        private SnackBar: MatSnackBar,
+        private afStorage : AngularFireStorage
     )
     {
         // Set the private defaults
@@ -66,12 +78,62 @@ export class EcommerceComponent implements OnInit
     }
 
 
+
+
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Functions
+    // -----------------------------------------------------------------------------------------------------
+
+
     /**
      * Get versions for a project
      */
     getVersions( projectId ): void
     {
-        this.currentProject.versions = this.FirebaseService.getCollection('versions', 'projectId', projectId);
+    	var docRef = this.afs.collection('versions', ref => ref.where('projectId', '==', projectId )
+    																 .orderBy('version'));
+
+        console.log('Getting the docs from collection versions where the projectId is '+projectId);
+		docRef.ref.get()
+            .then((snapshot) => {
+                var tempArray = [];
+                var docData;
+                snapshot.forEach((doc) => {
+                    docData=doc.data();
+                    docData.uid=doc.id;
+                    console.log(doc.id, '=>', doc.data());
+                    tempArray.push(docData);
+                });
+                this.versionList = tempArray;
+                this.currentVersion = this.versionList[this.versionList.length-1];
+                console.log(this.versionList);
+            })
+            .catch((err) => {
+              console.log('Error getting documents', err);
+        });
+    }
+
+
+
+    /**
+     * Get design for a project
+     */
+    getDesign( designId ): void
+    {
+		this.currentDesign = this.FirebaseService.getDocById( 'designs', designId ).then(response=> {
+			this.currentDesign=response.data();
+
+            // Get the main background image
+            for (var a=0; a<this.currentDesign.marketplace.images.length; a++)
+            {
+            	if ( this.currentDesign.marketplace.images[a]['mainImage'] )
+            	{
+					const ref = this.afStorage.ref(this.currentDesign.marketplace.images[a]['path']);
+					this.designImageUrl = ref.getDownloadURL();
+				}
+			}
+		});
     }
 
 
@@ -79,13 +141,90 @@ export class EcommerceComponent implements OnInit
     /**
      * When a version is selected
      */
-    onVersionSelected(): void
+    onVersionSelected(versionIndex): void
     {
-        this.currentProject.versions.forEach((thisVer, index) => {
-            if (thisVer.id == this.currentProject.currentVersionId){ this.currentVersion=thisVer; }
-        });
+
+        this.currentVersion = this.versionList[versionIndex];
+        this.currentVersion.measurements = [];
+        for (const property in this.currentVersion.values) {
+            this.currentVersion.measurements.push({'name': property, 'value': this.currentVersion.values[property] });
+        }
+
+        if ( versionIndex==this.versionList.length-1 ){ this.currentVersion.latest=true; }
+
 
     }
+
+
+
+
+
+
+	/*
+	*
+	* When the version needs to be saved
+	*
+	*/
+	saveVersion( ) 
+	{
+		console.log('Saving version '+this.currentVersion.uid);
+		this.FirebaseService.updateDocDataUsingId('versions', this.currentVersion.uid, this.currentVersion );
+		this.SnackBar.open('Version Saved','', {duration: 4000});
+
+	}
+
+
+
+	/*
+	*
+	* When a new version is to be created
+	*
+	*/
+	createNewVersion( type ) 
+	{
+		console.log('Creating new version '+type);
+
+		let versionsCollection = this.afs.collection('versions');
+		const versionId = this.afs.createId();
+
+		if ( type == 'default' )
+		{
+		    versionsCollection.doc(versionId).set(this.MarketplaceService.versionTemplate( this.currentProject.uid, versionId, this.versionList.length+1, this.currentDesign ));
+		}
+
+
+		if ( type == 'latest' )
+		{
+			let tempVer = this.MarketplaceService.versionTemplate( this.currentProject.uid, versionId, this.versionList.length+1, this.currentDesign );
+			tempVer.values = this.versionList[this.versionList.length-1]['values'];
+		    versionsCollection.doc(versionId).set(tempVer);
+		}
+
+
+		this.getVersions( this.currentProject.uid );
+		this.SnackBar.open('New version created','', {duration: 4000});
+
+	}
+
+
+
+
+
+	/*
+	*
+	* When the project needs to be saved
+	*
+	*/
+	saveProject( ) 
+	{
+		console.log('Saving project ');
+		this.FirebaseService.updateDocDataUsingId('projects', this.currentProject.uid, this.currentProject );
+		this.SnackBar.open('Project Saved','', {duration: 4000});
+
+	}
+
+
+
 
 }
 

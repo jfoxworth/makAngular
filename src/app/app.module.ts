@@ -52,7 +52,6 @@ import { MailConfirmModule } from 'app/main/mail-confirm/mail-confirm.module';
 
 import { MatDialogModule } from '@angular/material/dialog';
 
-
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from "@angular/fire/auth";
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -66,6 +65,9 @@ import { FirebaseService } from 'app/main/services/firebase.service';
 
 // New ng5 slider
 import { Ng5SliderModule } from 'ng5-slider';
+
+
+
 
 
 const appRoutes: Routes = [
@@ -136,7 +138,6 @@ const appRoutes: Routes = [
 
 
         Ng5SliderModule,
-
 
     ],
     providers :[

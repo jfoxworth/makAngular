@@ -71,14 +71,12 @@
                                 <div fxFlex="40">{{pi.name}}</div>
                                 <!-- <div fxFlex="40">{{pi.dateCreated.toDate() | date:'fullDate'}}</div> -->
                                 <div fxFlex="40">{{pi.dateCreated}}</div>
-                                <mat-icon fxFlex="10" 
-                                          style="cursor:pointer" 
+                                <mat-icon style="cursor:pointer" 
                                           matTooltip="Open in design studio"
                                           [routerLink]="['/designStudio/project/'+pi.uid]">
                                     color_lens
                                 </mat-icon>
-                                <mat-icon fxFlex="10" 
-                                          style="cursor:pointer" 
+                                <mat-icon style="cursor:pointer" 
                                           matTooltip="Open projects"
                                           [routerLink]="['/products']">
                                     today

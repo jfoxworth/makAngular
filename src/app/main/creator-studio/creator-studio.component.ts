@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { MatCarousel, MatCarouselComponent } from '@ngmodule/material-carousel';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -44,7 +44,8 @@ export class CreatorStudioComponent implements OnInit {
 				private AuthService : AuthService,
 				private FirebaseService : FirebaseService,
 				private SnackBar: MatSnackBar,
-				private afStorage : AngularFireStorage ) 
+				private afStorage : AngularFireStorage,
+				public vcRef: ViewContainerRef ) 
 	{
 
 		this.designList		= [];
@@ -69,7 +70,6 @@ export class CreatorStudioComponent implements OnInit {
 	// Variables needed for the BG image
 	carouselUrls : Array<any>;
 	imageUrls : Array<any>;
-
 
 
 
@@ -512,6 +512,18 @@ export class CreatorStudioComponent implements OnInit {
 		}
 	}
 
+
+
+
+
+  	/*
+  	*
+  	*	This function simply sets the main image
+  	*
+  	*/
+	onColorChanged(){
+		console.log('Color changed');
+	}
 
 
 }

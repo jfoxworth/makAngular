@@ -415,6 +415,7 @@
 									<div class="mt-20 mat-subheading-2" style="color:#898989">The list below holds the items that will be displayed as icons and have submenus. For each design, there is an initial menu where the user can pick a different design and a final menu that displays the cost. Click on the green plus to add a new submenu and then add individual items and move them from menu to menu.</div>	
 								</div>
 
+
 								<div fxFlex="100%">
 
 									<button mat-raised-button 
@@ -531,20 +532,6 @@
 		      														 class="w-280 mb-20 text-center"
 		      														 fxLayout="row">
 
-		      														<!--
-																	<mat-slider id="" 
-																				class="sliderItem w-180 ml-16"
-																				[min]="parameter['min']" 
-																				[max]="parameter['max']" 
-																				[step]="parameter['step']"
-																				[tickInterval]="parameter['tickInterval']"
-																				[value]="parameter['value']"
-																				thumbLabel 
-																				[tickLabel]="parameter[tickLabel]">
-																					
-																	</mat-slider>
-																	-->
-
 
 																	<div class="w-160 mr-20 ml-20 custom-slider">
 																		<ng5-slider [(value)]="parameter['value']" 
@@ -612,6 +599,27 @@
 																		   [(ngModel)]="parameter.text">
 
 																</div>
+
+
+
+
+
+		      													<!-- Color Select row -->
+																<div fxLayout="row"
+																	 *ngIf="parameter.type=='color select'">
+
+																	<div class="w-280 text-center mt-20 mb-20" fxLayout="row">
+
+																		<div class="h3 text-center mb-12 w-200">{{parameter.label}}</div>
+
+																		
+
+
+																	</div>
+		      													</div>
+
+
+
 
 
 																<!-- The toggle items -->

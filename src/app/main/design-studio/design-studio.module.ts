@@ -93,7 +93,8 @@ const routes = [
         MatGridListModule,
 
 
-        Ng5SliderModule
+        Ng5SliderModule,
+
 
 
     ],

@@ -299,6 +299,37 @@ export class DesignStudioService implements Resolve<any>
 
 
 
+	/**
+	 *
+	 * The function calculate the price of a design
+	 *
+	 */
+
+	setPrice(currentDesign, currentVersion) {
+		console.log('In the set price formula function');
+
+
+		let priceString = '';
+		for (let i = 0; i < currentDesign.priceArray.length; i++) {
+
+			if ( currentDesign.priceArray[i].status == 'parameter' )
+			{
+				priceString = priceString+currentVersion['values'][currentDesign.priceArray[i]['text']];
+
+			}else
+			{
+				priceString = priceString + currentDesign.priceArray[i].text;				
+			}
+		}
+
+		console.log('The calculated price is ');
+		console.log(priceString);
+
+		return Math.round(eval(priceString));
+
+
+	}
+
 
 
 

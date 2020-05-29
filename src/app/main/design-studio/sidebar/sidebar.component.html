@@ -70,7 +70,7 @@
 			<!-- The top design panel -->
 			<div *ngIf="valItem['type']=='makText'">
 
-				<div>{{valItem['text']}}</div>
+				<div class="p-20">{{valItem['text']}}</div>
 
 			</div>
 
@@ -78,7 +78,8 @@
 			<!-- The top design panel -->
 			<div *ngIf="valItem['type']=='makProjectVersions'"
 				 fxLayoutAlign="center center"
-				 fxLayout="column">
+				 fxLayout="column"
+				 fxFlex="100">
 
 
 				<button mat-stroked-button 
@@ -87,18 +88,18 @@
 					Create New Version
 				</button>
 
-				<div class="p-20"
-					 fxFlex="100">
-					<mat-selection-list>
-						<mat-list-option  *ngFor="let version of versionList; let i=index"
-					  					  (click)="setVersionData.emit(version)"
-					  				      fxLayout="row"
-					  				      [ngClass]="{'current' : version==versionData}">
-							<div>Version {{version.version}}</div>
-							<div>{{version.name}}</div>
-					  	</mat-list-option>
-					</mat-selection-list>
+				<div *ngFor="let version of versionList; let i=index"
+					 (click)="setVersionData.emit(version)"
+					 fxLayout="row"
+					 fxLayoutAlign="center center"
+					 class="mb-12 mt-12"
+					 style="cursor:pointer; font-size:1.1em; width:90%; margin:0px 5%;"
+					 [ngClass]="{'current' : version.version == versionData.version}">
+					
+					<div fxFlex="40" style="text-align:center">Version {{version.version}}</div>
+					<div fxFlex="60" style="text-align:center">{{version.name}}</div>
 				</div>
+
 			</div>
 
 
@@ -112,11 +113,12 @@
 
 
 			<!-- The cost item -->
-			<div *ngIf="valItem['type']=='makCostStudio'">
+			<div *ngIf="valItem['type']=='makCostStudio'"
+				 fxLayoutAlign="center center">
 
 				<div class="w-300">
-					<div style="margin-top:10px; padding:5px 0px"
-						 class="text-center primary-900 w-120 ml-80">
+					<div style="padding:5px 0px;"
+						 class="text-center primary-900 w-120 ml-80 mb-20 mt-12">
 						{{designData['initialPrice']}}
 					</div>
 				</div>
@@ -125,7 +127,7 @@
 
 				<div class="w-300 mb-40">
 					<div style="margin-top:10px; padding:5px 0px; color:#CCC"
-						 class="text-center primary-A100 w-120 ml-80 mt-20 heading-2"
+						 class="text-center primary-A100 w-120 ml-80 mt-20 mb-20 heading-2"
 						 (click)=addMyProject(designData.uid)>
 						Create Project with this Design
 					</div>
@@ -137,13 +139,26 @@
 
 
 			<!-- The cost item -->
-			<div *ngIf="valItem['type']=='makCostProject'">
+			<div *ngIf="valItem['type']=='makCostProject'"
+				 fxLayoutAlign="center center"
+				 fxLayout="column">
 
-				<div class="w-300">
-					<div style="margin-top:10px; padding:5px 0px"
-						 class="text-center primary-900 w-120 ml-80">
-						{{designData['price']}}
+
+				<div class="w-280"
+				 fxLayoutAlign="center center">
+					<div style="padding:5px 0px"
+						 class="text-center primary-900 w-120 mt-12 mb-20">
+						{{versionData['price']}}
 					</div>
+				</div>
+
+				<div class="w-280 mb-40 mt-8"
+					 fxLayoutAlign="center center">
+					<button mat-stroked-button 
+							color="accent"
+							(click)="createNewVersion.emit()">
+						Purchase this version
+					</button>
 				</div>
 
 			</div>
@@ -207,6 +222,7 @@
 				</div>
 
 
+
 			</div>
 
 
@@ -222,7 +238,7 @@
 						   id=""
 						   style="width:200px; border:1px solid #ACACAC" 
 						   class="inputItem w-70 mat-subheading-2 pt-5 pb-5 text-center" 
-						   [(ngModel)]="valItem.modelID"
+						   [(ngModel)]="valItem['value']"
 						   (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'value':valItem['value']});">
 
 				</div>
@@ -270,9 +286,9 @@
 				<input class="ng-hide"
 					   style="display:none" 
 			   		   id="uploadItem" 
-					   multiple type="file"
+					   type="file"
 					   accept=".png,.jpg,.jpeg,.gif"
-					   (change)="updateParameter.emit({'name':valItem['shapediver'], 'value': $('#uploadItem')[0]['files'][0]})" />
+					   (change)="uploadFile.emit($event, valItem['shapediver']);" >
 
 				<label for="uploadItem" 
 					   style="background-color:#456382; cursor:pointer; border-radius:8px; padding:10px; margin:10px 0px 0px 0px; color: white;"
@@ -281,9 +297,24 @@
 					{{valItem['label']}}
 				</label>
 
-
 			</div>
 
+
+
+
+
+			<!-- The color selector -->
+			<div *ngIf="valItem['type']=='color select'"
+				 fxLayout="row"
+				 fxFlex="100%"
+				 fxLayoutAlign="center center"
+				 class="mt-8 mb-8">
+
+				<div class="h3 text-center mb-12 w-200">{{valItem['label']}}</div>
+
+				<input [(colorPicker)]="color" [style.background]="color"/>
+
+			</div>
 
 
 

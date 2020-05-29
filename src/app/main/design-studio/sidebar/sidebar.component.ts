@@ -16,6 +16,7 @@ export class SidebarComponent implements OnInit {
 
 
 	@Output() updateParameter = new EventEmitter();
+	@Output() uploadFile = new EventEmitter();
 	@Output() setVersionData = new EventEmitter();
 	@Output() createNewVersion = new EventEmitter();
 
@@ -24,6 +25,7 @@ export class SidebarComponent implements OnInit {
 
 	@Input('designData') designData:any;
 	@Input('versionList') versionList:any;
+	@Input('versionData') versionData:any;
 	
 	constructor() { }
 

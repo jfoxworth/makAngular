@@ -14,8 +14,10 @@
             <!-- SIDEBAR -->
             <design-sidebar [designData]="designData" 
                             [versionList]="versionList"
+                            [versionData]="versionData"
                             (createNewVersion)="createNewVersion()"
                             (setVersionData)="setVersionData($event)"
+                            (uploadFile)="uploadFile($event, paramName)"
                             (updateParameter)="updateParameter($event)">
                                 
             </design-sidebar>

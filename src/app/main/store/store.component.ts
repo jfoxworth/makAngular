@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { FuseSharedModule } from '@fuse/shared.module';
 
 import { DesignService } from 'app/main/services/design-service.service';

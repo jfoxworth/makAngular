@@ -104,7 +104,7 @@ export class DesignService {
 	 * The parameter types
 	 */
 	getParameterTypes(){
-		return [ 'slider', 'text', 'dropdown', 'toggle', 'upload', 'blob']
+		return [ 'slider', 'text', 'dropdown', 'toggle', 'upload', 'blob', 'color select', 'image select']
 	}
 
 

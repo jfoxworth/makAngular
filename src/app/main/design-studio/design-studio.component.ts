@@ -15,6 +15,10 @@ import { DesignStudioService } from 'app/main/services/design-studio.service';
 import { AuthService } from 'app/main/services/auth.service';
 import { FirebaseService } from 'app/main/services/firebase.service';
 
+import { AngularFireStorage } from '@angular/fire/storage';
+
+import { finalize } from 'rxjs/operators';
+
 
 
 @Component({
@@ -49,6 +53,7 @@ export class DesignStudioComponent implements AfterViewInit {
 				private route: ActivatedRoute,
 				private AuthService : AuthService,
 				private FirebaseService : FirebaseService,
+				private afStorage : AngularFireStorage,
 				@Inject(DOCUMENT) private document: Document) { 
 
 
@@ -127,6 +132,7 @@ export class DesignStudioComponent implements AfterViewInit {
 					console.log(this.designData);
 
 
+					console.log('Getting all pversions with a projectId of '+this.projectData.uid);
 					this.FirebaseService.getDocsByParam( 'versions', 'projectId', this.projectData.uid )
 						.then((snapshot) => {
 							var tempArray = [];
@@ -145,6 +151,7 @@ export class DesignStudioComponent implements AfterViewInit {
 							this.dataFlag=true;
 							this.initializeMenu();
 							this.initializeModel();
+							this.calcPrice();
 						})
 						.catch((err) => {
 						  console.log('Error getting documents', err);
@@ -242,6 +249,7 @@ export class DesignStudioComponent implements AfterViewInit {
 		modelViewUrl: 'eu-central-1', // or 'us-east-1' or address of your own ShapeDiver model view server
 		});
 
+		console.log('Initialize Model called');
 
 		// Wait a few seconds and then place the data from the call into the model
 		setTimeout( () => { 
@@ -302,8 +310,30 @@ export class DesignStudioComponent implements AfterViewInit {
 								this.designData.parameterMenus[a]['parameters'][b]['value'] = element.value;								
 							}
 						}
+
+						// Handle the case where this is an uploaded image
+						if ( ( element['type'] == 'File' ) && 
+							 ( this.designData.parameterMenus[a]['parameters'][b]['type'] == "upload" ) &&
+							 ( this.designData.parameterMenus[a]['parameters'][b]['shapediver'] == element.name) )
+						{
+							console.log('The element '+element.name+' is a file upload');
+							if ( this.versionData.uploadedImage !== undefined )
+							{
+								// Get URL
+								const url = this.afStorage.ref( this.versionData.uploadedImage['path'] )
+															.getDownloadURL()
+															.subscribe(url => {
+																				console.log('The URL is '+url);
+																				paramChanges.push({'name':'Upload Logo', 'value': url });
+																			});
+							}
+						}
+
+
 					}
 				}
+
+
 			});
 
 			if ( this.studioType == "project" )
@@ -317,6 +347,9 @@ export class DesignStudioComponent implements AfterViewInit {
 
 			console.log('The design data is ...');
 			console.log(this.designData);
+
+			console.log('The param changes are ...');
+			console.log(paramChanges);
 
 
 		 }, 4000);
@@ -348,6 +381,7 @@ export class DesignStudioComponent implements AfterViewInit {
 		// Update the version data
 		this.versionData.values[parameters.name] = parameters.value;
 		this.saveVersion( this.versionData );
+		this.calcPrice()
 
 	}
 
@@ -365,6 +399,50 @@ export class DesignStudioComponent implements AfterViewInit {
 		console.log(parameters);
 		this.shapediverApi.parameters.updateAsync( parameters );
 	}
+
+
+
+
+
+
+
+	/*
+	*
+	* When the user uploads a file
+	*
+	*/
+	uploadFile( event, paramName ) 
+	{
+		console.log('Uploading a file to the parameter '+paramName);
+
+		// Get the file and the image type
+		const file = event.target.files[0];
+		var imageType = file.type.replace('image/','');
+
+
+		// Get a unique id for the upload and the path
+		let text = "";
+		let possible = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+		for (let i = 0; i < 6; i++) {
+			text += possible.charAt(Math.floor(Math.random() * possible.length));
+  		}
+		var path = '/studio/logo/'+this.versionData.uid+'-'+text+'.'+imageType;			
+
+		console.log('Uploading image to Upload Logo');
+		// Send the update to shapediver so that the model is updated
+		this.shapediverApi.parameters.updateAsync({'name': 'Upload Logo', 'value': event.target.files[0] });
+
+		// Upload file
+		const task = this.afStorage.upload(path, event.target.files[0]);
+
+		// Update the version data
+		this.versionData.uploadedImage = {'path':path, 'parameter' : 'Upload Logo'};
+		this.saveVersion( this.versionData );
+
+	}
+
+
+
 
 
 
@@ -427,10 +505,11 @@ export class DesignStudioComponent implements AfterViewInit {
 
 						this.designData.parameterMenus[a]['parameters'][b]['value'] = thisVersion['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']];
 						
+						console.log('Comparing '+this.versionData['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']] +' to '+thisVersion['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']]);
 						if ( this.versionData['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']] != 
 							 thisVersion['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']]  )
 						{
-							paramChanges.push('{'+element.name+':'+this.versionData['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']]+'}');
+							paramChanges.push({'name':element.name, 'value' : thisVersion['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']]});
 							isChanged = true;
 						}
 						
@@ -441,14 +520,28 @@ export class DesignStudioComponent implements AfterViewInit {
 
 		if ( isChanged )
 		{
+			console.log('Updating parameters ...');
+			console.log(paramChanges);
 			this.updateMultipleParameters( paramChanges );			
 		}
 
 		this.versionData = thisVersion;
 
+		this.calcPrice();
+
 	}
 
 
+
+	/*
+	*
+	* Calculate the price of a version
+	*
+	*/
+	calcPrice( ) 
+	{
+		this.versionData.price = this.DesignStudioService.setPrice(this.designData, this.versionData);
+	}
 
 
 
