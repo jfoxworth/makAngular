@@ -139,7 +139,9 @@ export class DesignService {
 			'showTicksValues':false,
 			'text'			: 'Text Here',			// Text for an input
 			'status'		: false,				// Boolean status
-			'options'		: []					// Options for the select item
+			'options'		: [],					// Options for the select item
+			'id'			: this.makeRandom(6);
+
 		};
 	}
 

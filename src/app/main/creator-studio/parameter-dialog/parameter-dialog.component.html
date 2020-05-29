@@ -182,6 +182,29 @@
 
 
 
+    	<!-- The image select options -->
+    	<div *ngIf="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['type']=='image select'"
+    		 fxFlex="100%" fxLayout="column">
+
+			<input class="ng-hide"
+				   style="display:none" 
+		   		   id="uploadItem" 
+				   type="file"
+				   accept=".png,.jpg,.jpeg,.gif"
+				   (change)="uploadFile($event, data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['id']);" >
+
+			<label for="uploadItem" 
+				   style="background-color:#456382; 
+				   		  cursor:pointer; 
+				   		  border-radius:8px; 
+				   		  padding:10px; margin:10px 0px 0px 0px; 
+				   		  color: white;"
+				   color="primary" 
+				   class="md-button md-raised md-primary">
+				Upload Image
+			</label>
+
+		</div>
 
 
 
