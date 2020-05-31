@@ -140,7 +140,8 @@ export class DesignService {
 			'text'			: 'Text Here',			// Text for an input
 			'status'		: false,				// Boolean status
 			'options'		: [],					// Options for the select item
-			'id'			: this.makeRandom(6);
+			'id'			: this.makeRandom(6),
+			'images'		: []
 
 		};
 	}
@@ -204,9 +205,6 @@ export class DesignService {
 			}
 		];
 	}
-
-
-
 
 
 

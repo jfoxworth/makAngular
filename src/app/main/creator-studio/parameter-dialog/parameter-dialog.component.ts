@@ -47,7 +47,7 @@ export class editParameterDialog implements OnInit {
 	*/
 	uploadFile( event, paramId ) 
 	{
-		console.log('Uploading a file to the parameter '+paramName);
+		console.log('Uploading an image file to the parameter '+paramId);
 
 		// Get the file and the image type
 		const file = event.target.files[0];
@@ -56,24 +56,46 @@ export class editParameterDialog implements OnInit {
 
 		// Get a unique id for the upload and the path
 		var text= this.DesignService.makeRandom(6);
-		var path = '/studio/select/'+this.versionData.uid+'-'+text+'.'+imageType;			
+		var path = '/studio/select/'+this.data.currentDesign.uid+'-'+text+'.'+imageType;			
+		let tL = this.data.currentDesign.parameterMenus[this.data.i]['parameters'][this.data.j]['images'].length;
 
-		console.log('Uploading image to Upload select');
+
+		// Get URL Reference
+		const ref = this.afStorage.ref(path);
+
+
+		// Store the path in the version variable 
+		if ( this.data.currentDesign.parameterMenus[this.data.i]['parameters'][this.data.j]['images'] === undefined )
+		{
+			this.data.currentDesign.parameterMenus[this.data.i]['parameters'][this.data.j]['images'] = []	
+		}
+
+		// prefill the parameter Url
+		this.data.parameterUrls[this.data.i]['parameters'][this.data.j]['images'].push({});
+
+
+		// Update the version data
+		this.data.currentDesign.parameterMenus[this.data.i]['parameters'][this.data.j]['images'].push( {'path':path, 
+																										'id':this.data.currentDesign.uid+'-'+text,
+																										'order' : tL,
+																										'label' : 'Image Label',
+																										'imageUrl' : '',
+																										'value' : tL } );
 
 		// Upload file
 		const task = this.afStorage.upload(path, event.target.files[0]);
-
-		// Store the path in the version variable 
-		if ( data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['images'] === undefined )
-		{
-			data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['images'] = []	
-		}
-
-		// Update the version data
-		this.versionData.uploadedImage = {'path':path, 'parameter' : 'Upload Logo'};
-		this.saveVersion( this.versionData );
+		task.snapshotChanges().pipe(
+		        	finalize(() => this.data.parameterUrls[this.data.i]['parameters'][this.data.j]['images'][tL]['imageUrl']= ref.getDownloadURL() )
+    	 )
+    	.subscribe()
 
 	}
+
+
+
+
+
+
 
 
 

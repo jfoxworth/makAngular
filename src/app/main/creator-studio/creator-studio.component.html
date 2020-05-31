@@ -625,11 +625,32 @@
 																<div fxLayout="row"
 																	 *ngIf="parameter.type=='image select'">
 
-																	<div class="w-280 text-center mt-20 mb-20" fxLayout="row">
+																	<div class="w-280 text-center mt-20 mb-20" 
+																		 fxLayout="column"
+																		 fxFlexAlign="center center">
 
-																		<div class="h3 text-center mb-12 w-200">{{parameter.label}}</div>
+																		<div class="h3 text-center mb-12 w-280"
+																			 fxFlexAlign="center center">
+																			{{parameter.label}}
+																		</div>
 
 																		
+
+																		<div *ngFor="let thisImage of parameter['images']; index as k"
+																			 fxLayoutAlign="center center"
+																			 fxLayout="column"
+																			 fxFlex="100">
+
+																			<div fxFlex="100"
+																				 fxLayout="center">
+																				<div style="height:75px; width:75px">
+																					<img width="75" [src]="(parameterUrls[i]['parameters'][j]['images'][k]['imageUrl'] | async)">
+																				</div>
+																			</div>
+
+																			<div>{{thisImage.label}}</div>
+
+																		</div>
 
 
 																	</div>

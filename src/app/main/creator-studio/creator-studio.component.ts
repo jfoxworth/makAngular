@@ -24,7 +24,8 @@ export interface DialogData {
   i:number;
   j:number;
   parameterTypes:string[]
-  iconOptions:string[];
+  iconOptions:string[],
+  parameterUrls: any;
 }
 
 
@@ -53,6 +54,7 @@ export class CreatorStudioComponent implements OnInit {
 		this.companies		= this.DesignService.getCompanies();
 		this.menuLocations	= this.DesignService.getMenuLocations();
 		this.carouselUrls 	= [];
+		this.parameterUrls	= [];
 	 }
 
 
@@ -70,6 +72,7 @@ export class CreatorStudioComponent implements OnInit {
 	// Variables needed for the BG image
 	carouselUrls : Array<any>;
 	imageUrls : Array<any>;
+	parameterUrls : Array<any>;
 
 
 
@@ -216,7 +219,8 @@ export class CreatorStudioComponent implements OnInit {
 			data: { currentDesign: this.currentDesign, 
 					i:i, 
 					j:j, 
-					parameterTypes: this.DesignService.getParameterTypes() }
+					parameterTypes: this.DesignService.getParameterTypes(),
+					parameterUrls: this.parameterUrls }
 		});
 
 		dialogRef.afterClosed().subscribe(result => {
@@ -268,8 +272,23 @@ export class CreatorStudioComponent implements OnInit {
 
 		console.log('Saving design changes for '+this.currentDesign.uid);
 		console.log(this.currentDesign);
+
+		let tD = JSON.parse( JSON.stringify( this.currentDesign ) );
+
+		// Clean the observables out from the design object
+		for (var a=1; a<tD['parameterMenus'].length; a++)
+		{
+			for (var b=0; b<tD['parameterMenus'][a]['parameters'].length; b++)
+			{
+				for (var c=0; c<tD['parameterMenus'][a]['parameters'][b]['images'].length; c++)
+				{
+					tD['parameterMenus'][a]['parameters'][b]['images'][c]['imageUrl'] = '';
+				}
+			}
+		}
+
 	
-		this.FirebaseService.updateDocDataUsingId( 'designs', this.currentDesign.uid, this.currentDesign )
+		this.FirebaseService.updateDocDataUsingId( 'designs', this.currentDesign.uid, tD )
 		.then((snapshot) => {
 			this.SnackBar.open('Design is updated','', {duration: 4000});
 		})
@@ -474,22 +493,43 @@ export class CreatorStudioComponent implements OnInit {
 	formatDesignData(){
 
 		this.carouselUrls = [];
+		this.parameterUrls = JSON.parse( JSON.stringify( this.currentDesign.parameterMenus ));
 
 		for (var b=0; b<this.currentDesign.marketplace.images.length; b++)
 		{
 
 			const ref = this.afStorage.ref(this.currentDesign.marketplace.images[b]['path']);
 			this.carouselUrls.push(ref.getDownloadURL());
+
+			for (var c=0; c<this.currentDesign.parameterMenus.length; c++)
+			{
+				for (var d=0; d<this.currentDesign.parameterMenus[c]['parameters'].length; d++)
+				{
+
+					if ( this.currentDesign.parameterMenus[c]['parameters'][d]['images'] === undefined )
+					{
+						this.currentDesign.parameterMenus[c]['parameters'][d]['images'] = [];
+					}
+					for (var e=0; e<this.currentDesign.parameterMenus[c]['parameters'][d]['images'].length; e++)
+					{
+
+						const ref = this.afStorage.ref(this.currentDesign.parameterMenus[c]['parameters'][d]['images'][e]['path']);
+						this.parameterUrls[c]['parameters'][d]['images'][e]['imageUrl'] = ref.getDownloadURL();
+					}
+				}
+			}
 		}
 		this.dataFlag=true;
 
 		console.log('The carousel URLs are ...');
 		console.log(this.carouselUrls);
 
+		console.log('The parameter URLs are ...');
+		console.log(this.parameterUrls);
+
+		console.log('The currentDesign is ...');
+		console.log(this.currentDesign);
 	}
-
-
-
 
 
 

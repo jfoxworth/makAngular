@@ -221,6 +221,28 @@ export class DesignStudioComponent implements AfterViewInit {
 			this.designData.menuShow[index] =  false;
 		});
 
+
+
+		// Get and place image URLs for any image selection items
+		for (var c=0; c<this.designData.parameterMenus.length; c++)
+		{
+			for (var d=0; d<this.designData.parameterMenus[c]['parameters'].length; d++)
+			{
+
+				if ( this.designData.parameterMenus[c]['parameters'][d]['images'] === undefined )
+				{
+					this.designData.parameterMenus[c]['parameters'][d]['images'] = [];
+				}
+				for (var e=0; e<this.designData.parameterMenus[c]['parameters'][d]['images'].length; e++)
+				{
+
+					const ref = this.afStorage.ref(this.designData.parameterMenus[c]['parameters'][d]['images'][e]['path']);
+					this.designData['parameterMenus'][c]['parameters'][d]['images'][e]['imageUrl'] = ref.getDownloadURL();
+				}
+			}
+		}
+
+
 	}
 
 
@@ -378,10 +400,16 @@ export class DesignStudioComponent implements AfterViewInit {
 		this.shapediverApi.parameters.updateAsync({name: parameters.name, value: parameters.value });
 
 
-		// Update the version data
-		this.versionData.values[parameters.name] = parameters.value;
-		this.saveVersion( this.versionData );
+		// Update the price
 		this.calcPrice()
+
+
+		// Update the version data
+		if ( this.studioType == 'project' )
+		{
+			this.versionData.values[parameters.name] = parameters.value;
+			this.saveVersion( this.versionData );
+		}
 
 	}
 
@@ -540,7 +568,17 @@ export class DesignStudioComponent implements AfterViewInit {
 	*/
 	calcPrice( ) 
 	{
-		this.versionData.price = this.DesignStudioService.setPrice(this.designData, this.versionData);
+		if ( this.studioType =="project" )
+		{
+			this.versionData.price = this.DesignStudioService.setPrice(this.designData, this.versionData);
+		}
+
+
+		if ( this.studioType =="design" )
+		{
+			this.designData.price = this.DesignStudioService.setPrice(this.designData, this.versionData);
+		}
+
 	}
 
 

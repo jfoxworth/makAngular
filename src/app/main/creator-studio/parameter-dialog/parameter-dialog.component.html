@@ -134,7 +134,7 @@
     	<div *ngIf="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['type']=='dropdown'"
     		 fxFlex="100%" fxLayout="column">
 
-    		<div class="text-center mb-40" fxFlex=100>
+    		<div class="text-center mb-40" fxFlex="100">
 	    		<button mat-raised-button 
 	    				color="primary" 
 	    				(click)="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['options'].push({'label':'New Option', 'value':'newOption'})">
@@ -194,15 +194,58 @@
 				   (change)="uploadFile($event, data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['id']);" >
 
 			<label for="uploadItem" 
-				   style="background-color:#456382; 
-				   		  cursor:pointer; 
+				   style="background-color:#456382; cursor:pointer; 
 				   		  border-radius:8px; 
-				   		  padding:10px; margin:10px 0px 0px 0px; 
-				   		  color: white;"
+				   		  padding:10px; margin:10px 25% 0px 25%; 
+				   		  color: white;
+				   		  width:50%"
 				   color="primary" 
-				   class="md-button md-raised md-primary">
+				   class="md-button md-raised md-primary mb-28">
 				Upload Image
 			</label>
+
+
+			<div layout="row" fxFlex="100" fxLayoutAlign="center center">
+				<div fxFlex="30"></div>
+				<div fxFlex="30">Label</div>
+				<div fxFlex="30">Value</div>
+			</div>
+
+			<div *ngFor="let thisImage of data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['images']; index as p "
+				 fxLayoutAlign="center center"
+				 fxLayout="row"
+				 class="mt-12 mb-20">
+
+				<div fxFlex="35"
+					 fxLayout="center">
+					<div style="height:50px; width:50px">
+						<img width="50" [src]="(data.parameterUrls[data.i]['parameters'][data.j]['images'][p]['imageUrl'] | async)">
+					</div>
+				</div>
+
+
+				<div fxFlex="30">
+					<input matInput placeholder=""
+						   type="text"
+						   name=""
+						   [(ngModel)]="thisImage.label">
+				</div>
+
+				<div fxFlex="30">
+					<input matInput placeholder=""
+						   type="text"
+						   name=""
+						   [(ngModel)]="thisImage.value">
+				</div>
+			
+				<div fxFlex="5">
+					<mat-icon class="text-center"
+							  (click)="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['images'].splice(p,1)">
+						cancel
+					</mat-icon>
+				</div>
+
+			</div>
 
 		</div>
 
