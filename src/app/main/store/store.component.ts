@@ -30,12 +30,17 @@ export class StoreComponent implements OnInit {
 	selectedType : string = "All";
 	designTypes=this.DesignService.getDesignTypes();
 	mobile : boolean = false;
+	userData : any;
 
 	constructor(private DesignService : DesignService,
 				private FirebaseService : FirebaseService,
 				private SnackBar: MatSnackBar,
 				private afStorage : AngularFireStorage 
-		) { }
+		) { 
+
+        // Get the user data
+        this.userData = JSON.parse(localStorage.getItem('user'));
+	}
 
 	
 
@@ -50,21 +55,19 @@ export class StoreComponent implements OnInit {
 
 
 		// Pull all docs where a status is active
-		this.FirebaseService.getDocsByParam( 'designs', 'status', '1' )
-			.then((snapshot) => {
+		this.FirebaseService.getDocsByParam( 'designs', 'status', 1 )
+			.subscribe(result => {
 				var tempArray = [];
 				var docData;
-				snapshot.forEach((doc) => {
+				result.forEach((doc) => {
 					docData=doc.data();
 					docData.uid=doc.id;
 					console.log(doc.id, '=>', doc.data());
 					tempArray.push(docData);
 				});
 				this.storeList = tempArray;
+				console.log(this.storeList);
 				this.formatData();
-			})
-			.catch((err) => {
-			  console.log('Error getting documents', err);
 		});
 
 

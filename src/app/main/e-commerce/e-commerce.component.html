@@ -57,7 +57,7 @@
 							<mat-divider></mat-divider>
 
 
-							<div *ngIf="projectList.length==0">You currently have no designs. Go to the marketplace and select a design to add to your list of projects.</div>
+							<div *ngIf="(projectList | async)?.length==0">You currently have no designs. Go to the marketplace and select a design to add to your list of projects.</div>
 
 							<table class="displayTable">
 
@@ -65,7 +65,7 @@
 							    <tr	(click)="currentProject=project; getVersions( currentProject.uid ); getDesign( currentProject.designId ) "
 							       target="_blank"
 							       [ngClass]="{'currentItem' : project==currentProject}"
-							       *ngFor="let project of (projectList | async)">
+							       *ngFor="let project of projectList">
 
 							    	<td class="mat-subheading-2" style="width:35%">{{ project.name }} 
 										<mat-icon style="cursor:pointer" 

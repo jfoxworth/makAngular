@@ -1,25 +1,23 @@
-<!-- SIDENAV HEADER -->
+<!-- SIDENAV HEADER --
 <div class="sidenav-header">
-    <!-- CHATS TOOLBAR -->
+    <!-- CHATS TOOLBAR --
     <mat-toolbar>
 
-        <!-- TOOLBAR TOP -->
+        <!-- TOOLBAR TOP --
         <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
 
-            <!-- USER AVATAR WRAPPER -->
+
             <div class="avatar-wrapper">
 
-                <!-- USER AVATAR -->
                 <img (click)="changeLeftSidenavView('user')"
                      src="{{user.avatar}}"
                      class="mat-avatar avatar"
                      alt="{{user.name}}"/>
-                <!-- / USER AVATAR -->
 
                 <mat-icon class="s-16 status" [ngClass]="user.status"
                           [matMenuTriggerFor]="userStatusMenu"></mat-icon>
 
-                <!-- USER STATUS -->
+
                 <mat-menu id="user-status-menu" #userStatusMenu="matMenu">
 
                     <button mat-menu-item (click)="setUserStatus('online')">
@@ -50,10 +48,9 @@
                         </div>
                     </button>
                 </mat-menu>
-                <!-- / USER STATUS -->
 
             </div>
-            <!-- / USER AVATAR -->
+
 
             <div>
                 <button mat-icon-button
@@ -74,10 +71,9 @@
         </mat-toolbar-row>
         <!-- / TOOLBAR TOP -->
 
-        <!-- TOOLBAR BOTTOM -->
+        <!-- TOOLBAR BOTTOM --
         <mat-toolbar-row>
 
-            <!-- SEARCH -->
             <div class="search-wrapper" fxFlex fxLayout="row" fxLayoutAlign="start center">
 
                 <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
@@ -86,16 +82,18 @@
                 </div>
 
             </div>
-            <!-- / SEARCH -->
 
         </mat-toolbar-row>
-        <!-- / TOOLBAR BOTTOM -->
+        <!-- / TOOLBAR BOTTOM --
 
     </mat-toolbar>
-    <!-- / CHATS TOOLBAR -->
+    <!-- / CHATS TOOLBAR --
 
 </div>
 <!-- / SIDENAV HEADER -->
+
+
+
 
 <!-- SIDENAV CONTENT -->
 <div class="sidenav-content" fusePerfectScrollbar fxFlex>
@@ -103,7 +101,7 @@
     <!-- CHATS CONTENT -->
     <div *fuseIfOnDom [@animateStagger]="{value:'50'}">
 
-        <!-- CHATS LIST-->
+        <!-- CHATS LIST--
         <div class="chat-list" fxLayout="column">
 
             <div matSubheader *ngIf="(user.chatList | filter: searchText).length > 0">
@@ -154,20 +152,22 @@
             </div>
 
             <button mat-button class="contact"
-                    *ngFor="let contact of contacts| filter: searchText"
                     (click)="getChat(contact.id)"
                     [@animate]="{value:'*',params:{y:'100%'}}">
 
                 <div fxLayout="row" fxLayoutAlign="start center">
 
                     <div class="avatar-wrapper" fxFlex="0 1 auto">
-                        <img src="{{contact.avatar}}" class="mat-avatar avatar" alt="{{contact.name}}"/>
-                        <mat-icon class="s-16 status" [ngClass]="contact.status"></mat-icon>
+                        <img src="/assets/images/logos/makTextBlackSmall.png" 
+                             class="mat-avatar avatar" 
+                             alt="Mak Studio Contact"
+                             style="height:auto !important"/>
+                        <mat-icon class="s-16 status" [ngClass]="'online'"></mat-icon>
                     </div>
 
                     <div fxLayout="column" fxLayoutAlign="start start">
-                        <div class="contact-name">{{contact.name}}</div>
-                        <p class="contact-mood">{{contact.mood}}</p>
+                        <div class="contact-name">Mak Studio Contact</div>
+                        <p class="contact-mood">Contact us here with questions and comments</p>
                     </div>
 
                 </div>
@@ -177,7 +177,7 @@
         </div>
         <!-- / CONTACTS LIST-->
 
-        <!-- NO RESULTS MESSAGE -->
+        <!-- NO RESULTS MESSAGE --
         <div *ngIf="(contacts | filter: searchText).length === 0" class="no-results-message">
             No results..
         </div>

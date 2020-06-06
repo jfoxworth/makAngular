@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatCarousel, MatCarouselComponent } from '@ngmodule/material-carousel';
+import { MatButtonModule } from '@angular/material/button';
 
 // Services
 import { FirebaseService } from 'app/main/services/firebase.service';

@@ -73,7 +73,24 @@ export class EcommerceComponent implements OnInit
         this.userData = JSON.parse(localStorage.getItem('user'));
 
         // Get the projects that this user has with this design
-        this.projectList = this.FirebaseService.getCollection('projects', 'creatorId', this.userData.uid);
+        //this.projectList = this.FirebaseService.getCollection('projects', 'creatorId', this.userData.uid);
+
+
+        this.FirebaseService.getDocsByParam( 'projects', 'creatorId', this.userData.uid )
+            .subscribe(result => {
+                console.log('The result is ');
+                console.log(result);
+                var tempArray = [];
+                var docData;
+                result.forEach((doc) => {
+                    docData=doc.data();
+                    docData.uid=doc.id;
+                    console.log(doc.id, '=>', doc.data());
+                    tempArray.push(docData);
+                });
+                this.projectList = tempArray;
+                console.log(this.projectList);
+        });
 
     }
 
@@ -86,11 +103,14 @@ export class EcommerceComponent implements OnInit
     // -----------------------------------------------------------------------------------------------------
 
 
+
     /**
      * Get versions for a project
      */
     getVersions( projectId ): void
     {
+
+        /*
     	var docRef = this.afs.collection('versions', ref => ref.where('projectId', '==', projectId )
     																 .orderBy('version'));
 
@@ -112,6 +132,26 @@ export class EcommerceComponent implements OnInit
             .catch((err) => {
               console.log('Error getting documents', err);
         });
+
+        */
+
+        console.log('In the get versions function with an id of '+projectId);
+        this.FirebaseService.getDocsByParamWithOrder( 'versions', 'projectId', projectId, 'version' )
+            .subscribe(result => {
+                console.log('The result is ');
+                console.log(result);
+                var tempArray = [];
+                var docData;
+                result.forEach((doc) => {
+                    docData=doc.data();
+                    docData.uid=doc.id;
+                    console.log(doc.id, '=>', doc.data());
+                    tempArray.push(docData);
+                });
+                this.versionList = tempArray;
+                console.log(this.versionList);
+        });
+
     }
 
 

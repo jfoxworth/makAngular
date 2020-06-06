@@ -6,6 +6,9 @@ import { Options } from 'ng5-slider';
 
 import { EventEmitter } from '@angular/core';
 
+// Services
+import { DesignService } from 'app/main/services/design-service.service';
+
 
 @Component({
   selector: 'design-sidebar',
@@ -19,6 +22,7 @@ export class SidebarComponent implements OnInit {
 	@Output() uploadFile = new EventEmitter();
 	@Output() setVersionData = new EventEmitter();
 	@Output() createNewVersion = new EventEmitter();
+	@Output() loadModel = new EventEmitter();
 
 
 	thisValue : number=5;
@@ -26,8 +30,11 @@ export class SidebarComponent implements OnInit {
 	@Input('designData') designData:any;
 	@Input('versionList') versionList:any;
 	@Input('versionData') versionData:any;
+	@Input('userData') userData:any;
 	
-	constructor() { }
+
+	constructor( private DesignService : DesignService ) { }
+
 
 	ngOnInit(): void {
 
@@ -57,6 +64,12 @@ export class SidebarComponent implements OnInit {
     // When a user wants to add a new project based upon a design
     addMyProject( designId ) {
     	console.log('I should be adding a new design with the ID of '+designId);
+    }
+
+
+    // Convert hex to RGB
+    hexToRGB( hexCode ):string {
+    	return this.DesignService.hexToRGB( hexCode )
     }
 
 

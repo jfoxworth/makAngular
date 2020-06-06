@@ -58,7 +58,10 @@
 
 				 	<mat-grid-tile *ngFor="let buttonItem of valItem['buttons']; let k=index;" 
 				 				   [matTooltip]="buttonItem['tooltip']">
-				    	<a mat-button routerLink="."><img [src]="buttonItem['icon']"></a>
+				    	<a mat-button [routerLink]="'/designStudio/'+buttonItem['id']"
+				    				  (click)="loadModel.emit(buttonItem['id'])">
+				    		<img [src]="buttonItem['icon']" >
+				    	</a>
 				  	</mat-grid-tile>
 
 				</mat-grid-list>
@@ -105,35 +108,39 @@
 
 
 			<!-- The cost item -->
-			<div *ngIf="valItem['type']=='makCostDesign'">
+			<div *ngIf="valItem['type']=='makCostDesign' || valItem['type']=='makCostStudio'"
+				 fxLayoutAlign="center center"
+				 fxLayout="column">
 
-				<div class="p-20">When this design is active, the user will see the initial price. When a project is created, the user will see a price quote based upon the formula entered in the creator studio.</div>
-
-			</div>
-
-
-			<!-- The cost item -->
-			<div *ngIf="valItem['type']=='makCostStudio'"
-				 fxLayoutAlign="center center">
-
-				<div class="w-300">
+				<div class="w-140">
 					<div style="padding:5px 0px;"
-						 class="text-center primary-900 w-120 ml-80 mb-20 mt-12">
-						{{designData['initialPrice']}}
+						 class="text-center primary-900 w-120 mb-20 mt-12">
+						{{versionData['price']}}
+					</div>
+				</div>
+
+				<div class="w-140 mb-40"
+					*ngIf="userData === undefined">
+					<div style="margin-top:10px; padding:5px 0px; color:#CCC"
+						 class="text-center primary-A100 w-120 mt-20 mb-20 heading-2"
+						 [routerLink]="'/login'">
+						Log In to Create Project
 					</div>
 				</div>
 
 
-
-				<div class="w-300 mb-40">
+				<div class="w-140 mb-40"
+					 *ngIf="userData !== undefined">
 					<div style="margin-top:10px; padding:5px 0px; color:#CCC"
-						 class="text-center primary-A100 w-120 ml-80 mt-20 mb-20 heading-2"
+						 class="text-center primary-A100 w-120 mt-20 mb-20 heading-2"
 						 (click)=addMyProject(designData.uid)>
 						Create Project with this Design
 					</div>
 				</div>
 
+
 			</div>
+
 
 
 
@@ -310,9 +317,18 @@
 				 fxLayoutAlign="center center"
 				 class="mt-8 mb-8">
 
-				<div class="h3 text-center mb-12 w-200">{{valItem['label']}}</div>
+				<div class="w-280 text-center mt-20 mb-20" fxLayout="row">
 
-				<input [(colorPicker)]="color" [style.background]="color"/>
+					<div class="h3 text-center mb-12 w-200">{{valItem['label']}}</div>
+
+					<input ejs-colorpicker 
+						   type="color" 
+						   id="colorpicker" 
+						   style="padding:0px"
+						   [(ngModel)]="valItem['colorValue']" 
+						   (change)="updateParameter.emit({'name':valItem['shapediver'], 'value':hexToRGB(valItem['colorValue'])});" />
+
+				</div>
 
 			</div>
 

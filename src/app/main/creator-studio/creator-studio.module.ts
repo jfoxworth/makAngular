@@ -47,6 +47,10 @@ import { SubmenuDialog } from './submenu-dialog/submenu-dialog.component';
 // New ng5 slider
 import { Ng5SliderModule } from 'ng5-slider';
 
+// color picker
+import { ColorPickerModule } from '@syncfusion/ej2-angular-inputs';
+
+
 
 const routes: Routes = [
     {
@@ -104,6 +108,8 @@ const routes: Routes = [
         FuseWidgetModule,
 
         Ng5SliderModule,
+
+        ColorPickerModule,
 
 
 

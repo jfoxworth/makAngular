@@ -45,11 +45,29 @@ export class FirebaseService {
 	* parameter is equal to a given value
 	*
 	*/
-	getDocsByParam( collection, getParam, paramValue ) {
+	getDocsByParam( collection:string, getParam:string, paramValue ) {
+
 		console.log('Retreiving the documents with with the parameter : '+getParam+' equal to : '+paramValue+' from collection : '+collection);
-		var docRef = this.afs.collection(collection, ref => ref.where(getParam, '==', paramValue));
-		return docRef.ref.get();
+		return this.afs.collection(collection, ref => ref.where(getParam, '==', paramValue)).get();
 	}
+
+
+
+
+	/*
+	* 
+	* Function to pull data with a parameter and an order
+	*
+	*/
+	getDocsByParamWithOrder( collection:string, getParam:string, paramValue, orderBy:string ){
+
+		console.log('Retreiving the documents with with the parameter : '+getParam+' equal to : '+paramValue+' from collection : '+collection);
+		return this.afs.collection(collection, ref => ref.where(getParam, '==', paramValue).orderBy(orderBy)).get();
+
+	}
+
+
+
 
 
 

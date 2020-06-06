@@ -73,17 +73,22 @@ export class ProfileComponent implements OnInit
 	ngOnInit() {
 
 
-		this.userData = JSON.parse(localStorage.getItem('user'));
+		this.userData = JSON.parse(localStorage.getItem('userData'));
 		this.userId = this.route.snapshot.paramMap.get('id');
 
 		console.log('The user ID I got was '+this.userId);
 
+		console.log(this.userData);
+
 		if ( (this.userId == '') || ( this.userId === null ) )
 		{
-			this.userInfo = this.FirebaseService.getDocById( 'users', this.userData.uid ).then(response=> {
-				this.userInfo=response.data();
-				this.dataFlag=true;
-			});
+			if ( ( this.userData !== null ) && ( this.userData !== undefined ) )
+			{
+				this.userInfo = this.FirebaseService.getDocById( 'users', this.userData.uid ).then(response=> {
+					this.userInfo=response.data();
+					this.dataFlag=true;
+				});
+			}
 		}else
 		{
 			this.userInfo = this.FirebaseService.getDocById( 'users', this.userId ).then(response=> {

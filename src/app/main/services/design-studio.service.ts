@@ -48,7 +48,7 @@ export class DesignStudioService implements Resolve<any>
 	{
 		return new Promise((resolve, reject) => {
 			Promise.all([
-				this.getDesign()
+				//this.getDesign()
 			]).then(
 				() => {
 					resolve();
@@ -96,7 +96,8 @@ export class DesignStudioService implements Resolve<any>
 				[88, 60],
 				[60, 112],
 				[30, 164],
-				[88, 164]
+				[88, 164],
+				[59,216]
 			]
 	}
 
@@ -124,52 +125,60 @@ export class DesignStudioService implements Resolve<any>
 						'type' : 'makButtonSet',
 						'buttons' : [
 							{
-								'order' : 0,
-								'icon' : 'assets/images/mak-icons/MAKICONS-04.png',
-								'tooltip' : 'Planter Wall',
-								'name' : 'planterWall'
+								'order' 	: 0,
+								'icon' 		: 'assets/images/mak-icons/MAKICONS-04.png',
+								'tooltip' 	: 'Planter Wall',
+								'name' 		: 'planterWall',
+								'id' 		: ''
 							},
 							{
 								'order' : 1,
 								'icon' : 'assets/images/mak-icons/MAKICONS-05.png',
 								'tooltip' : 'Planter Bench',
-								'name' : 'planterBench'
+								'name' : 'planterBench',
+								'id' 		: 'jBRzSildNc16fQjAmLkh'
 							},
 							{
 								'order' : 2,
 								'icon' : 'assets/images/mak-icons/MAKICONS-06.png',
 								'tooltip' : 'Faceted Wall',
-								'name' : 'facetedWall'
+								'name' : 'facetedWall',
+								'id' 		: ''
 							},
 							{
 								'order' : 3,
 								'icon' : 'assets/images/mak-icons/MAKICONS-07.png',
 								'tooltip' : 'Slat Wall',
-								'name' : 'slatWall'
+								'name' : 'slatWall',
+								'id' 		: 'k3Ah6psRFJs12MJfsmxL'
 							},
 							{
 								'order' : 4,
 								'icon' : 'assets/images/mak-icons/MAKICONS-08.png',
 								'tooltip' : 'Backlit Wall',
-								'name' : 'backlitWall'
+								'name' : 'backlitWall',
+								'id' 		: 'eLHfWkL4GA2LFeuoVQkx'
 							},
 							{
 								'order' : 5,
 								'icon' : 'assets/images/mak-icons/MAKICONS-09.png',
 								'tooltip' : 'Custom Desk',
-								'name' : 'customDesk'
+								'name' : 'customDesk',
+								'id' 		: ''
 							},
 							{
 								'order' : 6,
 								'icon' : 'assets/images/mak-icons/MAKICONS-10.png',
 								'tooltip' : 'Flower Wall',
-								'name' : 'flowerWall'
+								'name' : 'flowerWall',
+								'id' 		: '1pbM0lb5hcHureiiX239'
 							},
 							{
 								'order' : 7,
 								'icon' : 'assets/images/mak-icons/MAKICONS-11.png',
 								'tooltip' : 'Fossil Wall',
-								'name' : 'fossilWall'
+								'name' : 'fossilWall',
+								'id' 		: ''
 							}
 						]
 					},

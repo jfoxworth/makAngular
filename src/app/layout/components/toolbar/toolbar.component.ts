@@ -30,6 +30,7 @@ export class ToolbarComponent implements OnInit, OnDestroy
     navigation: any;
     selectedLanguage: any;
     userStatusOptions: any[];
+    userData : any;
 
     // Private
     private _unsubscribeAll: Subject<any>;
@@ -48,6 +49,10 @@ export class ToolbarComponent implements OnInit, OnDestroy
         public authService: AuthService,
     )
     {
+
+        // Get the user data
+        this.userData = JSON.parse(localStorage.getItem('user'));
+
 
 
 

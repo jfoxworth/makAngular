@@ -4,6 +4,8 @@ import { auth } from 'firebase/app';
 import { AngularFireAuth } from "@angular/fire/auth";
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Router } from "@angular/router";
+import { FirebaseService } from 'app/main/services/firebase.service';
+
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +18,8 @@ export class AuthService {
     public afs: AngularFirestore,   // Inject Firestore service
     public afAuth: AngularFireAuth, // Inject Firebase auth service
     public router: Router,
-    public ngZone: NgZone // NgZone service to remove outside scope warning
+    public ngZone: NgZone, // NgZone service to remove outside scope warning
+    public FirebaseService:FirebaseService
   ) {
     /* Saving user data in localstorage when
     logged in and setting up null when logged out */
@@ -37,7 +40,12 @@ export class AuthService {
     return this.afAuth.signInWithEmailAndPassword(email, password)
       .then((result) => {
         this.ngZone.run(() => {
-          this.router.navigate(['profile']);
+
+			var userInfo = this.FirebaseService.getDocById( 'users', result.user.uid ).then(response=> {
+				localStorage.setItem('userData', JSON.stringify(response.data()));
+				console.log('Setting user data to '+JSON.stringify(response.data()));
+	        	this.router.navigate(['profile']);
+			});
         });
         this.SetUserData(result.user);
       }).catch((error) => {
@@ -128,13 +136,12 @@ SendVerificationMail() {
 
   // Update Profile Data
   UpdateProfile() {
-  	return this.afAuth.currentUser
-  		.then((result) => { result.updateProfile({    	
-  			displayName : "My Name",
-    		photoURL: "https://example.com/jane-q-user/profile.jpg"
-		})
-  	}); 
+    return this.afAuth.currentUser
+      .then((result) => { result.updateProfile({      
+        displayName : "My Name",
+        photoURL: "https://example.com/jane-q-user/profile.jpg"
+    })
+    }); 
   }
-
 
 }

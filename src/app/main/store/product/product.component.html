@@ -89,10 +89,19 @@
 
                     <button mat-button 
                             class="primary mt-40"
-                            (click)="addProject(storeItem)">
+                            (click)="addProject(storeItem)"
+                            *ngIf="userData.uid !== undefined">
                         ADD AS NEW PROJECT
                     </button>
  
+
+                    <button mat-stroked-button 
+                            class="mt-40"
+                            color="accent"
+                            [routerLink]="'/designStudio/design/'+storeItem.uid">
+                        VIEW DESIGN IN STUDIO
+                    </button>
+
 
 
                 </div>
