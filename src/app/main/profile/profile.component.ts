@@ -4,6 +4,8 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { fuseAnimations } from '@fuse/animations';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 // The dialog component
 import { EditBioDialog } from './edit-dialog/edit-dialog.component';
@@ -12,6 +14,12 @@ import { EditBioDialog } from './edit-dialog/edit-dialog.component';
 import { UserService } from 'app/main/services/user-service.service';
 import { AuthService } from 'app/main/services/auth.service';
 import { FirebaseService } from 'app/main/services/firebase.service';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { MarketplaceService } from 'app/main/services/marketplace.service';
+import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
+
+import { finalize } from 'rxjs/operators';
+
 
 
 export interface UserData {
@@ -44,7 +52,10 @@ export class ProfileComponent implements OnInit
 		public dialog: MatDialog, 
 		private UserService : UserService,
 		private AuthService : AuthService,
-		private FirebaseService : FirebaseService
+		private FirebaseService : FirebaseService,
+        public afs: AngularFirestore,
+        private SnackBar: MatSnackBar,
+        private afStorage : AngularFireStorage
 	)
 	{
 
@@ -58,6 +69,7 @@ export class ProfileComponent implements OnInit
 	displayName : string;
 	userId : string;
 	dataFlag : boolean;
+	displayStyle : string = 'display';
 
 
 	/**
@@ -75,6 +87,7 @@ export class ProfileComponent implements OnInit
 
 		this.userData = JSON.parse(localStorage.getItem('userData'));
 		this.userId = this.route.snapshot.paramMap.get('id');
+		this.getProfileImage();
 
 		console.log('The user ID I got was '+this.userId);
 
@@ -101,6 +114,87 @@ export class ProfileComponent implements OnInit
 
 	};
 
+
+
+
+	/**
+	*
+	* When the data needs to be saved
+	*
+	**/
+	saveChanges():void{
+
+		console.log('Saving user data '+this.userData.uid);
+		this.FirebaseService.updateDocDataUsingId('users', this.userData.uid, this.userData );
+		this.SnackBar.open('Data Saved','', {duration: 4000});
+
+		localStorage.setItem('userData', JSON.stringify(this.userData));
+
+	}
+
+
+
+
+	/**
+	*
+	* When the background image is uploaded
+	*
+	**/
+	onUpload(event) {
+
+
+		// Grab the background image
+		const file = event.target.files[0];
+		console.log('The target is ...');
+		console.log(event.target.files);
+
+		var imageType = file.type.replace('image/','');
+		var path = '/profile/'+this.userData.uid+'.'+imageType;			
+
+
+		// Get URL
+		const ref = this.afStorage.ref(path);
+
+		// Store image type
+		this.userData.imageType = imageType;
+		this.saveChanges();
+
+		// Upload file and subscribe to results
+		const task = this.afStorage.upload(path, event.target.files[0]);
+		task.snapshotChanges().pipe(
+        	finalize(() => this.userData.profileImage = ref.getDownloadURL()) 
+    	 )
+    	.subscribe()
+
+
+  	}
+
+
+
+
+
+
+	/**
+	*
+	* Fetch the profile image if there is one
+	*
+	**/
+	getProfileImage():void {
+
+		if ( this.userData.imageType  === undefined )
+		{
+			var path = '/profile/default.jpeg';
+		}else{
+			var path = '/profile/'+this.userData.uid+'.'+this.userData.imageType;			
+		}
+
+
+		// Get URL
+		const ref = this.afStorage.ref(path);
+		this.userData.profileImage = ref.getDownloadURL();
+
+
+  	}
 
 
 

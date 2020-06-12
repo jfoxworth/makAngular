@@ -10,6 +10,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { FuseSharedModule } from '@fuse/shared.module';
 
@@ -61,6 +62,7 @@ const routes: Routes = [
         MatInputModule,
         MatSelectModule,
         CommonModule,
+        MatTooltipModule,
 
 
         FuseSharedModule
