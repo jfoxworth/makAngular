@@ -70,7 +70,7 @@
                                  [routerLink]="['/designStudio/project/'+pi.uid]">
                                 <div fxFlex="40">{{pi.name}}</div>
                                 <!-- <div fxFlex="40">{{pi.dateCreated.toDate() | date:'fullDate'}}</div> -->
-                                <div fxFlex="40">{{pi.dateCreated}}</div>
+                                <div fxFlex="40">{{pi.dateCreated | date:'short'}}</div>
                                 <mat-icon style="cursor:pointer" 
                                           matTooltip="Open in design studio"
                                           [routerLink]="['/designStudio/project/'+pi.uid]">

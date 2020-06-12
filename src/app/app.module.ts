@@ -73,7 +73,7 @@ import { Ng5SliderModule } from 'ng5-slider';
 const appRoutes: Routes = [
     {
         path      : '**',
-        redirectTo: 'profile'
+        redirectTo: 'designStudio'
     }
 ];
 

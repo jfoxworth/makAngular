@@ -1,6 +1,7 @@
 <div id="invoice" class="modern page-layout blank" fxLayout="row">
 
-    <div class="invoice-container">
+    <div class="invoice-container"
+         *ngIf="dataFlag==2">
 
         <!-- INVOICE -->
         <div class="card">
@@ -18,24 +19,24 @@
                         <div class="divider"></div>
 
                         <div class="detail">
-                            <div class="title">{{invoice.from.title}}</div>
-                            <div *ngIf="invoice?.from.address" class="address">
-                                {{invoice.from.address}}
+                            <div class="title">MAK STUDIO</div>
+                            <div class="address">
+                                305 Velasco St.<br>
+                                Houston, TX 77003
                             </div>
-                            <div *ngIf="invoice?.from.phone" class="phone">
-                                <span>Phone:</span>
-                                {{invoice.from.phone}}
+                            <div class="phone">
+                                <span>Phone : 713.505.1234</span>
                             </div>
-                            <div *ngIf="invoice?.from.email" class="email">
-                                <span>Email:</span>
-                                {{invoice.from.email}}
+                            <div class="email">
+                                <span>Email : info@makstudio.us</span>
                             </div>
-                            <div *ngIf="invoice?.from.website" class="website">
-                                <span>Web:</span>
-                                {{invoice.from.website}}
+                            <div class="website">
+                                <span>Web : www.makstudio.us</span>
                             </div>
                         </div>
                     </div>
+
+                    <!--
 
                     <div fxLayout="row" class="client" fxLayoutAlign="start center">
                         <div class="label" fxLayout="row" fxLayoutAlign="end center">
@@ -63,49 +64,84 @@
                             </div>
                         </div>
                     </div>
+                    -->
+
                 </div>
 
                 <table class="summary">
                     <tr class="code">
-                        <td class="label">INVOICE</td>
-                        <td class="value">{{invoice.number}}</td>
+                        <td class="label">QUOTE</td>
+                        <td class="value"></td>
                     </tr>
 
                     <tr>
-                        <td class="label">INVOICE DATE</td>
-                        <td class="value">{{invoice.date}}</td>
+                        <td class="label">DESIGN NAME</td>
+                        <td class="value">{{designData.title}}</td>
                     </tr>
 
                     <tr>
-                        <td class="label">DUE DATE</td>
-                        <td class="value">{{invoice.dueDate}}</td>
+                        <td class="label">PROJECT NAME</td>
+                        <td class="value">{{projectData.name}}</td>
                     </tr>
 
                     <tr>
-                        <td class="label">TOTAL DUE</td>
-                        <td class="value">{{invoice.total | currency:'USD':'symbol'}}</td>
+                        <td class="label">VERSION</td>
+                        <td class="value">{{versionData.name}} - {{versionData.version}}</td>
                     </tr>
+
                 </table>
+
             </div>
 
 
             <div class="content">
+
+                <div style="text-align:center"
+                     class="mb-20">
+                    <button mat-stroked-button 
+                            color="accent"
+                            [routerLink]="'/designStudio/project/'+projectData.uid">
+                        View Project in Studio
+                    </button>
+                </div>
+
+
+                <table class="mt-0 simple invoice-table">
+                    <tbody>
+
+                        <tr>
+                            <td>
+                                <div class="title">PROJECT DESCRIPTION</div>
+                                <div class="detail">{{projectData.description}}</div>
+                            </td>
+                            <td>
+                                <div class="title">VERSION DESCRIPTION</div>
+                                <div class="detail">{{versionData.description}}</div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+
+
+
                 <table class="simple invoice-table">
                     <thead>
                         <tr>
-                            <th>Project : {{invoice.project.type}}</th>
+                            <th>VERSION MEASUREMENTS : </th>
                             <th>ITEM</th>
-                            <th>MEASUREMENT</th>
+                            <th>VALUE</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let meas of invoice.project.measurements">
+                        <tr *ngFor="let meas of measurements">
                             <td></td>
                             <td>
                                 <div class="title">{{meas.name}}</div>
                             </td>
                             <td>
-                                <div class="title">{{meas.measurement}}</div>
+                                <div class="title">{{meas.value}}</div>
                             </td>
                         </tr>
                     </tbody>
@@ -113,6 +149,8 @@
 
 
 
+
+                <!--
                 <table class="simple invoice-table">
                     <thead>
                         <tr>
@@ -133,52 +171,52 @@
                                 {{service.unit}}
                             </td>
                             <td class="text-right">
-                                {{service.unitPrice | currency:'USD':'symbol'}}
+                                {{service.unitPrice}}
                             </td>
                             <td class="text-right">
                                 {{service.quantity}}
                             </td>
                             <td class="text-right">
-                                {{service.total | currency:'USD':'symbol'}}
+                                {{service.total}}
                             </td>
                         </tr>
                     </tbody>
                 </table>
 
+            -->
+
+
+
                 <table class="simple invoice-table-footer">
                     <tbody>
                         <tr class="subtotal">
                             <td>SUBTOTAL</td>
-                            <td>{{invoice.subtotal | currency:'USD':'symbol'}}</td>
+                            <td>{{versionData.price}}</td>
+                        </tr>
+                        <tr class="subtotal">
+                            <td>TAX (8.25%)</td>
+                            <td>{{versionData.tax}}</td>
                         </tr>
                         <tr class="tax">
-                            <td>TAX</td>
-                            <td>{{invoice.tax | currency:'USD':'symbol'}}</td>
-                        </tr>
-                        <tr class="discount">
-                            <td>DISCOUNT</td>
-                            <td>-{{invoice.discount | currency:'USD':'symbol'}}</td>
+                            <td>DEPOSIT (25%)</td>
+                            <td>{{versionData.deposit}}</td>
                         </tr>
                         <tr class="total">
                             <td>TOTAL</td>
-                            <td>{{invoice.total | currency:'USD':'symbol'}}</td>
+                            <td>{{versionData.totalCost}}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
             <div class="footer">
-                <div class="note">Please pay within 15 days. Thank you for your business.</div>
+                <div class="note">This quote is a starting point.</div>
                 <div fxLayout="row" fxLayoutAlign="start start">
                     <div class="logo">
                         <img src="assets/images/logos/makTextBlack.png">
                     </div>
                     <div class="small-note">
-                        In condimentum malesuada efficitur. Mauris volutpat placerat auctor. Ut ac congue dolor. Quisque
-                        scelerisque lacus sed feugiat fermentum. Cras aliquet facilisis pellentesque. Nunc hendrerit
-                        quam at leo commodo, a suscipit tellus dapibus. Etiam at felis volutpat est mollis lacinia.
-                        Mauris placerat sem sit amet velit mollis, in porttitor ex finibus. Proin eu nibh id libero
-                        tincidunt lacinia et eget eros.
+                        If you choose to purchase this item, when the deposit is received MAK Studio will contact the customer with 3D images of the final design. Once the final design is agreed to, construction and delivery will move forward. 
                     </div>
                 </div>
             </div>

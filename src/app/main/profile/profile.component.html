@@ -1,23 +1,55 @@
 <div id="profile" class="page-layout simple tabbed">
 
     <!-- HEADER -->
-    <div class="header p-24" fxLayout="column" fxLayoutAlign="center center" fxLayout.gt-sm="row"
-         fxLayoutAlign.gt-sm="space-between end">
+    <div class="header p-24" 
+         fxLayout="column" 
+         fxLayoutAlign="center center">
 
-        <div class="user-info" fxLayout="column" fxLayoutAlign="center center" fxLayout.gt-sm="row"
-             fxLayoutAlign.gt-sm="start center">
-            <img class="profile-image avatar huge" src="assets/images/avatars/Velazquez.jpg"
-                 [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+        <div class="user-info" 
+             fxLayout="column" 
+             fxLayoutAlign="center center" >
+
+            <div>
+                <img class="profileAvatar avatar huge" 
+                     src="assets/images/avatars/Velazquez.jpg"
+                     [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+            
+                <mat-icon class="secondary-text s-48 mat-icon-no-color"
+                          style="position:absolute; bottom:40px; left:20px"
+                          aria-hidden="true"
+                          *ngIf="userData.uid == userInfo.uid">
+                          add_circle_outline
+                </mat-icon>
+            
+            </div>
+
+
             <div class="name" 
                  [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}"
                  *ngIf="userData.displayName===null">
                 {{userData.email}}
+
+                <mat-icon class="secondary-text"
+                          aria-hidden="true"
+                          *ngIf="userData.uid == userInfo.uid">
+                          more_vert
+                </mat-icon>
+
             </div>
+
             <div class="name" 
                  [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}"
                  *ngIf="userData.displayName!==null">
                 {{userData.displayName}}
+
+                <mat-icon class="secondary-text s-48" 
+                          aria-hidden="true"
+                          *ngIf="userData.uid == userInfo.uid">
+                          more_vert
+                </mat-icon>
+
             </div>
+
         </div>
 
         <!--
@@ -30,52 +62,54 @@
     </div>
     <!-- / HEADER -->
 
-    <!-- CONTENT --
-    <div class="content">
-
-        <ng-container *ngIf="(userInfo | async)?.data() as info">
-
-            <mat-tab-group dynamicHeight="true"
-                           style="width:60%; margin:0px 20%;">
-
-                <mat-tab label="Bio">
-                    <profile-about [userData]='userData' [userInfo]="info"></profile-about>
-                </mat-tab>
-
-                <mat-tab label="Companies">
-                    <profile-companies [userData]='userData' [userInfo]="info"></profile-companies>
-                </mat-tab>
-
-            </mat-tab-group>
-
-        </ng-container>
-
-    </div>
-    <!-- / CONTENT -->
-
 
 
     <!-- CONTENT -->
-    <div class="content">
 
-        <ng-container *ngIf="dataFlag">
+    <ng-container *ngIf="dataFlag">
+    
+        <div class="content"
+         fxLayoutAlign="center center"
+         fxLayout="column">
 
-            <mat-tab-group dynamicHeight="true"
-                           style="width:60%; margin:0px 20%;">
 
-                <mat-tab label="Bio">
-                    <profile-about [userData]='userData' [userInfo]="userInfo"></profile-about>
-                </mat-tab>
 
-                <mat-tab label="Companies">
-                    <profile-companies [userData]='userData' [userInfo]="userInfo"></profile-companies>
-                </mat-tab>
+            <div class="bio-line mb-20">
+                <div class="title">{{userData.shortBio}}</div>
+            </div>
 
-            </mat-tab-group>
+            <div fxLayout="row">
 
-        </ng-container>
+                <div class="bio-line mb-20 mr-20"
+                     fxLayout="column"
+                     fxLayoutAlign="center center">
+                    <mat-icon class="secondary-text s-48 mat-icon-no-color" aria-hidden="true">email</mat-icon>
+                    <div class="info">{{userData.email}}</div>
+                </div>
 
-    </div>
+
+                <div class="bio-line mb-20"
+                     fxLayout="column"
+                     fxLayoutAlign="center center">
+                    <mat-icon class="secondary-text s-48 mat-icon-no-color" aria-hidden="true">account_circle</mat-icon>
+                    <div class="info">{{userData.displayName}}</div>
+                </div>
+
+                <div class="bio-line mb-20 ml-20"
+                     fxLayout="column"
+                     fxLayoutAlign="center center">
+                    <mat-icon class="secondary-text s-48 mat-icon-no-color" aria-hidden="true">web</mat-icon>
+                    <div class="info">{{userData.website[0]}}</div>
+                </div>
+
+            </div>
+
+
+            <!--- <profile-about [userData]='userData' [userData]="userData"></profile-about> -->
+
+        </div>
+
+    </ng-container>
     <!-- / CONTENT -->
 
 

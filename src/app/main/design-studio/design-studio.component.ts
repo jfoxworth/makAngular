@@ -5,6 +5,7 @@ import { RouterModule, Routes, ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { fuseAnimations } from '@fuse/animations';
 import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
@@ -40,14 +41,15 @@ export class DesignStudioComponent implements AfterViewInit {
     versionCollection : any;
     searchInput: any;
     studioType:string;
-    dataFlag:boolean=false;
+    dataFlag:boolean = false;
     designId : string;
     projectId : string;
     versionId : string;
     shapediverApi : any;
     shapeData : any;
-
-
+    flowersJSON : any;
+    flowerFlag : boolean = false;
+	editableVersion : boolean = true;
 
 	constructor(private DesignStudioService: DesignStudioService,
 				private route: ActivatedRoute,
@@ -55,6 +57,7 @@ export class DesignStudioComponent implements AfterViewInit {
 				private FirebaseService : FirebaseService,
 				private afStorage : AngularFireStorage,
 				private activeRoute: ActivatedRoute,
+				private SnackBar: MatSnackBar,
 				@Inject(DOCUMENT) private document: Document) { 
 
 
@@ -156,9 +159,9 @@ export class DesignStudioComponent implements AfterViewInit {
 							});
 							this.versionList = tempArray;
 							console.log(this.versionList);
-							this.versionData = this.versionList[this.versionList.length-1];
-							console.log('The version data is ...');
-							console.log(this.versionData);
+							//this.versionData = this.versionList[this.versionList.length-1];
+							//console.log('The version data is ...');
+							//console.log(this.versionData);
 							this.initializeAll();
 						});
 					});
@@ -358,6 +361,10 @@ export class DesignStudioComponent implements AfterViewInit {
 			// Pull the values from the shape diver ticket
 			this.shapeData = this.shapediverApi.parameters.get();
 
+			// Set the version data
+			this.setVersionData( this.versionList[this.versionList.length-1] );
+
+
 			// Loop through the data and set the parameters to the
 			// proper values. Elements within the menus were already
 			// named the necessary value to make this work.
@@ -395,7 +402,8 @@ export class DesignStudioComponent implements AfterViewInit {
 								paramChanges.push({'name':element.name, 'value' : this.versionData['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']]});
 								isChanged = true;
 							}
-							
+
+
 						}
 
 						// Handle the case where this is an uploaded image
@@ -418,17 +426,32 @@ export class DesignStudioComponent implements AfterViewInit {
 						}
 
 
+						// Handle the case for the flowers / blob 
+						if ( ( this.designData.parameterMenus[a]['parameters'][b]['type'] == "blob" ) &&
+							 ( this.designData.parameterMenus[a]['parameters'][b]['shapediver'] == element.name) )
+						{
+							console.log('The element '+element.name+' is a blob and the data is ...');
+							console.log(JSON.parse(element.value));
+
+						}
+
+
 					}
 				}
 
 
 			});
 
+			this.calcPrice();	
+			this.setDragDrop();	
+
+
 			if ( this.studioType == "project" )
 			{
 				this.saveVersion( this.versionData );
 				if ( isChanged )
 				{
+					console.log('Updating parameters from initialize data ...');
 					this.updateMultipleParameters( paramChanges );					
 				}
 			}
@@ -439,8 +462,6 @@ export class DesignStudioComponent implements AfterViewInit {
 			console.log('The param changes are ...');
 			console.log(paramChanges);
 
-			this.calcPrice();	
-			this.setDragDrop();	
 
 
 		 }, 4000);
@@ -466,7 +487,7 @@ export class DesignStudioComponent implements AfterViewInit {
 		console.log('Updating the parameter '+parameters.name+' with the value '+parameters.value);
 
 		// Send the update to shapediver so that the model is updated
-		this.shapediverApi.parameters.updateAsync({name: parameters.name, value: parameters.value });
+		this.shapediverApi.parameters.updateAsync({name: parameters.name, value: parseFloat(parameters.value) });
 
 
 		// Update the price
@@ -494,7 +515,11 @@ export class DesignStudioComponent implements AfterViewInit {
 	{
 		console.log('Updating parameters ...');
 		console.log(parameters);
-		this.shapediverApi.parameters.updateAsync( parameters );
+		//this.shapediverApi.parameters.updateAsync( parameters );
+		for (var a=0; a<parameters.length; a++)
+		{
+			this.shapediverApi.parameters.updateAsync( parameters[a] );
+		}
 	}
 
 
@@ -551,7 +576,13 @@ export class DesignStudioComponent implements AfterViewInit {
 	saveVersion( versionData ) 
 	{
 		console.log('Saving version '+versionData.uid);
-		this.FirebaseService.updateDocDataUsingId('versions', versionData.uid, versionData );
+		this.FirebaseService.updateDocDataUsingId('versions', versionData.uid, versionData )
+		.then((snapshot) => {
+			this.SnackBar.open('Version changes saved','', {duration: 4000});
+		})
+		.catch((err) => {
+		  console.log('Error updating version', err);
+		});
 
 	}
 
@@ -587,6 +618,11 @@ export class DesignStudioComponent implements AfterViewInit {
 		let paramChanges=[];
 		let isChanged=false;
 
+		// The initial call to this function has no defined versionData
+		if ( this.versionData === undefined){
+			this.versionData = thisVersion;
+		}
+
 		this.shapeData.data.forEach( (element) => {
 
 			for ( var a=1; a<this.designData.parameterMenus.length-1; a++ )
@@ -602,29 +638,43 @@ export class DesignStudioComponent implements AfterViewInit {
 
 						this.designData.parameterMenus[a]['parameters'][b]['value'] = thisVersion['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']];
 						
-						console.log('Comparing '+this.versionData['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']] +' to '+thisVersion['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']]);
+						//console.log('Comparing '+this.versionData['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']] +' to '+thisVersion['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']]);
+						/*
 						if ( this.versionData['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']] != 
 							 thisVersion['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']]  )
 						{
 							paramChanges.push({'name':element.name, 'value' : thisVersion['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']]});
 							isChanged = true;
 						}
+						*/
+							paramChanges.push({'name':element.name, 'value' : parseFloat(thisVersion['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']])});
 						
 					}
 				}
 			}
 		});
 
-		if ( isChanged )
-		{
-			console.log('Updating parameters ...');
-			console.log(paramChanges);
-			this.updateMultipleParameters( paramChanges );			
-		}
+		// If any items in this version are different from the original
+		// design, update all of those parameters
+		console.log('Updating parameters from version data ...');
+		console.log(paramChanges);
+		this.updateMultipleParameters( paramChanges );			
 
+		// Set the version data
 		this.versionData = thisVersion;
 
+		// Set the price
 		this.calcPrice();
+
+		// If this is a latest version, it can be changed
+		// If not, it cannot be changed
+		if ( thisVersion.version == this.versionList.length )
+		{
+			this.editableVersion = true;
+		}else
+		{
+			this.editableVersion = false;
+		}
 
 	}
 
@@ -658,14 +708,31 @@ export class DesignStudioComponent implements AfterViewInit {
 	setDragDrop( )
 	{
 
-/*
+
+
 
 		if ( this.designData.uid == "1pbM0lb5hcHureiiX239" )
 		{
 
 			var flowersID;
 			var panelsScenePath;
-			var flowersJSON = makModel.build_data.componentValues.flowersJSON;
+			var menuNum = 0;
+			var paramNum = 0; 
+
+			for ( var a=1; a<this.designData.parameterMenus.length-1; a++ )
+			{
+				for ( var b=0; b<this.designData.parameterMenus[a]['parameters'].length; b++ )
+				{
+					if ( this.designData.parameterMenus[a]['parameters'][b]['type'] == 'blob' )
+					{
+						this.flowersJSON = JSON.parse(this.designData.parameterMenus[a]['parameters'][b]['value']);
+						menuNum=a;
+						paramNum=b;
+						console.log('Setting the this.flowersJSON to ...');
+						console.log(this.flowersJSON);
+					}
+				}
+			}
 
 			//define effects for selectable, hoverable and draggable flowers
 			var hoverSelectDragEffect = {
@@ -722,7 +789,7 @@ export class DesignStudioComponent implements AfterViewInit {
 
 
 			//add event listener to detect flower dragging
-			this.shapediverApi.scene.addEventListener(this.shapediverApi.scene.EVENTTYPE.DRAG_END, function (res) {
+			this.shapediverApi.scene.addEventListener(this.shapediverApi.scene.EVENTTYPE.DRAG_END, (res) => {
 
 				var draggedScenePath = res.scenePath.split(".");
 
@@ -733,25 +800,31 @@ export class DesignStudioComponent implements AfterViewInit {
 
 					// Mark the selected flower as the current one and update the data
 					window['currentFlowerIndex'] = draggedFlower;
-					$('#flowerXLoc').val( makModel['build_data']['componentValues']['flowersJSON']['flowers'][currentFlowerIndex]['position'][0] );
-					$('#flowerYLoc').val( makModel['build_data']['componentValues']['flowersJSON']['flowers'][currentFlowerIndex]['position'][1] );
-					$('#flowerSize').val( makModel['build_data']['componentValues']['flowersJSON']['flowers'][currentFlowerIndex]['size'] );
-					$('#flowerRot').val( makModel['build_data']['componentValues']['flowersJSON']['flowers'][currentFlowerIndex]['rotation'] );
-					amplitude.getInstance().logEvent('Dragged Flower');
 
+
+					if ( typeof( this.flowersJSON ) == "string")
+					{
+						this.flowersJSON = JSON.parse(this.flowersJSON);
+					}
 
 					//store flower original location
-					var originalLoc = flowersJSON.flowers[draggedFlower].position;
+					var originalLoc = this.flowersJSON.flowers[draggedFlower].position;
+
 
 					//update flower location
-					flowersJSON.flowers[draggedFlower].position = [res.dragPosAbs.x, res.dragPosAbs.z];
-					this.shapediverApi.parameters.updateAsync({ name: "flowersJSON", value: JSON.stringify(flowersJSON) }).then(function () {
+					this.flowersJSON.flowers[draggedFlower].position = [res.dragPosAbs.x, res.dragPosAbs.z];
+
+
+					console.log('Updating the flowers with ...');
+					console.log(this.flowersJSON);
+
+					this.shapediverApi.parameters.updateAsync({ 'name': 'flowersJSON', 'value': JSON.stringify(this.flowersJSON) }).then(() => {
 						//check if there are any collisions with the new flower location
 						var checkFlower = this.shapediverApi.scene.getData({ name: "checkFlowers" }).data[0].data[draggedFlower];
 						if (checkFlower.collision) {
 							alert("Collision Detected");
-							flowersJSON.flowers[draggedFlower].position = originalLoc;
-							this.shapediverApi.parameters.updateAsync({ name: "flowersJSON", value: JSON.stringify(flowersJSON) });
+							this.flowersJSON.flowers[draggedFlower].position = originalLoc;
+							this.shapediverApi.parameters.updateAsync({ 'name': "flowersJSON", 'value': JSON.stringify(this.flowersJSON) });
 						}
 					});
 				}
@@ -759,7 +832,7 @@ export class DesignStudioComponent implements AfterViewInit {
 
 
 			//add event listener to detect flower selection
-			this.shapediverApi.scene.addEventListener(this.shapediverApi.scene.EVENTTYPE.SELECT_ON, function (res) {
+			this.shapediverApi.scene.addEventListener(this.shapediverApi.scene.EVENTTYPE.SELECT_ON, (res) => {
 				var selectedScenePath = res.scenePath.split(".");
 
 				//check if the dragged element is a flower
@@ -768,10 +841,16 @@ export class DesignStudioComponent implements AfterViewInit {
 			});
 
 
+			if ( typeof( this.flowersJSON ) == "string")
+			{
+				this.flowersJSON = JSON.parse(this.flowersJSON);
+			}
+
+			this.flowerFlag = true;
 			//activate random flowers
 			//this.shapediverApi.parameters.updateAsync({ name: "Random Flowers", value: true }).then(function () {
-			//	flowersJSON = this.shapediverApi.scene.getData({ name: "randomFlowersJSON" }).data[0].data;
-			//	this.shapediverApi.parameters.updateAsync([{ name: "Random Flowers", value: false }, { name: "flowersJSON", value: JSON.stringify(flowersJSON) }]);
+			//	this.flowersJSON = this.shapediverApi.scene.getData({ name: "randomthis.FlowersJSON" }).data[0].data;
+			//	this.shapediverApi.parameters.updateAsync([{ name: "Random Flowers", value: false }, { name: "this.flowersJSON", value: JSON.stringify(this.flowersJSON) }]);
 			//});
 
 
@@ -782,7 +861,7 @@ export class DesignStudioComponent implements AfterViewInit {
 		}else if ( this.designData.uid == "eLHfWkL4GA2LFeuoVQkx" )
 		{
 
-*/
+
 
 			console.log('In set drag and drop');
 			var panelsScenePath;
@@ -820,10 +899,6 @@ export class DesignStudioComponent implements AfterViewInit {
 			//get 3D assets
 			var assets = this.shapediverApi.scene.get(null, "CommPlugin_1").data;
 
-			console.log('The assets are ...');
-			console.log(assets);
-
-
 			//look for flowers and panels assets
 			for (var i = 0; i < assets.length; ++i) 
 			{
@@ -852,9 +927,6 @@ export class DesignStudioComponent implements AfterViewInit {
 
 			//add event listener to detect logo dragging
 			this.shapediverApi.scene.addEventListener(this.shapediverApi.scene.EVENTTYPE.DRAG_END, function (res) {
-
-				console.log('The res is ...');
-				console.log(res);
 
 				// Set the variable values to the dragged values
 				var draggedScenePath = res.scenePath.split(".");
@@ -888,7 +960,7 @@ export class DesignStudioComponent implements AfterViewInit {
 			});
 
 
-		
+		}
 		
 
 	}

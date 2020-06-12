@@ -17,9 +17,20 @@
             }
         }
 
+        .user-info {
+            position:relative;
+            top:140px;
+        }
+
+
+        .profileAvatar {
+            width:150px;
+            height:150px;
+            border-radius:50%;
+        }
+
         .name {
             font-size: 34px;
-            color: #FFFFFF;
 
             @include media-breakpoint('sm') {
                 margin-bottom: 32px;
@@ -38,6 +49,10 @@
 
     .content {
         flex: 1;
+
+        .bio-line {
+            font-size:1.2em;
+        }
 
         mat-tab-group {
             height: 100%;

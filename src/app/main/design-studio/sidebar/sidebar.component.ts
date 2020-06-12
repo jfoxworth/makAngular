@@ -4,6 +4,7 @@ import { Component, OnInit, Input, Output, ViewEncapsulation } from '@angular/co
 import { Ng5SliderModule } from 'ng5-slider';
 import { Options } from 'ng5-slider';
 
+import {MatButtonModule} from '@angular/material/button';
 import { EventEmitter } from '@angular/core';
 
 // Services
@@ -24,13 +25,16 @@ export class SidebarComponent implements OnInit {
 	@Output() createNewVersion = new EventEmitter();
 	@Output() loadModel = new EventEmitter();
 
-
 	thisValue : number=5;
+	blobSelectIndex : number = 0;
 
 	@Input('designData') designData:any;
 	@Input('versionList') versionList:any;
 	@Input('versionData') versionData:any;
 	@Input('userData') userData:any;
+	@Input('flowersJSON') flowersJSON:any;
+	@Input('flowerFlag') flowerFlag:any;
+	@Input('editableVersion') editableVersion:boolean;
 	
 
 	constructor( private DesignService : DesignService ) { }
@@ -62,15 +66,38 @@ export class SidebarComponent implements OnInit {
 
 
     // When a user wants to add a new project based upon a design
-    addMyProject( designId ) {
+    addMyProject( designId:string ) {
     	console.log('I should be adding a new design with the ID of '+designId);
     }
 
 
     // Convert hex to RGB
-    hexToRGB( hexCode ):string {
+    hexToRGB( hexCode:string ):string {
     	return this.DesignService.hexToRGB( hexCode )
     }
+
+
+
+    // Stringify an object
+    stringify( ots:object ):string {
+    	return JSON.stringify( ots )
+    }
+
+
+    // Add a new item to the blob
+	addNewItemToBlob():void
+	{
+		this.flowersJSON['flowers'].splice({'size':'', 'position':[], 'rotation': ''});
+	}
+
+
+
+    // Delete an item from the blob
+	deleteItemFromBlob( index:number ):void
+	{
+		this.flowersJSON['flowers'].splice( index, 1 );
+	}
+
 
 
 }

@@ -50,33 +50,57 @@
 
 						<div fxFlex="80%" 
 							 fxLayout="column"
-							 style="margin:0px 10%">
+							 style="margin:0px 10%"
+							 *ngIf="versionList && projectList">
 
 							<h1 class="mt-32 mb-20">Select a Project</h1>
 
 							<mat-divider></mat-divider>
 
 
-							<div *ngIf="(projectList | async)?.length==0">You currently have no designs. Go to the marketplace and select a design to add to your list of projects.</div>
+							<div *ngIf="projectList.length==0">
+								You currently have no designs. Go to the marketplace and select a design to add to your list of projects.
+							</div>
 
 							<table class="displayTable">
 
 
-							    <tr	(click)="currentProject=project; getVersions( currentProject.uid ); getDesign( currentProject.designId ) "
-							       target="_blank"
-							       [ngClass]="{'currentItem' : project==currentProject}"
-							       *ngFor="let project of projectList">
+								<tr	(click)="setCurrentProject( project ) "
+								   target="_blank"
+								   class="projectRow"
+								   [ngClass]="{'currentItem' : project==currentProject}"
+								   *ngFor="let project of projectList">
 
-							    	<td class="mat-subheading-2" style="width:35%">{{ project.name }} 
+									<td class="mat-subheading-2" 
+										style="width:10%">
 										<mat-icon style="cursor:pointer" 
-		                                          matTooltip="Open in design studio"
-		                                          [routerLink]="['/designStudio/project/'+project.uid]">
-		                                    color_lens
-		                                </mat-icon>
-							    	</td>
+												  matTooltip="Open in design studio"
+												  [routerLink]="['/designStudio/project/'+project.uid]">
+											color_lens
+										</mat-icon>
 
-							    	<td class="mat-body-1" style="color:#898989"> 
-							    		<span style="font-weight:bold; margin-right:10px;">Type : {{project.designType}}</span> 
+										<mat-icon style="cursor:pointer" 
+												  matTooltip="View Quotes for this project"
+												  [routerLink]="['/invoice/'+versionList[versionList.length-1]['uid']]">
+											attach_money
+										</mat-icon>
+									</td>
+
+									<td class="mat-subheading-2" 
+										style="width:25%">
+											{{ project.name }} 
+									</td>
+
+
+									<td class="mat-subheading-2" 
+										style="width:20%">
+											{{ project.dateCreated | date:'short' }} 
+									</td>
+
+
+									<td class="mat-body-1" > 
+										
+										<span style="font-weight:bold; margin-right:10px;">Type : {{project.designType}}</span> 
 										<span style="font-weight:bold; margin-right:10px;">Versions : {{project.versions.length}}</span>
 										{{ project.description }}
 									</td>
@@ -96,15 +120,15 @@
 						<div flex="100%" 
 							 layout="column" 
 							 style="width:100%"
-							 *ngIf="currentProject !== undefined">
+							 *ngIf="currentProject.uid">
 
 							<h2 class="mt-32 mb-20">
-								Project Data -                     
+								Project Data -					 
 									<mat-icon style="cursor:pointer" 
-	                                          matTooltip="Open in design studio"
-	                                          [routerLink]="['/designStudio/project/'+currentProject.uid]">
-	                                    color_lens
-	                                </mat-icon>
+											  matTooltip="Open in design studio"
+											  [routerLink]="['/designStudio/project/'+currentProject.uid]">
+										color_lens
+									</mat-icon>
 
 							</h2>
 					  
@@ -128,7 +152,7 @@
 									</mat-form-field>
 
 									<div [hidden]="projectName.valid || projectName.pristine || !projectName.errors?.minlength"
-									     class="alert alert-danger">
+										 class="alert alert-danger">
 										Project name is required with at least 5 characters
 									</div>
 											
@@ -149,7 +173,7 @@
 									</mat-form-field>
 
 									<div [hidden]="projectDescription.valid || projectDescription.pristine || !projectDescription.errors?.minlength"
-									     class="alert alert-danger">
+										 class="alert alert-danger">
 										Project description is required with at least 25 characters
 									</div>
 
@@ -204,7 +228,57 @@
 							<h2 class="mt-32 mb-20">Version Data</h2>
 
 
+
+							<!-- Row showing button to create default version -->
+							<div fxLayout="row" 
+								 fxLayoutAlign="center center" 
+								 flex="100%">
+
+								<div fxFlex="20" style="margin:20px 5%">
+									<button mat-stroked-button 
+											color="accent"
+											(click)="createNewVersion('default')">
+										New version (default)
+									</button>
+								</div>
+
+							</div>
+
+
+							<!-- Row showing the version list -->
 							<div fxLayout="row" fxLayoutAlign="center" flex="100%">
+
+								<table class="displayTable"
+									   fxFlex="60" style="margin:0px 5%">
+									<thead>
+										<tr>
+											<th>VERSION NUMBER AND NAME</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr *ngFor="let version of versionList; index as j"
+											class="projectRow"
+										    [ngClass]="{'currentItem' : version==currentVersion}"
+											(click)="onVersionSelected( j )">
+											<td>{{j+1}} - {{version.name}}</td>
+											<td>
+												<mat-icon style="cursor:pointer" 
+														  matTooltip="View Quotes for this version"
+														  [routerLink]="['/invoice/'+version['uid']]">
+													attach_money
+												</mat-icon>
+												<mat-icon style="cursor:pointer" 
+														  matTooltip="Make copy as latest version"
+														  (click)="createNewVersion( j )">
+													add_circle
+												</mat-icon>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+
+								<!--
 
 								<div fxFlex="40" style="margin:0px 5%">
 									<mat-form-field class="w-100-p ml-10-p mt-20 form-group">
@@ -221,31 +295,14 @@
 								</div>
 
 
+
 								<div fxLayoutAlign="center center" fxFlex="40" style="margin:0px 5%">
 									<button mat-button class="red-900 mt-8" *ngIf="currentVersion.latest">Submit for purchase</button>
 									<button mat-button class="primary mt-8" *ngIf="!currentVersion.latest">Recreate as latest version</button>	
 								</div>
 
+							-->
 
-							</div>
-
-
-							<div fxLayout="row" fxLayoutAlign="start" flex="100%">
-
-								<div fxFlex="20" style="margin:20px 5%">
-									<button mat-stroked-button 
-											color="accent"
-											(click)="createNewVersion('latest')">
-										New version (identical to latest)
-									</button>
-								</div>
-								<div fxFlex="20" style="margin:20px 5%">
-									<button mat-stroked-button 
-											color="accent"
-											(click)="createNewVersion('default')">
-										New version (default)
-									</button>
-								</div>
 
 							</div>
 
@@ -266,7 +323,7 @@
 											Estimated price - {{currentVersion.price}}
 										</div>
 										<div fxFlex="50">
-											Date Created - {{currentVersion.dateCreated}}
+											Date Created - {{currentVersion.dateCreated | date:'short'}}
 										</div>
 									</div>
 
@@ -288,7 +345,7 @@
 									</mat-form-field>
 
 									<div [hidden]="versionName.valid || versionName.pristine || !versionName.errors?.minlength"
-									     class="alert alert-danger">
+										 class="alert alert-danger">
 										Version name is required with at least 5 characters
 									</div>
 
@@ -310,7 +367,7 @@
 									</mat-form-field>
 
 									<div [hidden]="versionDescription.valid || versionDescription.pristine || !versionDescription.errors?.minlength"
-									     class="alert alert-danger">
+										 class="alert alert-danger">
 										Version description is required with at least 25 characters
 									</div>
 

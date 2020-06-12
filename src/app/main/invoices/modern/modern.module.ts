@@ -5,10 +5,18 @@ import { FuseSharedModule } from '@fuse/shared.module';
 
 import { InvoiceService } from 'app/main/services/invoice.service';
 import { InvoiceModernComponent } from 'app/main/invoices/modern/modern.component';
+import { MatButtonModule } from '@angular/material/button';
 
 const routes = [
     {
-        path     : 'invoices/modern',
+        path     : 'invoice/design/:designId',
+        component: InvoiceModernComponent,
+        resolve  : {
+            search: InvoiceService
+        }
+    },
+    {
+        path     : 'invoice/:versionId',
         component: InvoiceModernComponent,
         resolve  : {
             search: InvoiceService
@@ -23,7 +31,8 @@ const routes = [
     imports     : [
         RouterModule.forChild(routes),
 
-        FuseSharedModule
+        FuseSharedModule,
+        MatButtonModule
     ],
     providers   : [
         InvoiceService

@@ -143,7 +143,7 @@ export class DesignStudioService implements Resolve<any>
 								'icon' : 'assets/images/mak-icons/MAKICONS-06.png',
 								'tooltip' : 'Faceted Wall',
 								'name' : 'facetedWall',
-								'id' 		: ''
+								'id' 		: 'SzBOwe2odgJubMPI5kB7'
 							},
 							{
 								'order' : 3,
@@ -178,7 +178,7 @@ export class DesignStudioService implements Resolve<any>
 								'icon' : 'assets/images/mak-icons/MAKICONS-11.png',
 								'tooltip' : 'Fossil Wall',
 								'name' : 'fossilWall',
-								'id' 		: ''
+								'id' 		: 'rdTLJhZqGZ1uhLa59vVC'
 							}
 						]
 					},
@@ -315,7 +315,7 @@ export class DesignStudioService implements Resolve<any>
 	 */
 
 	setPrice(currentDesign, currentVersion) {
-		console.log('In the set price formula function');
+		//console.log('In the set price formula function');
 
 
 		let priceString = '';
@@ -330,9 +330,6 @@ export class DesignStudioService implements Resolve<any>
 				priceString = priceString + currentDesign.priceArray[i].text;				
 			}
 		}
-
-		console.log('The calculated price is ');
-		console.log(priceString);
 
 		return Math.round(eval(priceString));
 

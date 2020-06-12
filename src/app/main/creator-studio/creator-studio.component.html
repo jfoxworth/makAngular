@@ -82,17 +82,18 @@
 
 							    <tr	(click)="currentDesign=design; formatDesignData()"
 							       target="_blank"
+							       class="designRow"
 							       [ngClass]="{'currentItem' : design==currentDesign}"
 							       *ngFor="let design of designList; index as i">
 
 							    	<td class="mat-subheading-2" style="width:25%">{{ design.title }}</td>
 
-							    	<td class="mat-body-1" style="color:#898989; width:55%"> 
+							    	<td class="mat-body-1" style="width:55%"> 
 							    		<span style="font-weight:bold; margin-right:10px;">Type : {{design.category}}</span> 
 										{{ design.marketplace.description }}
 									</td>
 
-							    	<td class="mat-body-1" style="color:#898989; width:20%">
+							    	<td class="mat-body-1" style="width:20%">
 							    		<span *ngIf="design.status==0" style="font-weight:bold; margin-right:10px;">Status : Inactive</span> 
 							    		<span *ngIf="design.status==1" style="font-weight:bold; margin-right:10px;">Status : Active</span> 
 									</td>
@@ -685,14 +686,7 @@
 
 																	<div class="w-280 text-center mt-20 mb-20" fxLayout="row">
 
-																		<div class="h3 text-center mb-12 mt-12 w-200">{{parameter.label}}</div>
-
-																		<mat-slide-toggle
-																			  [(ngModel)]="parameter.value"
-																			  class="w-50 ml-20 mt-12"
-																			  name="block"
-																			  color="accent-900">
-																		</mat-slide-toggle>
+																		<div class="h3 text-center mb-12 mt-12 w-200">{{parameter.label}} - Blob</div>
 
 																	</div>
 

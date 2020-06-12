@@ -89,6 +89,10 @@ export class EcommerceComponent implements OnInit
                     tempArray.push(docData);
                 });
                 this.projectList = tempArray;
+                if ( this.projectList.length > 0 )
+                {
+                    this.setCurrentProject( this.projectList[0] );
+                }
                 console.log(this.projectList);
         });
 
@@ -101,6 +105,28 @@ export class EcommerceComponent implements OnInit
     // -----------------------------------------------------------------------------------------------------
     // @ Functions
     // -----------------------------------------------------------------------------------------------------
+
+
+
+
+    /**
+     * 
+     *  Set the current project to the one given
+     *
+     */
+    setCurrentProject( project )
+    {
+
+        this.currentProject = project; 
+        this.getVersions( project.uid ); 
+        this.getDesign( project.designId );
+    }
+
+
+
+
+
+
 
 
 
@@ -149,6 +175,7 @@ export class EcommerceComponent implements OnInit
                     tempArray.push(docData);
                 });
                 this.versionList = tempArray;
+                this.onVersionSelected( this.versionList.length-1 );
                 console.log(this.versionList);
         });
 
@@ -192,7 +219,6 @@ export class EcommerceComponent implements OnInit
 
         if ( versionIndex==this.versionList.length-1 ){ this.currentVersion.latest=true; }
 
-
     }
 
 
@@ -230,13 +256,12 @@ export class EcommerceComponent implements OnInit
 		if ( type == 'default' )
 		{
 		    versionsCollection.doc(versionId).set(this.MarketplaceService.versionTemplate( this.currentProject.uid, versionId, this.versionList.length+1, this.currentDesign ));
-		}
 
 
-		if ( type == 'latest' )
+		}else
 		{
 			let tempVer = this.MarketplaceService.versionTemplate( this.currentProject.uid, versionId, this.versionList.length+1, this.currentDesign );
-			tempVer.values = this.versionList[this.versionList.length-1]['values'];
+			tempVer.values = this.versionList[type]['values'];
 		    versionsCollection.doc(versionId).set(tempVer);
 		}
 
