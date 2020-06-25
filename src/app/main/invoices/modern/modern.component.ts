@@ -58,6 +58,7 @@ export class InvoiceModernComponent implements OnInit, OnDestroy
         console.log('ngOnInit called');
 
 
+
         // Get the version id. If there is no version ID,
         // get the design id
         

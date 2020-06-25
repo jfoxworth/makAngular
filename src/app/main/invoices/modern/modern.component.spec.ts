@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { InvoiceModernComponent } from './modern.component';
 import { RouterModule, Routes, ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -67,20 +67,20 @@ fdescribe('InvoiceModernComponent', () => {
 	});
 
 
-	fit('should call format values in ngOnInit', () => {
+	it('should call format values in ngOnInit', fakeAsync(() => {
 		spyOn(component, 'formatValues');
-		component.ngOnInit().and.callThrough();
-		console.log('--------------------------------------------------------------');
-		console.log(component.formatValues);
+		component.ngOnInit();
+		tick();
 		expect(component.formatValues).toHaveBeenCalled();
-	});
+	}));
 
 
-	it('should call calculateCosts ngOnInit', () => {
+	it('should call calculateCosts ngOnInit', fakeAsync(() => {
 		spyOn(component, 'calculateCosts');
 		component.ngOnInit();
+		tick();
 		expect(component.calculateCosts).toHaveBeenCalled();
-	});
+	}));
 
 
 });
