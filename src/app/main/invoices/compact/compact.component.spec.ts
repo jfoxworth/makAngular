@@ -1,25 +1,36 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { InvoiceService } from 'app/main/services/invoice.service';
+import { InvoiceCompactComponent } from './compact.component';
 
-import { CompactComponent } from './compact.component';
+describe('InvoiceCompactComponent', () => {
+	let component: InvoiceCompactComponent;
+	let fixture: ComponentFixture<InvoiceCompactComponent>;
 
-describe('CompactComponent', () => {
-  let component: CompactComponent;
-  let fixture: ComponentFixture<CompactComponent>;
+	beforeEach(async(() => {
+		TestBed.configureTestingModule({
+			declarations: [ InvoiceCompactComponent ]
+		})
+		.compileComponents();
+	}));
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ CompactComponent ]
-    })
-    .compileComponents();
-  }));
+	beforeEach(() => {
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(CompactComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+		TestBed.configureTestingModule({
+			declarations: [ InvoiceCompactComponent ],
+			providers: [ { provide: InvoiceService, useValue : {} } ]
+		});
+
+		fixture = TestBed.createComponent(InvoiceCompactComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
+
+
+
+	it('should create compact quote', () => {
+		expect(component).toBeTruthy();
+	});
+
+
 });

@@ -15,9 +15,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { FuseSharedModule } from '@fuse/shared.module';
 
 import { ProfileComponent } from './profile.component';
-import { ProfileAboutComponent } from 'app/main/profile/tabs/about/about.component';
-import { CompaniesComponent } from './tabs/companies/companies.component';
-import { EditBioDialog } from 'app/main/profile/edit-dialog/edit-dialog.component';
 
 import { CommonModule } from '@angular/common';
 
@@ -43,9 +40,6 @@ const routes: Routes = [
 @NgModule({
     declarations: [
         ProfileComponent,
-        ProfileAboutComponent,
-        CompaniesComponent,
-        EditBioDialog,
     ],
     imports     : [
         RouterModule.forChild(routes),

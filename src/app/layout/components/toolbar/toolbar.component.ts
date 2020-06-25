@@ -11,168 +11,189 @@ import { navigation } from 'app/navigation/navigation';
 
 
 import { AuthService } from 'app/main/services/auth.service';
+import { UserService } from 'app/main/services/user-service.service';
+import { FirebaseService } from 'app/main/services/firebase.service';
 
 
 
 @Component({
-    selector     : 'toolbar',
-    templateUrl  : './toolbar.component.html',
-    styleUrls    : ['./toolbar.component.scss'],
-    encapsulation: ViewEncapsulation.None
+	selector	 : 'toolbar',
+	templateUrl  : './toolbar.component.html',
+	styleUrls	: ['./toolbar.component.scss'],
+	encapsulation: ViewEncapsulation.None
 })
 
 export class ToolbarComponent implements OnInit, OnDestroy
 {
-    horizontalNavbar: boolean;
-    rightNavbar: boolean;
-    hiddenNavbar: boolean;
-    languages: any;
-    navigation: any;
-    selectedLanguage: any;
-    userStatusOptions: any[];
-    userData : any;
+	horizontalNavbar	: boolean;
+	rightNavbar			: boolean;
+	hiddenNavbar		: boolean;
+	languages			: any;
+	navigation			: any;
+	selectedLanguage	: any;
+	userStatusOptions	: any[];
+	userData 			: any;
+	userInfo 			: any;
+	profileImage 		: any;
 
-    // Private
-    private _unsubscribeAll: Subject<any>;
+	// Private
+	private _unsubscribeAll: Subject<any>;
 
-    /**
-     * Constructor
-     *
-     * @param {FuseConfigService} _fuseConfigService
-     * @param {FuseSidebarService} _fuseSidebarService
-     * @param {TranslateService} _translateService
-     */
-    constructor(
-        private _fuseConfigService: FuseConfigService,
-        private _fuseSidebarService: FuseSidebarService,
-        private _translateService: TranslateService,
-        public authService: AuthService,
-    )
-    {
+	/**
+	 * Constructor
+	 *
+	 * @param {FuseConfigService} _fuseConfigService
+	 * @param {FuseSidebarService} _fuseSidebarService
+	 * @param {TranslateService} _translateService
+	 */
+	constructor(
+		private _fuseConfigService: FuseConfigService,
+		private _fuseSidebarService: FuseSidebarService,
+		private _translateService: TranslateService,
+		public authService: AuthService,
+		private UserService : UserService,
+		private FirebaseService : FirebaseService,
+	)
+	{
 
-        // Get the user data
-        this.userData = JSON.parse(localStorage.getItem('user'));
+		// Get the user data
+		this.userData = JSON.parse(localStorage.getItem('user'));
+
+		if ( ( this.userData === undefined ) || ( this.userData === null ) )
+		{
+			this.profileImage = this.UserService.getProfileImage( {} );
+
+		}else
+		{
+			console.log(this.userData.uid);
+			this.userInfo = this.FirebaseService.getDocById( 'users', this.userData.uid ).then(response=> {
+				this.userInfo=response.data();
+				this.profileImage = this.UserService.getProfileImage( this.userInfo );
+
+			});		
+		}
 
 
 
 
 
-        // Set the defaults
-        this.userStatusOptions = [
-            {
-                title: 'Online',
-                icon : 'icon-checkbox-marked-circle',
-                color: '#4CAF50'
-            },
-            {
-                title: 'Away',
-                icon : 'icon-clock',
-                color: '#FFC107'
-            },
-            {
-                title: 'Do not Disturb',
-                icon : 'icon-minus-circle',
-                color: '#F44336'
-            },
-            {
-                title: 'Invisible',
-                icon : 'icon-checkbox-blank-circle-outline',
-                color: '#BDBDBD'
-            },
-            {
-                title: 'Offline',
-                icon : 'icon-checkbox-blank-circle-outline',
-                color: '#616161'
-            }
-        ];
 
-        this.languages = [
-            {
-                id   : 'en',
-                title: 'English',
-                flag : 'us'
-            },
-            {
-                id   : 'tr',
-                title: 'Turkish',
-                flag : 'tr'
-            }
-        ];
+		// Set the defaults
+		this.userStatusOptions = [
+			{
+				title: 'Online',
+				icon : 'icon-checkbox-marked-circle',
+				color: '#4CAF50'
+			},
+			{
+				title: 'Away',
+				icon : 'icon-clock',
+				color: '#FFC107'
+			},
+			{
+				title: 'Do not Disturb',
+				icon : 'icon-minus-circle',
+				color: '#F44336'
+			},
+			{
+				title: 'Invisible',
+				icon : 'icon-checkbox-blank-circle-outline',
+				color: '#BDBDBD'
+			},
+			{
+				title: 'Offline',
+				icon : 'icon-checkbox-blank-circle-outline',
+				color: '#616161'
+			}
+		];
 
-        this.navigation = navigation;
+		this.languages = [
+			{
+				id   : 'en',
+				title: 'English',
+				flag : 'us'
+			},
+			{
+				id   : 'tr',
+				title: 'Turkish',
+				flag : 'tr'
+			}
+		];
 
-        // Set the private defaults
-        this._unsubscribeAll = new Subject();
-    }
+		this.navigation = navigation;
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
+		// Set the private defaults
+		this._unsubscribeAll = new Subject();
+	}
 
-    /**
-     * On init
-     */
-    ngOnInit(): void
-    {
-        // Subscribe to the config changes
-        this._fuseConfigService.config
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((settings) => {
-                this.horizontalNavbar = settings.layout.navbar.position === 'top';
-                this.rightNavbar = settings.layout.navbar.position === 'right';
-                this.hiddenNavbar = settings.layout.navbar.hidden === true;
-            });
+	// -----------------------------------------------------------------------------------------------------
+	// @ Lifecycle hooks
+	// -----------------------------------------------------------------------------------------------------
 
-        // Set the selected language from default languages
-        this.selectedLanguage = _.find(this.languages, {id: this._translateService.currentLang});
-    }
+	/**
+	 * On init
+	 */
+	ngOnInit(): void
+	{
+		// Subscribe to the config changes
+		this._fuseConfigService.config
+			.pipe(takeUntil(this._unsubscribeAll))
+			.subscribe((settings) => {
+				this.horizontalNavbar = settings.layout.navbar.position === 'top';
+				this.rightNavbar = settings.layout.navbar.position === 'right';
+				this.hiddenNavbar = settings.layout.navbar.hidden === true;
+			});
 
-    /**
-     * On destroy
-     */
-    ngOnDestroy(): void
-    {
-        // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
-        this._unsubscribeAll.complete();
-    }
+		// Set the selected language from default languages
+		this.selectedLanguage = _.find(this.languages, {id: this._translateService.currentLang});
+	}
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
+	/**
+	 * On destroy
+	 */
+	ngOnDestroy(): void
+	{
+		// Unsubscribe from all subscriptions
+		this._unsubscribeAll.next();
+		this._unsubscribeAll.complete();
+	}
 
-    /**
-     * Toggle sidebar open
-     *
-     * @param key
-     */
-    toggleSidebarOpen(key): void
-    {
-        this._fuseSidebarService.getSidebar(key).toggleOpen();
-    }
+	// -----------------------------------------------------------------------------------------------------
+	// @ Public methods
+	// -----------------------------------------------------------------------------------------------------
 
-    /**
-     * Search
-     *
-     * @param value
-     */
-    search(value): void
-    {
-        // Do your search here...
-        console.log(value);
-    }
+	/**
+	 * Toggle sidebar open
+	 *
+	 * @param key
+	 */
+	toggleSidebarOpen(key): void
+	{
+		this._fuseSidebarService.getSidebar(key).toggleOpen();
+	}
 
-    /**
-     * Set the language
-     *
-     * @param lang
-     */
-    setLanguage(lang): void
-    {
-        // Set the selected language for the toolbar
-        this.selectedLanguage = lang;
+	/**
+	 * Search
+	 *
+	 * @param value
+	 */
+	search(value): void
+	{
+		// Do your search here...
+		console.log(value);
+	}
 
-        // Use the selected language for translations
-        this._translateService.use(lang.id);
-    }
+	/**
+	 * Set the language
+	 *
+	 * @param lang
+	 */
+	setLanguage(lang): void
+	{
+		// Set the selected language for the toolbar
+		this.selectedLanguage = lang;
+
+		// Use the selected language for translations
+		this._translateService.use(lang.id);
+	}
 }

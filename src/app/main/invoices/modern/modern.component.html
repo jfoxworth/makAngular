@@ -1,3 +1,5 @@
+
+
 <div id="invoice" class="modern page-layout blank" fxLayout="row">
 
     <div class="invoice-container"
@@ -35,36 +37,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!--
-
-                    <div fxLayout="row" class="client" fxLayoutAlign="start center">
-                        <div class="label" fxLayout="row" fxLayoutAlign="end center">
-                            <div>CLIENT</div>
-                        </div>
-
-                        <div class="divider"></div>
-
-                        <div class="detail">
-                            <div class="title">{{invoice.client.title}}</div>
-                            <div *ngIf="invoice?.client.address" class="address">
-                                {{invoice.client.address}}
-                            </div>
-                            <div *ngIf="invoice?.client.phone" class="phone">
-                                <span>Phone:</span>
-                                {{invoice.client.phone}}
-                            </div>
-                            <div *ngIf="invoice?.client.email" class="email">
-                                <span>Email:</span>
-                                {{invoice.client.email}}
-                            </div>
-                            <div *ngIf="invoice?.client.website" class="website">
-                                <span>Web:</span>
-                                {{invoice.client.website}}
-                            </div>
-                        </div>
-                    </div>
-                    -->
 
                 </div>
 
@@ -150,43 +122,6 @@
 
 
 
-                <!--
-                <table class="simple invoice-table">
-                    <thead>
-                        <tr>
-                            <th>SERVICE</th>
-                            <th>UNIT</th>
-                            <th class="text-right">UNIT PRICE</th>
-                            <th class="text-right">QUANTITY</th>
-                            <th class="text-right">TOTAL</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let service of invoice.services">
-                            <td>
-                                <div class="title">{{service.title}}</div>
-                                <div class="detail">{{service.detail}}</div>
-                            </td>
-                            <td>
-                                {{service.unit}}
-                            </td>
-                            <td class="text-right">
-                                {{service.unitPrice}}
-                            </td>
-                            <td class="text-right">
-                                {{service.quantity}}
-                            </td>
-                            <td class="text-right">
-                                {{service.total}}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-            -->
-
-
-
                 <table class="simple invoice-table-footer">
                     <tbody>
                         <tr class="subtotal">
@@ -221,44 +156,9 @@
                 </div>
             </div>
 
-            <!--
-
-            Use the following elements to add breaks to your pages. This will make sure that the section in between
-            these elements will be printed on a new page. The following two elements must be used before and after the
-            page content that you want to show as a new page. So, you have to wrap your content with them.
-
-            Elements:
-            ---------
-            <div class="page-break-after"></div>
-            <div class="page-break-before"></div>
-
-            -->
-
-            <!--
-
-            Example:
-            --------
-
-            Initial page content!
-
-            <div class="page-break-after"></div>
-            <div class="page-break-before"></div>
-
-            This is the second page!
-
-            <div class="page-break-after"></div>
-            <div class="page-break-before"></div>
-
-            This is the third page!
-
-            <div class="page-break-after"></div>
-            <div class="page-break-before"></div>
-
-            -->
-
+ 
         </div>
-        <!-- / INVOICE -->
-
+ 
     </div>
 
 </div>

@@ -2,10 +2,11 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewChildren, V
 import { NgForm } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
 
-import { ChatService } from 'app/main/chat/chat.service';
+import { ChatService } from 'app/main/services/chat.service';
 
 @Component({
     selector     : 'chat-view',

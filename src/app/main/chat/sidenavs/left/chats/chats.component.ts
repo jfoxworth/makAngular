@@ -6,7 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseMatSidenavHelperService } from '@fuse/directives/fuse-mat-sidenav/fuse-mat-sidenav.service';
 
-import { ChatService } from 'app/main/chat/chat.service';
+import { ChatService } from 'app/main/services/chat.service';
 
 @Component({
     selector     : 'chat-chats-sidenav',

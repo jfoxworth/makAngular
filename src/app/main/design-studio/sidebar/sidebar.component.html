@@ -186,7 +186,7 @@
 					<mat-form-field>
 					  <mat-select class="w-240"
 					  			  [(ngModel)]="valItem['value']"
-					  			  (selectionChange)="updateParameter.emit({'name':valItem['shapediver'], 'value':valItem['value']});">
+					  			  (selectionChange)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':valItem['value']});">
 					    <mat-option *ngFor="let option of valItem.options" [value]="option.value">
 					      {{option.label}}
 					    </mat-option>
@@ -225,7 +225,7 @@
 												readOnly : !editableVersion,
 												showTicks: valItem['showTicks'], 
 												showTicksValues: valItem['showTicksValues']}"
-									(valueChange)="updateParameter.emit({'name':valItem['shapediver'], 'value':valItem['value']});">
+									(valueChange)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':valItem['value']});">
 						</ng5-slider>
 					</div>
 
@@ -235,7 +235,7 @@
 						   style="width:70px; border:1px solid #ACACAC;" 
 						   class="inputItem w-70 mat-subheading-2 pt-5 pb-5 text-center mt-20" 
 						   [(ngModel)]="valItem['value']"
-						   (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'value':valItem['value']});">
+						   (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':valItem['value']});">
 
 					<div *ngIf="!editableVersion"
 						 style="width:70px; border:1px solid #ACACAC;" 
@@ -264,7 +264,7 @@
 						   style="width:200px; border:1px solid #ACACAC" 
 						   class="inputItem w-70 mat-subheading-2 pt-5 pb-5 text-center" 
 						   [(ngModel)]="valItem['value']"
-						   (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'value':valItem['value']});">
+						   (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':valItem['value']});">
 
 					<div *ngIf="!editableVersion"
 						 style="width:200px; border:1px solid #ACACAC" 
@@ -296,7 +296,7 @@
 					  fxFlex="20%"
 					  *ngIf="editableVersion"
 					  [(ngModel)]="valItem.value"
-					  (toggleChange)="updateParameter.emit({'name':valItem['shapediver'], 'value':valItem['value']});"
+					  (toggleChange)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':!valItem['value']});"
 					  class="mt-12"
 					  color="accent-900">
 				</mat-slide-toggle>
@@ -371,7 +371,7 @@
 						   *ngIf="editableVersion"
 						   style="padding:0px"
 						   [(ngModel)]="valItem['colorValue']" 
-						   (change)="updateParameter.emit({'name':valItem['shapediver'], 'value':hexToRGB(valItem['colorValue'])});" />
+						   (change)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':formatColor(valItem['colorValue'])});" />
 
 					<div *ngIf="!editableVersion"
 						 style="width:50px; height:50px; background-color:valItem['colorValue']">
@@ -407,7 +407,7 @@
 							 style="cursor:pointer; text-align:center"
 							 fxFlex="30"
 							 [matTooltip]="thisImage.label"
-							 (click)="updateParameter.emit({'name':valItem['shapediver'], 'value':thisImage['value']});">
+							 (click)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':thisImage['value']});">
 
 							<div fxFlex="100"
 								 fxLayout="center"
@@ -491,7 +491,7 @@
 						   *ngIf="flowersJSON['flowers'][blobSelectIndex]"
 						   class="inputItem w-240 mat-subheading-2 pt-5 pb-5 text-center" 
 						   [(ngModel)]="flowersJSON['flowers'][blobSelectIndex]['size']"
-						   (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'value':stringify(flowersJSON)});">
+						   (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':stringify(flowersJSON)});">
 
 
 
@@ -503,7 +503,7 @@
 						   *ngIf="flowersJSON['flowers'][blobSelectIndex]"
 						   class="inputItem w-240 mat-subheading-2 pt-5 pb-5 text-center" 
 						   [(ngModel)]="flowersJSON['flowers'][blobSelectIndex]['rotation']"
-						   (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'value':stringify(flowersJSON)});">
+						   (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':stringify(flowersJSON)});">
 
 
 
@@ -516,7 +516,7 @@
 						   *ngIf="flowersJSON['flowers'][blobSelectIndex]"
 						   class="inputItem w-240 mat-subheading-2 pt-5 pb-5 text-center" 
 						   [(ngModel)]="flowersJSON['flowers'][blobSelectIndex]['position'][0]"
-						   (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'value':stringify(flowersJSON)});">
+						   (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':stringify(flowersJSON)});">
 
 
 
@@ -528,7 +528,7 @@
 						   *ngIf="flowersJSON['flowers'][blobSelectIndex]"
 						   class="inputItem w-240 mat-subheading-2 pt-5 pb-5 text-center" 
 						   [(ngModel)]="flowersJSON['flowers'][blobSelectIndex]['position'][1]"
-						   (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'value':stringify(flowersJSON)});">
+						   (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':stringify(flowersJSON)});">
 
 
 

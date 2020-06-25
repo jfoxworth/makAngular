@@ -33,7 +33,7 @@ export class InvoiceModernComponent implements OnInit, OnDestroy
     /**
      * Constructor
      *
-     * @param {InvoiceService} _invoiceService
+     * 
      */
     constructor(
         private _invoiceService: InvoiceService,
@@ -54,9 +54,16 @@ export class InvoiceModernComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
+
+        console.log('ngOnInit called');
+
+
         // Get the version id. If there is no version ID,
         // get the design id
+        
+
         this.versionId = this.route.snapshot.paramMap.get('versionId');
+
         console.log('Version ID is '+this.versionId);
         if ( this.versionId === 'design' )
         {
@@ -70,6 +77,14 @@ export class InvoiceModernComponent implements OnInit, OnDestroy
             this.versionData=response.data();
             console.log('The version data is ...');
             console.log(this.versionData);
+
+
+            // calculate the costs
+            this.calculateCosts();
+
+            // Format the value data
+            this.formatValues();
+
     
             this.designData = this.FirebaseService.getDocById( 'designs', this.versionData.designId ).then(response=> {
                 this.designData=response.data();
@@ -86,15 +101,10 @@ export class InvoiceModernComponent implements OnInit, OnDestroy
             });
 
 
-            // Format the value data
-            this.formatValues();
-
-
-
-            // calculate the costs
-            this.calculateCosts();
 
         });
+
+        
 
     }
 
@@ -117,6 +127,8 @@ export class InvoiceModernComponent implements OnInit, OnDestroy
     **/
     calculateCosts(){
 
+
+        console.log('I called calculate costs');
     	this.versionData.tax = Math.round(this.versionData.price*0.0825);
     	this.versionData.totalCost = Math.round(this.versionData.price+this.versionData.tax);
     	this.versionData.deposit = Math.round(this.versionData.totalCost * 0.25);
@@ -135,10 +147,12 @@ export class InvoiceModernComponent implements OnInit, OnDestroy
     **/
     formatValues(){
 
+        console.log('I called format values');
+        this.measurements = [];
     	for (const property in this.versionData.values) {
 
     		this.measurements.push({ 'name' : property, 'value' : this.versionData['values'][property]});
-  			console.log(`${property}: ${this.versionData['values'][property]}`);
+  			//console.log(`${property}: ${this.versionData['values'][property]}`);
 		}
 
     }

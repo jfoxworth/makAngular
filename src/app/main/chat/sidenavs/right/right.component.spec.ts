@@ -1,25 +1,58 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RightComponent } from './right.component';
+import { ChatRightSidenavComponent } from './right.component';
+import { ChatService } from 'app/main/services/chat.service';
 
-describe('RightComponent', () => {
-  let component: RightComponent;
-  let fixture: ComponentFixture<RightComponent>;
+import { mockItems } from 'app/main/services/mockItems';
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ RightComponent ]
-    })
-    .compileComponents();
-  }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(RightComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+describe('ChatRightSidenavComponent', () => {
+	let component: ChatRightSidenavComponent;
+	let fixture: ComponentFixture<ChatRightSidenavComponent>;
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+
+	// Mock Items pulled from external mock file
+	let MockGroup = new mockItems();
+	const mockChatService = MockGroup.mockChatService();
+
+
+
+	beforeEach(async(() => {
+		TestBed.configureTestingModule({
+			declarations: [ ChatRightSidenavComponent ]
+		})
+		.compileComponents();
+	}));
+
+
+
+
+
+	beforeEach(() => {
+
+
+
+		TestBed.configureTestingModule({
+			declarations: [ ChatRightSidenavComponent ],
+			providers: [ { provide: ChatService, useValue : mockChatService } ]
+		});
+
+
+
+		fixture = TestBed.createComponent(ChatRightSidenavComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
+
+
+
+
+
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
+
+
+
+
 });

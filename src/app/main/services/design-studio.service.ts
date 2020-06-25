@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
 
 @Injectable({providedIn: 'root'})
-export class DesignStudioService implements Resolve<any>
+export class DesignStudioService
 {
 
  
@@ -21,11 +20,9 @@ export class DesignStudioService implements Resolve<any>
 	 * @param {HttpClient} _httpClient
 	 */
 	constructor(
-		private _httpClient: HttpClient
+
 	)
 	{
-		// Set the defaults
-		this.onDesignChanged = new BehaviorSubject({});
 
 	}
 
@@ -61,25 +58,6 @@ export class DesignStudioService implements Resolve<any>
 
 
 
-
-
-
-	/**
-	 * Get Design
-	 */
-	getDesign(): Promise<any[]>
-	{
-		return new Promise((resolve, reject) => {
-
-			console.log('In the get design function');
-			this._httpClient.get('api/design')
-				.subscribe((response: any) => {
-					this.design = response;
-					this.onDesignChanged.next(this.design);
-					resolve(this.design);
-				}, reject);
-		});
-	}
 
 
 

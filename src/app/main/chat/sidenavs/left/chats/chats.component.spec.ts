@@ -1,25 +1,54 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ChatChatsSidenavComponent } from './chats.component';
+import { mockItems } from 'app/main/services/mockItems';
+import { ChatService } from 'app/main/services/chat.service';
 
-import { ChatsComponent } from './chats.component';
 
-describe('ChatsComponent', () => {
-  let component: ChatsComponent;
-  let fixture: ComponentFixture<ChatsComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ChatsComponent ]
-    })
-    .compileComponents();
-  }));
+describe('ChatChatsSidenavComponent', () => {
+	let component: ChatChatsSidenavComponent;
+	let fixture: ComponentFixture<ChatChatsSidenavComponent>;
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ChatsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+	let MockGroup = new mockItems();
+	const ChatServiceStub = MockGroup.mockChatService();
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+
+
+
+	beforeEach(async(() => {
+		TestBed.configureTestingModule({
+			declarations: [ ChatChatsSidenavComponent ]
+		})
+		.compileComponents();
+	}));
+
+
+
+
+
+	beforeEach(() => {
+
+		TestBed.configureTestingModule({
+			declarations: [ ChatChatsSidenavComponent ],
+			providers: [ { provide: ChatService, useValue : ChatServiceStub } ]
+		});
+
+
+
+		fixture = TestBed.createComponent(ChatChatsSidenavComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
+
+
+
+
+
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
+
+
+
+
 });

@@ -5,6 +5,7 @@ import { auth } from 'firebase/app';
 import { AngularFireAuth } from "@angular/fire/auth";
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Router } from "@angular/router";
+import { AngularFireStorage } from '@angular/fire/storage';
 
 
 @Injectable({
@@ -16,8 +17,43 @@ export class UserService {
         public afs: AngularFirestore,   // Inject Firestore service
         public afAuth: AngularFireAuth, // Inject Firebase auth service
         public router: Router,
-        public ngZone: NgZone // NgZone service to remove outside scope warning
+        public ngZone: NgZone, // NgZone service to remove outside scope warning
+        private afStorage : AngularFireStorage
   	) { }
+
+
+
+
+
+
+	/**
+	*
+	* Fetch the profile image if there is one
+	*
+	**/
+	getProfileImage( userData ) {
+
+		console.log('In the getProfileImage, I am using the id of '+userData.uid);
+		console.log(userData);
+
+		if ( userData.imageType  === undefined )
+		{
+			console.log('The image type is undefined');
+			var path = '/profile/default.jpeg';
+		}else{
+			var path = '/profile/'+userData.uid+'.'+userData.imageType;			
+			console.log('The path is '+path);
+		}
+
+
+		// Get URL
+		const ref = this.afStorage.ref(path);
+		return ref.getDownloadURL();
+
+  	}
+
+
+
 
 
 

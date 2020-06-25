@@ -56,8 +56,13 @@ export class StoreProductComponent implements OnInit {
 
 
 		// Get the projects that this user has with this design
-		this.projectList = this.FirebaseService.getCollectionTwoParams('projects', 'creatorId', this.userData.uid, 'designId', this.id);
-
+		if ( this.userData !== null )
+		{
+			this.projectList = this.FirebaseService.getCollectionTwoParams('projects', 'creatorId', this.userData.uid, 'designId', this.id);
+		}else
+		{
+			this.projectList = [];
+		}
 
 
 	}

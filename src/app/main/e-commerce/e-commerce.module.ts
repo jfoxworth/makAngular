@@ -26,14 +26,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { FuseSharedModule } from '@fuse/shared.module';
 import { FuseWidgetModule } from '@fuse/components/widget/widget.module';
 
-import { EcommerceProductsComponent } from 'app/main/e-commerce/products/products.component';
-import { EcommerceProductsService } from 'app/main/services/products.service';
-import { EcommerceProductComponent } from 'app/main/e-commerce/product/product.component';
-import { EcommerceProductService } from 'app/main/services/product.service';
+import { EcommerceService } from 'app/main/services/e-commerce.service';
 import { EcommerceComponent } from 'app/main/e-commerce/e-commerce.component';
-
-import { QuoteComponent } from 'app/main/e-commerce/quote/quote.component';
-import { QuoteService } from 'app/main/services/quote.service';
 
 import { FuseSidebarModule } from '@fuse/components';
 
@@ -43,31 +37,14 @@ const routes: Routes = [
         path     : 'products',
         component: EcommerceComponent,
         resolve  : {
-            data: EcommerceProductsService, QuoteService
-        }
-    },
-    {
-        path     : 'products/:id',
-        component: EcommerceProductComponent,
-        resolve  : {
-            data: EcommerceProductService, QuoteService
-        }
-    },
-    {
-        path     : 'products/:id/:handle',
-        component: EcommerceProductComponent,
-        resolve  : {
-            data: EcommerceProductService, QuoteService
+            data: EcommerceService
         }
     }
 ];
 
 @NgModule({
     declarations: [
-        EcommerceProductsComponent,
-        EcommerceProductComponent,
         EcommerceComponent,
-        QuoteComponent,
     ],
     imports     : [
         RouterModule.forChild(routes),
@@ -100,9 +77,7 @@ const routes: Routes = [
         FuseWidgetModule
     ],
     providers   : [
-        EcommerceProductsService,
-        EcommerceProductService,
-        QuoteService,
+        EcommerceService,
     ]
 })
 export class EcommerceModule

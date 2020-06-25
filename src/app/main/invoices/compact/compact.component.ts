@@ -34,11 +34,7 @@ export class InvoiceCompactComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
-        this._invoiceService.invoiceOnChanged
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((invoice) => {
-                this.invoice = invoice;
-            });
+        this.invoice = { 'client' : {}, 'from' : {} }
     }
 
     /**
@@ -46,8 +42,5 @@ export class InvoiceCompactComponent implements OnInit, OnDestroy
      */
     ngOnDestroy(): void
     {
-        // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
-        this._unsubscribeAll.complete();
     }
 }

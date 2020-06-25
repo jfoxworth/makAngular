@@ -6,6 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { FuseMatchMediaService } from '@fuse/services/match-media.service';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
+import { FirebaseService } from 'app/main/services/firebase.service';
 
 import { Router } from '@angular/router';
 
@@ -22,6 +23,7 @@ export class FuseShortcutsComponent implements OnInit, AfterViewInit, OnDestroy
 	searching: boolean;
 	mobileShortcutsPanelActive: boolean;
 	userData : any;
+	userInfo : any;
 
 	@Input()
 	navigation: any;
@@ -50,7 +52,8 @@ export class FuseShortcutsComponent implements OnInit, AfterViewInit, OnDestroy
 		private _fuseNavigationService: FuseNavigationService,
 		private _mediaObserver: MediaObserver,
 		private _renderer: Renderer2,
-		private router: Router
+		private router: Router,
+		private FirebaseService : FirebaseService,
 	)
 	{
 		// Set the defaults
@@ -64,6 +67,7 @@ export class FuseShortcutsComponent implements OnInit, AfterViewInit, OnDestroy
 
 		// Get the user data
 		this.userData = JSON.parse(localStorage.getItem('userData'));
+
 	}
 
 	// -----------------------------------------------------------------------------------------------------
@@ -79,131 +83,143 @@ export class FuseShortcutsComponent implements OnInit, AfterViewInit, OnDestroy
 		this.filteredNavigationItems = this.navigationItems = this._fuseNavigationService.getFlatNavigation(this.navigation);
 
 
-			// Get the user data
-			this.userData = JSON.parse(localStorage.getItem('userData'));
+		// Get the user data
+		this.userData = JSON.parse(localStorage.getItem('userData'));
 
-			if ( ( this.userData === undefined) || ( this.userData == null ) )
-			{
+		if ( ( this.userData === undefined) || ( this.userData == null ) )
+		{
 
-				this.shortcutItems = [
-					{
-						title: 'Knowledge Base',
-						type : 'item',
-						icon : 'help_outline',
-						url  : '/knowledge-base'
-					},
-					{
-						title: 'Design Studio',
-						type : 'item',
-						icon : 'color_lens',
-						url  : '/designStudio'
-					},
-					{
-						title: 'Design Store',
-						type : 'item',
-						icon : 'store',
-						url  : '/store'
-					}
-				];
-
-			
+			this.shortcutItems = [
+				{
+					title: 'Knowledge Base',
+					type : 'item',
+					icon : 'help_outline',
+					url  : '/knowledge-base'
+				},
+				{
+					title: 'Design Studio',
+					type : 'item',
+					icon : 'color_lens',
+					url  : '/designStudio'
+				},
+				{
+					title: 'Design Store',
+					type : 'item',
+					icon : 'store',
+					url  : '/store'
+				}
+			];
 
 
+			this.userInfo = {};
 
-			}else if ( this.userData.designer )
-			{
+		}else
+		{
 
-				this.shortcutItems = [
-					{
-						title: 'My Profile',
-						type : 'item',
-						icon : 'person',
-						url  : '/profile'
-					},
-					{
-						title: 'Messages',
-						type : 'item',
-						icon : 'email',
-						url  : '/messages'
-					},
-					{
-						title: 'Knowledge Base',
-						type : 'item',
-						icon : 'help_outline',
-						url  : '/knowledge-base'
-					},
-					{
-						title: 'My Projects',
-						type : 'item',
-						icon : 'today',
-						url  : '/products'
-					},
-					{
-						title: 'Design Studio',
-						type : 'item',
-						icon : 'color_lens',
-						url  : '/designStudio'
-					},
-					{
-						title: 'Design Store',
-						type : 'item',
-						icon : 'store',
-						url  : '/store'
-					},
-					{
-						title: 'Creator Studio',
-						type : 'item',
-						icon : 'settings',
-						url  : '/creatorStudio'
-					}
-				];
+			console.log(this.userData.uid);
+			this.userInfo = this.FirebaseService.getDocById( 'users', this.userData.uid ).then(response=> {
+				this.userInfo=response.data();
+				
 
 
 
-			}else
-			{
+				if ( this.userInfo.designer )
+				{
 
-				this.shortcutItems = [
-					{
-						title: 'My Profile',
-						type : 'item',
-						icon : 'person',
-						url  : '/profile'
-					},
-					{
-						title: 'Messages',
-						type : 'item',
-						icon : 'email',
-						url  : '/messages'
-					},
-					{
-						title: 'Knowledge Base',
-						type : 'item',
-						icon : 'help_outline',
-						url  : '/knowledge-base'
-					},
-					{
-						title: 'My Projects',
-						type : 'item',
-						icon : 'today',
-						url  : '/products'
-					},
-					{
-						title: 'Design Studio',
-						type : 'item',
-						icon : 'color_lens',
-						url  : '/designStudio'
-					},
-					{
-						title: 'Design Store',
-						type : 'item',
-						icon : 'store',
-						url  : '/store'
-					}
-				];
+					this.shortcutItems = [
+						{
+							title: 'My Profile',
+							type : 'item',
+							icon : 'person',
+							url  : '/profile'
+						},
+						{
+							title: 'Messages',
+							type : 'item',
+							icon : 'email',
+							url  : '/messages'
+						},
+						{
+							title: 'Knowledge Base',
+							type : 'item',
+							icon : 'help_outline',
+							url  : '/knowledge-base'
+						},
+						{
+							title: 'My Projects',
+							type : 'item',
+							icon : 'today',
+							url  : '/products'
+						},
+						{
+							title: 'Design Studio',
+							type : 'item',
+							icon : 'color_lens',
+							url  : '/designStudio'
+						},
+						{
+							title: 'Design Store',
+							type : 'item',
+							icon : 'store',
+							url  : '/store'
+						},
+						{
+							title: 'Creator Studio',
+							type : 'item',
+							icon : 'settings',
+							url  : '/creatorStudio'
+						}
+					];
 
-			
-			}
+
+
+				}else
+				{
+
+					this.shortcutItems = [
+						{
+							title: 'My Profile',
+							type : 'item',
+							icon : 'person',
+							url  : '/profile'
+						},
+						{
+							title: 'Messages',
+							type : 'item',
+							icon : 'email',
+							url  : '/messages'
+						},
+						{
+							title: 'Knowledge Base',
+							type : 'item',
+							icon : 'help_outline',
+							url  : '/knowledge-base'
+						},
+						{
+							title: 'My Projects',
+							type : 'item',
+							icon : 'today',
+							url  : '/products'
+						},
+						{
+							title: 'Design Studio',
+							type : 'item',
+							icon : 'color_lens',
+							url  : '/designStudio'
+						},
+						{
+							title: 'Design Store',
+							type : 'item',
+							icon : 'store',
+							url  : '/store'
+						}
+					];
+
+				}
+
+			});		
+
+		}
 
 
 		

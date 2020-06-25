@@ -78,6 +78,13 @@ export class SidebarComponent implements OnInit {
 
 
 
+    // Format color to be sent to shapediver
+    formatColor( hexCode:string ):string {
+    	return hexCode.replace('#', '0x')+'AA';
+    }
+
+
+
     // Stringify an object
     stringify( ots:object ):string {
     	return JSON.stringify( ots )

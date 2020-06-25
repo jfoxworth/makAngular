@@ -37,7 +37,7 @@ export class DesignStudioComponent implements AfterViewInit {
     designData:any;
     projectData : any;
     versionData : any;
-    versionList : any;
+    versionList : any = [];
     versionCollection : any;
     searchInput: any;
     studioType:string;
@@ -92,6 +92,8 @@ export class DesignStudioComponent implements AfterViewInit {
 			this.designData = this.FirebaseService.getDocById( 'designs', this.designId ).then(response=> {
 				this.designData=response.data();
 				this.versionData = this.blankVersion();
+				this.versionList.push(this.versionData);
+
 				this.initializeAll();
 
 			});
@@ -109,6 +111,7 @@ export class DesignStudioComponent implements AfterViewInit {
 			this.designData = this.FirebaseService.getDocById( 'designs', this.designId ).then(response=> {
 				this.designData=response.data();
 				this.versionData = this.blankVersion();
+				this.versionList.push(this.versionData);
 				this.initializeAll();
 
 			});
@@ -123,6 +126,7 @@ export class DesignStudioComponent implements AfterViewInit {
 			this.designData = this.FirebaseService.getDocById( 'designs', this.designId ).then(response=> {
 				this.designData=response.data();
 				this.versionData = this.blankVersion();
+				this.versionList.push(this.versionData);
 				this.initializeAll();
 
 			});
@@ -180,6 +184,7 @@ export class DesignStudioComponent implements AfterViewInit {
 			this.designData = this.FirebaseService.getDocById( 'designs', this.designId ).then(response=> {
 				this.designData=response.data();
 				this.versionData = this.blankVersion();
+				this.versionList.push(this.versionData);
 				this.initializeAll();
 			});
 
@@ -202,7 +207,8 @@ export class DesignStudioComponent implements AfterViewInit {
 	*/
 	blankVersion() {
 
-		let tempVer = { 'values' : {},
+		let tempVer = { 'version' : 1,
+						'values' : {},
 						'parameterMenus' : [] };
 
 		for ( var a=1; a<this.designData.parameterMenus.length-1; a++ )
@@ -484,10 +490,16 @@ export class DesignStudioComponent implements AfterViewInit {
 	*/
 	updateParameter( parameters ) 
 	{
-		console.log('Updating the parameter '+parameters.name+' with the value '+parameters.value);
+		console.log('Updating the parameter '+parameters.name+' - '+parameters.id+' with the value '+parameters.value);
+		console.log(parameters);
 
 		// Send the update to shapediver so that the model is updated
-		this.shapediverApi.parameters.updateAsync({name: parameters.name, value: parseFloat(parameters.value) });
+		if ( parameters['id'] !== undefined )
+		{
+			this.shapediverApi.parameters.updateAsync({id: parameters.id, value: parameters.value });
+		}else{
+			this.shapediverApi.parameters.updateAsync({name: parameters.name, value: parameters.value });			
+		}
 
 
 		// Update the price
@@ -900,17 +912,20 @@ export class DesignStudioComponent implements AfterViewInit {
 			var assets = this.shapediverApi.scene.get(null, "CommPlugin_1").data;
 
 			//look for flowers and panels assets
-			for (var i = 0; i < assets.length; ++i) 
+			if ( assets !== undefined )
 			{
-				if (assets[i].material != undefined) 
+				for (var i = 0; i < assets.length; ++i) 
 				{
-					if (assets[i].name == "LogoAndText") 
+					if (assets[i].material != undefined) 
 					{
-						logoID = assets[i].id;
-					
-					}else if (assets[i].name == "Panels") 
-					{
-						panelsScenePath = assets[i].scenePath;
+						if (assets[i].name == "LogoAndText") 
+						{
+							logoID = assets[i].id;
+						
+						}else if (assets[i].name == "Panels") 
+						{
+							panelsScenePath = assets[i].scenePath;
+						}
 					}
 				}
 			}

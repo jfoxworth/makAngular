@@ -14,7 +14,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { FuseSharedModule } from '@fuse/shared.module';
 
-import { ChatService } from 'app/main/chat/chat.service';
+import { ChatService } from 'app/main/services/chat.service';
 import { ChatComponent } from 'app/main/chat/chat.component';
 import { ChatStartComponent } from 'app/main/chat/chat-start/chat-start.component';
 import { ChatViewComponent } from 'app/main/chat/chat-view/chat-view.component';

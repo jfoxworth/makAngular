@@ -193,7 +193,7 @@ export class DesignService {
 	 * An array of the available types
 	 */
 	getDesignTypes(){
-		return	['Wall', 'Seating', 'Desk', 'Island']
+		return	['Wall', 'Seating', 'Desk', 'Island', 'Sanitizer']
 
 	}
 

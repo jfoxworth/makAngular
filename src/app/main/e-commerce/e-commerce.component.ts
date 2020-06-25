@@ -13,7 +13,7 @@ import { FuseUtils } from '@fuse/utils';
 import { takeUntil } from 'rxjs/internal/operators';
 
 
-import { EcommerceProductsService } from 'app/main/services/products.service';
+import { EcommerceService } from 'app/main/services/e-commerce.service';
 import { FirebaseService } from 'app/main/services/firebase.service';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { MarketplaceService } from 'app/main/services/marketplace.service';
@@ -38,6 +38,10 @@ export class EcommerceComponent implements OnInit
     currentDesign : any; 
     userData : any;
     designImageUrl : any;
+    projectStages : string[];
+    projectStatus : boolean[];
+    selectedStatus : boolean[];
+    stageTexts : any[];
 
     changesExist : boolean = false;
     versionChangesExist : boolean = false;
@@ -47,12 +51,12 @@ export class EcommerceComponent implements OnInit
     private _unsubscribeAll: Subject<any>;
 
     constructor(
-        private EcommerceProductsService: EcommerceProductsService,
+        private EcommerceService: EcommerceService,
         private FirebaseService : FirebaseService,
         private MarketplaceService : MarketplaceService,
         public afs: AngularFirestore,
         private SnackBar: MatSnackBar,
-        private afStorage : AngularFireStorage
+        private afStorage : AngularFireStorage,
     )
     {
         // Set the private defaults
@@ -71,6 +75,20 @@ export class EcommerceComponent implements OnInit
 
         // Scrape the user data
         this.userData = JSON.parse(localStorage.getItem('user'));
+
+
+        // Get the product stages
+        this.projectStages = this.EcommerceService.getProductStages();
+
+        // Get the product status
+        this.projectStatus = this.EcommerceService.getInitialStageStatus();
+
+        // Set the product status
+        this.selectedStatus = this.EcommerceService.getInitialSelectedStatus();
+
+        // Get the status texts
+        this.stageTexts = this.EcommerceService.getStageTexts();
+
 
         // Get the projects that this user has with this design
         //this.projectList = this.FirebaseService.getCollection('projects', 'creatorId', this.userData.uid);
@@ -95,6 +113,8 @@ export class EcommerceComponent implements OnInit
                 }
                 console.log(this.projectList);
         });
+
+
 
     }
 
@@ -135,31 +155,6 @@ export class EcommerceComponent implements OnInit
      */
     getVersions( projectId ): void
     {
-
-        /*
-    	var docRef = this.afs.collection('versions', ref => ref.where('projectId', '==', projectId )
-    																 .orderBy('version'));
-
-        console.log('Getting the docs from collection versions where the projectId is '+projectId);
-		docRef.ref.get()
-            .then((snapshot) => {
-                var tempArray = [];
-                var docData;
-                snapshot.forEach((doc) => {
-                    docData=doc.data();
-                    docData.uid=doc.id;
-                    console.log(doc.id, '=>', doc.data());
-                    tempArray.push(docData);
-                });
-                this.versionList = tempArray;
-                this.currentVersion = this.versionList[this.versionList.length-1];
-                console.log(this.versionList);
-            })
-            .catch((err) => {
-              console.log('Error getting documents', err);
-        });
-
-        */
 
         console.log('In the get versions function with an id of '+projectId);
         this.FirebaseService.getDocsByParamWithOrder( 'versions', 'projectId', projectId, 'version' )
@@ -288,6 +283,32 @@ export class EcommerceComponent implements OnInit
 
 	}
 
+
+
+
+
+
+
+
+
+    /**
+     *
+     * Set the selected Item
+     *
+     */
+    setSelected( num:number ): void
+    {
+        for (var a=0; a<this.selectedStatus.length; a++)
+        {
+            if ( a == num )
+            {
+                this.selectedStatus[a]=true;
+            }else
+            {
+                this.selectedStatus[a]=false;                
+            }
+        }
+    }
 
 
 

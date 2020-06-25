@@ -37,6 +37,16 @@
 
 
 
+    	<!-- The Shapediver id -->
+		<mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+			<mat-label>Shapediver ID</mat-label>
+			<input matInput placeholder="Shapediver ID"
+				   name="shapediverId"
+				   [(ngModel)]="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['shapediverId']"
+				   required>
+		</mat-form-field>
+
+
 
 
     	<!-- The type of the parameter -->

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { fuseAnimations } from '@fuse/animations';
 
 @Component({
   selector: 'mail-confirm',

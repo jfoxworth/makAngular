@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable()
-export class EcommerceProductsService implements Resolve<any>
+export class EcommerceService implements Resolve<any>
 {
     products: any[];
     onProductsChanged: BehaviorSubject<any>;
@@ -61,4 +61,58 @@ export class EcommerceProductsService implements Resolve<any>
                 }, reject);
         });
     }
+
+
+
+
+
+
+
+    /**
+    * 
+    *  Return the product stages
+    *
+    **/
+    getProductStages() :string[] {
+        return ['Design', 'Deposit', 'Approval', 'Fabrication', 'Balance', 'Delivery', 'Feedback']
+    }
+
+
+
+    /**
+    * 
+    *  Return initial product settings
+    *
+    **/
+    getInitialStageStatus() :boolean[] {
+        return [true, false, false, false, false, false, false]
+    }
+
+
+
+    /**
+    * 
+    *  Return initial selected status
+    *
+    **/
+    getInitialSelectedStatus() :boolean[] {
+        return [true, false, false, false, false, false, false]
+    }
+
+
+
+    /**
+    * 
+    *  Return initial selected status
+    *
+    **/
+    getStageTexts() :object[] {
+        return [ { 'done' : 'While in the design phase, you can create as many versions as desired. Once you are happy with a version, you can look at a quote and then submit that version for purchase. When that is complete, a deposit can be made. After the deposit, Mak Studio will contact you for approval.',
+                    'notdone' : 'NA'},
+                 { 'done' : 'Your deposit has been received.',
+                   'notdone' : 'Once you are happy with a design version, you can look at the quote from either this page or the design studio. From there, you can make a deposit to move forward.'  } ]
+    }
+
+
+
 }

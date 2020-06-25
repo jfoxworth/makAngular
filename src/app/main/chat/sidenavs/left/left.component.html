@@ -1,5 +1,16 @@
 <div [ngSwitch]="view" class="views">
     <chat-chats-sidenav class="view"
+                        *ngSwitchCase="'chats'">
+    </chat-chats-sidenav>
+
+    <chat-user-sidenav class="view"
+                       *ngSwitchCase="'user'"
+                       fusePerfectScrollbar>
+    </chat-user-sidenav>
+
+
+<!--
+   <chat-chats-sidenav class="view"
                         *ngSwitchCase="'chats'"
                         [@slideInRight]>
     </chat-chats-sidenav>
@@ -9,4 +20,6 @@
                        [@slideInLeft]
                        fusePerfectScrollbar>
     </chat-user-sidenav>
+-->
+
 </div>
