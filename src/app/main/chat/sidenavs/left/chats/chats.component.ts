@@ -6,7 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseMatSidenavHelperService } from '@fuse/directives/fuse-mat-sidenav/fuse-mat-sidenav.service';
 
-import { ChatService } from 'app/main/services/chat.service';
+import { ChatsService } from 'app/main/services/chats.service';
 
 @Component({
     selector     : 'chat-chats-sidenav',
@@ -34,7 +34,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy
      * @param {MediaObserver} _mediaObserver
      */
     constructor(
-        private _chatService: ChatService,
+        private _chatService: ChatsService,
         private _fuseMatSidenavHelperService: FuseMatSidenavHelperService,
         public _mediaObserver: MediaObserver
     )
@@ -58,21 +58,6 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
-        this.user = this._chatService.user;
-        this.chats = this._chatService.chats;
-        this.contacts = this._chatService.contacts;
-
-        this._chatService.onChatsUpdated
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(updatedChats => {
-                this.chats = updatedChats;
-            });
-
-        this._chatService.onUserUpdated
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(updatedUser => {
-                this.user = updatedUser;
-            });
     }
 
     /**
@@ -80,9 +65,6 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy
      */
     ngOnDestroy(): void
     {
-        // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
-        this._unsubscribeAll.complete();
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -90,45 +72,11 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy
     // -----------------------------------------------------------------------------------------------------
 
     /**
-     * Get chat
-     *
-     * @param contact
+     * New conversation
      */
-    getChat(contact): void
+    newConversation(): void
     {
-        this._chatService.getChat(contact);
-
-        if ( !this._mediaObserver.isActive('gt-md') )
-        {
-            this._fuseMatSidenavHelperService.getSidenav('chat-left-sidenav').toggle();
-        }
+        console.log('added a new conversation');
     }
 
-    /**
-     * Set user status
-     *
-     * @param status
-     */
-    setUserStatus(status): void
-    {
-        this._chatService.setUserStatus(status);
-    }
-
-    /**
-     * Change left sidenav view
-     *
-     * @param view
-     */
-    changeLeftSidenavView(view): void
-    {
-        this._chatService.onLeftSidenavViewChanged.next(view);
-    }
-
-    /**
-     * Logout
-     */
-    logout(): void
-    {
-        console.log('logout triggered');
-    }
 }

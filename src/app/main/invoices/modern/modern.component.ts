@@ -79,13 +79,6 @@ export class InvoiceModernComponent implements OnInit, OnDestroy
             console.log('The version data is ...');
             console.log(this.versionData);
 
-
-            // calculate the costs
-            this.calculateCosts();
-
-            // Format the value data
-            this.formatValues();
-
     
             this.designData = this.FirebaseService.getDocById( 'designs', this.versionData.designId ).then(response=> {
                 this.designData=response.data();
@@ -101,6 +94,13 @@ export class InvoiceModernComponent implements OnInit, OnDestroy
                 console.log(this.projectData);
             });
 
+
+
+            // calculate the costs
+            this.calculateCosts();
+
+            // Format the value data
+            this.formatValues();
 
 
         });
@@ -126,17 +126,13 @@ export class InvoiceModernComponent implements OnInit, OnDestroy
     * This is a simple function to calculate tax and total
     *
     **/
-    calculateCosts(){
+    calculateCosts():void{
 
-
-        console.log('I called calculate costs');
-    	this.versionData.tax = Math.round(this.versionData.price*0.0825);
-    	this.versionData.totalCost = Math.round(this.versionData.price+this.versionData.tax);
-    	this.versionData.deposit = Math.round(this.versionData.totalCost * 0.25);
+    	this.versionData.tax = Math.round(this.versionData.price*0.0825*100) / 100;
+    	this.versionData.totalCost = Math.round((this.versionData.price+this.versionData.tax)*100)/100;
+    	this.versionData.deposit = Math.round(this.versionData.totalCost * 0.25*100)/100;
+    
     }
-
-
-
 
 
 
@@ -148,7 +144,6 @@ export class InvoiceModernComponent implements OnInit, OnDestroy
     **/
     formatValues(){
 
-        console.log('I called format values');
         this.measurements = [];
     	for (const property in this.versionData.values) {
 

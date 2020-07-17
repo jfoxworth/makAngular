@@ -7,6 +7,16 @@ import { mockItems } from 'app/main/services/mockItems';
 
 
 
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from "@angular/router/testing";
+
+
+
 describe('LoginComponent', () => {
 	let component: LoginComponent;
 	let fixture: ComponentFixture<LoginComponent>;
@@ -26,6 +36,14 @@ describe('LoginComponent', () => {
 	beforeEach(() => {
 	
 	    TestBed.configureTestingModule({
+	      imports: [ MatButtonModule,
+	      			 MatCheckboxModule,
+	      			 MatFormFieldModule,
+	      			 MatIconModule,
+	      			 MatInputModule,
+	      			 BrowserAnimationsModule,
+	      			 RouterTestingModule
+	      			  ],
 	      declarations: [ LoginComponent ],
 	      providers: [ { provide: FuseConfigService, useValue : {} },
 	      			   { provide: FormBuilder },

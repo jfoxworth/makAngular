@@ -17,6 +17,7 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { finalize } from 'rxjs/operators';
 
 
+
 @Component({
   selector: 'app-store',
   templateUrl: './store.component.html',
@@ -25,12 +26,13 @@ import { finalize } from 'rxjs/operators';
 export class StoreComponent implements OnInit {
 
 	storeItems : any[];
-	storeList : any[];
+	storeList : any[] =[];
 	currentItem : any;
 	selectedType : string = "All";
 	designTypes=this.DesignService.getDesignTypes();
 	mobile : boolean = false;
 	userData : any;
+	dataFlag : boolean = false;
 
 	constructor(private DesignService : DesignService,
 				private FirebaseService : FirebaseService,
@@ -40,6 +42,7 @@ export class StoreComponent implements OnInit {
 
         // Get the user data
         this.userData = JSON.parse(localStorage.getItem('user'));
+		this.dataFlag = false;
 	}
 
 	
@@ -62,202 +65,12 @@ export class StoreComponent implements OnInit {
 				result.forEach((doc) => {
 					docData=doc.data();
 					docData.uid=doc.id;
-					console.log(doc.id, '=>', doc.data());
+					//console.log(doc.id, '=>', doc.data());
 					tempArray.push(docData);
 				});
 				this.storeList = tempArray;
-				console.log(this.storeList);
-				this.formatData();
+				this.formatStoreData();
 		});
-
-
-
-
-		this.storeItems = [
-			{
-	            'id'      : '154588a0864d2881124',
-	            'title'   : 'Fossil Wall',
-	            'slug'    : 'fossil-wall',
-	            'category': 'Wall',
-	            'length'  : 60,
-	            'updated' : 'Nov 01, 2017',
-	            'date_created' : 'July 5, 2020',
-	            'initialPrice' : 3150,
-	            'background' : 'https://makstudio.s3.us-east-2.amazonaws.com/Products+-+Feature+Wall/flower_solid_surface_feature_wall.jpg',
-	            'description' : 'lorem ipsum free text here',
-	            'company' : {
-	            	'name' : 'MAK Studio',
-	            	'location' : 'Houston, Texas',
-	            	'logo' : 'https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png'
-	            },
-	            'images' : [
-	            	"https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png"
-	            ]
-			},
-			{
-	            'id'      : 'fm3oif93hfiuf3u3iihg',
-	            'title'   : 'Planter Bench',
-	            'slug'    : 'planter-bench',
-	            'category': 'Seating',
-	            'length'  : 60,
-	            'updated' : 'Nov 01, 2017',
-	            'date_created' : 'July 5, 2020',
-	            'initialPrice' : 3150,
-	            'background' : 'https://makstudio.s3.us-east-2.amazonaws.com/Products+-+Lobby+Seating/parametric_lobby_bench_seating.jpg',
-	            'description' : 'The MAK Studio planter bench adds a stylish seating element to any lobby or reception area. Customers can adjust the depth of the bench, the length of each side, the length of the twist area, and the depths of the planters areas on each side.',
-	            'company' : {
-	            	'name' : 'MAK Studio',
-	            	'location' : 'Houston, Texas',
-	            	'logo' : 'https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png'
-	            },
-	            'images' : [
-	            	"https://makstudio.s3.us-east-2.amazonaws.com/ProductImages/Screen+Shot+2020-04-15+at+5.28.57+PM.png",
-	            	"https://makstudio.s3.us-east-2.amazonaws.com/Products+-+Lobby+Seating/parametric_lobby_bench_seating.jpg",
-	            	"https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png"
-	            ]
-			},
-			{
-	            'id'      : 'fmowhf983hfi34b3f3f',
-	            'title'   : 'Flower Wall',
-	            'slug'    : 'flower-wall',
-	            'category': 'Wall',
-	            'length'  : 60,
-	            'updated' : 'Nov 01, 2017',
-	            'date_created' : 'July 5, 2020',
-	            'initialPrice' : 3150,
-	            'background' : 'https://makstudio.s3.us-east-2.amazonaws.com/makStudioFlowerWall.jpg',
-	            'description' : 'lorem ipsum free text here',
-	            'company' : {
-	            	'name' : 'MAK Studio',
-	            	'location' : 'Houston, Texas',
-	            	'logo' : 'https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png'
-	            },
-	            'images' : [
-	            	"https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png"
-	            ]
-			},
-			{
-	            'id'      : 'nwofy78guhjef3rf',
-	            'title'   : 'Breakroom Islands',
-	            'slug'    : 'breakroom-islands',
-	            'category': 'Island',
-	            'length'  : 60,
-	            'updated' : 'Nov 01, 2017',
-	            'date_created' : 'July 5, 2020',
-	            'initialPrice' : 3150,
-	            'background' : 'https://makstudio.s3.us-east-2.amazonaws.com/Products+-+Breakroom+Islands/breakroom_island.jpg',
-	            'description' : 'lorem ipsum free text here',
-	            'company' : {
-	            	'name' : 'MAK Studio',
-	            	'location' : 'Houston, Texas',
-	            	'logo' : 'https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png'
-	            },
-	            'images' : [
-	            	"https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png"
-	            ]
-			},
-			{
-	            'id'      : ' bhjf7t89jionfwgufw',
-	            'title'   : 'Reception Desk',
-	            'slug'    : 'reception-desk',
-	            'category': 'Desk',
-	            'length'  : 60,
-	            'updated' : 'Nov 01, 2017',
-	            'date_created' : 'July 5, 2020',
-	            'initialPrice' : 3150,
-	            'background' : 'https://makstudio.s3.us-east-2.amazonaws.com/Products+-+Reception+Desk/lobby_reception_desk_nova_chem.jpg',
-	            'description' : 'lorem ipsum free text here',
-	            'company' : {
-	            	'name' : 'MAK Studio',
-	            	'location' : 'Houston, Texas',
-	            	'logo' : 'https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png'
-	            },
-	            'images' : [
-	            	"https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png"
-	            ]
-			},
-			{
-	            'id'      : 'fnieurfy8734g3hbfg',
-	            'title'   : 'Backlit Wall',
-	            'slug'    : 'backlit-wall',
-	            'category': 'Wall',
-	            'length'  : 60,
-	            'updated' : 'Nov 01, 2017',
-	            'date_created' : 'July 5, 2020',
-	            'initialPrice' : 3150,
-	            'background' : 'https://makstudio.s3.us-east-2.amazonaws.com/Homepage/back_lit_feature_wall_jacob.jpg',
-	            'description' : 'lorem ipsum free text here',
-	            'company' : {
-	            	'name' : 'MAK Studio',
-	            	'location' : 'Houston, Texas',
-	            	'logo' : 'https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png'
-	            },
-	            'images' : [
-	            	"https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png"
-	            ]
-			},
-			{
-	            'id'      : 'fergerfhrguigopkf3f',
-	            'title'   : 'Slat Wall',
-	            'slug'    : 'slat-wall',
-	            'category': 'Wall',
-	            'length'  : 60,
-	            'updated' : 'Nov 01, 2017',
-	            'date_created' : 'July 5, 2020',
-	            'initialPrice' : 3150,
-	            'background' : 'https://makstudio.s3.us-east-2.amazonaws.com/OfficeWall9.jpg',
-	            'description' : 'lorem ipsum free text here',
-	            'company' : {
-	            	'name' : 'MAK Studio',
-	            	'location' : 'Houston, Texas',
-	            	'logo' : 'https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png'
-	            },
-	            'images' : [
-	            	"https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png"
-	            ]
-			},
-			{
-	            'id'      : 'kjhdtrsrertiyhiohgbu7t',
-	            'title'   : 'Faceted Wall',
-	            'slug'    : 'faceted-wall',
-	            'category': 'Wall',
-	            'length'  : 60,
-	            'updated' : 'Nov 01, 2017',
-	            'date_created' : 'July 5, 2020',
-	            'initialPrice' : 3150,
-	            'background' : 'https://makstudio.s3.us-east-2.amazonaws.com/facetedWallDemo.jpg',
-	            'description' : 'lorem ipsum free text here',
-	            'company' : {
-	            	'name' : 'MAK Studio',
-	            	'location' : 'Houston, Texas',
-	            	'logo' : 'https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png'
-	            },
-	            'images' : [
-	            	"https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png"
-	            ]
-			},
-			{
-	            'id'      : 'niugihfui3fho3ghoe',
-	            'title'   : 'Planter Wall',
-	            'slug'    : 'planter-wall',
-	            'category': 'Wall',
-	            'length'  : 60,
-	            'updated' : 'Nov 01, 2017',
-	            'date_created' : 'July 5, 2020',
-	            'initialPrice' : 3150,
-	            'background' : 'https://makstudio.s3.us-east-2.amazonaws.com/flowerWallDemo.jpg',
-	            'description' : 'lorem ipsum free text here',
-	            'company' : {
-	            	'name' : 'MAK Studio',
-	            	'location' : 'Houston, Texas',
-	            	'logo' : 'https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png'
-	            },
-	            'images' : [
-	            	"https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png"
-	            ]
-			}
-		];
-
 
 
 	}
@@ -270,7 +83,7 @@ export class StoreComponent implements OnInit {
   	*	This function formats the image data necessary
   	*
   	*/
-	formatData(){
+	formatStoreData(){
 
 		for (var a=0; a<this.storeList.length; a++)
 		{
@@ -279,16 +92,18 @@ export class StoreComponent implements OnInit {
 			for (var b=0; b<this.storeList[a].marketplace.images.length; b++)
 			{
 
-				const ref = this.afStorage.ref(this.storeList[a].marketplace.images[b]['path']);
-				this.storeList[a]['imageUrls'].push(ref.getDownloadURL());
+				const myRef = this.afStorage.ref(this.storeList[a].marketplace.images[b]['path']);
+				this.storeList[a]['imageUrls'].push(myRef.getDownloadURL());
 
 				if (this.storeList[a].marketplace.images[b]['mainImage'])
 				{
-					this.storeList[a]['background'] = ref.getDownloadURL();
+					this.storeList[a]['background'] = myRef.getDownloadURL();
 				}
 			}
 
 		}
+
+		this.dataFlag = true;
 
 	}
 

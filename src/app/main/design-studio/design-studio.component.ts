@@ -34,7 +34,7 @@ export class DesignStudioComponent implements AfterViewInit {
 	SDVApp : any;
 
     shapediver:any;
-    designData:any;
+    designData:any = { 'parameterMenus' : [{ 'parameters': [ { 'images':[] }]}] };
     projectData : any;
     versionData : any;
     versionList : any = [];
@@ -94,6 +94,9 @@ export class DesignStudioComponent implements AfterViewInit {
 				this.versionData = this.blankVersion();
 				this.versionList.push(this.versionData);
 
+				console.log('1. The design data is ...');
+				console.log(this.designData);
+
 				this.initializeAll();
 
 			});
@@ -112,6 +115,8 @@ export class DesignStudioComponent implements AfterViewInit {
 				this.designData=response.data();
 				this.versionData = this.blankVersion();
 				this.versionList.push(this.versionData);
+				console.log('2. The design data is ...');
+				console.log(this.designData);
 				this.initializeAll();
 
 			});
@@ -127,6 +132,8 @@ export class DesignStudioComponent implements AfterViewInit {
 				this.designData=response.data();
 				this.versionData = this.blankVersion();
 				this.versionList.push(this.versionData);
+				console.log('3. The design data is ...');
+				console.log(this.designData);
 				this.initializeAll();
 
 			});
@@ -177,6 +184,7 @@ export class DesignStudioComponent implements AfterViewInit {
 		}else
 		{
 
+
 			this.studioType = 'studio';
 
 			this.designId = 'jBRzSildNc16fQjAmLkh';
@@ -185,6 +193,8 @@ export class DesignStudioComponent implements AfterViewInit {
 				this.designData=response.data();
 				this.versionData = this.blankVersion();
 				this.versionList.push(this.versionData);
+				console.log('4. The design data is ...');
+				console.log(this.designData);
 				this.initializeAll();
 			});
 
@@ -232,6 +242,7 @@ export class DesignStudioComponent implements AfterViewInit {
 	*
 	*/
 	initializeAll() {
+		console.log('Here');
 		this.dataFlag=true;
 		this.initializeMenu();
 		this.initializeModel();
@@ -773,6 +784,7 @@ export class DesignStudioComponent implements AfterViewInit {
 
 			//get 3D assets
 			var assets = this.shapediverApi.scene.get(null, "CommPlugin_1").data;
+			if ( assets === undefined ){ assets = []; }
 
 
 			//look for flowers and panels assets

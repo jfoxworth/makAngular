@@ -54,7 +54,10 @@
 			</mat-form-field>
 
 
-			<div class="storeitems" fxLayout="row wrap" fxLayoutAlign="center" >
+			<div class="storeitems" 
+				 fxLayout="row wrap" 
+				 fxLayoutAlign="center" 
+				 *ngIf="dataFlag">
 				
 				<ng-container *ngFor="let si of storeList">
 
@@ -74,7 +77,7 @@
 									 [style.background]="'url(' + (si.background | async) + ')'" >
 
 									<div style="background-color:#ccc; width:60%; padding:5px 10px">	 
-										<div class="h1">{{si.title}}</div>
+										<div class="h1 siTitle">{{si.title}}</div>
 										<div class="description">{{si.company.name}}</div>
 									</div>
 								</div>
@@ -87,7 +90,7 @@
 
 				</ng-container>
 
-				<div class="no-storeitems" *ngIf="storeItems.length === 0">
+				<div class="no-storeitems" *ngIf="storeList.length === 0">
 					No store items found!
 				</div>
 

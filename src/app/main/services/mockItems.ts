@@ -1,5 +1,6 @@
 
 import { Observable } from "rxjs/Observable"
+import { of } from 'rxjs';
 
 
 export class mockItems {
@@ -10,16 +11,50 @@ export class mockItems {
 
     // Stub for the Angular Fire
     public AngularFireStub() {
-        return { getDocsByUserId: (_d: any, _id:any) => new Promise((resolve, _reject) => resolve({data:()=>{}})),
 
+        return { getDocsByUserId: (_d: any, _id:any) => new Promise((resolve, _reject) => resolve({data:()=>{}})),
 
         		 getDocById: (_d: any, _id:any) => new Promise((resolve, _reject) => resolve({data:()=>{ return this.FireStubData(_d, _id)}})),
 
+        		 //getDocsByParam: (_d: any, _id:any, num:any) => new Observable((observer) => {'Me'}) }
+        		 
+        		 getDocsByParam: (_d: any, _id:any, num:any) => of(this.mockStoreData(_d)),
+
+        		 getDocsByParamWithOrder: (_d: any, _id:any, num:any, order:any) => of(this.mockStoreData(_d)),
+
+        		 getCollectionTwoParams: (imp1: any, imp2:any, uid:any, param:any, id:any) => of(this.mockCollectionData(imp1, imp2, uid, param, id)),
+
+        		 updateDocDataUsingId: ()=>{}
+        		
+        }
+    }
 
 
+    public mockCollectionData(database, param1, value1, param2, value2){
 
-        		 getDocsByParam: (_d: any, _id:any) => new Observable((observer) => {}) }
-    }		
+    	if ( database == 'projects')
+    	{
+    		return [
+    			{
+
+		            'id'      : '154588a0864d2881124',
+					data : ()=>{ return {
+					'uid' 	  : '1',
+		            'id'      : '154588a0864d2881124',
+		            'title'   : 'Fossil Wall',
+		            'slug'    : 'fossil-wall',
+		            'name'	  : 'test',
+		            'versions':[]
+		     	   		}
+		     		}
+
+    			}
+    		]
+
+    		
+    	}
+
+    }
 
 
 
@@ -95,7 +130,50 @@ export class mockItems {
 					}
 		}
 
+		if ( database == 'users')
+		{
+
+			if ( id == 0 )
+			{
+				return {
+							'uid' : 0,
+							'designer' : false,
+							'email' : 'jfoxworth@cadwolf.com',
+							'displayName' : 'the wolf',
+							'title' : 'CEO / Hero',
+							'shortBio' : 'This is the short bio',
+							'website' : ''
+						}
+			}
+
+			if ( id == 1 )
+			{
+				return {
+							'uid' : 1,
+							'designer' : true,
+							'email' : 'jfoxworth@cadwolf.com',
+							'displayName' : 'the wolf',
+							'title' : 'CEO / Hero',
+							'shortBio' : 'This is the short bio',
+							'website' : ''
+						}
+			}
+		}
+
     }
+
+
+
+    // Stub for the Angular Fire Storage
+    public AngularFireStorageStub() {
+    	class afsStub {
+        	ref(_d: any) {
+        		 	return { getDownloadURL : (_d: any) => new Observable((observer) => {'Me'}) }
+        	}
+
+    	}
+    	return new afsStub()
+    }		
 
 
 
@@ -121,7 +199,9 @@ export class mockItems {
 	// Stub for the snack bar
 	public mockSnackBar() {
     	return { 
-    		Overlay : jasmine.createSpy('Overlay')
+    		Overlay : jasmine.createSpy('Overlay'),
+    		open : ()=>{},
+    		close : ()=>{}
     	}
 	}
 
@@ -158,7 +238,22 @@ export class mockItems {
 		return { 'snapshot': {
 	                'url': [{ 'path': 1 }, { 'path': 2 }],
 	                'paramMap' : {
-	                	'get' : ()=>'mmAvAdd1GlgBebdV85OVRE1CSK43',
+	                	'get' : ()=>{ return '1'},
+	                	'set' : ()=>{},
+	                }
+	            }
+	        
+		}
+	}
+
+
+
+	// Data Object for activated route stub
+	public ActivatedRouteEmptyStub() {
+		return { 'snapshot': {
+	                'url': [{ 'path': 1 }, { 'path': 2 }],
+	                'paramMap' : {
+	                	'get' : ()=>{ return undefined},
 	                	'set' : ()=>{},
 	                }
 	            }
@@ -263,14 +358,54 @@ export class mockItems {
 
 
 	// Data Object for user data
-	public mockUserService() {
+	public UserServiceStub() {
 		return { 
+			'uid' : 'mmAvAdd1GlgBebdV85OVRE1CSK43',
 			'getYearList' : ()=>{},
 			'getMonthList' : ()=>{},
+			'getProfileImage' : ()=>{}
 	        
 		}
 	}
 
+
+
+	public EcommerceServiceStub() {
+		return {
+			getProducts: (_d: any, _id:any) => new Promise((resolve, _reject) => resolve({data:()=>{return this.projectStubData()}})),
+			getProductStages: ()=>{},
+			getInitialStageStatus: ()=>{},
+			getInitialSelectedStatus: ()=>{},
+			getStageTexts:()=>{}
+		}
+
+	}
+
+
+
+	public projectStubData(){
+
+		return  [
+			{
+				'creatorId' : 'mmAvAdd1GlgBebdV85OVRE1CSK43',
+				'dateCreated' : '1592015010813',
+				'description' : "This is the description of this project",
+				'designId' : "5W0vbMqd9j3cYeW5V82Y",
+				'designType' : "Island",
+				'initialOpen' : false,
+				'name' : "Sanitizer 1",
+				'status' : "0",
+				'uid' : "1ryfv7hw4JzJF072YI2d",
+				'versions' : '1'
+	        }
+	    ]
+	}
+	
+
+	public MarketplaceServiceStub() {
+		return {}
+
+	}
 
 
 
@@ -287,6 +422,10 @@ export class mockItems {
 
 
 
+	public FaqServiceStub() {
+		return {}
+
+	}
 
 
 	public mockChatService() {
@@ -345,7 +484,163 @@ export class mockItems {
 
 
 
+	public mockStoreData(type){
+
+		if ( type =="projects" )
+		{
+			return  [
+				{
+
+		            'id'      : '154588a0864d2881124',
+					data : ()=>{ return {
+					'uid' 	  : '1',
+		            'id'      : '154588a0864d2881124',
+		            'title'   : 'Fossil Wall',
+		            'slug'    : 'fossil-wall',
+		            'name'	  : 'test',
+		            'versions':[]
+		     	   		}
+		     		}
+		     	}
+		    ]
+
+		}else
+		{
+			return  [
+				{
+
+		            'id'      : '154588a0864d2881124',
+					data : ()=>{ return {
+					'uid' 	  : '1',
+		            'id'      : '154588a0864d2881124',
+		            'title'   : 'Fossil Wall',
+		            'slug'    : 'fossil-wall',
+		            'category': 'Wall',
+		            'length'  : 60,
+		            'updated' : 'Nov 01, 2017',
+		            'date_created' : 'July 5, 2020',
+		            'initialPrice' : 3150,
+		            'background' : 'https://makstudio.s3.us-east-2.amazonaws.com/Products+-+Feature+Wall/flower_solid_surface_feature_wall.jpg',
+		            'description' : 'lorem ipsum free text here',
+		            'company' : {
+		            	'name' : 'MAK Studio',
+		            	'location' : 'Houston, Texas',
+		            	'logo' : 'https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png'
+		            },
+		            'images' : [
+		            	"https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png"
+		            ],
+		            'marketplace' : {
+		            	'description' : "The flower wall lets customers place, move, and alter the size and orientation of flowers on a wall.",
+		            	'mainImage' : "https://makstudio.s3.us-east-2.amazonaws.com/Marketplace/background/001.png",
+		            	'images' : [
+		            		{
+		            			'mainImage' : true,
+		            			'path' : "/marketplace/carousel/1pbM0lb5hcHureiiX239-shh6E4.png"
+		            		}
+		            	]
+		            },
+		            'parameterMenus' : [
+		            	{
+		            		'icon' : "settings",
+		            		'label' : 'Wall Dimensions',
+		            		'parameters' : [
+
+		            		]
+		            	}
+		            ],
+		            'price':0,
+		            'priceFormula' : '',
+		            'priceStatus' : true,
+		            'priceValid' : true,
+		            'shapediverTicket' : '',
+		            'status' : 1 } }
+				},
+				{
+		            'id'      : 'fm3oif93hfiuf3u3iihg',
+					data : ()=>{ return {
+					'uid' 	  : '2',
+		            'id'      : 'fm3oif93hfiuf3u3iihg',
+		            'title'   : 'Planter Bench',
+		            'slug'    : 'planter-bench',
+		            'category': 'Seating',
+		            'length'  : 60,
+		            'updated' : 'Nov 01, 2017',
+		            'date_created' : 'July 5, 2020',
+		            'initialPrice' : 3150,
+		            'background' : 'https://makstudio.s3.us-east-2.amazonaws.com/Products+-+Lobby+Seating/parametric_lobby_bench_seating.jpg',
+		            'description' : 'The MAK Studio planter bench adds a stylish seating element to any lobby or reception area. Customers can adjust the depth of the bench, the length of each side, the length of the twist area, and the depths of the planters areas on each side.',
+		            'company' : {
+		            	'name' : 'MAK Studio',
+		            	'location' : 'Houston, Texas',
+		            	'logo' : 'https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png'
+		            },
+		            'images' : [
+		            	"https://makstudio.s3.us-east-2.amazonaws.com/ProductImages/Screen+Shot+2020-04-15+at+5.28.57+PM.png",
+		            	"https://makstudio.s3.us-east-2.amazonaws.com/Products+-+Lobby+Seating/parametric_lobby_bench_seating.jpg",
+		            	"https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png"
+		            ],
+		            'marketplace' : {
+		            	'description' : "The flower wall lets customers place, move, and alter the size and orientation of flowers on a wall.",
+		            	'mainImage' : "https://makstudio.s3.us-east-2.amazonaws.com/Marketplace/background/001.png",
+		            	'images' : [
+		            		{
+		            			'mainImage' : true,
+		            			'path' : "/marketplace/carousel/1pbM0lb5hcHureiiX239-shh6E4.png"
+		            		}
+		            	]
+		            },
+		            'parameterMenus' : [
+		            	{
+		            		'icon' : "settings",
+		            		'label' : 'Wall Dimensions',
+		            		'parameters' : [
+
+		            		]
+		            	}
+		            ],
+		            'price':0,
+		            'priceFormula' : '',
+		            'priceStatus' : true,
+		            'priceValid' : true,
+		            'shapediverTicket' : '',
+		            'status' : 1 } }
+				}
+
+			];
+		}
+
+
+	}
+
+
+
+
+
+    // Stub for the Fuse Navication
+    public FuseNavigationStub() {
+    	class navStub {
+        	ref(_d: any) {
+        		 	return { getDownloadURL : (_d: any) => new Observable((observer) => {'Me'}) }
+        	}
+        	getFlatNavigation(){ return {} }
+
+    	}
+    	return new navStub()
+    }		
+
 
 
 
 }
+
+
+
+
+
+
+
+
+
+
+

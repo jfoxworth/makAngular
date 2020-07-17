@@ -15,7 +15,7 @@ import { mockItems } from 'app/main/services/mockItems';
 
 
 
-fdescribe('InvoiceModernComponent', () => {
+describe('InvoiceModernComponent', () => {
 	let component: InvoiceModernComponent;
 	let fixture: ComponentFixture<InvoiceModernComponent>;
 
@@ -67,6 +67,56 @@ fdescribe('InvoiceModernComponent', () => {
 	});
 
 
+
+
+	/*
+	*
+	*  Calculate costs unit tests
+	*
+	*/
+	it('calculateCosts should calculate tax properly',() => {
+		component.versionData.price = 1000;
+		component.calculateCosts();
+		expect(component.versionData.tax).toEqual(82.50);
+	});
+
+	it('calculateCosts should calculate total cost properly', () => {
+		component.versionData.price = 1000;
+		component.calculateCosts();
+		expect(component.versionData.totalCost).toEqual(1082.50);
+	});
+
+	it('calculateCosts should calculate total cost properly', () => {
+		component.versionData.price = 1000;
+		component.calculateCosts();
+		expect(component.versionData.deposit).toEqual(270.63);
+	});
+
+	it('should call calculateCosts in ngOnInit', fakeAsync(() => {
+		spyOn(component, 'calculateCosts');
+		component.ngOnInit();
+		tick();
+		expect(component.calculateCosts).toHaveBeenCalled();
+	}));
+
+
+
+
+
+	/*
+	*
+	* 	Format Values unit tests
+	*
+	*/
+	it('formatValues should put proper elements in measurements array', () => {
+		component.measurements = [];
+		component.versionData.values = {'length':100, 'width':4,'design':'Texas'};
+		component.formatValues();
+		expect(component.measurements).toContain({'name':'length', 'value':100});
+		expect(component.measurements).toContain({'name':'width', 'value':4});
+		expect(component.measurements).toContain({'name':'design', 'value':'Texas'});
+	});
+
 	it('should call format values in ngOnInit', fakeAsync(() => {
 		spyOn(component, 'formatValues');
 		component.ngOnInit();
@@ -75,12 +125,8 @@ fdescribe('InvoiceModernComponent', () => {
 	}));
 
 
-	it('should call calculateCosts ngOnInit', fakeAsync(() => {
-		spyOn(component, 'calculateCosts');
-		component.ngOnInit();
-		tick();
-		expect(component.calculateCosts).toHaveBeenCalled();
-	}));
+
+
 
 
 });

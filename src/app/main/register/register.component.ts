@@ -5,6 +5,7 @@ import { takeUntil } from 'rxjs/internal/operators';
 
 import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { AuthService } from 'app/main/services/auth.service';
 

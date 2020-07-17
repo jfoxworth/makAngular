@@ -65,8 +65,6 @@ export class FuseShortcutsComponent implements OnInit, AfterViewInit, OnDestroy
 		this._unsubscribeAll = new Subject();
 
 
-		// Get the user data
-		this.userData = JSON.parse(localStorage.getItem('userData'));
 
 	}
 
@@ -82,46 +80,48 @@ export class FuseShortcutsComponent implements OnInit, AfterViewInit, OnDestroy
 		// Get the navigation items and flatten them
 		this.filteredNavigationItems = this.navigationItems = this._fuseNavigationService.getFlatNavigation(this.navigation);
 
-
 		// Get the user data
-		this.userData = JSON.parse(localStorage.getItem('userData'));
-
-		if ( ( this.userData === undefined) || ( this.userData == null ) )
+		if ( ( localStorage.getItem('userData') === undefined ) || 
+			 ( localStorage.getItem('userData') === null ) ||
+			 ( localStorage.getItem('userData') == 'undefined' ) )
 		{
-
-			this.shortcutItems = [
-				{
-					title: 'Knowledge Base',
-					type : 'item',
-					icon : 'help_outline',
-					url  : '/knowledge-base'
-				},
-				{
-					title: 'Design Studio',
-					type : 'item',
-					icon : 'color_lens',
-					url  : '/designStudio'
-				},
-				{
-					title: 'Design Store',
-					type : 'item',
-					icon : 'store',
-					url  : '/store'
-				}
-			];
-
-
-			this.userInfo = {};
-
+			this.userData = undefined;
 		}else
 		{
+			this.userData = JSON.parse(localStorage.getItem('userData'));
+		}
 
-			console.log(this.userData.uid);
+
+		this.shortcutItems = [
+			{
+				title: 'Knowledge Base',
+				type : 'item',
+				icon : 'help_outline',
+				url  : '/knowledge-base'
+			},
+			{
+				title: 'Design Studio',
+				type : 'item',
+				icon : 'color_lens',
+				url  : '/designStudio'
+			},
+			{
+				title: 'Design Store',
+				type : 'item',
+				icon : 'store',
+				url  : '/store'
+			}
+		];
+
+
+		this.userInfo = {};
+
+		if ( ( this.userData !== undefined) && ( this.userData !== null ) )
+		{
+
 			this.userInfo = this.FirebaseService.getDocById( 'users', this.userData.uid ).then(response=> {
 				this.userInfo=response.data();
 				
-
-
 
 				if ( this.userInfo.designer )
 				{

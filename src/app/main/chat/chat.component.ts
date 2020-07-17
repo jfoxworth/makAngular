@@ -4,58 +4,91 @@ import { takeUntil } from 'rxjs/operators';
 
 import { fuseAnimations } from '@fuse/animations';
 
-import { ChatService } from 'app/main/services/chat.service';
+import { ChatsService } from 'app/main/services/chats.service';
 
 @Component({
-    selector     : 'message',
-    templateUrl  : './chat.component.html',
-    styleUrls    : ['./chat.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+	selector	 : 'message',
+	templateUrl  : './chat.component.html',
+	styleUrls	: ['./chat.component.scss'],
+	encapsulation: ViewEncapsulation.None,
+	animations   : fuseAnimations
 })
 export class ChatComponent implements OnInit, OnDestroy
 {
-    selectedChat: any;
+	selectedChat: any;
+	chats:any;
+	conversations:any;
 
-    // Private
-    private _unsubscribeAll: Subject<any>;
+	/**
+	 * Constructor
+	 *
+	 * @param {ChatService} _chatService
+	 */
+	constructor(
+		private ChatsService: ChatsService
+	)
+	{
+	}
 
-    /**
-     * Constructor
-     *
-     * @param {ChatService} _chatService
-     */
-    constructor(
-        private _chatService: ChatService
-    )
-    {
-        // Set the private defaults
-        this._unsubscribeAll = new Subject();
-    }
+	// -----------------------------------------------------------------------------------------------------
+	// @ Lifecycle hooks
+	// -----------------------------------------------------------------------------------------------------
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
+	/**
+	 * On init
+	 */
+	ngOnInit(): void
+	{
+		  this.ChatsService.getConversations()
+			  .subscribe(result => {
 
-    /**
-     * On init
-     */
-    ngOnInit(): void
-    {
-        this._chatService.onChatSelected
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(chatData => {
-                this.selectedChat = chatData;
-            });
-    }
+				var tempArray = [];
+				var docData;
+				result.forEach((doc) => {
+					docData=doc.data();
+					docData.uid=doc.id;
+					//console.log(doc.id, '=>', doc.data());
+					tempArray.push(docData);
+				});
+				this.conversations = tempArray;
 
-    /**
-     * On destroy
-     */
-    ngOnDestroy(): void
-    {
-        // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
-        this._unsubscribeAll.complete();
-    }
+				console.log('The conversations are ...');
+				console.log(this.conversations);
+
+				this.ChatsService.getMessages( this.conversations[0]['conversationId'] )
+				  .subscribe(result => {
+
+					var tempArray = [];
+					var docData;
+					result.forEach((doc) => {
+						docData=doc.data();
+						docData.uid=doc.id;
+						//console.log(doc.id, '=>', doc.data());
+						tempArray.push(docData);
+					});
+					this.conversations[0]['messages'] = tempArray;
+
+					console.log('The messages are ...');
+					console.log(tempArray);
+
+				});
+
+		});
+
+
+	}
+
+	/**
+	 * On destroy
+	 */
+	ngOnDestroy(): void
+	{
+	}
+
+
+
+
+
+
+
 }

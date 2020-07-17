@@ -42,6 +42,7 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy
     ngOnInit(): void
     {
         this.user = this._chatService.user;
+        this.user = {};
 
         this.userForm = new FormGroup({
             mood  : new FormControl(this.user.mood),

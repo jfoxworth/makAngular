@@ -30,8 +30,8 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firest
 export class EcommerceComponent implements OnInit
 {
 
-    projectList : any;
-    versionList : any;
+    projectList : any[] = [{'versions':['temp']}];
+    versionList : any[] = [{'uid' :'0'}];
     columnsToDisplayMeas = ['name', 'value'];
     currentProject : any = {};
     currentVersion : any = {'id':''};
@@ -72,9 +72,14 @@ export class EcommerceComponent implements OnInit
      */
     ngOnInit(): void
     {
+        
 
         // Scrape the user data
         this.userData = JSON.parse(localStorage.getItem('user'));
+        if ( ( this.userData === null ) || ( this.userData ===undefined ) )
+        {
+            this.userData = {};
+        }
 
 
         // Get the product stages
@@ -96,28 +101,29 @@ export class EcommerceComponent implements OnInit
 
         this.FirebaseService.getDocsByParam( 'projects', 'creatorId', this.userData.uid )
             .subscribe(result => {
-                console.log('The result is ');
-                console.log(result);
+                //console.log('The result is ');
+                //console.log(result);
                 var tempArray = [];
                 var docData;
                 result.forEach((doc) => {
                     docData=doc.data();
                     docData.uid=doc.id;
-                    console.log(doc.id, '=>', doc.data());
+                    //console.log(doc.id, '=>', doc.data());
                     tempArray.push(docData);
                 });
                 this.projectList = tempArray;
+                console.log('The project list is ');
+                console.log(this.projectList);
                 if ( this.projectList.length > 0 )
                 {
                     this.setCurrentProject( this.projectList[0] );
                 }
-                console.log(this.projectList);
+                //console.log(this.projectList);
         });
 
 
 
     }
-
 
 
 
@@ -156,22 +162,22 @@ export class EcommerceComponent implements OnInit
     getVersions( projectId ): void
     {
 
-        console.log('In the get versions function with an id of '+projectId);
+        //console.log('In the get versions function with an id of '+projectId);
         this.FirebaseService.getDocsByParamWithOrder( 'versions', 'projectId', projectId, 'version' )
             .subscribe(result => {
-                console.log('The result is ');
-                console.log(result);
+               // console.log('The result is ');
+                //console.log(result);
                 var tempArray = [];
                 var docData;
                 result.forEach((doc) => {
                     docData=doc.data();
                     docData.uid=doc.id;
-                    console.log(doc.id, '=>', doc.data());
+                    //console.log(doc.id, '=>', doc.data());
                     tempArray.push(docData);
                 });
                 this.versionList = tempArray;
                 this.onVersionSelected( this.versionList.length-1 );
-                console.log(this.versionList);
+                //console.log(this.versionList);
         });
 
     }

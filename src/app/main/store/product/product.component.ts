@@ -9,7 +9,9 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { MarketplaceService } from 'app/main/services/marketplace.service';
 
 import { MatGridListModule } from '@angular/material/grid-list';
-import {MatTooltipModule} from '@angular/material/tooltip';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -45,7 +47,7 @@ export class StoreProductComponent implements OnInit {
 		this.FirebaseService.getDocById( 'designs', this.id )
 			.then((snapshot) => {
 				this.storeItem = snapshot.data();
-				console.log(snapshot.data());
+				//console.log(snapshot.data());
 				this.formatData();
 				this.dataFlag=true;
 			})
@@ -56,12 +58,12 @@ export class StoreProductComponent implements OnInit {
 
 
 		// Get the projects that this user has with this design
-		if ( this.userData !== null )
+		if ( ( this.userData !== null ) && ( this.userData !== undefined ) )
 		{
 			this.projectList = this.FirebaseService.getCollectionTwoParams('projects', 'creatorId', this.userData.uid, 'designId', this.id);
 		}else
 		{
-			this.projectList = [];
+			this.projectList = new Observable();
 		}
 
 
@@ -79,7 +81,6 @@ export class StoreProductComponent implements OnInit {
 		this.storeItem['imageUrls'] = [];
 		for (var a=0; a<this.storeItem.marketplace.images.length; a++)
 		{
-
 			const ref = this.afStorage.ref(this.storeItem.marketplace.images[a]['path']);
 			this.storeItem['imageUrls'].push(ref.getDownloadURL());
 

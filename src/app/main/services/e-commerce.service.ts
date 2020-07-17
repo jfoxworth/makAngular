@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/r
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class EcommerceService implements Resolve<any>
 {
     products: any[];
@@ -15,11 +15,8 @@ export class EcommerceService implements Resolve<any>
      * @param {HttpClient} _httpClient
      */
     constructor(
-        private _httpClient: HttpClient
     )
     {
-        // Set the defaults
-        this.onProductsChanged = new BehaviorSubject({});
     }
 
     /**
@@ -49,8 +46,9 @@ export class EcommerceService implements Resolve<any>
      *
      * @returns {Promise<any>}
      */
-    getProducts(): Promise<any>
+    getProducts(): void
     {
+/*
         console.log('In the get products');
         return new Promise((resolve, reject) => {
             this._httpClient.get('api/e-commerce-products')
@@ -60,6 +58,7 @@ export class EcommerceService implements Resolve<any>
                     resolve(response);
                 }, reject);
         });
+*/
     }
 
 
@@ -76,6 +75,7 @@ export class EcommerceService implements Resolve<any>
     getProductStages() :string[] {
         return ['Design', 'Deposit', 'Approval', 'Fabrication', 'Balance', 'Delivery', 'Feedback']
     }
+
 
 
 

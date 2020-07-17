@@ -1,7 +1,17 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ChatStartComponent } from 'app/main/chat/chat-start/chat-start.component';
+import { ChatLeftSidenavComponent } from 'app/main/chat/sidenavs/left/left.component';
+import { ChatRightSidenavComponent } from 'app/main/chat/sidenavs/right/right.component';
+import { ChatContactSidenavComponent } from 'app/main/chat/sidenavs/right/contact/contact.component';
+import { ChatChatsSidenavComponent } from 'app/main/chat/sidenavs/left/chats/chats.component';
 import { ChatComponent } from './chat.component';
-import { fuseAnimations } from '@fuse/animations';
 import { ChatService } from 'app/main/services/chat.service';
+
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatIconModule } from '@angular/material/icon';
+
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { fuseAnimations } from '@fuse/animations';
 import { mockItems } from 'app/main/services/mockItems';
 
 
@@ -29,7 +39,15 @@ describe('ChatComponent', () => {
 
 
 		TestBed.configureTestingModule({
-			declarations: [ ChatComponent ],
+			imports: [ MatSidenavModule,
+					   BrowserAnimationsModule,
+					   MatIconModule ],
+			declarations: [ ChatComponent,
+							ChatStartComponent,
+							ChatRightSidenavComponent,
+							ChatLeftSidenavComponent,
+							ChatContactSidenavComponent,
+							ChatChatsSidenavComponent ],
 			providers: [ { provide: ChatService, useValue : ChatServiceStub } ]
 		});
 

@@ -19,20 +19,18 @@ import { fuseConfig } from 'app/fuse-config';
 import { FakeDbService } from 'app/fake-db/fake-db.service';
 import { AppComponent } from 'app/app.component';
 import { LayoutModule } from 'app/layout/layout.module';
-import { SampleModule } from 'app/main/sample/sample.module';
 import { ProfileModule } from 'app/main/profile/profile.module';
 import { InvoiceCompactModule } from 'app/main/invoices/compact/compact.module';
 import { InvoiceModernModule } from 'app/main/invoices/modern/modern.module';
 import { LoginModule } from 'app/main/login/login.module';
 import { RegisterModule } from 'app/main/register/register.module';
-import { FaqModule } from 'app/main/faq/faq.module';
 import { DesignStudioModule } from 'app/main/design-studio/design-studio.module';
 
 
-import {MatIconModule} from '@angular/material/icon';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatSliderModule} from '@angular/material/slider';
-import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 
 import { DesignStudioService } from 'app/main/services/design-studio.service';
@@ -113,13 +111,11 @@ const appRoutes: Routes = [
 
         // App modules
         LayoutModule,
-        SampleModule,
         ProfileModule,
         InvoiceModernModule,
         InvoiceCompactModule,
         LoginModule,
         RegisterModule,
-        FaqModule,
         DesignStudioModule,
         EcommerceModule,
         ChatModule,

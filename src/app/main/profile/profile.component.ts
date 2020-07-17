@@ -62,11 +62,12 @@ export class ProfileComponent implements OnInit
 	}
 
 
-	userData 		: any;					// Info for the logged in user				
-	userInfo 		: any;					// Info for the user whose page is being viewed
+	userData 		: any = {};				// Info for the logged in user				
+	userInfo 		: any = {};				// Info for the user whose page is being viewed
+	canEdit			: boolean = false;		// Can the viewer edit the profile
 	displayName 	: string;
 	userId 			: string;
-	dataFlag 		: boolean;
+	dataFlag 		: boolean = false;
 	displayStyle 	: string = 'display';
 	profileImage 	: any;					// Image for the user whose page is being viewed
 
@@ -87,35 +88,59 @@ export class ProfileComponent implements OnInit
 		this.userData = JSON.parse(localStorage.getItem('userData'));
 		this.userId = this.route.snapshot.paramMap.get('id');
 
-		// No user defined by URL
-		if ( (this.userId == '') || ( this.userId === null ) )
+		// No user defined by URL or by login
+		if ( ( (this.userId == '') || ( this.userId === null ) || ( this.userId === undefined ) ) &&
+		   ( ( this.userData === null ) || ( this.userData === undefined ) || ( this.userData == 'undefined' ) ) )
 		{
-			// User is logged in
-			if ( ( this.userData !== null ) && ( this.userData !== undefined ) )
-			{
-				this.userInfo = this.FirebaseService.getDocById( 'users', this.userData.uid ).then(response=> {
-					this.userInfo=response.data();
-			        this.profileImage = this.UserService.getProfileImage( this.userInfo );
-					this.dataFlag=true;
-				});
-			
-			// No user logged in, so no user is defined
-			}else
-			{
-				this.userInfo = {};
-			}
+			this.userInfo = {};
+			this.userData = {};
+			this.displayStyle = "NoUser";
 
 
-		// Looking at user defined by the URL
-		}else
+		// A user is defined by URL
+		}else if ( (this.userId != '') && ( this.userId !== null ) && ( this.userId !== undefined ) )
 		{
-			this.userInfo = this.FirebaseService.getDocById( 'users', this.userId ).then(response=> {
+			this.FirebaseService.getDocById( 'users', this.userId ).then(response=> {
 				this.userInfo=response.data();
 		        this.profileImage = this.UserService.getProfileImage( this.userInfo );
+				if ( ( this.userData !== null ) && ( this.userData !== undefined ) )
+				{
+					if ( this.userInfo.uid == this.userData.uid ){ this.canEdit=true; }
+				}
 				this.dataFlag=true;
-			});		
-		}
+				this.displayStyle='display';
+			});
+		
 
+		// Looking at user defined by the URL, but the user is logged in
+		}else if ( ( this.userData !== null ) && ( this.userData !== undefined ) && ( this.userData !== {} ) )
+		{
+
+			/*
+			console.log('2. The user data for a user logged in with no URL is ...');
+			console.log(this.userData);
+			console.log('2. The userId is ');
+			console.log(this.userId);
+			this.userInfo = this.FirebaseService.getDocById( 'users', this.userData.uid ).then(response=> {
+				this.userInfo=response.data();
+		        this.profileImage = this.UserService.getProfileImage( this.userData );
+				this.dataFlag=true;
+				console.log('2. The userInfo is now ');
+				console.log(this.userInfo);
+			});		
+
+			*/
+			this.userInfo = this.userData;
+			this.profileImage = this.UserService.getProfileImage( this.userData );
+			this.dataFlag=true;
+			this.canEdit=true;
+		
+		}else
+		{
+
+			console.log('I got nothing');
+
+		}
 
 
 	};
@@ -132,6 +157,7 @@ export class ProfileComponent implements OnInit
 
 		console.log('Saving user data '+this.userData.uid);
 		this.FirebaseService.updateDocDataUsingId('users', this.userData.uid, this.userData );
+		this.userInfo = this.userData;
 		this.SnackBar.open('Data Saved','', {duration: 4000});
 		localStorage.setItem('userData', JSON.stringify(this.userData));
 

@@ -1,9 +1,27 @@
 <div id="profile" class="page-layout simple tabbed">
 
+    <!-- NO USER HEADER -->
+    <div class="header p-24" 
+         fxLayout="column" 
+         fxLayoutAlign="center center"
+         *ngIf="displayStyle=='NoUser'">
+
+        <div class="user-info" 
+             fxLayout="column" 
+             fxLayoutAlign="center center" >
+
+             <h2 id="noUserText">No user selected and no user logged in</h2>
+
+        </div>
+    </div>
+    <!-- / NO USER HEADER -->
+
+
     <!-- HEADER -->
     <div class="header p-24" 
          fxLayout="column" 
-         fxLayoutAlign="center center">
+         fxLayoutAlign="center center"
+         *ngIf="displayStyle!='NoUser'">
 
         <div class="user-info" 
              fxLayout="column" 
@@ -27,7 +45,7 @@
 		                          style="position:absolute; top:0px; left:20px; color:#ccc; cursor:pointer;"
 		                          matTooltip="change profile photo"
 		                          aria-hidden="true"
-		                          *ngIf="userInfo.uid == userInfo.uid">
+		                          *ngIf="canEdit">
 		                          add_circle_outline
 		                </mat-icon>
 		            </label>
@@ -35,33 +53,37 @@
             </div>
 
 
-            <div class="name" 
+            <div class="name"
+                 id="userEmailHeader"
                  [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}"
                  *ngIf="userInfo.displayName===null">
                 {{userInfo.email}}
 
                 <mat-icon class="secondary-text"
+                		  id="editButton"
                           aria-hidden="true"
                           style="cursor:pointer; position:relative;"
                           matTooltip="edit profile data"
                           (click)="displayStyle='edit'"
-                          *ngIf="userInfo.uid == userInfo.uid">
+                          *ngIf="canEdit">
                           more_vert
                 </mat-icon>
 
             </div>
 
             <div class="name" 
+                 id="userDisplayNameHeader"
                  [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}"
                  *ngIf="userInfo.displayName!==null">
                 {{userInfo.displayName}}
 
                 <mat-icon class="secondary-text" 
+                		  id="editButton"
                           aria-hidden="true"
                           style="cursor:pointer; position:relative;"
                           matTooltip="edit profile data"
                           (click)="displayStyle='edit'"
-                          *ngIf="userInfo.uid == userInfo.uid">
+                          *ngIf="canEdit">
                           more_vert
                 </mat-icon>
 
@@ -85,7 +107,6 @@
 
 
     <!-- CONTENT -->
-
     <ng-container *ngIf="dataFlag && displayStyle=='display'">
     
         <div class="content pt-120"
@@ -93,12 +114,14 @@
          fxLayout="column">
 
 
-            <div class="bio-line mb-20">
+            <div class="bio-line mb-20"
+                 id="userTitle">
                 <div class="title">{{userInfo.title}}</div>
             </div>
 
 
-            <div class="bio-line mb-40 mt-20">
+            <div class="bio-line mb-40 mt-20"
+                 id="userShortBio">
                 <div class="title">{{userInfo.shortBio}}</div>
             </div>
 
@@ -108,7 +131,7 @@
                      fxLayout="column"
                      fxLayoutAlign="center center">
                     <mat-icon class="secondary-text s-48 mat-icon-no-color" aria-hidden="true">email</mat-icon>
-                    <div class="info">{{userInfo.email}}</div>
+                    <div class="info" id="userEmail">{{userInfo.email}}</div>
                 </div>
 
 
@@ -116,14 +139,14 @@
                      fxLayout="column"
                      fxLayoutAlign="center center">
                     <mat-icon class="secondary-text s-48 mat-icon-no-color" aria-hidden="true">account_circle</mat-icon>
-                    <div class="info">{{userInfo.displayName}}</div>
+                    <div class="info" id="userDisplayName">{{userInfo.displayName}}</div>
                 </div>
 
                 <div class="bio-line mb-28"
                      fxLayout="column"
                      fxLayoutAlign="center center">
                     <mat-icon class="secondary-text s-48 mat-icon-no-color" aria-hidden="true">web</mat-icon>
-                    <div class="info">{{userInfo.website[0]}}</div>
+                    <div class="info" id="userWebsite">{{userInfo.website}}</div>
                 </div>
 
             </div>
@@ -155,8 +178,7 @@
                                class="form-control" 
                                placeholder="Enter Title"
                                name="title"
-                               #email="ngModel"
-                               [(ngModel)]="userInfo['title']"
+                               [(ngModel)]="userData['title']"
                                (blur)="saveChanges()"
                                (keyup.enter)="saveChanges()"
                                minlength="5"
@@ -173,8 +195,7 @@
                                   matInput 
                                   placeholder="Enter Your Bio Here"
                                   name="shortbio"
-                                  #shortbio="ngModel"
-                                  [(ngModel)]="userInfo['shortBio']"
+                                  [(ngModel)]="userData['shortBio']"
                                   (blur)="saveChanges()"
                                   (keyup.enter)="saveChanges()"
                                   rows="5"
@@ -193,8 +214,7 @@
                                class="form-control" 
                                placeholder="Enter Display Name"
                                name="email"
-                               #email="ngModel"
-                               [(ngModel)]="userInfo['displayName']"
+                               [(ngModel)]="userData['displayName']"
                                (blur)="saveChanges()"
                                (keyup.enter)="saveChanges()"
                                minlength="5"
@@ -214,8 +234,7 @@
                                class="form-control" 
                                placeholder="Enter Website"
                                name="website"
-                               #website="ngModel"
-                               [(ngModel)]="userInfo['website'][0]"
+                               [(ngModel)]="userData['website']"
                                (blur)="saveChanges()"
                                (keyup.enter)="saveChanges()"
                                minlength="5"
@@ -235,6 +254,7 @@
 				 class="w-80-p">
 				<button mat-raised-button 
 						color="primary"
+						id="doneEditing"
 						(click)="displayStyle='display'"
 						style="margin:10px 25%; width:50%">
 					Done Editing

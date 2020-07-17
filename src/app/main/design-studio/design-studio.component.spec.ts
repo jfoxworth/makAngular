@@ -5,6 +5,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { RouterModule, Routes, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 // Services
@@ -21,20 +22,25 @@ describe('DesignStudioComponent', () => {
 	let fixture: ComponentFixture<DesignStudioComponent>;
 
 	// Mock items unique to this page
-	let DesignStudioServiceStub : DesignStudioService;
-	let	AuthServiceStub : AuthService;
-	let	FirebaseServiceStub :FirebaseService;
-	let	SnackBarStub : MatSnackBar;
+	let DesignStudioServiceStub 	: DesignStudioService;
+	let	AuthServiceStub 			: AuthService;
+	let	FirebaseServiceStub 		: FirebaseService;
+	let	SnackBarStub 				: MatSnackBar;
 
 
 	// Mock Items pulled from external mock file
 	let MockGroup = new mockItems();
-	const AngularFireStub = MockGroup.AngularFireStub();
-	const mockDialogRef = MockGroup.DialogRefStub();
-	const mockDialog = MockGroup.mockDialog();
-	const mockSnackBar = MockGroup.mockSnackBar();
-	const ActivatedRouteStub = MockGroup.ActivatedRouteStub();
-	const mockDocumentDialog = MockGroup.mockDocumentDialog();
+	const AngularFireStub 			= MockGroup.AngularFireStub();
+	const mockDialogRef 			= MockGroup.DialogRefStub();
+	const mockDialog				= MockGroup.mockDialog();
+	const mockSnackBar 				= MockGroup.mockSnackBar();
+	const ActivatedRouteStub 		= MockGroup.ActivatedRouteStub();
+	const mockDocumentDialog 		= MockGroup.mockDocumentDialog();
+	const AngularFireStorageStub 	= MockGroup.AngularFireStorageStub();
+
+
+
+
 
 
 	beforeEach(async(() => {
@@ -44,18 +50,25 @@ describe('DesignStudioComponent', () => {
 		.compileComponents();
 	}));
 
+
+
+
+
 	beforeEach(() => {
 
 		TestBed.configureTestingModule({
+			imports: [ BrowserAnimationsModule ],
 			declarations: [ DesignStudioComponent ],
 			providers: [ { provide: DesignStudioService },
-						 { provide: ActivatedRoute, useValue : ActivatedRouteStub },
-						 { provide: AuthService, useValue : {} },
-						 { provide: FirebaseService, useValue : AngularFireStub },
-						 { provide: AngularFireStorage, useValue : {} },
-						 { provide: ActivatedRoute, useValue : ActivatedRouteStub },
-						 { provide: MatSnackBar, useValue : mockSnackBar },
-						 { provide: DOCUMENT, useValue : mockDocumentDialog } ]
+						 { provide: ActivatedRoute, 	useValue : ActivatedRouteStub },
+						 { provide: AuthService, 		useValue : {} },
+						 { provide: FirebaseService, 	useValue : AngularFireStub },
+						 { provide: AngularFireStorage, useValue : AngularFireStorageStub },
+						 { provide: ActivatedRoute, 	useValue : ActivatedRouteStub },
+						 { provide: MatSnackBar, 		useValue : mockSnackBar } ]
+
+
+//						 { provide: DOCUMENT, 			useValue : { getElementById : ()=>{}, querySelectorAll : ()=>{} } } ]
 		});
 
 		fixture = TestBed.createComponent(DesignStudioComponent);
@@ -65,9 +78,15 @@ describe('DesignStudioComponent', () => {
 		fixture.detectChanges();
 	});
 
+
+
+
+
 	it('should create the Design Studio', () => {
 		expect(component).toBeTruthy();
 	});
+
+
 });
 
 

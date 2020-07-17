@@ -64,11 +64,16 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit
                 if ( chatData )
                 {
                     this.selectedChat = chatData;
-                    this.contact = chatData.contact;
+                    this.contact = chatData.contact? chatData.contact : {};
                     this.dialog = chatData.dialog;
                     this.readyToReply();
+                }else
+                {
+                    this.contact = {};
+                    this.dialog = {};
                 }
             });
+        this.contact = {};
     }
 
     /**

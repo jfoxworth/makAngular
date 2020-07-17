@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class FaqService implements Resolve<any>
 {
     faqs: any;

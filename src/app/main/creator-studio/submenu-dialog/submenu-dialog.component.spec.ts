@@ -5,8 +5,14 @@ import { Inject } from '@angular/core';
 import { SubmenuDialog } from './submenu-dialog.component';
 
 
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogData } from 'app/main/creator-studio/creator-studio.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 // Services
@@ -40,12 +46,16 @@ describe('SubmenuDialog', () => {
   beforeEach(() => {
 
     TestBed.configureTestingModule({
+      imports: [ MatIconModule,
+      			 MatFormFieldModule,
+      			 MatGridListModule,
+      			 MatToolbarModule,
+      			 MatInputModule,
+      			 BrowserAnimationsModule ],
       declarations: [ SubmenuDialog ],
       providers: [ { provide: MatDialogRef, useValue : mockDialogRef },
                    { provide: MAT_DIALOG_DATA, useValue : mockParameterDialog } ]
     });
-
-
 
 
     fixture = TestBed.createComponent(SubmenuDialog);
