@@ -4,7 +4,8 @@ import { takeUntil } from 'rxjs/operators';
 
 import { fuseAnimations } from '@fuse/animations';
 
-import { ChatsService } from 'app/main/services/chats.service';
+import { ChatService } from 'app/main/services/chat.service';
+
 
 @Component({
 	selector	 : 'message',
@@ -15,17 +16,20 @@ import { ChatsService } from 'app/main/services/chats.service';
 })
 export class ChatComponent implements OnInit, OnDestroy
 {
-	selectedChat: any;
+	selectedChat: number;
 	chats:any;
 	conversations:any;
+
+   // Private
+    private _unsubscribeAll: Subject<any>;
 
 	/**
 	 * Constructor
 	 *
-	 * @param {ChatService} _chatService
+	 * @param {ChatService} ChatService
 	 */
 	constructor(
-		private ChatsService: ChatsService
+		private ChatService: ChatService
 	)
 	{
 	}
@@ -39,44 +43,10 @@ export class ChatComponent implements OnInit, OnDestroy
 	 */
 	ngOnInit(): void
 	{
-		  this.ChatsService.getConversations()
-			  .subscribe(result => {
-
-				var tempArray = [];
-				var docData;
-				result.forEach((doc) => {
-					docData=doc.data();
-					docData.uid=doc.id;
-					//console.log(doc.id, '=>', doc.data());
-					tempArray.push(docData);
-				});
-				this.conversations = tempArray;
-
-				console.log('The conversations are ...');
-				console.log(this.conversations);
-
-				this.ChatsService.getMessages( this.conversations[0]['conversationId'] )
-				  .subscribe(result => {
-
-					var tempArray = [];
-					var docData;
-					result.forEach((doc) => {
-						docData=doc.data();
-						docData.uid=doc.id;
-						//console.log(doc.id, '=>', doc.data());
-						tempArray.push(docData);
-					});
-					this.conversations[0]['messages'] = tempArray;
-
-					console.log('The messages are ...');
-					console.log(tempArray);
-
-				});
-
-		});
-
-
+        this.ChatService.selectedChatIndex
+            .subscribe((convNum)=>{this.selectedChat = convNum;});
 	}
+
 
 	/**
 	 * On destroy

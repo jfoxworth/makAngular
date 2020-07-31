@@ -27,6 +27,7 @@ import { RegisterModule } from 'app/main/register/register.module';
 import { DesignStudioModule } from 'app/main/design-studio/design-studio.module';
 
 
+
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSliderModule } from '@angular/material/slider';
@@ -59,6 +60,7 @@ import { environment } from '../environments/environment';
 
 import { AuthService } from 'app/main/services/auth.service';
 import { FirebaseService } from 'app/main/services/firebase.service';
+import { ChatService } from 'app/main/services/chat.service';
 
 
 // New ng5 slider
@@ -141,6 +143,7 @@ const appRoutes: Routes = [
         KnowledgeBaseService,
         DesignService,
         AuthService,
+        ChatService,
         FirebaseService,
     ],
     exports : [

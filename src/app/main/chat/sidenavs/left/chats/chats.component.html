@@ -147,22 +147,22 @@
         <!-- CONTACTS LIST-->
         <div class="contact-list" fxLayout="column">
 
-            <div matSubheader *ngIf="(contacts | filter: searchText).length > 0"
-                 class="mt-40">
+            <div matSubheader >
                 Conversations
             </div>
 
+
             <button mat-raised-button color="primary" 
-                    (click)="newConversation()"
-                    class="w-60-p"
+                    (click)="createConversation( userData.uid )"
+                    class="w-60-p mt-10 mb-20"
                     style="margin:0px 0px 0px 20%">
                 New Conversation
             </button>
 
             <button mat-button class="contact"
-                    (click)="getChat(contact.id)"
+                    (click)="chatSelected(i);"
                     [@animate]="{value:'*',params:{y:'100%'}}"
-                    *ngFor="let conv of conversations">
+                    *ngFor="let conv of conversations; index as i">
 
                 <div fxLayout="row" fxLayoutAlign="start center">
 

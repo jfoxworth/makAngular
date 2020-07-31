@@ -44,22 +44,6 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy
         this.user = this._chatService.user;
         this.user = {};
 
-        this.userForm = new FormGroup({
-            mood  : new FormControl(this.user.mood),
-            status: new FormControl(this.user.status)
-        });
-
-        this.userForm.valueChanges
-            .pipe(
-                takeUntil(this._unsubscribeAll),
-                debounceTime(500),
-                distinctUntilChanged()
-            )
-            .subscribe(data => {
-                this.user.mood = data.mood;
-                this.user.status = data.status;
-                this._chatService.updateUserData(this.user);
-            });
     }
 
     /**
@@ -76,14 +60,5 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
 
-    /**
-     * Change left sidenav view
-     *
-     * @param view
-     */
-    changeLeftSidenavView(view): void
-    {
-        this._chatService.onLeftSidenavViewChanged.next(view);
-    }
 
 }

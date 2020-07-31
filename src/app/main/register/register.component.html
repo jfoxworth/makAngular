@@ -64,7 +64,10 @@
                     <a href="#">terms and conditions</a>
                 </div>
 
-                <button mat-raised-button color="accent" class="submit-button" aria-label="CREATE AN ACCOUNT"
+                <button mat-raised-button 
+                        color="accent" 
+                        class="submit-button" 
+                        aria-label="CREATE AN ACCOUNT"
                         [disabled]="registerForm.invalid"
                         (click)="authService.SignUp( registerForm.get('email').value, registerForm.get('password').value);">
                     CREATE AN ACCOUNT

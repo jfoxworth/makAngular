@@ -24,8 +24,10 @@ export class mockItems {
 
         		 getCollectionTwoParams: (imp1: any, imp2:any, uid:any, param:any, id:any) => of(this.mockCollectionData(imp1, imp2, uid, param, id)),
 
-        		 updateDocDataUsingId: ()=>{}
-        		
+        		 updateDocDataUsingId: ()=>{},
+
+        		 collection:()=> { valuesChanges : (imp1: any, imp2:any, imp3:any, imp4:any) => of(this.mockCollectionData(imp1, imp2, imp3, imp4, '')) },
+
         }
     }
 
@@ -447,7 +449,12 @@ export class mockItems {
 				},
 				'onUserUpdated' : {
 					'pipe' : (_d: any) => new Observable((observer) => {})
-				}
+				},
+				'selectedChatIndex' :  new Observable((observer) => {}),
+				'conversations' :  new Observable((observer) => {}),
+				'conversationStatus' : new Observable((observer) => {}),
+				'dataFlagStatus' : new Observable((observer) => {}),
+				'contactStatus' : new Observable((observer) => {}),				
 				
 		}
 	}

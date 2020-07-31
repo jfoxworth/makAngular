@@ -7,6 +7,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
 
 import { ChatService } from 'app/main/services/chat.service';
+import { UserService } from 'app/main/services/user-service.service';
+
+
 
 @Component({
     selector     : 'chat-view',
@@ -16,12 +19,16 @@ import { ChatService } from 'app/main/services/chat.service';
 })
 export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit
 {
-    user: any;
-    chat: any;
-    dialog: any;
-    contact: any;
-    replyInput: any;
-    selectedChat: any;
+    user 			: any;
+    chat 			: any;
+    dialog 			: any;
+    contact 		: any;
+    contacts 		: any[] = [];
+    replyInput 		: any;
+    selectedChat 	: number = 0;
+	conversations	: any[];
+	dataFlag		: boolean = false;
+	userData		: any;
 
     @ViewChild(FusePerfectScrollbarDirective)
     directiveScroll: FusePerfectScrollbarDirective;
@@ -41,7 +48,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit
      * @param {ChatService} _chatService
      */
     constructor(
-        private _chatService: ChatService
+        private _chatService: ChatService,
+        private UserService: UserService
     )
     {
         // Set the private defaults
@@ -57,23 +65,37 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit
      */
     ngOnInit(): void
     {
-        this.user = this._chatService.user;
-        this._chatService.onChatSelected
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(chatData => {
-                if ( chatData )
-                {
-                    this.selectedChat = chatData;
-                    this.contact = chatData.contact? chatData.contact : {};
-                    this.dialog = chatData.dialog;
-                    this.readyToReply();
-                }else
-                {
-                    this.contact = {};
-                    this.dialog = {};
-                }
+    	// Grab the user data
+        this.userData = JSON.parse(localStorage.getItem('user'));
+
+
+        // Subscribe to the cconversation index
+        this._chatService.selectedChatIndex
+            .subscribe((convNum)=>{
+            	this.selectedChat = convNum;
             });
-        this.contact = {};
+
+
+        // Subscribe to the data flag
+        this._chatService.dataFlagStatus
+            .subscribe((flagStatus)=>{this.dataFlag = flagStatus;});
+
+
+        // Subscribe to the conversations
+        this._chatService.conversationStatus
+            .subscribe((conv)=>{
+            	this.conversations = conv;
+            });
+
+
+        // Subscribe to the contacts
+        this._chatService.contactStatus
+            .subscribe((cont)=>{
+            	this.contacts = cont;
+            });
+
+
+
     }
 
     /**
@@ -106,12 +128,29 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit
      * @param i
      * @returns {boolean}
      */
-    shouldShowContactAvatar(message, i): boolean
+    setContactImages()
     {
-        return (
-            message.who === this.contact.id &&
-            ((this.dialog[i + 1] && this.dialog[i + 1].who !== this.contact.id) || !this.dialog[i + 1])
-        );
+    	for (var a=0; a<this.contacts.length; a++)
+    	{
+    		for (var b=0; b<this.conversations[this.selectedChat]['messages'].length; b++)
+	    	{
+	    		if ( this.contacts[a]['uid'] == this.conversations[this.selectedChat]['messages'][b]['sender'] )
+	    		{
+	    			this.contacts[a]['displayMe'] = true;
+	    		}
+	    	}
+
+    	}
+
+    	for (var a=0; a<this.contacts.length; a++)
+    	{
+	        if ( this.contacts[a].profileImage === undefined )
+	        {
+	        	this.contacts[a].profileImage = this.UserService.getProfileImage( this.contacts[a] );
+	        }
+	    }
+
+ 
     }
 
     /**
@@ -123,7 +162,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit
      */
     isFirstMessageOfGroup(message, i): boolean
     {
-        return (i === 0 || this.dialog[i - 1] && this.dialog[i - 1].who !== message.who);
+        return (i === 0 || this.conversations[this.selectedChat]['messages'][i - 1] && this.conversations[this.selectedChat]['messages'][i - 1].who !== message.who);
     }
 
     /**
@@ -135,7 +174,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit
      */
     isLastMessageOfGroup(message, i): boolean
     {
-        return (i === this.dialog.length - 1 || this.dialog[i + 1] && this.dialog[i + 1].who !== message.who);
+        return (i === this.conversations[this.selectedChat]['messages'].length - 1 || this.conversations[this.selectedChat]['messages'][i + 1] && this.conversations[this.selectedChat]['messages'][i + 1].who !== message.who);
     }
 
     /**
@@ -143,7 +182,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit
      */
     selectContact(): void
     {
-        this._chatService.selectContact(this.contact);
+        //this._chatService.selectContact(this.contact);
     }
 
     /**
@@ -199,20 +238,25 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit
 
         // Message
         const message = {
-            who    : this.user.id,
-            message: this.replyForm.form.value.message,
-            time   : new Date().toISOString()
+            sender 			: this.userData.uid,
+            text 			: this.replyForm.form.value.message,
+            sendDate		: Date.now(),
+            readDate 		: [],
+            status 			: 0,
+            conversationId 	: this.conversations[this.selectedChat]['conversationId']
         };
 
         // Add the message to the chat
-        this.dialog.push(message);
+        this.conversations[this.selectedChat]['messages'].push(message);
+
+        // Update the server
+        this._chatService.pushMessage(message)
+        	.then(response => {
+            	this.readyToReply();
+        });
 
         // Reset the reply form
         this.replyForm.reset();
 
-        // Update the server
-        this._chatService.updateDialog(this.selectedChat.chatId, this.dialog).then(response => {
-            this.readyToReply();
-        });
     }
 }

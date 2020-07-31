@@ -184,6 +184,7 @@ describe('EcommerceComponent', () => {
 		})
 	);
 */
+
 /*
 
 	fit('should call to save changes when project name is blurred', 
@@ -204,6 +205,7 @@ describe('EcommerceComponent', () => {
 			});
 		})
 	);
+
 */
 
 

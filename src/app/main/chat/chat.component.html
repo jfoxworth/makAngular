@@ -19,10 +19,12 @@
                 </mat-sidenav>
                 <!-- / LEFT SIDENAV -->
 
-                <!-- CONTENT -->
-                <chat-start *ngIf="!selectedChat"></chat-start>
+                <!-- CHAT START CONTENT --
+                <chat-start *ngIf="!(selectedChat-1)"></chat-start>
+                <!-- /CHAT START CONTENT -->
 
-                <chat-view *ngIf="selectedChat"></chat-view>
+                <!-- CHAT VIEW CONTENT -->
+                <chat-view></chat-view>
                 <!-- / CONTENT -->
 
                 <!-- RIGHT SIDENAV -->

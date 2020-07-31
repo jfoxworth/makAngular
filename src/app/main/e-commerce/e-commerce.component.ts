@@ -42,6 +42,7 @@ export class EcommerceComponent implements OnInit
     projectStatus : boolean[];
     selectedStatus : boolean[];
     stageTexts : any[];
+    displayType : string = 'list';
 
     changesExist : boolean = false;
     versionChangesExist : boolean = false;
