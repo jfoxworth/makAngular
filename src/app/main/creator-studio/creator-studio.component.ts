@@ -723,8 +723,8 @@ export class CreatorStudioComponent implements OnInit {
 						});
 
 				}
-				this.reqList = reqs;
 			}
+			this.reqList = reqs;
 		});
 
 	}

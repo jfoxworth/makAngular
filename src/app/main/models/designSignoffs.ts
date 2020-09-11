@@ -15,13 +15,15 @@ import { makVersion } from './makVersion';
 
 
 export interface designSignoff {
-	id 			: string;			// The id of the signoff
-	designId 	: string;			// The id of the design
-	projectId	: string;			// The id of the project
-	version 	: makVersion;		// The entire version data
-	comments 	: string; 			// Comments entered by the user
-	userId 		: string;			// ID of the user
-	userName 	: string;			// Name of the user
-	approve 	: boolean;			// Whether or not this signoff is an approval
-	dateCreated : number;
+	id 				: string;			// The id of the signoff
+	designId 		: string;			// The id of the design
+	projectId		: string;			// The id of the project
+	version 		: makVersion;		// The entire version data
+	versionId 		: string;
+	comments 		: string; 			// Comments entered by the user
+	creatorId 		: string;			// ID of the user
+	creatorEmail 	: string;			// Name of the user
+	approve 		: boolean;			// Whether or not this signoff is an approval
+	dateCreated 	: number;
+	deleted 		: boolean;
 }

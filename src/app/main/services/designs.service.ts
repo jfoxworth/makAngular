@@ -158,6 +158,14 @@ export class DesignsService
 	}
 
 
+	fetchDesignData( designId ) 
+	{
+		return this.afs.collection('designs', ref => ref.where('id', '==', designId ))
+		.get();
+
+	}
+
+
 	// Update a design
 	updateDesign( designObj )
 	{

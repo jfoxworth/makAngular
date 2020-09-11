@@ -31,6 +31,7 @@ export class SignoffReqsService
 
 	signoffReqStatus 		: BehaviorSubject<any>;
 	signoffReqOneStatus 	: BehaviorSubject<any>;
+	signoffReqUserStatus 	: BehaviorSubject<any>;
 
 
 	/*
@@ -45,6 +46,7 @@ export class SignoffReqsService
 	{
 		this.signoffReqStatus 		= new BehaviorSubject([]);
 		this.signoffReqOneStatus 	= new BehaviorSubject([]);
+		this.signoffReqUserStatus 	= new BehaviorSubject([]);
 	}
 
 
@@ -119,6 +121,26 @@ export class SignoffReqsService
 			this.signoffReqOneStatus.next(result);
 			
 		});
+	}
+
+
+
+
+
+	// Read
+	getSignoffReqsForUser( userId:string )
+	{ 
+	 		this.afs.collection('signoffReqs', ref => ref
+	 			.where('userId', '==', userId )
+	 			.where('deleted', '==', false))
+			.valueChanges({idField: 'uid'})
+			.subscribe(result=> {
+
+				console.log('The signoffReqs for the user in the service are ');
+				console.log(result);
+				this.signoffReqUserStatus.next(result);
+
+			});
 	}
 
 
