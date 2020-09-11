@@ -1108,12 +1108,13 @@
 
 									<div *ngFor="let userReq of reqList"
 										 fxLayout="row"
-										 class="text-center">
+										 class="text-center w-300"
+										 style="margin:auto">
 
 										<img class="profileAvatar avatar" 
     										 [src]="(userReq.userImage | async)">
 
-										<div>{{userReq.userEmail}}</div>
+										<div class="mt-8 ml-20 w-220 text-center">{{userReq.userEmail}}</div>
 									</div>
 
 								</div>
