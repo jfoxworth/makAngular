@@ -51,20 +51,21 @@
                     <mat-divider></mat-divider>
 
                     <div fxFlex="100"
-                         fxAlign="center center">
+                         fxAlign="center center"
+                         *ngIf="projectDataFlag">
 
-                        <div *ngIf="(projectList | async)?.length==0">
+                        <div *ngIf="projectList.length==0">
                             <h2>You have no projects using this design</h2>
                         </div>
 
 
-                        <div *ngIf="(projectList | async)?.length>0"
+                        <div *ngIf="projectList.length>0"
                              fxAlign="center center"
                              fxFlex="100">
 
-                            <h2>You have {{(projectList | async)?.length}} projects using this design</h2>
+                            <h2>You have {{projectList.length}} projects using this design</h2>
 
-                            <div *ngFor="let pi of (projectList | async)"
+                            <div *ngFor="let pi of projectList"
                                  fxLayout="row"
                                  style="cursor:pointer"
                                  [routerLink]="['/designStudio/project/'+pi.uid]">

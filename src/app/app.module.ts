@@ -28,6 +28,8 @@ import { DesignStudioModule } from 'app/main/design-studio/design-studio.module'
 
 
 
+
+
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSliderModule } from '@angular/material/slider';
@@ -36,7 +38,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 
 import { DesignStudioService } from 'app/main/services/design-studio.service';
 import { KnowledgeBaseService } from 'app/main/services/knowledge-base.service';
-import { DesignService } from 'app/main/services/design-service.service';
+import { CreatorStudioService } from 'app/main/services/creator-studio.service';
 
 
 import { EcommerceModule } from 'app/main/e-commerce/e-commerce.module';
@@ -141,7 +143,7 @@ const appRoutes: Routes = [
     providers :[
         DesignStudioService,
         KnowledgeBaseService,
-        DesignService,
+        CreatorStudioService,
         AuthService,
         ChatService,
         FirebaseService,

@@ -8,7 +8,7 @@ import {MatButtonModule} from '@angular/material/button';
 import { EventEmitter } from '@angular/core';
 
 // Services
-import { DesignService } from 'app/main/services/design-service.service';
+import { CreatorStudioService } from 'app/main/services/creator-studio.service';
 
 
 @Component({
@@ -37,7 +37,7 @@ export class SidebarComponent implements OnInit {
 	@Input('editableVersion') editableVersion:boolean;
 	
 
-	constructor( private DesignService : DesignService ) { }
+	constructor( private CreatorStudioService : CreatorStudioService ) { }
 
 
 	ngOnInit(): void {
@@ -73,7 +73,7 @@ export class SidebarComponent implements OnInit {
 
     // Convert hex to RGB
     hexToRGB( hexCode:string ):string {
-    	return this.DesignService.hexToRGB( hexCode )
+    	return this.CreatorStudioService.hexToRGB( hexCode )
     }
 
 

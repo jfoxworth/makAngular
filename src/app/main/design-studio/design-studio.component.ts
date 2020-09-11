@@ -1,31 +1,58 @@
+
+
+
+/*
+
+	This is the controller for the primary component of the app - the
+	design studio. 
+
+*/
+
+// Common Angular Items
 import { Component, OnDestroy, Inject, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { DOCUMENT } from '@angular/common'; 
 import { FormControl, FormGroup } from '@angular/forms';
 import { RouterModule, Routes, ActivatedRoute } from '@angular/router';
-import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
+
+
+// Angular Material Items
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+
+// RXJS 
+import { debounceTime, distinctUntilChanged, takeUntil, finalize } from 'rxjs/operators';
+import { BehaviorSubject, fromEvent, merge, Observable, Subject } from 'rxjs';
+
+
+// Fuse specific items
 import { fuseAnimations } from '@fuse/animations';
 import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 
 
 // Services
 import { DesignStudioService } from 'app/main/services/design-studio.service';
+import { DesignsService } from 'app/main/services/designs.service';
+import { ProjectsService } from 'app/main/services/projects.service';
+import { VersionsService } from 'app/main/services/versions.service';
 import { AuthService } from 'app/main/services/auth.service';
 import { FirebaseService } from 'app/main/services/firebase.service';
 
+
+// Firestore Items
 import { AngularFireStorage } from '@angular/fire/storage';
 
-import { finalize } from 'rxjs/operators';
+
+// Models
+import { makDesign } from 'app/main/models/makDesign';
+import { makProject } from 'app/main/models/makProject';
+import { makVersion } from 'app/main/models/makVersion';
 
 
 
 @Component({
-  selector: 'app-design-studio',
-  templateUrl: './design-studio.component.html',
-  styleUrls: ['./design-studio.component.scss']
+	selector: 'app-design-studio',
+	templateUrl: './design-studio.component.html',
+	styleUrls: ['./design-studio.component.scss']
 })
 export class DesignStudioComponent implements AfterViewInit {
 
@@ -33,34 +60,46 @@ export class DesignStudioComponent implements AfterViewInit {
 	window : any;
 	SDVApp : any;
 
-    shapediver:any;
-    designData:any = { 'parameterMenus' : [{ 'parameters': [ { 'images':[] }]}] };
-    projectData : any;
-    versionData : any;
-    versionList : any = [];
-    versionCollection : any;
-    searchInput: any;
-    studioType:string;
-    dataFlag:boolean = false;
-    designId : string;
-    projectId : string;
-    versionId : string;
-    shapediverApi : any;
-    shapeData : any;
-    flowersJSON : any;
-    flowerFlag : boolean = false;
-	editableVersion : boolean = true;
+	shapediver:any;
+	designData:any = { 'parameterMenus' : [{ 'parameters': [ { 'images':[] }]}] };
+	projectData : any;
+	versionData : any;
+	versionList : any = [];
 
-	constructor(private DesignStudioService: DesignStudioService,
-				private route: ActivatedRoute,
-				private AuthService : AuthService,
-				private FirebaseService : FirebaseService,
-				private afStorage : AngularFireStorage,
-				private activeRoute: ActivatedRoute,
-				private SnackBar: MatSnackBar,
-				@Inject(DOCUMENT) private document: Document) { 
+	//designData 			: makDesign;
+	//projectData 		: makProject;
+	//versionData 		: makVersion;
+	//versionList 		: makVersion[];
+	versionCollection 	: any;
+	searchInput 		: any;
+	studioType 			: string;
+	dataFlag 			: boolean = false;
+	designId 			: string;
+	projectId 			: string;
+	versionId 			: string;
+	shapediverApi 		: any;
+	shapeData 			: any;
+	flowersJSON 		: any;
+	flowerFlag 			: boolean = false;
+	editableVersion 	: boolean = true;
 
 
+	private _unsubscribeAll: Subject<any>;
+
+
+	constructor(	private DesignStudioService 		: DesignStudioService,
+					private DesignsService 				: DesignsService,
+					private ProjectsService 			: ProjectsService,
+					private VersionsService 			: VersionsService,
+					private route 						: ActivatedRoute,
+					private AuthService 				: AuthService,
+					private FirebaseService 			: FirebaseService,
+					private afStorage 					: AngularFireStorage,
+					private activeRoute 				: ActivatedRoute,
+					private SnackBar 					: MatSnackBar,
+					@Inject(DOCUMENT) private document 	: Document) 
+	{ 
+		this._unsubscribeAll = new Subject();
 	}
 
 
@@ -69,7 +108,9 @@ export class DesignStudioComponent implements AfterViewInit {
 
 	ngOnInit() {
 
-    }
+		this.subscribeToData();
+
+	}
 
 
 
@@ -86,8 +127,10 @@ export class DesignStudioComponent implements AfterViewInit {
 		if ( this.route.snapshot.url[1] === undefined )
 		{
 			this.studioType = 'studio';
-
 			this.designId = 'jBRzSildNc16fQjAmLkh';
+			this.DesignsService.getDesignById( this.designId );
+
+			/*
 
 			this.designData = this.FirebaseService.getDocById( 'designs', this.designId ).then(response=> {
 				this.designData=response.data();
@@ -101,6 +144,8 @@ export class DesignStudioComponent implements AfterViewInit {
 
 			});
 
+			*/
+
 
 		// WHen a user is navigating using the icon menu to a preset design
 		}else if ( ( this.route.snapshot.url[1].toString() != 'design' ) &&
@@ -108,9 +153,10 @@ export class DesignStudioComponent implements AfterViewInit {
 		{
 
 			this.studioType = 'studio';
-
 			this.designId = this.route.snapshot.url[1].toString();
+			this.DesignsService.getDesignById( this.designId );
 
+			/*
 			this.designData = this.FirebaseService.getDocById( 'designs', this.designId ).then(response=> {
 				this.designData=response.data();
 				this.versionData = this.blankVersion();
@@ -120,6 +166,7 @@ export class DesignStudioComponent implements AfterViewInit {
 				this.initializeAll();
 
 			});
+			*/
 
 
 		// WHen a user is looking at a design that is likely not live
@@ -127,6 +174,9 @@ export class DesignStudioComponent implements AfterViewInit {
 		{
 			this.studioType = 'design';
 			this.designId = this.route.snapshot.paramMap.get('designId');
+			this.DesignsService.getDesignById( this.designId );
+
+			/*
 
 			this.designData = this.FirebaseService.getDocById( 'designs', this.designId ).then(response=> {
 				this.designData=response.data();
@@ -138,6 +188,8 @@ export class DesignStudioComponent implements AfterViewInit {
 
 			});
 
+			*/
+
 
 
 		// If the viewer is looking at a project - the nominal case of a user working on a project
@@ -146,7 +198,9 @@ export class DesignStudioComponent implements AfterViewInit {
 
 			this.studioType = 'project';
 			this.projectId = this.route.snapshot.paramMap.get('projectId');
+			this.ProjectsService.getProjectById( this.projectId );
 
+/*
 			this.projectData = this.FirebaseService.getDocById( 'projects', this.projectId ).then(response=> {
 				
 				this.projectData = response.data();
@@ -178,16 +232,18 @@ export class DesignStudioComponent implements AfterViewInit {
 					});
 
 			});
+*/
 
 
 		// The user is looking at the design studio - possibly not logged in
 		}else
 		{
 
-
 			this.studioType = 'studio';
-
 			this.designId = 'jBRzSildNc16fQjAmLkh';
+			this.DesignsService.getDesignById( this.designId );
+
+			/*
 
 			this.designData = this.FirebaseService.getDocById( 'designs', this.designId ).then(response=> {
 				this.designData=response.data();
@@ -198,6 +254,8 @@ export class DesignStudioComponent implements AfterViewInit {
 				this.initializeAll();
 			});
 
+			*/
+
 		}
 
 	}
@@ -207,6 +265,92 @@ export class DesignStudioComponent implements AfterViewInit {
 
 
 
+
+
+	// -----------------------------------------------------------------------------------------------------
+	// @ Functions
+	// -----------------------------------------------------------------------------------------------------
+
+
+
+	// -----------------------------------------------------------------------------------------------------
+	//
+	// @ FUNCTIONS TO SUBSCRIBE TO DATA
+	//
+	// -----------------------------------------------------------------------------------------------------
+
+	// Read
+	subscribeToData()
+	{
+
+		// Subscribe to the design data
+		this.DesignsService.designStatus
+		.pipe(takeUntil(this._unsubscribeAll))
+		.subscribe((design)=>
+		{ 
+
+			this.designData = design;
+
+			console.log('The design data is ...');
+			console.log(design);
+			console.log(this.studioType);
+
+			if ( ( this.studioType == 'studio' ) || ( this.studioType == 'design' ) )
+			{
+				this.versionData 	= this.VersionsService.blankVersion();
+				this.versionList.push(this.versionData);
+				console.log('1. The design data is ...');
+				console.log(design);
+				this.initializeAll();
+			}
+
+
+			if ( this.studioType == 'project' )
+			{
+				this.VersionsService.getVersionsForProject( this.designData.id );
+			}
+
+		});
+
+
+
+		// Subscribe to the project data
+		this.ProjectsService.projectOneStatus
+		.pipe(takeUntil(this._unsubscribeAll))
+		.subscribe((project)=>
+		{ 
+
+			this.projectData = project;
+
+			console.log('1. The project data is ...');
+			console.log(project);
+
+			if ( this.studioType = 'project' )
+			{
+				this.DesignsService.getDesignById( this.projectData.designId );
+			}
+
+		});
+
+
+
+
+		// Subscribe to the version data
+		this.VersionsService.versionOneStatus
+		.pipe(takeUntil(this._unsubscribeAll))
+		.subscribe((version)=>
+		{ 
+
+			this.versionData 	= version;
+
+			console.log('1. The version data is ...');
+			console.log(version);
+
+			this.initializeAll();
+
+		});
+
+	}
 
 
 
@@ -293,22 +437,22 @@ export class DesignStudioComponent implements AfterViewInit {
 		// Add and remove the windows for the project menu and cost
 		if ( this.studioType == 'design' )
 		{
-        	this.designData.parameterMenus.unshift(this.DesignStudioService.getDesignMenu());
+			this.designData.parameterMenus.unshift(this.DesignStudioService.getDesignMenu());
 		
 		}else if ( this.studioType == 'project' )
 		{
-        	this.designData.parameterMenus.unshift(this.DesignStudioService.getProjectMenu());			
+			this.designData.parameterMenus.unshift(this.DesignStudioService.getProjectMenu());			
 
 		}else if ( this.studioType == 'studio' )
 		{
-        	this.designData.parameterMenus.unshift(this.DesignStudioService.getStudioMenu());			
+			this.designData.parameterMenus.unshift(this.DesignStudioService.getStudioMenu());			
 		}
 		this.designData.parameterMenus.push(this.DesignStudioService.getCostMenu( this.studioType ));
 		this.designData.menuLocations = this.DesignStudioService.getMenuLocations();
 
 
-        // Add the array to hide/show the side menus
-        this.designData.menuShow = [];
+		// Add the array to hide/show the side menus
+		this.designData.menuShow = [];
 		this.designData.parameterMenus.forEach((value, index) => {
 			this.designData.menuShow[index] =  false;
 		});
@@ -722,17 +866,14 @@ export class DesignStudioComponent implements AfterViewInit {
 
 
 
-	/*--------------------------------------------------------*
+	// -----------------------------------------------------------------------------------------------------
+	//
+	// @ FUNCTION TO SET THE DRAG AND DROP FOR THE CURRENT MODEL
+	//
+	// -----------------------------------------------------------------------------------------------------
 
-		This function sets the items to be dragged and
-		dropped in the current model.
-
-	/*-------------------------------------------------------*/
 	setDragDrop( )
 	{
-
-
-
 
 		if ( this.designData.uid == "1pbM0lb5hcHureiiX239" )
 		{

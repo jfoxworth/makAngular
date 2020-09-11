@@ -1,4 +1,19 @@
+
+
+
+// Common Angular Items
 import { Component, OnInit } from '@angular/core';
+
+
+
+// RXJS Items
+import { finalize } from 'rxjs/operators';
+import { BehaviorSubject, Subject, Observable } from 'rxjs';
+import { takeUntil } from 'rxjs/internal/operators';
+
+
+
+// Angular Material Items
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,69 +23,89 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FuseSharedModule } from '@fuse/shared.module';
 
-import { DesignService } from 'app/main/services/design-service.service';
 
+
+
+// Services
+import { CreatorStudioService } from 'app/main/services/creator-studio.service';
+import { StoreService } from 'app/main/services/store.service';
+import { DesignsService } from 'app/main/services/designs.service';
+
+
+
+
+
+// Models
+import { makDesign } from 'app/main/models/makDesign';
+import { makProject } from 'app/main/models/makProject';
+import { makVersion } from 'app/main/models/makVersion';
+
+
+
+
+// Firestore Items
 import { FirebaseService } from 'app/main/services/firebase.service';
-
 import { AngularFireStorage } from '@angular/fire/storage';
+import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 
-import { finalize } from 'rxjs/operators';
 
 
 
 @Component({
-  selector: 'app-store',
-  templateUrl: './store.component.html',
-  styleUrls: ['./store.component.scss']
+	selector: 'app-store',
+	templateUrl: './store.component.html',
+	styleUrls: ['./store.component.scss']
 })
 export class StoreComponent implements OnInit {
 
-	storeItems : any[];
-	storeList : any[] =[];
-	currentItem : any;
-	selectedType : string = "All";
-	designTypes=this.DesignService.getDesignTypes();
-	mobile : boolean = false;
-	userData : any;
-	dataFlag : boolean = false;
+//	storeItems 		: makDesign[];
+	storeList 		: makDesign[];
+	currentItem 	: makDesign;
+	selectedType 	: string = "All";
+	designTypes 	: string[];
+	mobile 			: boolean = false;
+	userData 		: any;
+	dataFlag 		: boolean = false;
+	private _unsubscribeAll: Subject<any>;
 
-	constructor(private DesignService : DesignService,
-				private FirebaseService : FirebaseService,
-				private SnackBar: MatSnackBar,
-				private afStorage : AngularFireStorage 
+
+
+
+	constructor(	private CreatorStudioService 	: CreatorStudioService,
+					private StoreService 			: StoreService,
+					private DesignsService 			: DesignsService,
+					private FirebaseService 		: FirebaseService,
+					private SnackBar 				: MatSnackBar,
+					private afStorage 				: AngularFireStorage 
 		) { 
 
         // Get the user data
         this.userData = JSON.parse(localStorage.getItem('user'));
 		this.dataFlag = false;
+		this._unsubscribeAll = new Subject();
 	}
 
 	
 
 	ngOnInit(): void {
 
+
+		// Get the design types
+		this.designTypes=this.CreatorStudioService.getDesignTypes();
+		this.designTypes.unshift("All");
+
+
 		if ( window.screen.width < 960 )
 		{
 			this.mobile = true;
 		}
 
-		this.designTypes.unshift("All");
+		// Set up the observers
+		this.subscribeToData();
 
 
-		// Pull all docs where a status is active
-		this.FirebaseService.getDocsByParam( 'designs', 'status', 1 )
-			.subscribe(result => {
-				var tempArray = [];
-				var docData;
-				result.forEach((doc) => {
-					docData=doc.data();
-					docData.uid=doc.id;
-					//console.log(doc.id, '=>', doc.data());
-					tempArray.push(docData);
-				});
-				this.storeList = tempArray;
-				this.formatStoreData();
-		});
+		// Trigger the function to get all valid designs
+		this.DesignsService.getValidDesigns();
 
 
 	}
@@ -78,12 +113,56 @@ export class StoreComponent implements OnInit {
 
 
 
+
+
+
+
+	// -----------------------------------------------------------------------------------------------------
+	//
+	// @ CRUD FUNCTIONS FOR A DESIGN
+	//
+	// -----------------------------------------------------------------------------------------------------
+
+	// Read
+	subscribeToData()
+	{
+
+		// Subscribe to the designs for the user
+		this.DesignsService.designAllStatus
+		.pipe(takeUntil(this._unsubscribeAll))
+		.subscribe((designs)=>
+		{ 
+			if ( designs.length > 0 )
+			{
+				this.storeList = designs;
+				this.formatStoreData();
+			}
+
+		});
+
+	}
+
+
+
+
+
+
+
+
+
+	// -----------------------------------------------------------------------------------------------------
+	//
+	// @ FUNCTIONS TO FORMAT OR PREPARE THE DATA AND PAGE
+	//
+	// -----------------------------------------------------------------------------------------------------
+
   	/*
   	*
   	*	This function formats the image data necessary
   	*
   	*/
-	formatStoreData(){
+	formatStoreData()
+	{
 
 		for (var a=0; a<this.storeList.length; a++)
 		{

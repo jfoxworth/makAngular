@@ -1,11 +1,36 @@
+
+
+/*
+*
+*
+*	This is the controller for the profile page. It is a simple page that pulls some
+*	data from the database for the users info
+*
+*
+*/
+
+
+// Common Angular and Dialog Items
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { RouterModule, Routes, ActivatedRoute } from '@angular/router';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { fuseAnimations } from '@fuse/animations';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
+
+
+
+// RXJS Items
+import { finalize } from 'rxjs/operators';
+import { BehaviorSubject, Subject, Observable } from 'rxjs';
+import { takeUntil } from 'rxjs/internal/operators';
+
+
+
+// Angular Material Items
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 
 // Services
@@ -16,7 +41,6 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { MarketplaceService } from 'app/main/services/marketplace.service';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 
-import { finalize } from 'rxjs/operators';
 
 
 
@@ -39,24 +63,29 @@ export interface UserData {
 })
 export class ProfileComponent implements OnInit
 {
+
+	private _unsubscribeAll: Subject<any>;
+
+
 	/**
 	 * Constructor
 	 *
 	 * @param {FuseTranslationLoaderService} _fuseTranslationLoaderService
 	 */
 	constructor(
-		private _fuseTranslationLoaderService: FuseTranslationLoaderService,
-		private route: ActivatedRoute,
-		public dialog: MatDialog, 
-		private UserService : UserService,
-		private AuthService : AuthService,
-		private FirebaseService : FirebaseService,
-        public afs: AngularFirestore,
-        private SnackBar: MatSnackBar,
-        private afStorage : AngularFireStorage
+		private _fuseTranslationLoaderService 	: FuseTranslationLoaderService,
+		private route 							: ActivatedRoute,
+		public dialog 							: MatDialog, 
+		private UserService 					: UserService,
+		private AuthService 					: AuthService,
+		private FirebaseService 				: FirebaseService,
+        public afs 								: AngularFirestore,
+        private SnackBar 						: MatSnackBar,
+        private afStorage 						: AngularFireStorage
 	)
 	{
 
+		this._unsubscribeAll = new Subject();
 		//this.userData = this.UserService.getUser();
 		//this._fuseTranslationLoaderService.loadTranslations(english, turkish);
 	}
@@ -100,36 +129,13 @@ export class ProfileComponent implements OnInit
 		// A user is defined by URL
 		}else if ( (this.userId != '') && ( this.userId !== null ) && ( this.userId !== undefined ) )
 		{
-			this.FirebaseService.getDocById( 'users', this.userId ).then(response=> {
-				this.userInfo=response.data();
-		        this.profileImage = this.UserService.getProfileImage( this.userInfo );
-				if ( ( this.userData !== null ) && ( this.userData !== undefined ) )
-				{
-					if ( this.userInfo.uid == this.userData.uid ){ this.canEdit=true; }
-				}
-				this.dataFlag=true;
-				this.displayStyle='display';
-			});
-		
+
+			this.UserService.getUserById( this.userId );
+
 
 		// Looking at user defined by the URL, but the user is logged in
 		}else if ( ( this.userData !== null ) && ( this.userData !== undefined ) && ( this.userData !== {} ) )
 		{
-
-			/*
-			console.log('2. The user data for a user logged in with no URL is ...');
-			console.log(this.userData);
-			console.log('2. The userId is ');
-			console.log(this.userId);
-			this.userInfo = this.FirebaseService.getDocById( 'users', this.userData.uid ).then(response=> {
-				this.userInfo=response.data();
-		        this.profileImage = this.UserService.getProfileImage( this.userData );
-				this.dataFlag=true;
-				console.log('2. The userInfo is now ');
-				console.log(this.userInfo);
-			});		
-
-			*/
 			this.userInfo = this.userData;
 			this.profileImage = this.UserService.getProfileImage( this.userData );
 			this.dataFlag=true;
@@ -148,11 +154,45 @@ export class ProfileComponent implements OnInit
 
 
 
-	/**
-	*
-	* When the data needs to be saved
-	*
-	**/
+
+
+
+
+	// -----------------------------------------------------------------------------------------------------
+	//
+	// @ CRUD FUNCTIONS FOR A DESIGN
+	//
+	// -----------------------------------------------------------------------------------------------------
+
+	// Read
+	subscribeToData()
+	{
+
+		// Subscribe to the designs for the user
+		this.UserService.userStatus
+		.pipe(takeUntil(this._unsubscribeAll))
+		.subscribe((user)=>
+		{ 
+			console.log('The user returned is ');
+			console.log(user);
+
+			if ( user.email )
+			{
+				this.userInfo=user;
+		        this.profileImage = this.UserService.getProfileImage( this.userInfo );
+				if ( ( this.userData !== null ) && ( this.userData !== undefined ) )
+				{
+					if ( this.userInfo.uid == this.userData.uid ){ this.canEdit=true; }
+				}
+				this.dataFlag=true;
+				this.displayStyle='display';
+			}
+
+		});
+
+	}
+
+	// Update
 	saveChanges():void{
 
 		console.log('Saving user data '+this.userData.uid);
@@ -166,11 +206,12 @@ export class ProfileComponent implements OnInit
 
 
 
-	/**
-	*
-	* When the background image is uploaded
-	*
-	**/
+
+	// -----------------------------------------------------------------------------------------------------
+	//
+	// @ FILE UPLOAD FOR PROFILE IMAGE AND GET PROFILE IMAGE
+	//
+	// -----------------------------------------------------------------------------------------------------
 	onUpload(event) {
 
 
@@ -200,16 +241,6 @@ export class ProfileComponent implements OnInit
 
   	}
 
-
-
-
-
-
-	/**
-	*
-	* Fetch the profile image if there is one
-	*
-	**/
 	getProfileImage( userId ):void {
 
 		this.profileImage = this.UserService.getProfileImage( userId );

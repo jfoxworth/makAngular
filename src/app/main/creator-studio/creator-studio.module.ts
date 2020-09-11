@@ -23,7 +23,9 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { FormsModule }   from '@angular/forms';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -92,6 +94,9 @@ const routes: Routes = [
         MatToolbarModule,
         MatSliderModule,
         MatSlideToggleModule,
+        MatCheckboxModule,
+
+        BrowserAnimationsModule,
 
         FormsModule,
         MatGridListModule,

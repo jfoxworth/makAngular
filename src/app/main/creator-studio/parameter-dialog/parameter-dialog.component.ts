@@ -1,35 +1,58 @@
+
+
+/*
+*
+*
+*	This is the controller for the parameter dialog. The data for the view
+*	comes from the main controller for the creator studio. The design is 
+*	altered from here, but no call is made to the server to update the 
+* 	data. The user must press the button for that.
+*
+*
+*/
+
+
+// Common Angular Items and Dialog items
 import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogData } from 'app/main/creator-studio/creator-studio.component';
+
+
+// RXJS Items
+import { finalize } from 'rxjs/operators';
+
 
 // New ng5 slider
 import { Ng5SliderModule } from 'ng5-slider';
 import { Options } from 'ng5-slider';
 
+
 // Services
-import { DesignService } from 'app/main/services/design-service.service';
+import { CreatorStudioService } from 'app/main/services/creator-studio.service';
 import { AuthService } from 'app/main/services/auth.service';
 import { FirebaseService } from 'app/main/services/firebase.service';
 
+
+
 import { AngularFireStorage } from '@angular/fire/storage';
 
-import { finalize } from 'rxjs/operators';
 
 
 @Component({
-  selector: 'parameter-dialog',
-  templateUrl: './parameter-dialog.component.html',
-  styleUrls: ['./parameter-dialog.component.scss'],
-  encapsulation: ViewEncapsulation.None
+	selector: 'parameter-dialog',
+	templateUrl: './parameter-dialog.component.html',
+	styleUrls: ['./parameter-dialog.component.scss'],
+	encapsulation: ViewEncapsulation.None
 })
 export class editParameterDialog implements OnInit {
 
-  constructor(
-	private FirebaseService : FirebaseService,
-	private DesignService : DesignService,
-	private afStorage : AngularFireStorage,
-	public dialogRef: MatDialogRef<editParameterDialog>,
-	@Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+	constructor(
+		private FirebaseService 		: FirebaseService,
+		private CreatorStudioService 	: CreatorStudioService,
+		private afStorage 				: AngularFireStorage,
+		public dialogRef 				: MatDialogRef<editParameterDialog>,
+		@Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+
 
 	onNoClick(): void {
 		this.dialogRef.close({data:this.data});
@@ -55,7 +78,7 @@ export class editParameterDialog implements OnInit {
 
 
 		// Get a unique id for the upload and the path
-		var text= this.DesignService.makeRandom(6);
+		var text= this.CreatorStudioService.makeRandom(6);
 		var path = '/studio/select/'+this.data.currentDesign.uid+'-'+text+'.'+imageType;			
 		let tL = this.data.currentDesign.parameterMenus[this.data.i]['parameters'][this.data.j]['images'].length;
 

@@ -1,10 +1,24 @@
+/*
+*
+*
+*	This service handles the items needed for the creator studio. This is
+*	a return of simple data that is used in the component, as well as
+*	using the URL and user setting to set the proper settings for the 
+*	display.
+*
+*
+*/
+
+
+
+
 import { Injectable } from '@angular/core';
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class DesignService {
+export class CreatorStudioService {
 
 	constructor() { }
 

@@ -1,23 +1,57 @@
+
+// Standard Angular Items
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
-import { MatCarousel, MatCarouselComponent } from '@ngmodule/material-carousel';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-//import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+
+// RXJS Items
+import { finalize } from 'rxjs/operators';
+import { BehaviorSubject, Subject, Observable } from 'rxjs';
+import { takeUntil } from 'rxjs/internal/operators';
+
+
+// Child Dialogs
 import { editParameterDialog } from './parameter-dialog/parameter-dialog.component';
 import { SubmenuDialog } from './submenu-dialog/submenu-dialog.component';
+
+
+
+// Angular Material Items
+import { MatCarousel, MatCarouselComponent } from '@ngmodule/material-carousel';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatGridListModule } from '@angular/material/grid-list';
 
 
+// Drag Drop Items
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+
+
 // Services
-import { DesignService } from 'app/main/services/design-service.service';
+import { CreatorStudioService } from 'app/main/services/creator-studio.service';
 import { AuthService } from 'app/main/services/auth.service';
 import { FirebaseService } from 'app/main/services/firebase.service';
+import { VersionsService } from 'app/main/services/versions.service';
+import { ProjectsService } from 'app/main/services/projects.service';
+import { DesignsService } from 'app/main/services/designs.service';
+import { UserService } from 'app/main/services/user-service.service';
+import { SignoffReqsService } from 'app/main/services/signoff-reqs.service';
 
+
+
+// Firestore Items
 import { AngularFireStorage } from '@angular/fire/storage';
 
-import { finalize } from 'rxjs/operators';
+
+
+
+// Models
+import { makDesign } from 'app/main/models/makDesign';
+import { makProject } from 'app/main/models/makProject';
+import { makVersion } from 'app/main/models/makVersion';
+import { signoffReq } from 'app/main/models/signoffReq';
+
+
 
 
 export interface DialogData {
@@ -28,6 +62,8 @@ export interface DialogData {
   iconOptions:string[],
   parameterUrls: any;
 }
+
+
 
 
 @Component({
@@ -41,57 +77,44 @@ export interface DialogData {
 })
 export class CreatorStudioComponent implements OnInit {
 
-	constructor(public dialog: MatDialog, 
-				private DesignService : DesignService,
-				private AuthService : AuthService,
-				private FirebaseService : FirebaseService,
-				private SnackBar: MatSnackBar,
-				private afStorage : AngularFireStorage,
-				public vcRef: ViewContainerRef ) 
-	{
-
-		this.designList		= [];
-		this.designType		= this.DesignService.getDesignTypes();
-		this.companies		= this.DesignService.getCompanies();
-		this.menuLocations	= this.DesignService.getMenuLocations();
-		this.carouselUrls 	= [];
-		this.parameterUrls	= [];
-	 }
-
-
-	designList : any;
-	designType : any;
-	designTemplate : any;
-	parameterTemplate : any;
-	currentDesign : any;
-	companies : any;
-	menuLocations : any;
-	dataFlag : boolean = false;
-	dataFlag2 : boolean = false;
-	changesExist : boolean = false;
+	userData 			: any;
+	designList 			: makDesign[];
+	designType 			: any;
+	designTemplate 		: any;
+	parameterTemplate 	: any;
+	currentDesign 		: makDesign;
+	companies 			: any;
+	menuLocations 		: any;
+	dataFlag 			: boolean = false;
+	dataFlag2 			: boolean = false;
+	changesExist 		: boolean = false;
+	potentialUser 		: any = {};
+	testUser 			: string;
+	reqList 			: signoffReq[];
 
 	// Variables needed for the BG image
-	carouselUrls : Array<any>;
-	imageUrls : Array<any>;
-	parameterUrls : Array<any>;
+	carouselUrls : Array<any> = [];
+	imageUrls : Array<any> = [];
+	parameterUrls : Array<any> = [];
+
+	private _unsubscribeAll: Subject<any>;
 
 
-
-	  drop(event: CdkDragDrop<string[]>) {
-	  	console.log(event.container);
-	  	console.log(event.previousContainer);
-		if (event.previousContainer === event.container) {
-		  moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-		} else {
-		  transferArrayItem(event.previousContainer.data,
-							event.container.data,
-							event.previousIndex,
-							event.currentIndex);
-		}
-	  }
-
-
-
+	constructor(	public dialog 					: MatDialog, 
+					private CreatorStudioService 	: CreatorStudioService,
+					private VersionsService 		: VersionsService,
+					private ProjectsService 		: ProjectsService,
+					private DesignsService 			: DesignsService,
+					private UserService 			: UserService,
+					private SignoffReqsService 		: SignoffReqsService,
+					private AuthService  			: AuthService,
+					private FirebaseService 		: FirebaseService,
+					private SnackBar 				: MatSnackBar,
+					private afStorage 				: AngularFireStorage,
+					public vcRef 					: ViewContainerRef ) 
+	{
+		this._unsubscribeAll = new Subject();
+	}
 
 
 
@@ -104,27 +127,20 @@ export class CreatorStudioComponent implements OnInit {
 
 	ngOnInit(): void {
 
+		this.userData = JSON.parse(localStorage.getItem('user'));
+
+
+		// Get the lists of things needed from the service
+		this.designType		= this.CreatorStudioService.getDesignTypes();
+		this.companies		= this.CreatorStudioService.getCompanies();
+		this.menuLocations	= this.CreatorStudioService.getMenuLocations();
+
+
 		// Pull the list of existing designs for this user	
-		this.FirebaseService.getDocsByUserId( 'designs', 'designerId' )
-			.then((snapshot) => {
-				var tempArray = [];
-				var docData;
-				snapshot.forEach((doc) => {
-					docData=doc.data();
-					docData.uid=doc.id;
-					console.log(doc.id, '=>', doc.data());
-					tempArray.push(docData);
-				});
-				this.designList = tempArray;
-				if (this.designList.length>0)
-				{
-					this.currentDesign = this.designList[0];
-					this.formatDesignData();
-				}
-			})
-			.catch((err) => {
-			  console.log('Error getting documents', err);
-			});
+		this.DesignsService.getDesignsForUser( this.userData.uid );
+
+		// Subscribe to that data
+		this.subscribeToData();
 
 	}
 
@@ -132,23 +148,142 @@ export class CreatorStudioComponent implements OnInit {
 
 
 
+	// -----------------------------------------------------------------------------------------------------
+	// @ Functions
+	// -----------------------------------------------------------------------------------------------------
 
+
+
+
+	// -----------------------------------------------------------------------------------------------------
+	//
+	// @ DRAG AND DROP FUNCTIONS
+	//
+	// -----------------------------------------------------------------------------------------------------
 
 	/**
-	 * When a new design is added
+	 * When a parameter is dropped into a list
 	 */
+	drop(event: CdkDragDrop<string[]>) {
+		console.log(event.container);
+		console.log(event.previousContainer);
+		if (event.previousContainer === event.container) {
+			moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+		} else {
+			transferArrayItem(event.previousContainer.data,
+							  event.container.data,
+							  event.previousIndex,
+							  event.currentIndex);
+		}
+  	}
+
+
+
+
+
+
+
+
+
+
+	// -----------------------------------------------------------------------------------------------------
+	//
+	// @ CRUD FUNCTIONS FOR A DESIGN
+	//
+	// -----------------------------------------------------------------------------------------------------
+
+	// Create
 	newDesign( ): void
 	{
-		var newId = this.FirebaseService.createDocInCollection( 'designs', this.DesignService.getNewDesign( '' ) )
-		this.designList.push(this.DesignService.getNewDesign( newId ));
-		this.currentDesign = this.designList[this.designList.length-1];
-		console.log(this.designList);
+		this.DesignsService.createDesign();
+	}
+
+
+	// Read
+	subscribeToData()
+	{
+
+		// Subscribe to the signoff reqs observer
+		this.subscribeToSignOffData();
+
+		// Subscribe to the designs for the user
+		this.DesignsService.designUserStatus
+		.pipe(takeUntil(this._unsubscribeAll))
+		.subscribe((designs)=>
+		{ 
+			if ( designs.length > 0 )
+			{
+				this.designList = designs;
+				this.currentDesign=this.designList[0];
+				this.formatDesignData();
+			}
+
+			// Get the main background image
+			/*
+			for (var a=0; a<designs.length; a++)
+			{
+				for (var b=0; b<designs[a].marketplace.images.length; b++)
+				{
+					if ( designs[a].marketplace.images[b]['mainImage'] )
+					{
+						const ref = this.afStorage.ref(designs[a].marketplace.images[b]['path']);
+						this.designImageUrl = ref.getDownloadURL();
+					}
+				}
+			}
+			*/
+
+		});
+
+
+
+
+	}
+
+	// Update
+	saveDesignChanges( ) 
+	{
+
+		let tD = JSON.parse( JSON.stringify( this.currentDesign ) );
+
+		// Clean the observables out from the design object
+		for (var a=1; a<tD['parameterMenus'].length; a++)
+		{
+			for (var b=0; b<tD['parameterMenus'][a]['parameters'].length; b++)
+			{
+				for (var c=0; c<tD['parameterMenus'][a]['parameters'][b]['images'].length; c++)
+				{
+					tD['parameterMenus'][a]['parameters'][b]['images'][c]['imageUrl'] = '';
+				}
+			}
+		}
+
+		this.DesignsService.updateDesign( this.currentDesign );
+		this.SnackBar.open('Design is updated','', {duration: 4000});
+		
+	}
+
+
+	// Delete 
+	deleteDesign( designId )
+	{
+		this.DesignsService.deleteDesign( designId );
 	}
 
 
 
 
 
+
+
+
+
+
+	// -----------------------------------------------------------------------------------------------------
+	//
+	// @ FUNCTIONS TO EDIT PARAMETERS OF THE DESIGN
+	//
+	// -----------------------------------------------------------------------------------------------------
 
 
 	/**
@@ -172,87 +307,19 @@ export class CreatorStudioComponent implements OnInit {
 	}
 
 
-
-
-
-
-
-
-
-
-
 	/**
 	 * When someone adds a new submenu
 	 */
 	addSubmenu() {
-		this.currentDesign['parameterMenus'].push(this.DesignService.getNewSubmenu());
+		this.currentDesign['parameterMenus'].push(this.CreatorStudioService.getNewSubmenu());
 	}
-
-
-
-
-
-
-
-
 
 
 	/**
 	 * When someone adds a new item to a submenu
 	 */
 	addMenuItem(menuIndex) {
-		this.currentDesign['parameterMenus'][menuIndex]['parameters'].push(this.DesignService.getNewParameter());
-	}
-
-
-
-
-
-
-
-	/**
-	 * Dialog to edit a parameter
-	 */
-	openDialog(i,j) {
-		console.log('In the open dialog with '+i+' - '+j);
-		const dialogRef = this.dialog.open( editParameterDialog, {
-			panelClass: 'parameter-dialog',
-			data: { currentDesign: this.currentDesign, 
-					i:i, 
-					j:j, 
-					parameterTypes: this.DesignService.getParameterTypes(),
-					parameterUrls: this.parameterUrls }
-		});
-
-		dialogRef.afterClosed().subscribe(result => {
-		  console.log('The dialog was closed');
-		  console.log(result);
-		});
-
-	}
-
-
-
-
-
-	/**
-	 * Dialog to edit a submenu
-	 */
-	openSubmenuDialog(i) {
-		console.log('In the open submenu dialog with '+i);
-		const dialogRef = this.dialog.open( SubmenuDialog, {
-			panelClass: 'submenu-dialog',
-			data: { currentDesign: this.currentDesign, 
-					i:i,
-					iconOptions : this.DesignService.getIconOptions()
-				  }
-		});
-
-		dialogRef.afterClosed().subscribe(result => {
-		  console.log('The dialog was closed');
-		  console.log(result);
-		});
-
+		this.currentDesign['parameterMenus'][menuIndex]['parameters'].push(this.CreatorStudioService.getNewParameter());
 	}
 
 
@@ -266,39 +333,10 @@ export class CreatorStudioComponent implements OnInit {
 
 
 
-	/**
-	 * When a user makes a change to a design and those changes are saved
-	 */
-	saveDesignChanges( ) {
-
-		console.log('Saving design changes for '+this.currentDesign.uid);
-		console.log(this.currentDesign);
-
-		let tD = JSON.parse( JSON.stringify( this.currentDesign ) );
-
-		// Clean the observables out from the design object
-		for (var a=1; a<tD['parameterMenus'].length; a++)
-		{
-			for (var b=0; b<tD['parameterMenus'][a]['parameters'].length; b++)
-			{
-				for (var c=0; c<tD['parameterMenus'][a]['parameters'][b]['images'].length; c++)
-				{
-					tD['parameterMenus'][a]['parameters'][b]['images'][c]['imageUrl'] = '';
-				}
-			}
-		}
-
-	
-		this.FirebaseService.updateDocDataUsingId( 'designs', this.currentDesign.uid, tD )
-		.then((snapshot) => {
-			this.SnackBar.open('Design is updated','', {duration: 4000});
-		})
-		.catch((err) => {
-		  console.log('Error getting documents', err);
-		});
 
 
-	}
+
+
 
 
 
@@ -386,7 +424,7 @@ export class CreatorStudioComponent implements OnInit {
 		}
 		this.currentDesign.priceValid = priceValid;
 
-		if (priceValid) { this.setPrice(); }else { this.currentDesign.price = 'NA'; } 
+		if (priceValid) { this.setPrice(); }else { this.currentDesign.price = 0; } 
 
 	}
 
@@ -459,7 +497,7 @@ export class CreatorStudioComponent implements OnInit {
 		for (let i = 0; i < 6; i++) {
 			text += possible.charAt(Math.floor(Math.random() * possible.length));
   		}
-		var path = '/marketplace/carousel/'+this.currentDesign.uid+'-'+text+'.'+imageType;			
+		var path = '/marketplace/carousel/'+this.currentDesign.id+'-'+text+'.'+imageType;			
 
 
 		// Get URL
@@ -521,15 +559,8 @@ export class CreatorStudioComponent implements OnInit {
 			}
 		}
 		this.dataFlag=true;
+		this.SignoffReqsService.getSignoffReqsForDesign( this.currentDesign.id );
 
-		console.log('The carousel URLs are ...');
-		console.log(this.carouselUrls);
-
-		console.log('The parameter URLs are ...');
-		console.log(this.parameterUrls);
-
-		console.log('The currentDesign is ...');
-		console.log(this.currentDesign);
 	}
 
 
@@ -565,6 +596,140 @@ export class CreatorStudioComponent implements OnInit {
 	onColorChanged(){
 		console.log('Color changed');
 	}
+
+
+
+
+
+
+
+	// -----------------------------------------------------------------------------------------------------
+	//
+	// @ FUNCTIONS RELATING TO OPENING THE DIALOGS
+	//
+	// -----------------------------------------------------------------------------------------------------
+
+	/**
+	 * Dialog to edit a parameter
+	 */
+	openDialog(i,j) {
+		console.log('In the open dialog with '+i+' - '+j);
+		const dialogRef = this.dialog.open( editParameterDialog, {
+			panelClass: 'parameter-dialog',
+			data: { currentDesign: this.currentDesign, 
+					i:i, 
+					j:j, 
+					parameterTypes: this.CreatorStudioService.getParameterTypes(),
+					parameterUrls: this.parameterUrls }
+		});
+
+		dialogRef.afterClosed().subscribe(result => {
+		  console.log('The dialog was closed');
+		  console.log(result);
+		});
+
+	}
+
+
+
+
+
+	/**
+	 * Dialog to edit a submenu
+	 */
+	openSubmenuDialog(i) {
+		console.log('In the open submenu dialog with '+i);
+		const dialogRef = this.dialog.open( SubmenuDialog, {
+			panelClass: 'submenu-dialog',
+			data: { currentDesign: this.currentDesign, 
+					i:i,
+					iconOptions : this.CreatorStudioService.getIconOptions()
+				  }
+		});
+
+		dialogRef.afterClosed().subscribe(result => {
+		  console.log('The dialog was closed');
+		  console.log(result);
+		});
+
+	}
+
+
+
+
+
+
+
+	// -----------------------------------------------------------------------------------------------------
+	//
+	// @ FUNCTIONS RELATING TO THE SIGNOFFS
+	//
+	// -----------------------------------------------------------------------------------------------------
+
+	// Check if a user or team name is valid
+	checkUserEmail( name )
+	{
+		console.log(name);
+
+		this.UserService.checkUserEmail( name )
+		.subscribe(result=> {
+			console.log(result.docs);
+
+			if ( result.docs.length>0 )
+			{ 
+				this.potentialUser = result.docs[0].data();
+
+			}else
+			{
+				this.potentialUser = {};
+			}
+		});
+
+	}
+
+
+
+	// -----------------------------------------------------------------------------------------------------
+	//
+	// @ CRUD FUNCTIONS FOR A DESIGN REQ
+	//
+	// -----------------------------------------------------------------------------------------------------
+
+	// Create
+	createDesignReq( userObj ): void
+	{
+		this.SignoffReqsService.createSignoffReq( userObj, this.currentDesign );
+		this.potentialUser = {};
+	}
+
+
+	// Read
+	subscribeToSignOffData()
+	{
+
+		// Subscribe to the designs for the user
+		this.SignoffReqsService.signoffReqStatus
+		.pipe(takeUntil(this._unsubscribeAll))
+		.subscribe((reqs)=>
+		{ 
+
+			if ( reqs.length > 0 )
+			{
+				for (let a=0; a<reqs.length; a++)
+				{
+					this.UserService.fetchUserData( reqs[a].userId )
+						.subscribe(result=> {
+							reqs[a]['userImage'] = this.UserService.getProfileImage( result.docs[0].data() );
+						});
+
+				}
+				this.reqList = reqs;
+			}
+		});
+
+	}
+
+
 
 
 }

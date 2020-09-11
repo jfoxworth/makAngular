@@ -1,3 +1,31 @@
+
+
+<!--
+
+
+	This is the page for the products. A user creates a new project in the marketplace 
+	when they want to play with a particular design. There are four tabs on the page.
+
+	Tab 1 : Project List - A list of projects that the user has created. The user selects 
+			one and then the remaining tabs are populated with the data for those projects.
+			There are links to open the project in the design studio and to open the quote.
+
+	Tab 2 : Project Data - A place for the user to edit data about the project. This 
+			includes the name of the project and the description.
+
+	Tab 3 : Version Data - This is where the user creates and edits versions of this 
+			project. Versions are different iterations with different design parameters.
+			On this tab, the user can create a new version, open a version in the design
+			parameter, see the quote, edit the name and description of the version and 
+			see the different design parameters.
+
+	Tab 4 : Design and Purchase data : This tab shows the status of the project. Once the 
+			user decides to purchase the project, this tab will show the status.
+			It is still a work in progress.
+
+-->
+
+
 <div id="projects" style="background-color:#FFF" class="page-layout simple inner-scroll">
 
 	<!-- HEADER -->
@@ -156,7 +184,7 @@
 						<div flex="100%" 
 							 layout="column" 
 							 style="width:100%"
-							 *ngIf="currentProject.uid">
+							 *ngIf="projectDataFlag">
 
 							<h2 class="mt-32 mb-20">
 								Project Data -					 
@@ -316,36 +344,15 @@
 									</tbody>
 								</table>
 
-								<!--
-
-								<div fxFlex="40" style="margin:0px 5%">
-									<mat-form-field class="w-100-p ml-10-p mt-20 form-group">
-									  <mat-label>Select a version to see the details</mat-label>
-									  <mat-select  (selectionChange)="onVersionSelected(versionIndex)"
-												   name="versionIndex"
-												   #name="ngModel"
-												   [(ngModel)]="versionIndex">
-										<mat-option *ngFor="let version of versionList; index as i" [value]="i">
-										  {{i+1}} - {{version.name}}
-										</mat-option>
-									  </mat-select>
-									</mat-form-field>
-								</div>
-
-
-
-								<div fxLayoutAlign="center center" fxFlex="40" style="margin:0px 5%">
-									<button mat-button class="red-900 mt-8" *ngIf="currentVersion.latest">Submit for purchase</button>
-									<button mat-button class="primary mt-8" *ngIf="!currentVersion.latest">Recreate as latest version</button>	
-								</div>
-
-							-->
 
 
 							</div>
 
 
-							<div fxLayout="row" fxLayoutAlign="center" flex="100%">
+							<div fxLayout="row" 
+								 fxLayoutAlign="center" 
+								 flex="100%"
+								 *ngIf="versionDataFlag">
 
 								<!-- VERSIONS DATA -->
 								<div fxLayout="column" 

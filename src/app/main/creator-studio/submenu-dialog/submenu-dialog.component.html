@@ -1,3 +1,11 @@
+
+<!--
+
+	This is the dialog that lets the user set the specifics for how a submenu 
+	will appear on the design studio.
+
+-->
+
 <div class="dialog-content-wrapper">
 
 	<div class="dialog-content">
@@ -41,23 +49,6 @@
 		    	</mat-grid-tile>
 		    </mat-grid-list>
 		</div>
-
-
-
-
-		<!-- The Icon for the submenu --
-		<mat-form-field appearance="outline"
-						floatLabel="always"
-						fxFlex="90%"
-						style="margin:0px 5%">
-		  <mat-label>Icon for Submenu</mat-label>
-		  <mat-select  [(ngModel)]="data.currentDesign.parameterMenus[data.i]['icon']">
-			<mat-option *ngFor="let icon of data.iconOptions; index as x" [value]="icon">
-			  {{icon}} - <mat-icon>{{icon}}</mat-icon>
-			</mat-option>
-		  </mat-select>
-		</mat-form-field>
-	-->
 
 	</div>
 

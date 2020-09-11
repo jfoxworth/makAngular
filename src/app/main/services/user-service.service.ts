@@ -1,10 +1,18 @@
-import { Injectable, NgZone } from '@angular/core';
 
+// Common Angular Items
+import { Injectable, NgZone } from '@angular/core';
+import { Router } from "@angular/router";
+
+
+// RXJS Items
+import { BehaviorSubject, Observable } from 'rxjs';
+
+
+// Services
 import { User } from "app/main/services/users";
 import { auth } from 'firebase/app';
 import { AngularFireAuth } from "@angular/fire/auth";
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-import { Router } from "@angular/router";
 import { AngularFireStorage } from '@angular/fire/storage';
 
 
@@ -13,18 +21,83 @@ import { AngularFireStorage } from '@angular/fire/storage';
 })
 export class UserService {
 
-  constructor(
-        public afs: AngularFirestore,   // Inject Firestore service
-        public afAuth: AngularFireAuth, // Inject Firebase auth service
-        public router: Router,
-        public ngZone: NgZone, // NgZone service to remove outside scope warning
-        private afStorage : AngularFireStorage
-  	) { }
+	userStatus 		: BehaviorSubject<any>;
+
+	constructor(
+        public afs 			: AngularFirestore, 	// Inject Firestore service
+        public afAuth 		: AngularFireAuth, 		// Inject Firebase auth service
+        public router 		: Router,
+        public ngZone 		: NgZone,  				// NgZone service to remove outside scope warning
+        private afStorage 	: AngularFireStorage
+  	) { 
+		this.userStatus 	= new BehaviorSubject([]);
+  	}
 
 
 
 
 
+
+	// -----------------------------------------------------------------------------------------------------
+	//
+	// @ CRUD FUNCTIONS FOR USERS - NO CREATE BECAUSE THAT IS DONE UPON SIGNUP. NO DELETE
+	//
+	// -----------------------------------------------------------------------------------------------------
+
+
+	// Read one user
+	getUserById( userId:string )
+	{ 
+		this.afs.collection('users').doc( userId )
+		.valueChanges()
+		.subscribe((result) => {
+
+			result['uid'] = userId;
+			this.userStatus.next(result);
+			
+		});
+	}
+
+
+	// Update a user
+	updateUser( userObj )
+	{
+		this.afs.collection('users').doc( userObj.uid ).update( userObj );		
+	}
+
+
+
+
+
+
+
+
+
+	// -----------------------------------------------------------------------------------------------------
+	//
+	// @ TEST A USER NAME TO SEE IF IT EXISTS
+	//
+	// -----------------------------------------------------------------------------------------------------
+
+
+	checkUserEmail( potentialEmail ) 
+	{
+		return this.afs.collection('users', ref => ref.where('email', '==', potentialEmail))
+		.get();
+
+	}
+
+
+
+
+
+
+
+	// -----------------------------------------------------------------------------------------------------
+	//
+	// @ GET THE PROFILE IMAGE
+	//
+	// -----------------------------------------------------------------------------------------------------
 
 	/**
 	*
@@ -33,16 +106,11 @@ export class UserService {
 	**/
 	getProfileImage( userData ) {
 
-		console.log('In the getProfileImage, I am using the id of '+userData.uid);
-		console.log(userData);
-
 		if ( userData.imageType  === undefined )
 		{
-			console.log('The image type is undefined');
 			var path = '/profile/default.jpeg';
 		}else{
 			var path = '/profile/'+userData.uid+'.'+userData.imageType;			
-			console.log('The path is '+path);
 		}
 
 
@@ -52,9 +120,20 @@ export class UserService {
 
   	}
 
+	fetchUserData( userId ) 
+	{
+		return this.afs.collection('users', ref => ref.where('uid', '==', userId ))
+		.get();
+
+	}
 
 
 
+	// -----------------------------------------------------------------------------------------------------
+	//
+	// @ RETURN THE NEEDED STATIC ITEMS
+	//
+	// -----------------------------------------------------------------------------------------------------
 
 
 

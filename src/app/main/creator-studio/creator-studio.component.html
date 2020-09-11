@@ -1,3 +1,36 @@
+
+<!--
+
+		This is the creator studio. It is where designers create new designs. There are 
+		seven tabs where this happens. This page is available only to designers.
+
+		Select a Design : In this tab, the user can add a new design or select an existing
+		one. Once one is selected, the remaining items are populated.
+
+		Design Data : This tabs lets the designer edit the name and description. They
+		then can paste the shapediver ticket into the spot and set the status of the design.
+		Finally, the user can set the images, the type, and a few other things.
+
+		Design Parameters : This is the primary tab. Here, the designer builds the menus
+		that the users will interact with to adjust their projects to their desire. Designers
+		can add new submenus, add parameters, adjust the placement of those items as well
+		as the parameter types.
+
+		Pricing Data : This tab lets the user set the initial price of a project with this
+		design. They can then set the formula which will be used to calculate the price.
+
+		Marketplace Demo : This tab shows the designer a demo of what their project will
+		look like in the marketplace.
+
+		Design Studio Demo : This tab is a link that lets the designer see what the design
+		will function like when viewed in the design studio
+
+		Signoff : If a sign off is required, this final tab is shown. This is a place where
+		the user can assign other users who have the right to sign off on the design.
+
+-->
+
+
 <div id="projects" style="background-color:#FFF" class="page-layout simple left-sidebar inner-sidebar inner-scroll">
 
 	<!-- HEADER -->
@@ -8,38 +41,6 @@
 	<ng-template #Loading><h1>Loading</h1></ng-template>
 
 	<div class="content" *ngIf="dataFlag else Loading">
-
-		<!-- SIDEBAR --
-		<fuse-sidebar class="sidebar left-positioned open locked-open" 
-					  name="simple-left-sidebar-4" position="left" lockedOpen="gt-md">
-
-			<div class="content p-24" fusePerfectScrollbar>
-				<div class="demo-sidebar text-center  ml-20">
-					<mat-list class="" style="">
-
-						<h2 style="color:#777;">Creator Studio</h2>
-
-
-						<button mat-button class="primary mb-40" (click)="newDesign()">Create New Design</button>
-
-
-						<mat-list-item *ngFor="let design of designList;" 
-									   (click)="currentDesign=design;"
-									   [ngClass]="{'currentItem' : design.id==currentDesign.id}"
-								  	   style="font-size:1em; padding:5px 15px;">
-							{{design.title}}
-						</mat-list-item>
-
-						<mat-divider class="mt-12 mb-12" style="color:#000"></mat-divider>
-
-					</mat-list>
-				</div>
-			</div>
-
-		</fuse-sidebar>
-		<!-- / SIDEBAR -->
-
-
 
 
 		<!-- CENTER -->
@@ -244,6 +245,14 @@
 												</mat-option>
 											</mat-select>
 										</mat-form-field>
+
+
+										<!-- Whether or not sign offs are required -->
+										<mat-checkbox [(ngModel)]="currentDesign.signoffRequired"
+													  name="signoff"
+													  style="color:#FF0000">
+											Signoffs Required
+										</mat-checkbox>
 
 
 									</div>
@@ -1046,6 +1055,78 @@
 						</mat-tab>
 						<!-- / DESIGN STUDIO DEMO -->
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+						<!-- SIGNOFFS -->
+						<mat-tab label="Signoffs"
+								 *ngIf="currentDesign.signoffRequired">
+
+
+							<div layout="column" 
+								 flex="100%" 
+								 style="width:100%"
+								 *ngIf="userData.uid == currentDesign.creatorId">
+
+								<h2 class="mt-32 mb-20">Users who can sign off</h2>
+
+								<div class="">To add a user to the list of those that can provide input to the design or sign off on it, enter the user name in the box below and press enter. If that user name is found, a button will appear giving you the option to add that user. Once the user is added, they will see the sign off option on this tab.</div>
+
+
+								<div class="text-center">
+
+									<div class="mt-40 mb-40 text-center">
+										<mat-form-field class="w-400">
+										<mat-label>User Email</mat-label>
+											<input matInput 
+												   placeholder="User Name" 
+												   [(ngModel)]="testUser" 
+												   name="testUser"
+												   (keyup.enter)="checkUserEmail(testUser)">
+										</mat-form-field>
+									</div>
+								
+									<div class="mb-20 text-center">
+										<button mat-button 
+												class="primary"
+												*ngIf="potentialUser.email"
+												(click)="createDesignReq( potentialUser )">
+											Add User to Signoff
+										</button>
+									</div>
+
+
+									<div *ngFor="let userReq of reqList"
+										 fxLayout="row"
+										 class="text-center">
+
+										<img class="profileAvatar avatar" 
+    										 [src]="(userReq.userImage | async)">
+
+										<div>{{userReq.userEmail}}</div>
+									</div>
+
+								</div>
+
+
+
+
+							</div>
+
+
+						
+						</mat-tab>
+						<!-- / SIGNOFFS -->
 
 
 

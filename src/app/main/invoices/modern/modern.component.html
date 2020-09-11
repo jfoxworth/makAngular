@@ -1,9 +1,12 @@
+<!--
 
-
+    This component is an invoice. It is given an ID and presents the invoice 
+    based upon the data from the version in question 
+-->
 <div id="invoice" class="modern page-layout blank" fxLayout="row">
 
     <div class="invoice-container"
-         *ngIf="dataFlag==2">
+         *ngIf="projectDataFlag && designDataFlag && versionDataFlag">
 
         <!-- INVOICE -->
         <div class="card">
