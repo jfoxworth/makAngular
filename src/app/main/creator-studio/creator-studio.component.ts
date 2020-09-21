@@ -1,4 +1,18 @@
 
+/*
+
+
+	This is the component file for the creator studio. The studio has six or seven
+	tabs and is where a user sets up the menu for the design studio as well as the
+	appearance of the design on the market place.
+
+	As with other components, the data for the designs, the signoffs, and other 
+	items are brought in through observables from firebase.
+
+
+*/
+
+
 // Standard Angular Items
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
 
@@ -30,7 +44,6 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 // Services
 import { CreatorStudioService } from 'app/main/services/creator-studio.service';
 import { AuthService } from 'app/main/services/auth.service';
-import { FirebaseService } from 'app/main/services/firebase.service';
 import { VersionsService } from 'app/main/services/versions.service';
 import { ProjectsService } from 'app/main/services/projects.service';
 import { DesignsService } from 'app/main/services/designs.service';
@@ -108,7 +121,6 @@ export class CreatorStudioComponent implements OnInit {
 					private UserService 			: UserService,
 					private SignoffReqsService 		: SignoffReqsService,
 					private AuthService  			: AuthService,
-					private FirebaseService 		: FirebaseService,
 					private SnackBar 				: MatSnackBar,
 					private afStorage 				: AngularFireStorage,
 					public vcRef 					: ViewContainerRef ) 
@@ -257,6 +269,9 @@ export class CreatorStudioComponent implements OnInit {
 				}
 			}
 		}
+
+		console.log('The design is ...');
+		console.log(this.currentDesign);
 
 		this.DesignsService.updateDesign( this.currentDesign );
 		this.SnackBar.open('Design is updated','', {duration: 4000});

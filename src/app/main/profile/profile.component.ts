@@ -36,7 +36,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 // Services
 import { UserService } from 'app/main/services/user-service.service';
 import { AuthService } from 'app/main/services/auth.service';
-import { FirebaseService } from 'app/main/services/firebase.service';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { MarketplaceService } from 'app/main/services/marketplace.service';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
@@ -78,8 +77,6 @@ export class ProfileComponent implements OnInit
 		public dialog 							: MatDialog, 
 		private UserService 					: UserService,
 		private AuthService 					: AuthService,
-		private FirebaseService 				: FirebaseService,
-        public afs 								: AngularFirestore,
         private SnackBar 						: MatSnackBar,
         private afStorage 						: AngularFireStorage
 	)
@@ -121,6 +118,7 @@ export class ProfileComponent implements OnInit
 		if ( ( (this.userId == '') || ( this.userId === null ) || ( this.userId === undefined ) ) &&
 		   ( ( this.userData === null ) || ( this.userData === undefined ) || ( this.userData == 'undefined' ) ) )
 		{
+
 			this.userInfo = {};
 			this.userData = {};
 			this.displayStyle = "NoUser";
@@ -129,13 +127,13 @@ export class ProfileComponent implements OnInit
 		// A user is defined by URL
 		}else if ( (this.userId != '') && ( this.userId !== null ) && ( this.userId !== undefined ) )
 		{
-
 			this.UserService.getUserById( this.userId );
 
 
 		// Looking at user defined by the URL, but the user is logged in
 		}else if ( ( this.userData !== null ) && ( this.userData !== undefined ) && ( this.userData !== {} ) )
 		{
+
 			this.userInfo = this.userData;
 			this.profileImage = this.UserService.getProfileImage( this.userData );
 			this.dataFlag=true;
@@ -147,6 +145,8 @@ export class ProfileComponent implements OnInit
 			console.log('I got nothing');
 
 		}
+
+		this.subscribeToData();
 
 
 	};
@@ -196,7 +196,8 @@ export class ProfileComponent implements OnInit
 	saveChanges():void{
 
 		console.log('Saving user data '+this.userData.uid);
-		this.FirebaseService.updateDocDataUsingId('users', this.userData.uid, this.userData );
+		this.UserService.updateUser(this.userData);
+//		this.FirebaseService.updateDocDataUsingId('users', this.userData.uid, this.userData );
 		this.userInfo = this.userData;
 		this.SnackBar.open('Data Saved','', {duration: 4000});
 		localStorage.setItem('userData', JSON.stringify(this.userData));

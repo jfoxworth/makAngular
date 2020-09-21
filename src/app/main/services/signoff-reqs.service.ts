@@ -29,9 +29,10 @@ export class SignoffReqsService
 {
 
 
-	signoffReqStatus 		: BehaviorSubject<any>;
-	signoffReqOneStatus 	: BehaviorSubject<any>;
-	signoffReqUserStatus 	: BehaviorSubject<any>;
+	signoffReqStatus 			: BehaviorSubject<any>;
+	signoffReqOneStatus 		: BehaviorSubject<any>;
+	signoffReqUserStatus 		: BehaviorSubject<any>;
+	signoffReqDesignUserStatus 	: BehaviorSubject<any>;
 
 
 	/*
@@ -44,9 +45,10 @@ export class SignoffReqsService
 		public afs 			: AngularFirestore,
 	)
 	{
-		this.signoffReqStatus 		= new BehaviorSubject([]);
-		this.signoffReqOneStatus 	= new BehaviorSubject([]);
-		this.signoffReqUserStatus 	= new BehaviorSubject([]);
+		this.signoffReqStatus 				= new BehaviorSubject([]);
+		this.signoffReqOneStatus 			= new BehaviorSubject([]);
+		this.signoffReqUserStatus 			= new BehaviorSubject([]);
+		this.signoffReqDesignUserStatus 	= new BehaviorSubject([]);
 	}
 
 
@@ -127,7 +129,7 @@ export class SignoffReqsService
 
 
 
-	// Read
+	// Read for user
 	getSignoffReqsForUser( userId:string )
 	{ 
 	 		this.afs.collection('signoffReqs', ref => ref
@@ -142,6 +144,27 @@ export class SignoffReqsService
 
 			});
 	}
+
+
+
+
+	// Read for user and design
+	getSignoffReqsForDesignUser( userId:string, designId:string )
+	{ 
+	 		this.afs.collection('signoffReqs', ref => ref
+	 			.where('userId', '==', userId )
+	 			.where('designId', '==', designId )
+	 			.where('deleted', '==', false))
+			.valueChanges({idField: 'uid'})
+			.subscribe(result=> {
+
+				console.log('The signoffReqs for the design and user in the service are ');
+				console.log(result);
+				this.signoffReqDesignUserStatus.next(result);
+
+			});
+	}
+
 
 
 

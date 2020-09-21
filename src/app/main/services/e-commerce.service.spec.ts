@@ -12,7 +12,6 @@ describe('EcommerceService', () => {
 
 	beforeEach(() => {
 
-		service = new EcommerceService( );
 		TestBed.configureTestingModule({
 			imports: [ 
 			    RouterTestingModule,

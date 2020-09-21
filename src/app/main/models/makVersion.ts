@@ -18,8 +18,8 @@ export interface makVersion {
 	name 			: string;		// Name of the version
 	projectId 		: string;		// ID of the project that this version is based on
 	version 		: number;		// What version this entry represents
-	measurements	: any[];		// Array that holds the values that have been edited for this version
-	values			: any[];		// Array that holds the values that have been edited for this version
+	measurements	: any;			// Array that holds the values that have been edited for this version
+	values			: any;			// Array that holds the values that have been edited for this version
 	price 			: number;		// Price for this project based on this version
 	tax 			: number;		// The amount of tax that must be paid on the item
 	totalCost 		: number; 		// The total cost of the item

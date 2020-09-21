@@ -11,7 +11,6 @@
 // Standard Angular Items
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 
 
 // RXJS Stuff
@@ -44,9 +43,7 @@ export class StoreService {
 	 *
 	 *
 	 */
-	constructor(
-		public afs 			: AngularFirestore,
-	)
+	constructor()
 	{
 
 	}

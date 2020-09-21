@@ -25,6 +25,7 @@ import { InvoiceModernModule } from 'app/main/invoices/modern/modern.module';
 import { LoginModule } from 'app/main/login/login.module';
 import { RegisterModule } from 'app/main/register/register.module';
 import { DesignStudioModule } from 'app/main/design-studio/design-studio.module';
+import { DesignSignoffModule } from 'app/main/design-signoff/design-signoff.module';
 
 
 
@@ -73,86 +74,87 @@ import { Ng5SliderModule } from 'ng5-slider';
 
 
 const appRoutes: Routes = [
-    {
-        path      : '**',
-        redirectTo: 'designStudio'
-    }
+	{
+		path	  : '**',
+		redirectTo: 'designStudio'
+	}
 ];
 
 @NgModule({
-    declarations: [
-        AppComponent
-    ],
-    imports     : [
-        BrowserModule,
-        BrowserAnimationsModule,
-        HttpClientModule,
-        RouterModule.forRoot(appRoutes),
+	declarations: [
+		AppComponent,
+	],
+	imports	 : [
+		BrowserModule,
+		BrowserAnimationsModule,
+		HttpClientModule,
+		RouterModule.forRoot(appRoutes),
 
-        TranslateModule.forRoot(),
-        InMemoryWebApiModule.forRoot(FakeDbService, {
-            delay             : 0,
-            passThruUnknownUrl: true
-        }),
+		TranslateModule.forRoot(),
+		InMemoryWebApiModule.forRoot(FakeDbService, {
+			delay			 : 0,
+			passThruUnknownUrl: true
+		}),
 
-        // Material moment date module
-        MatMomentDateModule,
+		// Material moment date module
+		MatMomentDateModule,
 
-        // Material
-        MatButtonModule,
-        MatIconModule,
-        MatTooltipModule,
-        MatSliderModule,
-        MatDatepickerModule,
-        MatDialogModule,
+		// Material
+		MatButtonModule,
+		MatIconModule,
+		MatTooltipModule,
+		MatSliderModule,
+		MatDatepickerModule,
+		MatDialogModule,
 
-        // Fuse modules
-        FuseModule.forRoot(fuseConfig),
-        FuseProgressBarModule,
-        FuseSharedModule,
-        FuseSidebarModule,
-        FuseThemeOptionsModule,
+		// Fuse modules
+		FuseModule.forRoot(fuseConfig),
+		FuseProgressBarModule,
+		FuseSharedModule,
+		FuseSidebarModule,
+		FuseThemeOptionsModule,
 
-        // App modules
-        LayoutModule,
-        ProfileModule,
-        InvoiceModernModule,
-        InvoiceCompactModule,
-        LoginModule,
-        RegisterModule,
-        DesignStudioModule,
-        EcommerceModule,
-        ChatModule,
-        KnowledgeBaseModule,
-        StoreModule,
-        CreatorStudioModule,
-        DragDropModule,
-        MailConfirmModule,
-
-
-        // Firestore Auth Modules
-        AngularFireModule.initializeApp(environment.firebase),
-        AngularFireAuthModule,
-        AngularFirestoreModule,
-        AngularFireStorageModule,
+		// App modules
+		LayoutModule,
+		ProfileModule,
+		InvoiceModernModule,
+		InvoiceCompactModule,
+		LoginModule,
+		RegisterModule,
+		DesignStudioModule,
+		EcommerceModule,
+		ChatModule,
+		KnowledgeBaseModule,
+		StoreModule,
+		CreatorStudioModule,
+		DragDropModule,
+		MailConfirmModule,
+		DesignSignoffModule,
 
 
-        Ng5SliderModule,
+		// Firestore Auth Modules
+		AngularFireModule.initializeApp(environment.firebase),
+		AngularFireAuthModule,
+		AngularFirestoreModule,
+		AngularFireStorageModule,
 
-    ],
-    providers :[
-        DesignStudioService,
-        KnowledgeBaseService,
-        CreatorStudioService,
-        AuthService,
-        ChatService,
-        FirebaseService,
-    ],
-    exports : [
-    ],
-    bootstrap   : [
-        AppComponent
-    ]
+
+		Ng5SliderModule,
+
+	],
+	providers :[
+		DesignStudioService,
+		KnowledgeBaseService,
+		CreatorStudioService,
+		AuthService,
+		ChatService,
+		FirebaseService,
+	],
+	exports : [
+	],
+	bootstrap   : [
+		AppComponent
+	]
 })
 export class AppModule
 {

@@ -6,65 +6,65 @@ import { of } from 'rxjs';
 export class mockItems {
 
 
-    constructor() {}
+	constructor() {}
 
 
-    // Stub for the Angular Fire
-    public AngularFireStub() {
+	// Stub for the Angular Fire
+	public AngularFireStub() {
 
-        return { getDocsByUserId: (_d: any, _id:any) => new Promise((resolve, _reject) => resolve({data:()=>{}})),
+		return { getDocsByUserId: (_d: any, _id:any) => new Promise((resolve, _reject) => resolve({data:()=>{}})),
 
-        		 getDocById: (_d: any, _id:any) => new Promise((resolve, _reject) => resolve({data:()=>{ return this.FireStubData(_d, _id)}})),
+				 getDocById: (_d: any, _id:any) => new Promise((resolve, _reject) => resolve({data:()=>{ return this.FireStubData(_d, _id)}})),
 
-        		 //getDocsByParam: (_d: any, _id:any, num:any) => new Observable((observer) => {'Me'}) }
-        		 
-        		 getDocsByParam: (_d: any, _id:any, num:any) => of(this.mockStoreData(_d)),
+				 //getDocsByParam: (_d: any, _id:any, num:any) => new Observable((observer) => {'Me'}) }
+				 
+				 getDocsByParam: (_d: any, _id:any, num:any) => of(this.mockStoreData(_d)),
 
-        		 getDocsByParamWithOrder: (_d: any, _id:any, num:any, order:any) => of(this.mockStoreData(_d)),
+				 getDocsByParamWithOrder: (_d: any, _id:any, num:any, order:any) => of(this.mockStoreData(_d)),
 
-        		 getCollectionTwoParams: (imp1: any, imp2:any, uid:any, param:any, id:any) => of(this.mockCollectionData(imp1, imp2, uid, param, id)),
+				 getCollectionTwoParams: (imp1: any, imp2:any, uid:any, param:any, id:any) => of(this.mockCollectionData(imp1, imp2, uid, param, id)),
 
-        		 updateDocDataUsingId: ()=>{},
+				 updateDocDataUsingId: ()=>{},
 
-        		 collection:()=> { valuesChanges : (imp1: any, imp2:any, imp3:any, imp4:any) => of(this.mockCollectionData(imp1, imp2, imp3, imp4, '')) },
+				 collection:()=> { valuesChanges : (imp1: any, imp2:any, imp3:any, imp4:any) => of(this.mockCollectionData(imp1, imp2, imp3, imp4, '')) },
 
-        }
-    }
+		}
+	}
 
 
-    public mockCollectionData(database, param1, value1, param2, value2){
+	public mockCollectionData(database, param1, value1, param2, value2){
 
-    	if ( database == 'projects')
-    	{
-    		return [
-    			{
+		if ( database == 'projects')
+		{
+			return [
+				{
 
-		            'id'      : '154588a0864d2881124',
+					'id'	  : '154588a0864d2881124',
 					data : ()=>{ return {
 					'uid' 	  : '1',
-		            'id'      : '154588a0864d2881124',
-		            'title'   : 'Fossil Wall',
-		            'slug'    : 'fossil-wall',
-		            'name'	  : 'test',
-		            'versions':[]
-		     	   		}
-		     		}
+					'id'	  : '154588a0864d2881124',
+					'title'   : 'Fossil Wall',
+					'slug'	: 'fossil-wall',
+					'name'	  : 'test',
+					'versions':[]
+			 	   		}
+			 		}
 
-    			}
-    		]
+				}
+			]
 
-    		
-    	}
+			
+		}
 
-    }
+	}
 
 
 
-    public FireStubData(database, id){
+	public FireStubData(database, id){
 
-    	if ( database == 'versions')
-    	{
-	    	return { 	'creatorId': "mmAvAdd1GlgBebdV85OVRE1CSK43",
+		if ( database == 'versions')
+		{
+			return { 	'creatorId': "mmAvAdd1GlgBebdV85OVRE1CSK43",
 						'dateCreated': 1591842018832,
 						'deposit': 4465,
 						'description': "This was an update after speaking with the customer",
@@ -162,29 +162,29 @@ export class mockItems {
 			}
 		}
 
-    }
+	}
 
 
 
-    // Stub for the Angular Fire Storage
-    public AngularFireStorageStub() {
-    	class afsStub {
-        	ref(_d: any) {
-        		 	return { getDownloadURL : (_d: any) => new Observable((observer) => {'Me'}) }
-        	}
+	// Stub for the Angular Fire Storage
+	public AngularFireStorageStub() {
+		class afsStub {
+			ref(_d: any) {
+				 	return { getDownloadURL : (_d: any) => new Observable((observer) => {'Me'}) }
+			}
 
-    	}
-    	return new afsStub()
-    }		
+		}
+		return new afsStub()
+	}		
 
 
 
-    // Stub for the dialog ref
-    public DialogRefStub() {
-    	return {
-	    	close: jasmine.createSpy('close'),
-	    	open: jasmine.createSpy('open')
-	    }
+	// Stub for the dialog ref
+	public DialogRefStub() {
+		return {
+			close: jasmine.createSpy('close'),
+			open: jasmine.createSpy('open')
+		}
 	};
 
 
@@ -192,19 +192,19 @@ export class mockItems {
 	public mockDialog() {
 		return {
 			close: jasmine.createSpy('close'),
-	    	open: jasmine.createSpy('open'),
-	    	Overlay : jasmine.createSpy('Overlay')
-	    }
+			open: jasmine.createSpy('open'),
+			Overlay : jasmine.createSpy('Overlay')
+		}
 	};
 
 
 	// Stub for the snack bar
 	public mockSnackBar() {
-    	return { 
-    		Overlay : jasmine.createSpy('Overlay'),
-    		open : ()=>{},
-    		close : ()=>{}
-    	}
+		return { 
+			Overlay : jasmine.createSpy('Overlay'),
+			open : ()=>{},
+			close : ()=>{}
+		}
 	}
 
 
@@ -223,7 +223,76 @@ export class mockItems {
 
 
 
+	// Stub for the Creator Studio
+	public mockCreatorStudio() {
+		return { 
+			 getDesignTypes 	: () => { return ['Wall', 'Seating', 'Desk', 'Island', 'Sanitizer'] },
+			 getCompanies 		: () => {},
+			 getMenuLocations 	: () => {}
+		}
+	}
 
+
+
+	// Stub for the designs service
+	public mockDesignsService() {
+		return { 
+				 'designStatus' 	: of( this.FireStubData('designs',0) ),
+				 'designAllStatus' 	: of( this.FireStubData('designs',0) ),
+				 'designUserStatus' : of( this.FireStubData('designs',0) ),
+				 'getDesignsForUser': ()=>{ return '' },
+				 'getValidDesigns' 	: ()=>{ return '' },
+				 'subscribeToData' 	: ()=>{ return '' },
+				 'getDesignById'	: ()=>{ return '' },
+		}
+	}
+
+
+
+	// Stub for the projects service
+	public mockProjectsService() {
+		return { 
+				 'projectUDStatus' 			: of(),
+				 'projectStatus'			: of(),
+				 'getProjectsForUserDesign' : ()=>{ return '' },
+				 'getProjectsForUser' 		: ()=>{ return '' }
+		}
+	}
+
+
+
+	// Stub for the signoff reqs service
+	public mockSignoffReqsService() {
+		return { 
+				 'signoffReqUserStatus' 		: of(),
+				 'signoffReqDesignUserStatus'	: of(),
+				 'signoffReqStatus'				: of(),
+				 'getSignoffReqsForDesignUser'	: ()=> { return '' },
+				 'getSignoffReqsForUser' 		: ()=> { return '' },
+		}
+	}
+
+
+
+
+
+	// Stub for the design signoff service
+	public mockDesignSignoffService() {
+		return { 
+			'designSignoffStatus'				: of(),
+			'getdesignSignoffsForDesign' 		: ()=>{ return },
+		}
+	}
+
+
+
+
+	// Stub for the version service
+	public mockVersionsService() {
+		return { 
+				 'versionStatus'				: of(),
+		}
+	}
 
 
 
@@ -238,13 +307,13 @@ export class mockItems {
 	// Data Object for activated route stub
 	public ActivatedRouteStub() {
 		return { 'snapshot': {
-	                'url': [{ 'path': 1 }, { 'path': 2 }],
-	                'paramMap' : {
-	                	'get' : ()=>{ return '1'},
-	                	'set' : ()=>{},
-	                }
-	            }
-	        
+					'url': [{ 'path': 1 }, { 'path': 2 }],
+					'paramMap' : {
+						'get' : ()=>{ return undefined},
+						'set' : ()=>{},
+					}
+				}
+			
 		}
 	}
 
@@ -253,13 +322,13 @@ export class mockItems {
 	// Data Object for activated route stub
 	public ActivatedRouteEmptyStub() {
 		return { 'snapshot': {
-	                'url': [{ 'path': 1 }, { 'path': 2 }],
-	                'paramMap' : {
-	                	'get' : ()=>{ return undefined},
-	                	'set' : ()=>{},
-	                }
-	            }
-	        
+					'url': [{ 'path': 1 }, { 'path': 2 }],
+					'paramMap' : {
+						'get' : ()=>{ return undefined},
+						'set' : ()=>{},
+					}
+				}
+			
 		}
 	}
 
@@ -269,13 +338,13 @@ export class mockItems {
 	// Stub for Route
 	public RouteStub() {
 		return { 'snapshot': {
-	                'url': [{ 'path': 1 }, { 'path': 2 }],
-	                'paramMap' : {
-	                	'get' : ()=>{},
-	                	'set' : ()=>{},
-	                }
-	            }
-	        
+					'url': [{ 'path': 1 }, { 'path': 2 }],
+					'paramMap' : {
+						'get' : ()=>{},
+						'set' : ()=>{},
+					}
+				}
+			
 		}
 	}
 
@@ -306,8 +375,8 @@ export class mockItems {
 				'menuShow' : [],
 				'menuLocations' : [ [] ]
 			 
-	            
-	        
+				
+			
 		}
 	}
 
@@ -316,7 +385,7 @@ export class mockItems {
 	// Data Object for version List
 	public versionListStub() {
 		return [] 
-	           
+			   
 	}
 
 
@@ -325,8 +394,8 @@ export class mockItems {
 	// Data Object for version data
 	public versionDataStub() {
 		return { 
-	            
-	        
+				
+			
 		}
 	}
 
@@ -337,8 +406,8 @@ export class mockItems {
 	// Data Object for user data
 	public userDataStub() {
 		return { 
-	            
-	        
+				
+			
 		}
 	}
 
@@ -350,8 +419,8 @@ export class mockItems {
 	// Data Object for user data
 	public mockUserData() {
 		return { 
-	            
-	        
+				
+			
 		}
 	}
 
@@ -360,13 +429,14 @@ export class mockItems {
 
 
 	// Data Object for user data
-	public UserServiceStub() {
+	public mockUserService() {
 		return { 
-			'uid' : 'mmAvAdd1GlgBebdV85OVRE1CSK43',
-			'getYearList' : ()=>{},
-			'getMonthList' : ()=>{},
-			'getProfileImage' : ()=>{}
-	        
+			'uid' 					: 'mmAvAdd1GlgBebdV85OVRE1CSK43',
+			'getYearList' 			: ()=>{},
+			'getMonthList' 			: ()=>{},
+			'getProfileImage' 		: ()=>{},
+			'getUserById'			: ()=>{ return '' },
+			'userStatus'			: of(),
 		}
 	}
 
@@ -399,8 +469,8 @@ export class mockItems {
 				'status' : "0",
 				'uid' : "1ryfv7hw4JzJF072YI2d",
 				'versions' : '1'
-	        }
-	    ]
+			}
+		]
 	}
 	
 
@@ -498,120 +568,120 @@ export class mockItems {
 			return  [
 				{
 
-		            'id'      : '154588a0864d2881124',
+					'id'	  : '154588a0864d2881124',
 					data : ()=>{ return {
 					'uid' 	  : '1',
-		            'id'      : '154588a0864d2881124',
-		            'title'   : 'Fossil Wall',
-		            'slug'    : 'fossil-wall',
-		            'name'	  : 'test',
-		            'versions':[]
-		     	   		}
-		     		}
-		     	}
-		    ]
+					'id'	  : '154588a0864d2881124',
+					'title'   : 'Fossil Wall',
+					'slug'	: 'fossil-wall',
+					'name'	  : 'test',
+					'versions':[]
+			 	   		}
+			 		}
+			 	}
+			]
 
 		}else
 		{
 			return  [
 				{
 
-		            'id'      : '154588a0864d2881124',
+					'id'	  : '154588a0864d2881124',
 					data : ()=>{ return {
 					'uid' 	  : '1',
-		            'id'      : '154588a0864d2881124',
-		            'title'   : 'Fossil Wall',
-		            'slug'    : 'fossil-wall',
-		            'category': 'Wall',
-		            'length'  : 60,
-		            'updated' : 'Nov 01, 2017',
-		            'date_created' : 'July 5, 2020',
-		            'initialPrice' : 3150,
-		            'background' : 'https://makstudio.s3.us-east-2.amazonaws.com/Products+-+Feature+Wall/flower_solid_surface_feature_wall.jpg',
-		            'description' : 'lorem ipsum free text here',
-		            'company' : {
-		            	'name' : 'MAK Studio',
-		            	'location' : 'Houston, Texas',
-		            	'logo' : 'https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png'
-		            },
-		            'images' : [
-		            	"https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png"
-		            ],
-		            'marketplace' : {
-		            	'description' : "The flower wall lets customers place, move, and alter the size and orientation of flowers on a wall.",
-		            	'mainImage' : "https://makstudio.s3.us-east-2.amazonaws.com/Marketplace/background/001.png",
-		            	'images' : [
-		            		{
-		            			'mainImage' : true,
-		            			'path' : "/marketplace/carousel/1pbM0lb5hcHureiiX239-shh6E4.png"
-		            		}
-		            	]
-		            },
-		            'parameterMenus' : [
-		            	{
-		            		'icon' : "settings",
-		            		'label' : 'Wall Dimensions',
-		            		'parameters' : [
+					'id'	  : '154588a0864d2881124',
+					'title'   : 'Fossil Wall',
+					'slug'	: 'fossil-wall',
+					'category': 'Wall',
+					'length'  : 60,
+					'updated' : 'Nov 01, 2017',
+					'date_created' : 'July 5, 2020',
+					'initialPrice' : 3150,
+					'background' : 'https://makstudio.s3.us-east-2.amazonaws.com/Products+-+Feature+Wall/flower_solid_surface_feature_wall.jpg',
+					'description' : 'lorem ipsum free text here',
+					'company' : {
+						'name' : 'MAK Studio',
+						'location' : 'Houston, Texas',
+						'logo' : 'https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png'
+					},
+					'images' : [
+						"https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png"
+					],
+					'marketplace' : {
+						'description' : "The flower wall lets customers place, move, and alter the size and orientation of flowers on a wall.",
+						'mainImage' : "https://makstudio.s3.us-east-2.amazonaws.com/Marketplace/background/001.png",
+						'images' : [
+							{
+								'mainImage' : true,
+								'path' : "/marketplace/carousel/1pbM0lb5hcHureiiX239-shh6E4.png"
+							}
+						]
+					},
+					'parameterMenus' : [
+						{
+							'icon' : "settings",
+							'label' : 'Wall Dimensions',
+							'parameters' : [
 
-		            		]
-		            	}
-		            ],
-		            'price':0,
-		            'priceFormula' : '',
-		            'priceStatus' : true,
-		            'priceValid' : true,
-		            'shapediverTicket' : '',
-		            'status' : 1 } }
+							]
+						}
+					],
+					'price':0,
+					'priceFormula' : '',
+					'priceStatus' : true,
+					'priceValid' : true,
+					'shapediverTicket' : '',
+					'status' : 1 } }
 				},
 				{
-		            'id'      : 'fm3oif93hfiuf3u3iihg',
+					'id'	  : 'fm3oif93hfiuf3u3iihg',
 					data : ()=>{ return {
 					'uid' 	  : '2',
-		            'id'      : 'fm3oif93hfiuf3u3iihg',
-		            'title'   : 'Planter Bench',
-		            'slug'    : 'planter-bench',
-		            'category': 'Seating',
-		            'length'  : 60,
-		            'updated' : 'Nov 01, 2017',
-		            'date_created' : 'July 5, 2020',
-		            'initialPrice' : 3150,
-		            'background' : 'https://makstudio.s3.us-east-2.amazonaws.com/Products+-+Lobby+Seating/parametric_lobby_bench_seating.jpg',
-		            'description' : 'The MAK Studio planter bench adds a stylish seating element to any lobby or reception area. Customers can adjust the depth of the bench, the length of each side, the length of the twist area, and the depths of the planters areas on each side.',
-		            'company' : {
-		            	'name' : 'MAK Studio',
-		            	'location' : 'Houston, Texas',
-		            	'logo' : 'https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png'
-		            },
-		            'images' : [
-		            	"https://makstudio.s3.us-east-2.amazonaws.com/ProductImages/Screen+Shot+2020-04-15+at+5.28.57+PM.png",
-		            	"https://makstudio.s3.us-east-2.amazonaws.com/Products+-+Lobby+Seating/parametric_lobby_bench_seating.jpg",
-		            	"https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png"
-		            ],
-		            'marketplace' : {
-		            	'description' : "The flower wall lets customers place, move, and alter the size and orientation of flowers on a wall.",
-		            	'mainImage' : "https://makstudio.s3.us-east-2.amazonaws.com/Marketplace/background/001.png",
-		            	'images' : [
-		            		{
-		            			'mainImage' : true,
-		            			'path' : "/marketplace/carousel/1pbM0lb5hcHureiiX239-shh6E4.png"
-		            		}
-		            	]
-		            },
-		            'parameterMenus' : [
-		            	{
-		            		'icon' : "settings",
-		            		'label' : 'Wall Dimensions',
-		            		'parameters' : [
+					'id'	  : 'fm3oif93hfiuf3u3iihg',
+					'title'   : 'Planter Bench',
+					'slug'	: 'planter-bench',
+					'category': 'Seating',
+					'length'  : 60,
+					'updated' : 'Nov 01, 2017',
+					'date_created' : 'July 5, 2020',
+					'initialPrice' : 3150,
+					'background' : 'https://makstudio.s3.us-east-2.amazonaws.com/Products+-+Lobby+Seating/parametric_lobby_bench_seating.jpg',
+					'description' : 'The MAK Studio planter bench adds a stylish seating element to any lobby or reception area. Customers can adjust the depth of the bench, the length of each side, the length of the twist area, and the depths of the planters areas on each side.',
+					'company' : {
+						'name' : 'MAK Studio',
+						'location' : 'Houston, Texas',
+						'logo' : 'https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png'
+					},
+					'images' : [
+						"https://makstudio.s3.us-east-2.amazonaws.com/ProductImages/Screen+Shot+2020-04-15+at+5.28.57+PM.png",
+						"https://makstudio.s3.us-east-2.amazonaws.com/Products+-+Lobby+Seating/parametric_lobby_bench_seating.jpg",
+						"https://makstudio.s3.us-east-2.amazonaws.com/logoBlack.png"
+					],
+					'marketplace' : {
+						'description' : "The flower wall lets customers place, move, and alter the size and orientation of flowers on a wall.",
+						'mainImage' : "https://makstudio.s3.us-east-2.amazonaws.com/Marketplace/background/001.png",
+						'images' : [
+							{
+								'mainImage' : true,
+								'path' : "/marketplace/carousel/1pbM0lb5hcHureiiX239-shh6E4.png"
+							}
+						]
+					},
+					'parameterMenus' : [
+						{
+							'icon' : "settings",
+							'label' : 'Wall Dimensions',
+							'parameters' : [
 
-		            		]
-		            	}
-		            ],
-		            'price':0,
-		            'priceFormula' : '',
-		            'priceStatus' : true,
-		            'priceValid' : true,
-		            'shapediverTicket' : '',
-		            'status' : 1 } }
+							]
+						}
+					],
+					'price':0,
+					'priceFormula' : '',
+					'priceStatus' : true,
+					'priceValid' : true,
+					'shapediverTicket' : '',
+					'status' : 1 } }
 				}
 
 			];
@@ -624,17 +694,17 @@ export class mockItems {
 
 
 
-    // Stub for the Fuse Navication
-    public FuseNavigationStub() {
-    	class navStub {
-        	ref(_d: any) {
-        		 	return { getDownloadURL : (_d: any) => new Observable((observer) => {'Me'}) }
-        	}
-        	getFlatNavigation(){ return {} }
+	// Stub for the Fuse Navication
+	public FuseNavigationStub() {
+		class navStub {
+			ref(_d: any) {
+				 	return { getDownloadURL : (_d: any) => new Observable((observer) => {'Me'}) }
+			}
+			getFlatNavigation(){ return {} }
 
-    	}
-    	return new navStub()
-    }		
+		}
+		return new navStub()
+	}		
 
 
 

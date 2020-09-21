@@ -59,6 +59,7 @@ export class UserService {
 	}
 
 
+
 	// Update a user
 	updateUser( userObj )
 	{

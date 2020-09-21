@@ -21,12 +21,12 @@ describe('ChatService', () => {
 
 
 	// Mock Items pulled from external mock file
-	let MockGroup = new mockItems();
-	const AngularFireStub = MockGroup.AngularFireStub();
-	const DialogRefStub = MockGroup.DialogRefStub();
-	const ActivatedRouteStub = MockGroup.ActivatedRouteStub();
-	const UserServiceStub = MockGroup.UserServiceStub();
-	const RouteStub = MockGroup.RouteStub();
+	let MockGroup 				= new mockItems();
+	const AngularFireStub 		= MockGroup.AngularFireStub();
+	const DialogRefStub 		= MockGroup.DialogRefStub();
+	const ActivatedRouteStub 	= MockGroup.ActivatedRouteStub();
+	const UserServiceStub 		= MockGroup.mockUserService();
+	const RouteStub 			= MockGroup.RouteStub();
 
 	
 

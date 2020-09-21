@@ -24,6 +24,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { makDesign } from 'app/main/models/makDesign';
 import { makProject } from 'app/main/models/makProject';
 import { makVersion } from 'app/main/models/makVersion';
+import { designSignoff } from 'app/main/models/designSignoffs';
+import { signoffReq } from 'app/main/models/signoffReq';
 
 
 
@@ -31,9 +33,13 @@ import { makVersion } from 'app/main/models/makVersion';
 // Services
 import { ProjectsService } from 'app/main/services/projects.service';
 import { DesignsService } from 'app/main/services/designs.service';
-import { FirebaseService } from 'app/main/services/firebase.service';
-import { AngularFireStorage } from '@angular/fire/storage';
 import { MarketplaceService } from 'app/main/services/marketplace.service';
+import { SignoffReqsService } from 'app/main/services/signoff-reqs.service';
+import { DesignSignoffsService } from 'app/main/services/design-signoffs.service';
+
+import { AngularFireStorage } from '@angular/fire/storage';
+
+
 
 
 
@@ -51,14 +57,15 @@ export class StoreProductComponent implements OnInit {
 	dataFlag 			: boolean = false;
 	projectDataFlag 	: boolean = false;
 	projectList 		: makProject[];
+	signoffList 		: signoffReq[];
 	userData 			: any;
 	private _unsubscribeAll: Subject<any>;
 
 
 	constructor(private route 				: ActivatedRoute,
-				private FirebaseService 	: FirebaseService,
 				private DesignsService 		: DesignsService,
 				private ProjectsService 	: ProjectsService,
+				private SignoffReqsService	: SignoffReqsService,
 				private afStorage 			: AngularFireStorage,
 				private MarketplaceService 	: MarketplaceService ) 
 	{
@@ -78,19 +85,6 @@ export class StoreProductComponent implements OnInit {
 			
 		// Get the design data
 		this.DesignsService.getDesignById( this.id );
-
-		/*
-		this.FirebaseService.getDocById( 'designs', this.id )
-			.then((snapshot) => {
-				this.storeItem = snapshot.data();
-				//console.log(snapshot.data());
-				this.formatData();
-				this.dataFlag=true;
-			})
-			.catch((err) => {
-			  console.log('Error getting documents', err);
-		});
-		*/
 
 
 		// Get the projects that this user has with this design
@@ -137,6 +131,16 @@ export class StoreProductComponent implements OnInit {
 				this.storeItem = design;
 				this.formatData();
 				this.dataFlag=true;
+
+				// Trigger the function to see if the user has any signoff chances
+				if ( this.userData )
+				{
+					this.SignoffReqsService.getSignoffReqsForDesignUser( this.userData.uid, design.id );
+				}else
+				{
+					this.signoffList = [];
+				}
+
 			}
 
 		});
@@ -157,6 +161,19 @@ export class StoreProductComponent implements OnInit {
 			}
 
 		});
+
+
+		// Subscribe to the signoff reqs for this user and design
+		this.SignoffReqsService.signoffReqDesignUserStatus
+		.pipe(takeUntil(this._unsubscribeAll))
+		.subscribe((signoffs)=>
+		{ 
+			console.log('signoffs');
+			console.log(signoffs);
+			this.signoffList = signoffs;
+
+		});
+
 
 
 	}

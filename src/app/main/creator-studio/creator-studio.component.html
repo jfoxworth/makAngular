@@ -249,9 +249,11 @@
 
 
 										<!-- Whether or not sign offs are required -->
+										<div class="mat-body-2">It is possible to require that other users sign off on this design. By clicking the box below, you can establish this requirement and will be offered the option to add as many users as desired in a new tab. These signoffs do not affect the ability of the creator to set the status of the design.</div>
+
 										<mat-checkbox [(ngModel)]="currentDesign.signoffRequired"
 													  name="signoff"
-													  style="color:#FF0000">
+													  (click)="saveDesignChanges()">
 											Signoffs Required
 										</mat-checkbox>
 
@@ -1109,13 +1111,16 @@
 
 									<div *ngFor="let userReq of reqList"
 										 fxLayout="row"
-										 class="text-center w-300"
+										 class="text-center w-300 pt-12 pb-12"
 										 style="margin:auto">
 
 										<img class="profileAvatar avatar" 
     										 [src]="(userReq.userImage | async)">
 
 										<div class="mt-8 ml-20 w-220 text-center">{{userReq.userEmail}}</div>
+
+										<mat-divider></mat-divider>
+
 									</div>
 
 								</div>

@@ -1,17 +1,32 @@
+
+/*
+
+	This is the test file for the invoice component
+*/
+
+
+// Angular Items and test files
 import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
-import { InvoiceModernComponent } from './modern.component';
 import { RouterModule, Routes, ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatButtonModule } from '@angular/material/button';
 
 
-// Services
-import { InvoiceService } from 'app/main/services/invoice.service';
-import { AuthService } from 'app/main/services/auth.service';
-import { FirebaseService } from 'app/main/services/firebase.service';
+// The component
+import { InvoiceModernComponent } from './modern.component';
 
+
+// Services and mock item
+import { InvoiceService } from 'app/main/services/invoice.service';
+import { DesignsService } from 'app/main/services/designs.service';
+import { ProjectsService } from 'app/main/services/projects.service';
+import { VersionsService } from 'app/main/services/versions.service';
+import { AuthService } from 'app/main/services/auth.service';
+import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { mockItems } from 'app/main/services/mockItems';
+
+
 
 
 
@@ -22,7 +37,6 @@ describe('InvoiceModernComponent', () => {
 	// Mock items unique to this page
 	let InvoiceServiceStub : InvoiceService;
 	let AuthServiceStub : AuthService;
-	let FirebaseServiceStub :FirebaseService;
 	let RouteStub : ActivatedRoute;
 
 	// Mock Items pulled from external mock file
@@ -48,17 +62,41 @@ describe('InvoiceModernComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [ InvoiceModernComponent ],
 			providers: [ { provide: InvoiceService, useValue : {} },
+						 { provider: DesignsService },
+						 { provider: ProjectsService },
+						 { provider: VersionsService },
 						 { provide: ActivatedRoute, useValue : ActivatedRouteStub },
-						 { provide: AuthService, useValue : {} },
-						 { provide: FirebaseService, useValue : AngularFireStub } ]
+						 { provide: AuthService, useValue : {} }]
 		});
 
 		fixture = TestBed.createComponent(InvoiceModernComponent);
 		component = fixture.componentInstance;
-		component.versionData = {};
+		component.versionData = {
+			'id' 			: '',
+			'dateCreated'	: Date.now(),
+			'creatorId'		: '',
+			'creatorName'	: '',
+			'description'	: "This is the description of this version",
+			'designId' 		: '',
+			'initialOpen'	: false,
+			'name'			: 'New Version',
+			'price'			: 0,
+			'projectId'		: '',
+			'values'		: [],
+			'version'		: 1,
+			'deleted' 		: false,
+			'measurements' 	: '',
+			'tax'			: 0,
+			'totalCost'		: 0,
+			'deposit'		: 0
+		}
+
 		fixture.detectChanges();
 
 	});
+
+
+
 
 
 

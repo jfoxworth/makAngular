@@ -18,6 +18,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { DialogData } from 'app/main/creator-studio/creator-studio.component';
 
 
+
 // RXJS Items
 import { finalize } from 'rxjs/operators';
 
@@ -27,13 +28,13 @@ import { Ng5SliderModule } from 'ng5-slider';
 import { Options } from 'ng5-slider';
 
 
+
 // Services
 import { CreatorStudioService } from 'app/main/services/creator-studio.service';
-import { AuthService } from 'app/main/services/auth.service';
-import { FirebaseService } from 'app/main/services/firebase.service';
 
 
 
+// Firebase items
 import { AngularFireStorage } from '@angular/fire/storage';
 
 
@@ -47,7 +48,6 @@ import { AngularFireStorage } from '@angular/fire/storage';
 export class editParameterDialog implements OnInit {
 
 	constructor(
-		private FirebaseService 		: FirebaseService,
 		private CreatorStudioService 	: CreatorStudioService,
 		private afStorage 				: AngularFireStorage,
 		public dialogRef 				: MatDialogRef<editParameterDialog>,

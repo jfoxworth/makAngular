@@ -35,6 +35,9 @@ import { DesignsService } from 'app/main/services/designs.service';
 import { ProjectsService } from 'app/main/services/projects.service';
 import { VersionsService } from 'app/main/services/versions.service';
 import { AuthService } from 'app/main/services/auth.service';
+import { UserService } from 'app/main/services/user-service.service';
+import { DesignSignoffsService } from 'app/main/services/design-signoffs.service';
+import { SignoffReqsService } from 'app/main/services/signoff-reqs.service';
 import { FirebaseService } from 'app/main/services/firebase.service';
 
 
@@ -46,6 +49,8 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { makDesign } from 'app/main/models/makDesign';
 import { makProject } from 'app/main/models/makProject';
 import { makVersion } from 'app/main/models/makVersion';
+import { signoffReq } from 'app/main/models/signoffReq';
+import { designSignoff } from 'app/main/models/designSignoffs';
 
 
 
@@ -82,6 +87,9 @@ export class DesignStudioComponent implements AfterViewInit {
 	flowersJSON 		: any;
 	flowerFlag 			: boolean = false;
 	editableVersion 	: boolean = true;
+	userData 			: any;
+	signoffData 		: signoffReq[];
+	designSignoffList 	: designSignoff[];
 
 
 	private _unsubscribeAll: Subject<any>;
@@ -91,10 +99,12 @@ export class DesignStudioComponent implements AfterViewInit {
 					private DesignsService 				: DesignsService,
 					private ProjectsService 			: ProjectsService,
 					private VersionsService 			: VersionsService,
-					private route 						: ActivatedRoute,
+					private DesignSignoffsService		: DesignSignoffsService,
+					private SignoffReqsService 			: SignoffReqsService,
 					private AuthService 				: AuthService,
 					private FirebaseService 			: FirebaseService,
 					private afStorage 					: AngularFireStorage,
+					private route 						: ActivatedRoute,
 					private activeRoute 				: ActivatedRoute,
 					private SnackBar 					: MatSnackBar,
 					@Inject(DOCUMENT) private document 	: Document) 
@@ -108,6 +118,7 @@ export class DesignStudioComponent implements AfterViewInit {
 
 	ngOnInit() {
 
+		this.userData = JSON.parse(localStorage.getItem('user'));
 		this.subscribeToData();
 
 	}
@@ -126,6 +137,7 @@ export class DesignStudioComponent implements AfterViewInit {
 		// The url is /design/{ID of design}
 		if ( this.route.snapshot.url[1] === undefined )
 		{
+			console.log('Here 1');
 			this.studioType = 'studio';
 			this.designId = 'jBRzSildNc16fQjAmLkh';
 			this.DesignsService.getDesignById( this.designId );
@@ -152,6 +164,7 @@ export class DesignStudioComponent implements AfterViewInit {
 				   ( this.route.snapshot.url[1].toString() != 'project') )
 		{
 
+			console.log('Here 2');
 			this.studioType = 'studio';
 			this.designId = this.route.snapshot.url[1].toString();
 			this.DesignsService.getDesignById( this.designId );
@@ -172,6 +185,8 @@ export class DesignStudioComponent implements AfterViewInit {
 		// WHen a user is looking at a design that is likely not live
 		}else if ( this.route.snapshot.url[1].toString() == 'design' )
 		{
+
+			console.log('Here 3');
 			this.studioType = 'design';
 			this.designId = this.route.snapshot.paramMap.get('designId');
 			this.DesignsService.getDesignById( this.designId );
@@ -196,6 +211,7 @@ export class DesignStudioComponent implements AfterViewInit {
 		}else if ( this.route.snapshot.url[1].toString() == 'project' )
 		{
 
+			console.log('Here 4');
 			this.studioType = 'project';
 			this.projectId = this.route.snapshot.paramMap.get('projectId');
 			this.ProjectsService.getProjectById( this.projectId );
@@ -239,6 +255,7 @@ export class DesignStudioComponent implements AfterViewInit {
 		}else
 		{
 
+			console.log('Here 5');
 			this.studioType = 'studio';
 			this.designId = 'jBRzSildNc16fQjAmLkh';
 			this.DesignsService.getDesignById( this.designId );
@@ -260,6 +277,21 @@ export class DesignStudioComponent implements AfterViewInit {
 
 	}
 
+
+
+
+
+
+
+	ngOnDestroy() {
+
+		this.dataFlag 		= false;
+		this.designData 	= [];
+		this.projectData 	= [];
+		this.versionData 	= [];
+		console.log('On the destroy data hook');
+
+	}
 
 
 
@@ -289,23 +321,30 @@ export class DesignStudioComponent implements AfterViewInit {
 		.subscribe((design)=>
 		{ 
 
-			this.designData = design;
-
-			console.log('The design data is ...');
+			console.log('The design data being returned is ...');
 			console.log(design);
-			console.log(this.studioType);
 
+
+			// Assign the design data
+			this.designData = JSON.parse(JSON.stringify(design));
+
+			// See if this user has signoff privileges
+			if ( ( this.designData.id ) && ( this.userData.uid ) )
+			{
+				this.SignoffReqsService.getSignoffReqsForDesignUser( this.userData.uid, this.designData.id )
+			}
+
+			// If this is a new item (no user logged in), create a blank version
 			if ( ( this.studioType == 'studio' ) || ( this.studioType == 'design' ) )
 			{
 				this.versionData 	= this.VersionsService.blankVersion();
 				this.versionList.push(this.versionData);
-				console.log('1. The design data is ...');
-				console.log(design);
 				this.initializeAll();
 			}
 
 
-			if ( this.studioType == 'project' )
+			// If this is a project, get the versions for it
+			if ( ( this.studioType == 'project' ) && ( design.id ) )
 			{
 				this.VersionsService.getVersionsForProject( this.designData.id );
 			}
@@ -322,10 +361,7 @@ export class DesignStudioComponent implements AfterViewInit {
 
 			this.projectData = project;
 
-			console.log('1. The project data is ...');
-			console.log(project);
-
-			if ( this.studioType = 'project' )
+			if ( ( this.studioType = 'project' ) && ( this.projectData.designId ) )
 			{
 				this.DesignsService.getDesignById( this.projectData.designId );
 			}
@@ -336,19 +372,54 @@ export class DesignStudioComponent implements AfterViewInit {
 
 
 		// Subscribe to the version data
-		this.VersionsService.versionOneStatus
+		this.VersionsService.versionStatus
 		.pipe(takeUntil(this._unsubscribeAll))
-		.subscribe((version)=>
+		.subscribe((versions)=>
 		{ 
 
-			this.versionData 	= version;
+			this.versionData = versions;
 
-			console.log('1. The version data is ...');
-			console.log(version);
-
-			this.initializeAll();
+			if ( this.versionData[0] )
+			{
+				this.initializeAll();
+			}
 
 		});
+
+
+
+
+		// Subscribe to the signoff reqs
+		this.SignoffReqsService.signoffReqDesignUserStatus
+		.pipe(takeUntil(this._unsubscribeAll))
+		.subscribe((signoffReqs)=>
+		{ 
+
+			this.signoffData = signoffReqs;
+
+			if ( this.signoffData.length > 0 )
+			{
+				this.DesignSignoffsService.getdesignSignoffsForDesign( this.designData.id );
+			}
+
+		});
+
+
+
+
+
+
+		// Subscribe to the design signoffs 
+		this.DesignSignoffsService.designSignoffStatus
+		.pipe(takeUntil(this._unsubscribeAll))
+		.subscribe((signoffs)=>
+		{ 
+			this.designSignoffList = signoffs;
+
+		});
+
+
+
 
 	}
 
@@ -386,7 +457,7 @@ export class DesignStudioComponent implements AfterViewInit {
 	*
 	*/
 	initializeAll() {
-		console.log('Here');
+
 		this.dataFlag=true;
 		this.initializeMenu();
 		this.initializeModel();
@@ -414,10 +485,12 @@ export class DesignStudioComponent implements AfterViewInit {
 
 
 		// Load model from shapediver and initialize model and menu
+		/*
 		this.designData = this.FirebaseService.getDocById( 'designs', this.designId ).then(response=> {
 			this.designData=response.data();
 			this.initializeAll();
 		});
+		*/
 	}
 
 
@@ -434,6 +507,9 @@ export class DesignStudioComponent implements AfterViewInit {
 
 		console.log('Initializing the menu for type : '+this.studioType);
 
+		console.log('The parameter menus are ... ');
+		console.log(this.designData.parameterMenus);
+
 		// Add and remove the windows for the project menu and cost
 		if ( this.studioType == 'design' )
 		{
@@ -447,7 +523,11 @@ export class DesignStudioComponent implements AfterViewInit {
 		{
 			this.designData.parameterMenus.unshift(this.DesignStudioService.getStudioMenu());			
 		}
+
+
+		// Set the menus for cost and signoff and get the menu locations
 		this.designData.parameterMenus.push(this.DesignStudioService.getCostMenu( this.studioType ));
+		this.designData.parameterMenus.push(this.DesignStudioService.getSignoffMenu( ));
 		this.designData.menuLocations = this.DesignStudioService.getMenuLocations();
 
 
@@ -480,6 +560,11 @@ export class DesignStudioComponent implements AfterViewInit {
 
 
 	}
+
+
+
+
+
 
 
 
@@ -743,6 +828,11 @@ export class DesignStudioComponent implements AfterViewInit {
 	saveVersion( versionData ) 
 	{
 		console.log('Saving version '+versionData.uid);
+
+		this.VersionsService.updateVersion( versionData );
+		this.SnackBar.open('Version changes saved','', {duration: 4000});
+
+		/*
 		this.FirebaseService.updateDocDataUsingId('versions', versionData.uid, versionData )
 		.then((snapshot) => {
 			this.SnackBar.open('Version changes saved','', {duration: 4000});
@@ -750,6 +840,7 @@ export class DesignStudioComponent implements AfterViewInit {
 		.catch((err) => {
 		  console.log('Error updating version', err);
 		});
+		*/
 
 	}
 
@@ -763,10 +854,12 @@ export class DesignStudioComponent implements AfterViewInit {
 	createNewVersion( ) 
 	{
 		console.log('Creating new version ');
+		this.VersionsService.createVersion( '', this.projectData, this.versionData, this.designData )
+		/*
 		let tempVer = this.versionData;
 		tempVer['version'] = this.versionList.length;
 		this.FirebaseService.createDocInCollection('versions', tempVer);
-
+		*/
 	}
 
 

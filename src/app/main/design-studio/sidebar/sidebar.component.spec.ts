@@ -1,20 +1,43 @@
+
+/*
+
+	This is the test file for the sidebar for the design studio
+
+*/
+
+
+// Angular Testing Items
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Ng5SliderModule } from 'ng5-slider';
-import { Options } from 'ng5-slider';
+import { RouterModule, Routes } from '@angular/router';
 import { EventEmitter } from '@angular/core';
-import { DesignService } from 'app/main/services/design-service.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FuseConfigService } from '@fuse/services/config.service';
 
-import { MatIconModule} from '@angular/material/icon';
+
+
+// The Component
 import { SidebarComponent } from './sidebar.component';
+
+
+
+// Services and Mock Items
+import { CreatorStudioService } from 'app/main/services/creator-studio.service';
+import { mockItems } from 'app/main/services/mockItems';
+
+
+
+// Google Material Items
+import { MatIconModule} from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FuseConfirmDialogModule, FuseSidebarModule } from '@fuse/components';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterModule, Routes } from '@angular/router';
 
-import { mockItems } from 'app/main/services/mockItems';
 
+
+
+// NG5 Slider Items
+import { Ng5SliderModule } from 'ng5-slider';
+import { Options } from 'ng5-slider';
 
 
 describe('SidebarComponent', () => {
@@ -40,7 +63,7 @@ describe('SidebarComponent', () => {
 			imports:[ MatIconModule,
 					  MatButtonModule ],
 			declarations: [ SidebarComponent ],
-			providers: [ { provide: DesignService} ]
+			providers: [ { provide : CreatorStudioService } ]
 		});
 
 

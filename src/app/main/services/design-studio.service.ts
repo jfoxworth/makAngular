@@ -286,6 +286,33 @@ export class DesignStudioService
 
 
 
+
+
+	/**
+	 * Get Signoff Menu
+	 */
+	getSignoffMenu()
+	{
+		// Data for Project menu
+		return {
+				'location' : 0,
+				'name' : 'makSignoffs',
+				'label' : 'Design Signoffs',
+				'icon' : 'assignment_turned_in',
+				'parameters' : [
+					{
+						'location' : 0,
+						'type' : 'makDesignSignoffs',
+						'text' : 'This will be filled with the list of versions soon.'
+					}
+				]
+		}
+	}
+
+
+
+
+
 	/**
 	 *
 	 * The function calculate the price of a design

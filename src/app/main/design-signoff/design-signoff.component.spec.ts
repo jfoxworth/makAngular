@@ -1,6 +1,6 @@
 /*
 
-	This is the test file for the creator studio component
+  This is the test file for the creator studio component
 
 */
 
@@ -9,13 +9,12 @@
 // Angular Testing Items
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ViewContainerRef } from '@angular/core';
-
+import { RouterModule, Routes, ActivatedRoute } from '@angular/router';
 
 
 
 // The component
-import { CreatorStudioComponent } from './creator-studio.component';
-
+import { DesignSignoffComponent } from './design-signoff.component';
 
 
 
@@ -27,18 +26,10 @@ import { ProjectsService } from 'app/main/services/projects.service';
 import { DesignsService } from 'app/main/services/designs.service';
 import { UserService } from 'app/main/services/user-service.service';
 import { SignoffReqsService } from 'app/main/services/signoff-reqs.service';
+import { DesignSignoffsService } from 'app/main/services/design-signoffs.service';
 
 import { AngularFireStorage } from '@angular/fire/storage';
 import { mockItems } from 'app/main/services/mockItems';
-
-
-
-
-// Dialog Items
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { editParameterDialog } from './parameter-dialog/parameter-dialog.component';
-import { SubmenuDialog } from './submenu-dialog/submenu-dialog.component';
-
 
 
 
@@ -51,78 +42,79 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 
-describe('CreatorStudioComponent', () => {
+
+describe('DesignSignoffComponent', () => {
 	
-	let component: CreatorStudioComponent;
-	let fixture: ComponentFixture<CreatorStudioComponent>;
+	let component: DesignSignoffComponent;
+	let fixture: ComponentFixture<DesignSignoffComponent>;
 
 
-	// Mock items unique to this page
-	let	AuthServiceStub : AuthService;
-	let	SnackBarStub : MatSnackBar;
-	let	vCRefStub :  ViewContainerRef;
+
 
 
 	// Mock Items pulled from external mock file
 	let MockGroup = new mockItems();
-	const AngularFireStub 			= MockGroup.AngularFireStub();
-	const mockDialogRef 			= MockGroup.DialogRefStub();
-	const mockDialog 				= MockGroup.mockDialog();
-	const mockSnackBar 				= MockGroup.mockSnackBar();
-	const CreatorStudioStub 		= MockGroup.mockCreatorStudio();
-	const UserServiceStub 			= MockGroup.mockUserService();
 	const DesignsServiceStub 		= MockGroup.mockDesignsService();
 	const ProjectsServiceStub 		= MockGroup.mockProjectsService();
 	const VersionsServiceStub 		= MockGroup.mockVersionsService();
+	const UserServiceStub 			= MockGroup.mockUserService();
 	const SignoffReqsServiceStub 	= MockGroup.mockSignoffReqsService();
+	const DesignSignoffServiceStub 	= MockGroup.mockDesignSignoffService();
 	const ActivatedRouteStub 		= MockGroup.ActivatedRouteStub();
-	const AuthStub 					= MockGroup.AngularAuthStub();
+
+
 
 
 
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ CreatorStudioComponent ]
+			declarations: [ DesignSignoffComponent ]
 		})
 		.compileComponents();
 	}));
 
 
 
+
+
 	beforeEach(() => {
 
 		TestBed.configureTestingModule({
-			declarations: [ CreatorStudioComponent ],
-			providers: [ { provide: MatDialog, 				useValue : mockDialog },
-						 { provide: CreatorStudioService,	useValue : CreatorStudioStub },
-						 { provide: VersionsService, 		useValue : VersionsServiceStub },
+			declarations: [ DesignSignoffComponent ],
+			providers: [ { provide: DesignsService, 		useValue : DesignsServiceStub },
 						 { provide: ProjectsService,		useValue : ProjectsServiceStub },
-						 { provide: DesignsService, 		useValue : DesignsServiceStub },
+						 { provide: VersionsService, 		useValue : VersionsServiceStub },
 						 { provide: UserService,			useValue : UserServiceStub },
 						 { provide: SignoffReqsService,		useValue : SignoffReqsServiceStub },
-						 { provide: AuthService, 			useValue : {} },
-						 { provide: MatSnackBar, 			useValue : mockSnackBar },
-						 { provide: AngularFireStorage, 	useValue : {} },
-						 { provide: ViewContainerRef } ]
+						 { provide: DesignSignoffsService, 	useValue : DesignSignoffServiceStub },
+						 { provide: ActivatedRoute, 		useValue : ActivatedRouteStub } ]
 		});
 
-		fixture = TestBed.createComponent(CreatorStudioComponent);
+		fixture = TestBed.createComponent(DesignSignoffComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});
 
 
-
-	// Basic test to ensure that the component is created
-	it('should create creator studio main', () => {
-		localStorage.setItem('user', JSON.stringify({'uid':1, 'id':1}));
-		component.ngOnInit();
+		beforeEach(() => {
+		fixture = TestBed.createComponent(DesignSignoffComponent);
+		component = fixture.componentInstance;
 		fixture.detectChanges();
+	});
+
+  
+
+
+
+
+	it('should create', () => {
+		localStorage.setItem('user', JSON.stringify({'uid':1, 'id':1}));
 		expect(component).toBeTruthy();
 	});
+
+
+
+
 });
-
-
-
 

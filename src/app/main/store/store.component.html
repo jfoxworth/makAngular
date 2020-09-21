@@ -59,12 +59,16 @@
 						 fxFlex="100" 
 						 fxFlex.gt-sm="33" 
 						 *ngIf="(si.category==selectedType || selectedType=='All')">
-						 {{si.userReview}}
 
-						<mat-icon *ngIf="si.userReview"
-								  style="position:relative;top:40px">
-							assignment_turned_in
-						</mat-icon>
+
+						<div style="position:relative;top:10px; left:10px; height:0px">
+							<mat-icon *ngIf="si.userReview"
+									  style="cursor:pointer"
+		                          	  matTooltip="You have sign off permissions">
+								assignment_turned_in
+							</mat-icon>
+						</div>
+
 						<a [routerLink]="'/store/' + si.uid + '/' + si.title">
 
 							<div class="storeitem-content" 

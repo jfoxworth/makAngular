@@ -54,7 +54,6 @@ import { makVersion } from 'app/main/models/makVersion';
 
 
 // Firestore Items
-import { FirebaseService } from 'app/main/services/firebase.service';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 
@@ -72,26 +71,26 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firest
 export class EcommerceComponent implements OnInit
 {
 
-	projectList : makProject[];
-	versionList : makVersion[];
+	projectList 		: makProject[];
+	versionList 		: makVersion[];
 	columnsToDisplayMeas = ['name', 'value'];
-	currentProject : makProject;
-	currentVersion : makVersion;
-	currentDesign : makDesign; 
-	userData : any;
-	designImageUrl : any;
-	projectStages : string[];
-	projectStatus : boolean[];
-	selectedStatus : boolean[];
-	stageTexts : any[];
-	displayType : string = 'list';
+	currentProject 		: makProject;
+	currentVersion 		: makVersion;
+	currentDesign 		: makDesign; 
+	userData 			: any;
+	designImageUrl 		: any;
+	projectStages 		: string[];
+	projectStatus 		: boolean[];
+	selectedStatus 		: boolean[];
+	stageTexts 			: any[];
+	displayType 		: string = 'list';
 
-	changesExist : boolean = false;
+	changesExist 		: boolean = false;
 	versionChangesExist : boolean = false;
 
-	projectDataFlag : boolean = false;
-	versionDataFlag : boolean = false;
-	designDataFlag : boolean = false;
+	projectDataFlag 	: boolean = false;
+	versionDataFlag 	: boolean = false;
+	designDataFlag 		: boolean = false;
 
 
 	// Private
@@ -102,7 +101,6 @@ export class EcommerceComponent implements OnInit
 		private VersionsService		: VersionsService,
 		private ProjectsService		: ProjectsService,
 		private DesignsService		: DesignsService,
-		private FirebaseService 	: FirebaseService,
 		private MarketplaceService 	: MarketplaceService,
 		public afs 					: AngularFirestore,
 		private SnackBar 			: MatSnackBar,
@@ -143,11 +141,6 @@ export class EcommerceComponent implements OnInit
 
 		// Get the status texts
 		this.stageTexts = this.EcommerceService.getStageTexts();
-
-
-		// Get the status texts
-		this.stageTexts = this.EcommerceService.getStageTexts();
-
 
 		// Subscribe to the observables for the data
 		this.ProjectsService.getProjectsForUser( this.userData.uid ); 
@@ -309,6 +302,8 @@ export class EcommerceComponent implements OnInit
 	 */
 	setCurrentProject( project : makProject )
 	{
+		console.log('The project I am sending is ...');
+		console.log(project);
 
 		this.currentProject = project; 
 		this.VersionsService.getVersionsForProject( project.id ); 

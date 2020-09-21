@@ -33,7 +33,7 @@ describe('ChatViewComponent', () => {
 
 	let MockGroup = new mockItems();
 	const ChatServiceStub = MockGroup.mockChatService();
-	const UserServiceStub = MockGroup.UserServiceStub();
+	const UserServiceStub = MockGroup.mockUserService();
 
 
 

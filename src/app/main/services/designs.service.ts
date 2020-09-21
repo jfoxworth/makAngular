@@ -169,6 +169,8 @@ export class DesignsService
 	// Update a design
 	updateDesign( designObj )
 	{
+		console.log('I am updating the design ...');
+		console.log(designObj);
 		this.afs.collection('designs').doc( designObj.uid ).update( designObj );		
 	}
 

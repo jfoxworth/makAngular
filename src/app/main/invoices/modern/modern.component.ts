@@ -32,7 +32,6 @@ import { DesignsService } from 'app/main/services/designs.service';
 import { ProjectsService } from 'app/main/services/projects.service';
 import { VersionsService } from 'app/main/services/versions.service';
 import { AuthService } from 'app/main/services/auth.service';
-import { FirebaseService } from 'app/main/services/firebase.service';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 
 
@@ -81,9 +80,7 @@ export class InvoiceModernComponent implements OnInit, OnDestroy
 		private ProjectsService 	: ProjectsService,
 		private VersionsService 	: VersionsService,
 		private route				: ActivatedRoute,
-		private AuthService 		: AuthService,
-		private FirebaseService 	: FirebaseService,
-		public afs 					: AngularFirestore
+		private AuthService 		: AuthService
 	)
 	{
 		this._unsubscribeAll = new Subject();

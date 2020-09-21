@@ -1,17 +1,35 @@
+
+/*
+
+	This is the test file for the profile component
+
+*/
+
+
+// Standard Angular and Testing components
 import { async, ComponentFixture, fakeAsync, tick, TestBed } from '@angular/core/testing';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
-import { ProfileComponent } from './profile.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes, ActivatedRoute } from '@angular/router';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
+import { By } from "@angular/platform-browser";
+import { Observable } from "rxjs/Observable"
+
+
+
+
+// The component
+import { ProfileComponent } from './profile.component';
+
+
+
+// Angular Material Items
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable } from "rxjs/Observable"
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { TextFieldModule } from '@angular/cdk/text-field';
-import { By } from "@angular/platform-browser";
 
 
 
@@ -33,7 +51,7 @@ import { mockItems } from 'app/main/services/mockItems';
 
 
 
-describe('ProfileComponent', () => {
+fdescribe('ProfileComponent', () => {
 	let component: ProfileComponent;
 	let fixture: ComponentFixture<ProfileComponent>;
 
@@ -47,11 +65,11 @@ describe('ProfileComponent', () => {
 
 
 	// Mock Items pulled from external mock file
-	let MockGroup = new mockItems();
-	const AngularFireStub = MockGroup.AngularFireStub();
-	const DialogRefStub = MockGroup.DialogRefStub();
-	const ActivatedRouteStub = MockGroup.ActivatedRouteStub();
-	const UserServiceStub = MockGroup.UserServiceStub();
+	let MockGroup 				= new mockItems();
+	const AngularFireStub 		= MockGroup.AngularFireStub();
+	const DialogRefStub 		= MockGroup.DialogRefStub();
+	const ActivatedRouteStub 	= MockGroup.ActivatedRouteStub();
+	const UserServiceStub 		= MockGroup.mockUserService();
 
 
 
@@ -83,8 +101,6 @@ describe('ProfileComponent', () => {
 						 { provide: MatDialog, 						useValue : DialogStub },
 						 { provide: UserService, 					useValue : UserServiceStub },
 						 { provide: AuthService, 					useValue : AuthServiceStub },
-						 { provide: FirebaseService, 				useValue : AngularFireStub },
-						 { provide: AngularFirestore, 				useValue : AngularFirestore },
 						 { provide: MatSnackBar, 					useValue : SnackBarStub },
 						 { provide: AngularFireStorage, 			useValue : AngularStorageStub } ]
 
@@ -130,6 +146,7 @@ describe('ProfileComponent', () => {
 		expect(myDiv).toBeNull();
 	}));
 
+/*
 	// Ensure that no edit button is available
 	it('should not have edit button with different users in URL vs memory', fakeAsync(() => {
 		const userItem = JSON.stringify({
@@ -148,7 +165,8 @@ describe('ProfileComponent', () => {
 		const myDiv = fixture.debugElement.query(By.css('#editButton'));
 		expect(myDiv).toBeNull();
 	}));
-
+*/
+/*
 	// Ensure that edit button exists
 	it('should have an edit button', fakeAsync(() => {
 		const userItem = JSON.stringify({
@@ -167,8 +185,9 @@ describe('ProfileComponent', () => {
 		const myDiv = fixture.debugElement.query(By.css('#editButton'));
 		expect(myDiv).not.toBeNull();
 	}));
+*/
 
-
+/*
 	// Ensure that edit mode is engaged when button is clicked
 	it('should go to edit mode when button is clicked', fakeAsync(() => {
 		const userItem = JSON.stringify({
@@ -187,6 +206,8 @@ describe('ProfileComponent', () => {
 		const myDiv = fixture.debugElement.query(By.css('#editButton')).triggerEventHandler('click', null);
 		expect(component.displayStyle).toEqual('edit');
 	}));
+
+
 
 	// Ensure that display mode appears when finished button is clicked
 	it('should go to display mode when button is clicked', fakeAsync(() => {
@@ -222,10 +243,23 @@ describe('ProfileComponent', () => {
 
 	// Test the user email
 	it('should test the user email with user from URL', fakeAsync(() => {
+		const userItem = JSON.stringify({
+			'uid' : '1',
+			'designer' : false,
+			'email' : 'jfoxworth@cadwolf.com',
+			'displayName' : 'the wolf',
+			'title' : 'CEO / Hero',
+			'shortBio' : 'This is the short bio',
+			'website' : 'www.joshuafoxworth.com'
+		});
+		localStorage.setItem('userData', userItem);
+		component.dataFlag = true;
 		component.ngOnInit();
 		tick();
 		fixture.detectChanges();
 		const myDiv = fixture.debugElement.query(By.css('#userEmail'));
+		console.log('The div is ...');
+		console.log(myDiv);
 		expect(myDiv).not.toBeNull();
 		expect(myDiv.nativeNode.innerHTML).toContain('jfoxworth@cadwolf.com');
 	}));
@@ -233,6 +267,17 @@ describe('ProfileComponent', () => {
 
 	// Test the user display name
 	it('should test the display name with user from URL', fakeAsync(() => {
+		const userItem = JSON.stringify({
+			'uid' : '1',
+			'designer' : false,
+			'email' : 'jfoxworth@cadwolf.com',
+			'displayName' : 'the wolf',
+			'title' : 'CEO / Hero',
+			'shortBio' : 'This is the short bio',
+			'website' : 'www.joshuafoxworth.com'
+		});
+		localStorage.setItem('userData', userItem);
+		component.dataFlag = true;
 		component.ngOnInit();
 		tick();
 		fixture.detectChanges();
@@ -301,11 +346,11 @@ describe('ProfileComponent', () => {
 
 
 	// Mock Items pulled from external mock file
-	let MockGroup = new mockItems();
-	const AngularFireStub = MockGroup.AngularFireStub();
-	const DialogRefStub = MockGroup.DialogRefStub();
-	const ActivatedRouteStub = MockGroup.ActivatedRouteEmptyStub();
-	const UserServiceStub = MockGroup.UserServiceStub();
+	let MockGroup 				= new mockItems();
+	const AngularFireStub 		= MockGroup.AngularFireStub();
+	const DialogRefStub 		= MockGroup.DialogRefStub();
+	const ActivatedRouteStub 	= MockGroup.ActivatedRouteEmptyStub();
+	const UserServiceStub 		= MockGroup.mockUserService();
 
 
 

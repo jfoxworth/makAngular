@@ -17,13 +17,10 @@ import { makVersion } from './makVersion';
 export interface designSignoff {
 	id 				: string;			// The id of the signoff
 	designId 		: string;			// The id of the design
-	projectId		: string;			// The id of the project
-	version 		: makVersion;		// The entire version data
-	versionId 		: string;
 	comments 		: string; 			// Comments entered by the user
 	creatorId 		: string;			// ID of the user
 	creatorEmail 	: string;			// Name of the user
-	approve 		: boolean;			// Whether or not this signoff is an approval
+	approve 		: number;			// 0 for Not Approved. 1 for Approved. 2 for Approved with comments
 	dateCreated 	: number;
 	deleted 		: boolean;
 }

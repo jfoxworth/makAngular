@@ -48,9 +48,7 @@ import { designSignoff } from 'app/main/models/designSignoffs';
 
 
 // Firestore Items
-import { FirebaseService } from 'app/main/services/firebase.service';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 
 
 
@@ -62,7 +60,7 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firest
 })
 export class StoreComponent implements OnInit {
 
-//	storeItems 		: makDesign[];
+
 	storeList 		: makDesign[];
 	currentItem 	: makDesign;
 	selectedType 	: string = "All";
@@ -83,7 +81,6 @@ export class StoreComponent implements OnInit {
 					private DesignsService 			: DesignsService,
 					private SignoffReqsService 		: SignoffReqsService,
 					private DesignSignoffsService 	: DesignSignoffsService,
-					private FirebaseService 		: FirebaseService,
 					private SnackBar 				: MatSnackBar,
 					private afStorage 				: AngularFireStorage 
 		) { 
@@ -101,6 +98,8 @@ export class StoreComponent implements OnInit {
 
 		// Get the design types
 		this.designTypes=this.CreatorStudioService.getDesignTypes();
+		console.log('The design types are ...');
+		console.log(this.designTypes);
 		this.designTypes.unshift("All");
 
 
@@ -158,10 +157,6 @@ export class StoreComponent implements OnInit {
 		.pipe(takeUntil(this._unsubscribeAll))
 		.subscribe((signoffReqs)=>
 		{ 
-			console.log('signoffs are ...');
-			console.log(signoffReqs);
-			console.log('storelist is ...');
-			console.log(this.storeList);
 			this.signoffReqs = signoffReqs;
 
 			if (this.storeList)
@@ -174,11 +169,9 @@ export class StoreComponent implements OnInit {
 				let flag = true;
 				for (let b=0; b<this.signoffReqs.length; b++)
 				{
-					console.log('The signoff id is '+this.signoffReqs[b]['designId']);
 					flag = true;
 					for (let a=0; a<this.storeList.length; a++)
 					{
-						console.log('The storelist id is '+this.storeList[a]['id']);
 						if ( this.storeList[a]['id'] == this.signoffReqs[b]['designId'])
 						{
 							this.storeList[a]['userReview'] = true;
@@ -187,7 +180,6 @@ export class StoreComponent implements OnInit {
 
 					}
 
-					console.log('the flag is '+flag);
 
 					if (flag)
 					{
@@ -197,9 +189,9 @@ export class StoreComponent implements OnInit {
 
 								let addFlag = true;
 								let tempData = result.docs[0].data();
+								tempData['userReview'] = true;
 								for (let c=0; c<this.storeList.length; c++)
 								{
-									console.log(this.storeList[c]['id']+' - '+tempData['id']);
 									if (this.storeList[c]['id']==tempData['id'])
 									{
 										addFlag=false;
@@ -207,9 +199,7 @@ export class StoreComponent implements OnInit {
 								}
 								if (addFlag)
 								{
-									console.log('The store item is');
-									console.log(result.docs[0].data());
-									this.storeList.push( tempData );
+									this.storeList.push( JSON.parse(JSON.stringify(tempData )));
 									this.formatStoreData();
 								}
 							});

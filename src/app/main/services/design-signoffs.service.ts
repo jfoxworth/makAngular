@@ -60,7 +60,7 @@ export class DesignSignoffsService
 
 
 	// Create
-	createDesignSignoff( userObj, design, project, version )
+	createDesignSignoff( userObj, designId, status, comments )
 	{
 
 		var userData = JSON.parse(localStorage.getItem('user'));
@@ -69,12 +69,9 @@ export class DesignSignoffsService
 			'id' 			: '',
 			'creatorId'		: userObj.uid,
 			'creatorEmail'	: userObj.email,
-			'designId' 		: design.id,
-			'projectId'		: project.id,
-			'versionId'		: version.id,
-			'version'		: version,
-			'comments' 		: '',
-			'approve' 		: false,
+			'designId' 		: designId,
+			'comments' 		: comments,
+			'approve' 		: status,
 			'deleted' 		: false,
 			'dateCreated'	: Date.now(),
 		}

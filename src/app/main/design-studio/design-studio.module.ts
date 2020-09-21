@@ -93,6 +93,8 @@ const routes = [
         MatSelectModule,
         MatGridListModule,
         MatSnackBarModule,
+        MatFormFieldModule,
+        MatInputModule,
 
 
         Ng5SliderModule,

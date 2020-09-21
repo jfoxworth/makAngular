@@ -65,6 +65,7 @@ export class VersionsService
 		var userData = JSON.parse(localStorage.getItem('user'));
 
 		let versionObj = {
+			'id'			: '',
 			'dateCreated'	: Date.now(),
 			'creatorId'		: userData.uid,
 			'creatorName'	: userData.username,
@@ -76,7 +77,11 @@ export class VersionsService
 			'projectId'		: project.id,
 			'values'		: {},
 			'version'		: versions.length+1,
-			'deleted' 		: false
+			'deleted' 		: false,
+			'measurements' 	: '',
+			'tax'			: 0,
+			'totalCost'		: 0,
+			'deposit'		: 0
 		}
 
 		if ( type != 'default' )
@@ -99,6 +104,9 @@ export class VersionsService
 	// Read
 	getVersionsForProject( projectId:string )
 	{ 
+		console.log('The project ID is ...');
+		console.log(projectId);
+		console.log('The versions are ...');
  		this.afs.collection('versions', ref => ref
  			.where('projectId', '==', projectId )
  			.where('deleted', '==', false)
@@ -160,11 +168,16 @@ export class VersionsService
 	blankVersion( ) {
 
 		var userData = JSON.parse(localStorage.getItem('user'));
+
+		if ( !userData )
+		{
+			userData = { 'uid' : '', 'email': '' }
+		}
 		
 		return {
 			'dateCreated'	: Date.now(),
 			'creatorId'		: userData.uid,
-			'creatorName'	: userData.username,
+			'creatorEmail'	: userData.email,
 			'description'	: "This is the description of this version",
 			'designId' 		: '',
 			'initialOpen'	: false,
