@@ -64,10 +64,17 @@ The invoice component is a place where users can view the cost of the item as we
 
 ## Code setup
 
-For every database table, there is an associated model. For each of those models, there is a service that handles the CRUD operations for that model. There are multiple read options with ones getting a single document by ID, getting all documents for the user, etc. There is an additional service for each component that handles organizational and formatting items for that component.
+For every database table, there is an associated model. For each of those models, there is a service that handles the CRUD operations for that model. There are multiple read options with ones getting a single document by ID, getting all documents for the user, etc. All models are held in a separate folder with that name.
 
-All models are held in a separate folder with that name. All services are held in a separate folder with that name as well.
 
+There is a service for each component that handles organizational and formatting items for that component. All services are held in a separate folder with that name. As much as possible, the premise of "fat services and skinny components" is used where as much logic is possible is pushed onto the services.
+
+
+
+
+
+
+<!--
 
 ## How to create the development server
 
@@ -84,3 +91,6 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 ## Running end-to-end tests
 
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+
+
+-->

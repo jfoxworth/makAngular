@@ -1,14 +1,26 @@
+
+/*
+	This is the service for the chats page.
+
+*/
+
+
+// Common angular items
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
+
+
+// RXJS Items
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
+
+// Fuse items
 import { FuseUtils } from '@fuse/utils';
 
 
 // Services
 import { AuthService } from 'app/main/services/auth.service';
-import { FirebaseService } from 'app/main/services/firebase.service';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { UserService } from 'app/main/services/user-service.service';
 
@@ -102,12 +114,6 @@ export class ChatService
 	 *
 	 */
 	getConversations( ) {
-/*
-		let userData = JSON.parse(localStorage.getItem('userData'));
-		console.log('participantId of '+userData.uid);
-		return this.afs.collection('convParticipants', ref => ref.where('participantId', '==', userData.uid)).valueChanges();
-*/
-
 
 		// Grab the user data
 		this.userData = JSON.parse(localStorage.getItem('user'));

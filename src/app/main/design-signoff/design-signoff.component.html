@@ -101,9 +101,10 @@
 										style="">
 							<mat-label>Select Status</mat-label>
 							<mat-select [(ngModel)]="approveStatus">
-								<mat-option [value]="0">Not approved</mat-option>
 								<mat-option [value]="1">Approved</mat-option>
-								<mat-option [value]="2">Approved with comments</mat-option>
+								<mat-option [value]="0">Approved with Changes Noted</mat-option>
+								<mat-option [value]="2">Revise and Resubmit</mat-option>
+								<mat-option [value]="3">Rejected</mat-option>
 							</mat-select>
 						</mat-form-field>
 

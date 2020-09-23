@@ -111,9 +111,7 @@
 
 			<!-- The signoff panel -->
 			<div *ngIf="valItem['type']=='makDesignSignoffs'"
-				 fxLayoutAlign="center center"
-				 fxLayout="column"
-				 fxFlex="100">
+				 style="height:500px !important">
 
 
 				<div *ngFor="let signoff of signoffData; let i=index"
@@ -129,41 +127,55 @@
 					<div class="mb-12 mt-12">{{signoff.creatorEmail}}</div>
 					<div class="mb-12 mt-12">{{signoff.comments}}</div>
 
+					<mat-divider class="mt-8 mb-8"></mat-divider>
+
 				</div>
 
 
-				<mat-divider></mat-divider>
 
-				<mat-form-field class="w-80-p">
-					<mat-select name="signoffStatus"
-								style="margin-left:10%"
-				  				[(ngModel)]="signoffStatus">
-						<mat-option >Not Approved</mat-option>
-						<mat-option >Approved with comments</mat-option>
-						<mat-option >Approved</mat-option>
-				  </mat-select>
-				</mat-form-field>
+				<div class="text-center w-100-p mt-32">
 
-				<mat-form-field class="w-80-p">
-					<mat-label>Comments</mat-label>
-					<textarea matInput
-							[(ngModel)]="signoffComments"
-							name="signoffComments">
-								
-					</textarea>
-				</mat-form-field>
+					<div class="">
+						<mat-form-field>
+							<mat-select name="signoffStatus"
+						  				[(ngModel)]="signoffStatus">
+								<mat-option [value]="1">Approved</mat-option>
+								<mat-option [value]="0">Approved with Changes Noted</mat-option>
+								<mat-option [value]="2">Revise and Resubmit</mat-option>
+								<mat-option [value]="3">Rejected</mat-option>
+						  </mat-select>
+						</mat-form-field>
+					</div>
 
-				<div fxFlex="20" style="margin:20px auto">
-					<button mat-stroked-button 
-							class="primary" 
-							name="saveMe"
-							(click)="createNewSignoff()">
-						Save Signoff
-					</button>
+					<div class="w-80-p"
+						 style="margin-left:10%">
+						<mat-form-field class="w-100-p">
+							<mat-label>Comments</mat-label>
+							<textarea matInput
+									[(ngModel)]="signoffComments"
+									name="signoffComments">
+										
+							</textarea>
+						</mat-form-field>
+					</div>
+
+
+					<div style="margin:20px auto">
+						<button mat-stroked-button 
+								class="primary" 
+								name="saveMe"
+								(click)="createNewSignoff()">
+							Save Signoff
+						</button>
+					</div>
+
 				</div>
 
 
 			</div>
+
+
+
 
 
 

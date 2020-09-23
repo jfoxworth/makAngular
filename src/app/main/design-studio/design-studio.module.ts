@@ -42,30 +42,18 @@ const routes = [
     {
         path     : 'designStudio/design/:designId',
         component: DesignStudioComponent,
-        resolve  : {
-            designData: DesignStudioService
-        }
     },
     {
         path     : 'designStudio/project/:projectId',
         component: DesignStudioComponent,
-        resolve  : {
-            designData: DesignStudioService
-        }
     },
     {
         path     : 'designStudio/:designId',
         component: DesignStudioComponent,
-        resolve  : {
-            designData: DesignStudioService
-        }
     },
     {
         path     : 'designStudio',
         component: DesignStudioComponent,
-        resolve  : {
-            designData: DesignStudioService
-        }
     }
 ];
 
