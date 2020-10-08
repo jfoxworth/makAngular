@@ -68,6 +68,7 @@ import { ChatService } from 'app/main/services/chat.service';
 
 // New ng5 slider
 import { Ng5SliderModule } from 'ng5-slider';
+import { StoreModule } from '@ngrx/store';
 
 
 
@@ -140,6 +141,9 @@ const appRoutes: Routes = [
 
 
 		Ng5SliderModule,
+
+
+		StoreModule.forRoot({}, {}),
 
 	],
 	providers :[
