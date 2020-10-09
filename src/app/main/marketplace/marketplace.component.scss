@@ -1,6 +1,6 @@
 @import "src/@fuse/scss/fuse";
 
-#store {
+#marketplace {
 
     .header {
         position: relative;
@@ -93,7 +93,7 @@
                 margin: 0 auto;
             }
 
-            .storeitem-search {
+            .marketplaceitem-search {
                 width: 320px;
 
                 @include media-breakpoint('gt-xs') {
@@ -102,29 +102,29 @@
             }
         }
 
-        .storeitems {
+        .marketplaceitems {
             width: 100%;
             max-width: 1040px;
             margin: 0 auto;
 
-            .no-storeitems {
+            .no-marketplaceitems {
                 font-size: 24px;
                 margin: 24px 0;
                 text-align: center;
             }
 
-            .storeitem {
+            .marketplaceitem {
                 padding: 16px;
 
                 &:hover {
 
-                    .storeitem-content {
+                    .marketplaceitem-content {
                         border: none;
                         @include mat-elevation(12);
                     }
                 }
 
-                .storeitem-content {
+                .marketplaceitem-content {
                     min-height: 240px;
                     border-radius: 4px;
                     overflow: hidden;
@@ -202,7 +202,7 @@
             }
         }
 
-        .storeitem a {
+        .marketplaceitem a {
             color: #000;
             text-decoration : none;
         }

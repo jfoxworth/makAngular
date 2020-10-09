@@ -14,9 +14,9 @@ import { MatSelectModule } from '@angular/material/select';
 
 import { FuseSharedModule } from '@fuse/shared.module';
 
-import { StoreComponent } from 'app/main/store/store.component';
-import { StoreProductComponent } from './product/product.component';
-import { CarouselComponent } from 'app/main/store/carousel/carousel.component';
+import { MarketplaceComponent } from 'app/main/marketplace/marketplace.component';
+import { MarketplaceProductComponent } from './product/product.component';
+import { CarouselComponent } from 'app/main/marketplace/carousel/carousel.component';
 
 import { MatCarouselModule } from '@ngmodule/material-carousel';
 
@@ -27,14 +27,14 @@ import { FuseWidgetModule } from '@fuse/components/widget/widget.module';
 
 const routes = [
     {
-        path     : 'store',
-        component: StoreComponent,
+        path     : 'marketplace',
+        component: MarketplaceComponent,
         resolve  : {
         }
     },
     {
-        path     : 'store/:itemId/:itemSlug',
-        component: StoreProductComponent,
+        path     : 'marketplace/:itemId/:itemSlug',
+        component: MarketplaceProductComponent,
         resolve  : {
         }
     }
@@ -42,8 +42,8 @@ const routes = [
 
 @NgModule({
     declarations: [
-        StoreComponent,
-        StoreProductComponent,
+        MarketplaceComponent,
+        MarketplaceProductComponent,
         CarouselComponent,
     ],
     imports     : [
@@ -65,14 +65,14 @@ const routes = [
         FuseSidebarModule
     ],
     exports     : [
-        StoreComponent
+        MarketplaceComponent
     ],
     providers   : [
 
     ]
 })
 
-export class StoreModule
+export class MarketplaceModule
 {
 }
 

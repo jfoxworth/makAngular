@@ -1,11 +1,11 @@
-@mixin store-theme($theme) {
+@mixin marketplace-theme($theme) {
 
     $background: map-get($theme, background);
     $foreground: map-get($theme, foreground);
     $accent: map-get($theme, accent);
     $is-dark: map-get($theme, is-dark);
 
-    #store {
+    #marketplace {
 
         .header {
             //background: #1A237E;
@@ -25,11 +25,11 @@
 
         .content {
 
-            .storeitems {
+            .marketplaceitems {
 
-                .storeitem {
+                .marketplaceitem {
 
-                    .storeitem-content {
+                    .marketplaceitem-content {
                         background: map-get($background, card);
 
                         .header {
@@ -62,7 +62,7 @@
         }
     }
 
-    #store {
+    #marketplace {
 
         .sidebar {
 
@@ -144,9 +144,9 @@
                     background: mat-color($mat-grey, 200);
                 }
 
-                .storeitem-step {
+                .marketplaceitem-step {
 
-                    .storeitem-step-content {
+                    .marketplaceitem-step-content {
                         background: map-get($background, card);
                     }
                 }

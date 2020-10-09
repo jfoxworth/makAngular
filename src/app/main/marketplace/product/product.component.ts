@@ -46,20 +46,20 @@ import { AngularFireStorage } from '@angular/fire/storage';
 
 
 @Component({
-  selector: 'store-product',
+  selector: 'marketplace-product',
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.scss']
 })
-export class StoreProductComponent implements OnInit {
+export class MarketplaceProductComponent implements OnInit {
 
-	public id 			: string;
-	public storeItem 	: makDesign;
-	dataFlag 			: boolean = false;
-	projectDataFlag 	: boolean = false;
-	projectList 		: makProject[];
-	signoffList 		: signoffReq[];
-	userData 			: any;
-	private _unsubscribeAll: Subject<any>;
+	public id 				: string;
+	public marketplaceItem 	: makDesign;
+	dataFlag 				: boolean = false;
+	projectDataFlag 		: boolean = false;
+	projectList 			: makProject[];
+	signoffList 			: signoffReq[];
+	userData 				: any;
+	private _unsubscribeAll : Subject<any>;
 
 
 	constructor(private route 				: ActivatedRoute,
@@ -113,7 +113,7 @@ export class StoreProductComponent implements OnInit {
 
 	//Create
 	addProject( projectObj ){
-		this.ProjectsService.createProject( projectObj, this.storeItem );
+		this.ProjectsService.createProject( projectObj, this.marketplaceItem );
 	}
 
 
@@ -128,7 +128,7 @@ export class StoreProductComponent implements OnInit {
 		{ 
 			if ( design.category )
 			{
-				this.storeItem = design;
+				this.marketplaceItem = design;
 				this.formatData();
 				this.dataFlag=true;
 
@@ -194,15 +194,15 @@ export class StoreProductComponent implements OnInit {
 
 	formatData(){
 
-		this.storeItem['imageUrls'] = [];
-		for (var a=0; a<this.storeItem.marketplace.images.length; a++)
+		this.marketplaceItem['imageUrls'] = [];
+		for (var a=0; a<this.marketplaceItem.marketplace.images.length; a++)
 		{
-			const ref = this.afStorage.ref(this.storeItem.marketplace.images[a]['path']);
-			this.storeItem['imageUrls'].push(ref.getDownloadURL());
+			const ref = this.afStorage.ref(this.marketplaceItem.marketplace.images[a]['path']);
+			this.marketplaceItem['imageUrls'].push(ref.getDownloadURL());
 
-			if (this.storeItem.marketplace.images[a]['mainImage'])
+			if (this.marketplaceItem.marketplace.images[a]['mainImage'])
 			{
-				this.storeItem['background'] = ref.getDownloadURL();
+				this.marketplaceItem['background'] = ref.getDownloadURL();
 			}
 		}
 

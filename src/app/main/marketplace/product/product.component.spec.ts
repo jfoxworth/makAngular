@@ -17,7 +17,7 @@ import { RouterTestingModule } from "@angular/router/testing";
 
 
 // The components
-import { StoreProductComponent } from './product.component';
+import { MarketplaceProductComponent } from './product.component';
 
 
 
@@ -44,9 +44,9 @@ import { mockItems } from 'app/main/services/mockItems';
 
 
 
-describe('StoreProductComponent', () => {
-	let component: StoreProductComponent;
-	let fixture: ComponentFixture<StoreProductComponent>;
+describe('MarketplaceProductComponent', () => {
+	let component: MarketplaceProductComponent;
+	let fixture: ComponentFixture<MarketplaceProductComponent>;
 
 
 	// Mock items unique to this page
@@ -66,7 +66,7 @@ describe('StoreProductComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ StoreProductComponent ]
+			declarations: [ MarketplaceProductComponent ]
 		})
 		.compileComponents();
 	}));
@@ -84,7 +84,7 @@ describe('StoreProductComponent', () => {
 						MatDividerModule,
 						RouterTestingModule
 			],
-			declarations: [ StoreProductComponent ],
+			declarations: [ MarketplaceProductComponent ],
 			providers: [ 
 
 						 { provide: ActivatedRoute, 		useValue : ActivatedRouteStub },
@@ -96,7 +96,7 @@ describe('StoreProductComponent', () => {
 			});
 
 
-		fixture = TestBed.createComponent(StoreProductComponent);
+		fixture = TestBed.createComponent(MarketplaceProductComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});
@@ -170,7 +170,7 @@ describe('StoreProductComponent', () => {
 	*
 	*/
 
-	it('should create store product', () => {
+	it('should create marketplace product', () => {
 		expect(component).toBeTruthy();
 	});
 

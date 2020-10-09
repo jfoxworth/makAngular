@@ -15,7 +15,7 @@ import { By } from "@angular/platform-browser";
 
 
 // The component being testing
-import { StoreComponent } from './store.component';
+import { MarketplaceComponent } from './marketplace.component';
 
 
 // Angular Material Items
@@ -38,7 +38,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // Services and Mock Items
 import { CreatorStudioService } from 'app/main/services/creator-studio.service';
-import { StoreService } from 'app/main/services/store.service';
+import { MarketplaceService } from 'app/main/services/marketplace.service';
 import { DesignsService } from 'app/main/services/designs.service';
 import { SignoffReqsService } from 'app/main/services/signoff-reqs.service';
 import { DesignSignoffsService } from 'app/main/services/design-signoffs.service';
@@ -58,10 +58,10 @@ import { Observable } from "rxjs/Observable"
 
 
 
-describe('StoreComponent', () => {
+describe('MarketplaceComponent', () => {
 	
-	let component 	: StoreComponent;
-	let fixture 	: ComponentFixture<StoreComponent>;
+	let component 	: MarketplaceComponent;
+	let fixture 	: ComponentFixture<MarketplaceComponent>;
 
 	// Mock Items pulled from external mock file
 	let MockGroup 					= new mockItems();
@@ -75,7 +75,7 @@ describe('StoreComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ StoreComponent ]
+			declarations: [ MarketplaceComponent ]
 		})
 		.compileComponents();
 	}));
@@ -96,7 +96,7 @@ describe('StoreComponent', () => {
 					   BrowserAnimationsModule,
 					   RouterTestingModule,
 					   FormsModule ],
-			declarations: [ StoreComponent ],
+			declarations: [ MarketplaceComponent ],
 			providers: [ { provide: CreatorStudioService, 	useValue : CreatorStudioStub },
 						 { provide: StoreService, 			useValue : {} },
 						 { provide: DesignsService, 		useValue : DesignsServiceStub },
@@ -107,7 +107,7 @@ describe('StoreComponent', () => {
 						 
 		});
 
-		fixture = TestBed.createComponent(StoreComponent);
+		fixture = TestBed.createComponent(MarketplaceComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});
@@ -144,7 +144,7 @@ describe('StoreComponent', () => {
 	*/
 	
 	// Generic creation test
-	it('store component should be created', () => {
+	it('marketplace component should be created', () => {
 		expect(component).toBeTruthy();
 	});
 

@@ -1,11 +1,11 @@
-<div id="store-product" class="page-layout simple fullwidth">
+<div id="marketplace-product" class="page-layout simple fullwidth">
 
 	<!-- HEADER -->
 	<div class="header accent p-24" fxLayout="row" fxLayoutAlign="start center">
-		<button mat-icon-button class="mr-0 mr-sm-16" [routerLink]="'/store'">
+		<button mat-icon-button class="mr-0 mr-sm-16" [routerLink]="'/marketplace'">
 			<mat-icon>arrow_back</mat-icon>
 		</button>
-		<h2>Back to store</h2>
+		<h2>Back to marketplace</h2>
 	</div>
 	<!-- / HEADER -->
 
@@ -25,23 +25,23 @@
 					 style="width:40%; margin:0px 5%">
 
 
-					<div class="itemTypeText">{{storeItem.category}}</div>
+					<div class="itemTypeText">{{marketplaceItem.category}}</div>
 
 
-					<div class="mat-display-2 itemTypeTitle">{{storeItem.title}}</div>
+					<div class="mat-display-2 itemTypeTitle">{{marketplaceItem.title}}</div>
 
 
-					<div class="mat-title itemDescription">{{storeItem.marketplace.description}}</div>
+					<div class="mat-title itemDescription">{{marketplaceItem.marketplace.description}}</div>
 
 
 					<div class="itemCompanySection" fxLayout="row">
 
-						<img class="itemCompanyLogo" [src]="storeItem.company.logo">
+						<img class="itemCompanyLogo" [src]="marketplaceItem.company.logo">
 
 						<div class="itemCompanyDetails" fxLayout="column">
 
-							<div class="mat-title itemCompanyName">{{storeItem.company.name}}</div>
-							<div class="mat-subheading-1 itemCompanyLocation">{{storeItem.company.location}}</div>
+							<div class="mat-title itemCompanyName">{{marketplaceItem.company.name}}</div>
+							<div class="mat-subheading-1 itemCompanyLocation">{{marketplaceItem.company.location}}</div>
 
 						</div>
 
@@ -91,7 +91,7 @@
 					<button mat-button 
 							class="primary mt-40"
 							id="addProjectButton"
-							(click)="addProject(storeItem)"
+							(click)="addProject(marketplaceItem)"
 							*ngIf="userData !== undefined">
 						ADD AS NEW PROJECT
 					</button>
@@ -101,7 +101,7 @@
 							class="mt-40 primary"
 							color=""
 							id="viewDesignStudioButton"
-							[routerLink]="'/designStudio/design/'+storeItem.uid">
+							[routerLink]="'/designStudio/design/'+marketplaceItem.uid">
 						VIEW DESIGN IN STUDIO
 					</button>
 
@@ -110,7 +110,7 @@
 							class="accent mt-40"
 							color=""
 							id="viewDesignSignoffButton"
-							[routerLink]="'/designSignoff/'+storeItem.uid">
+							[routerLink]="'/designSignoff/'+marketplaceItem.uid">
 						VIEW / ADD SIGNOFFS
 					</button>
 
@@ -128,13 +128,13 @@
 
 
 					<mat-grid-list cols="2" rowHeight="2:1">
-						<mat-grid-tile *ngFor="let thisImage of storeItem.imageUrls; index as i">
+						<mat-grid-tile *ngFor="let thisImage of marketplaceItem.imageUrls; index as i">
 							<img [src]="(thisImage | async)" width="300">
 						</mat-grid-tile>
 					</mat-grid-list>
 
 
-					<!-- <carousel [thisitem]="storeItem"></carousel> -->
+					<!-- <carousel [thisitem]="marketplaceItem"></carousel> -->
 
 				</div>
 				<!--/  IMAGES -->

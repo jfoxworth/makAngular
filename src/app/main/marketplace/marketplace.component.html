@@ -6,7 +6,7 @@
 
 -->
 
-<div id="store" style="background-color:#FFF" 
+<div id="marketplace" style="background-color:#FFF" 
 				class="page-layout simple">
 
 	<!-- TOP BACKGROUND -->
@@ -47,14 +47,14 @@
 			</mat-form-field>
 
 
-			<div class="storeitems" 
+			<div class="marketplaceitems" 
 				 fxLayout="row wrap" 
 				 fxLayoutAlign="center" 
 				 *ngIf="dataFlag">
 				
-				<ng-container *ngFor="let si of storeList">
+				<ng-container *ngFor="let si of marketplaceList">
 
-					<div class="storeitem" 
+					<div class="marketplaceitem" 
 						 [ngClass]="si.category" 
 						 fxFlex="100" 
 						 fxFlex.gt-sm="33" 
@@ -69,9 +69,9 @@
 							</mat-icon>
 						</div>
 
-						<a [routerLink]="'/store/' + si.uid + '/' + si.title">
+						<a [routerLink]="'/marketplace/' + si.uid + '/' + si.title">
 
-							<div class="storeitem-content" 
+							<div class="marketplaceitem-content" 
 								 fxLayout="column" 
 								 fxFlex="1 1 auto">
 
@@ -92,8 +92,8 @@
 
 				</ng-container>
 
-				<div class="no-storeitems" *ngIf="storeList.length === 0">
-					No store items found!
+				<div class="no-marketplaceitems" *ngIf="marketplaceList.length === 0">
+					No marketplace items found!
 				</div>
 
 			</div>

@@ -84,7 +84,7 @@ export interface DialogData {
   templateUrl: './creator-studio.component.html',
   styleUrls: ['./creator-studio.component.scss', 
   			  '../e-commerce/e-commerce.component.scss', 
-  			  '../store/product/product.component.scss', 
+  			  '../marketplace/product/product.component.scss', 
   			  '../design-studio/sidebar/sidebar.component.scss',
   			  '../design-studio/slider.component.scss']
 })

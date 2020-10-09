@@ -28,7 +28,7 @@ import { FuseSharedModule } from '@fuse/shared.module';
 
 // Services
 import { CreatorStudioService } from 'app/main/services/creator-studio.service';
-import { StoreService } from 'app/main/services/store.service';
+import { MarketplaceService } from 'app/main/services/marketplace.service';
 import { DesignsService } from 'app/main/services/designs.service';
 import { SignoffReqsService } from 'app/main/services/signoff-reqs.service';
 import { DesignSignoffsService } from 'app/main/services/design-signoffs.service';
@@ -54,14 +54,14 @@ import { AngularFireStorage } from '@angular/fire/storage';
 
 
 @Component({
-	selector: 'app-store',
-	templateUrl: './store.component.html',
-	styleUrls: ['./store.component.scss']
+	selector: 'app-marketplace',
+	templateUrl: './marketplace.component.html',
+	styleUrls: ['./marketplace.component.scss']
 })
-export class StoreComponent implements OnInit {
+export class MarketplaceComponent implements OnInit {
 
 
-	storeList 		: makDesign[];
+	marketplaceList 		: makDesign[];
 	currentItem 	: makDesign;
 	selectedType 	: string = "All";
 	designTypes 	: string[];
@@ -77,7 +77,7 @@ export class StoreComponent implements OnInit {
 
 
 	constructor(	private CreatorStudioService 	: CreatorStudioService,
-					private StoreService 			: StoreService,
+					private MarketplaceService 			: MarketplaceService,
 					private DesignsService 			: DesignsService,
 					private SignoffReqsService 		: SignoffReqsService,
 					private DesignSignoffsService 	: DesignSignoffsService,
@@ -145,8 +145,8 @@ export class StoreComponent implements OnInit {
 		{ 
 			if ( designs.length > 0 )
 			{
-				this.storeList = designs;
-				this.formatStoreData();
+				this.marketplaceList = designs;
+				this.formatMarketplaceData();
 			}
 
 		});
@@ -159,22 +159,22 @@ export class StoreComponent implements OnInit {
 		{ 
 			this.signoffReqs = signoffReqs;
 
-			if (this.storeList)
+			if (this.marketplaceList)
 			{
-				for (let a=0; a<this.storeList.length; a++)
+				for (let a=0; a<this.marketplaceList.length; a++)
 				{
-					this.storeList[a]['userReview'] = false;
+					this.marketplaceList[a]['userReview'] = false;
 				}
 
 				let flag = true;
 				for (let b=0; b<this.signoffReqs.length; b++)
 				{
 					flag = true;
-					for (let a=0; a<this.storeList.length; a++)
+					for (let a=0; a<this.marketplaceList.length; a++)
 					{
-						if ( this.storeList[a]['id'] == this.signoffReqs[b]['designId'])
+						if ( this.marketplaceList[a]['id'] == this.signoffReqs[b]['designId'])
 						{
-							this.storeList[a]['userReview'] = true;
+							this.marketplaceList[a]['userReview'] = true;
 							flag = false;
 						}
 
@@ -190,17 +190,17 @@ export class StoreComponent implements OnInit {
 								let addFlag = true;
 								let tempData = result.docs[0].data();
 								tempData['userReview'] = true;
-								for (let c=0; c<this.storeList.length; c++)
+								for (let c=0; c<this.marketplaceList.length; c++)
 								{
-									if (this.storeList[c]['id']==tempData['id'])
+									if (this.marketplaceList[c]['id']==tempData['id'])
 									{
 										addFlag=false;
 									}
 								}
 								if (addFlag)
 								{
-									this.storeList.push( JSON.parse(JSON.stringify(tempData )));
-									this.formatStoreData();
+									this.marketplaceList.push( JSON.parse(JSON.stringify(tempData )));
+									this.formatMarketplaceData();
 								}
 							});
 					}
@@ -231,22 +231,22 @@ export class StoreComponent implements OnInit {
   	*	This function formats the image data necessary
   	*
   	*/
-	formatStoreData()
+	formatMarketplaceData()
 	{
 
-		for (var a=0; a<this.storeList.length; a++)
+		for (var a=0; a<this.marketplaceList.length; a++)
 		{
 
-			this.storeList[a]['imageUrls'] = [];
-			for (var b=0; b<this.storeList[a].marketplace.images.length; b++)
+			this.marketplaceList[a]['imageUrls'] = [];
+			for (var b=0; b<this.marketplaceList[a].marketplace.images.length; b++)
 			{
 
-				const myRef = this.afStorage.ref(this.storeList[a].marketplace.images[b]['path']);
-				this.storeList[a]['imageUrls'].push(myRef.getDownloadURL());
+				const myRef = this.afStorage.ref(this.marketplaceList[a].marketplace.images[b]['path']);
+				this.marketplaceList[a]['imageUrls'].push(myRef.getDownloadURL());
 
-				if (this.storeList[a].marketplace.images[b]['mainImage'])
+				if (this.marketplaceList[a].marketplace.images[b]['mainImage'])
 				{
-					this.storeList[a]['background'] = myRef.getDownloadURL();
+					this.marketplaceList[a]['background'] = myRef.getDownloadURL();
 				}
 			}
 
