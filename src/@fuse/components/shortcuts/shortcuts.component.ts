@@ -158,10 +158,10 @@ export class FuseShortcutsComponent implements OnInit, AfterViewInit, OnDestroy
 							url  : '/designStudio'
 						},
 						{
-							title: 'Design Store',
+							title: 'The Marketplace',
 							type : 'item',
 							icon : 'store',
-							url  : '/store'
+							url  : '/marketplace'
 						},
 						{
 							title: 'Creator Studio',
@@ -208,10 +208,10 @@ export class FuseShortcutsComponent implements OnInit, AfterViewInit, OnDestroy
 							url  : '/designStudio'
 						},
 						{
-							title: 'Design Store',
+							title: 'The Markeplace',
 							type : 'item',
 							icon : 'store',
-							url  : '/store'
+							url  : '/marketplace'
 						}
 					];
 

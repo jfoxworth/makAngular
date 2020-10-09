@@ -149,7 +149,7 @@ const appRoutes: Routes = [
 		EcommerceModule,
 		ChatModule,
 		KnowledgeBaseModule,
-		StoreModule,
+		MarketplaceModule,
 		CreatorStudioModule,
 		DragDropModule,
 		MailConfirmModule,
@@ -181,7 +181,9 @@ const appRoutes: Routes = [
 		StoreRouterConnectingModule.forRoot({
 			stateKey: 'router',
 			routerState: RouterState.Minimal
-		})
+		}),
+		StoreModule.forRoot({}, {}),
+		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
 
 	],
 	providers :[

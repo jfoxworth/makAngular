@@ -32,6 +32,7 @@ import { MarketplaceService } from 'app/main/services/marketplace.service';
 import { DesignsService } from 'app/main/services/designs.service';
 import { SignoffReqsService } from 'app/main/services/signoff-reqs.service';
 import { DesignSignoffsService } from 'app/main/services/design-signoffs.service';
+import { makDesignEntityService } from 'app/main/services/entity/makDesign-entity.service';
 
 
 
@@ -61,7 +62,7 @@ import { AngularFireStorage } from '@angular/fire/storage';
 export class MarketplaceComponent implements OnInit {
 
 
-	marketplaceList 		: makDesign[];
+	marketplaceList : makDesign[];
 	currentItem 	: makDesign;
 	selectedType 	: string = "All";
 	designTypes 	: string[];
@@ -70,6 +71,7 @@ export class MarketplaceComponent implements OnInit {
 	dataFlag 		: boolean = false;
 	signoffReqs 	: designSignoff[];
 	signoffs 		: signoffReq[];
+	marketplace$ 	: any[];
 
 	private _unsubscribeAll: Subject<any>;
 
@@ -77,12 +79,13 @@ export class MarketplaceComponent implements OnInit {
 
 
 	constructor(	private CreatorStudioService 	: CreatorStudioService,
-					private MarketplaceService 			: MarketplaceService,
+					private MarketplaceService 		: MarketplaceService,
 					private DesignsService 			: DesignsService,
 					private SignoffReqsService 		: SignoffReqsService,
 					private DesignSignoffsService 	: DesignSignoffsService,
 					private SnackBar 				: MatSnackBar,
-					private afStorage 				: AngularFireStorage 
+					private afStorage 				: AngularFireStorage,
+					private DesignEntityService 	: makDesignEntityService
 		) { 
 
         // Get the user data
@@ -110,6 +113,10 @@ export class MarketplaceComponent implements OnInit {
 
 		// Set up the observers
 		this.subscribeToData();
+
+		this.DesignEntityService.getAll();
+        this.marketplace$ = this.DesignEntityService.entities$
+
 
 
 		// Trigger the function to get all valid designs
