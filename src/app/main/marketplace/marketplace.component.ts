@@ -9,8 +9,9 @@ import { Component, OnInit } from '@angular/core';
 // RXJS Items
 import { finalize } from 'rxjs/operators';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
+import 'rxjs/add/observable/forkJoin';
 import { takeUntil } from 'rxjs/internal/operators';
-
+import { concatMap, delay, filter, first, map, shareReplay, tap, withLatestFrom } from 'rxjs/operators';
 
 
 // Angular Material Items
@@ -32,7 +33,9 @@ import { MarketplaceService } from 'app/main/services/marketplace.service';
 import { DesignsService } from 'app/main/services/designs.service';
 import { SignoffReqsService } from 'app/main/services/signoff-reqs.service';
 import { DesignSignoffsService } from 'app/main/services/design-signoffs.service';
+
 import { makDesignEntityService } from 'app/main/services/entity/makDesign-entity.service';
+import { signoffReqEntityService } from 'app/main/services/entity/signoffReq-entity.service';
 
 
 
@@ -44,12 +47,23 @@ import { makProject } from 'app/main/models/makProject';
 import { makVersion } from 'app/main/models/makVersion';
 import { signoffReq } from 'app/main/models/signoffReq';
 import { designSignoff } from 'app/main/models/designSignoffs';
+import { imageObj } from 'app/main/models/imageObj';
 
 
 
 
 // Firestore Items
 import { AngularFireStorage } from '@angular/fire/storage';
+
+
+
+// NGRX Items
+import { Store } from "@ngrx/store";
+import { AppState } from 'app/main/reducers';
+import { DesignState } from 'app/main/reducers';
+import { designImagesSave } from 'app/main/actions/design.actions';
+import { designImagesReducer } from 'app/main/reducers/index';
+import { DesignActions } from 'app/main/actions/designAction-types';
 
 
 
@@ -62,35 +76,38 @@ import { AngularFireStorage } from '@angular/fire/storage';
 export class MarketplaceComponent implements OnInit {
 
 
+	makDesigns$ 	: Observable<makDesign[]>;
+	signoffReqs$ 	: Observable<signoffReq[]>;
 	marketplaceList : makDesign[];
 	currentItem 	: makDesign;
 	selectedType 	: string = "All";
 	designTypes 	: string[];
-	mobile 			: boolean = false;
 	userData 		: any;
-	dataFlag 		: boolean = false;
 	signoffReqs 	: designSignoff[];
-	signoffs 		: signoffReq[];
-	marketplace$ 	: any[];
+	signoffs 		: string[];
+	newArr 			: imageObj[];
+	images 			: never[];
 
 	private _unsubscribeAll: Subject<any>;
 
 
 
 
-	constructor(	private CreatorStudioService 	: CreatorStudioService,
-					private MarketplaceService 		: MarketplaceService,
-					private DesignsService 			: DesignsService,
-					private SignoffReqsService 		: SignoffReqsService,
-					private DesignSignoffsService 	: DesignSignoffsService,
-					private SnackBar 				: MatSnackBar,
-					private afStorage 				: AngularFireStorage,
-					private DesignEntityService 	: makDesignEntityService
+	constructor(	private CreatorStudioService 		: CreatorStudioService,
+					private MarketplaceService 			: MarketplaceService,
+					private DesignsService 				: DesignsService,
+					private SignoffReqsService 			: SignoffReqsService,
+					private DesignSignoffsService 		: DesignSignoffsService,
+					private SnackBar 					: MatSnackBar,
+					private afStorage 					: AngularFireStorage,
+					private DesignEntityService 		: makDesignEntityService,
+					private SignoffEntityService 		: signoffReqEntityService,
+					private store 						: Store<AppState>,
+					private designStore 				: Store<DesignState>
 		) { 
 
-        // Get the user data
-        this.userData = JSON.parse(localStorage.getItem('user'));
-		this.dataFlag = false;
+		// Get the user data
+		this.userData = JSON.parse(localStorage.getItem('user'));
 		this._unsubscribeAll = new Subject();
 	}
 
@@ -101,121 +118,49 @@ export class MarketplaceComponent implements OnInit {
 
 		// Get the design types
 		this.designTypes=this.CreatorStudioService.getDesignTypes();
-		console.log('The design types are ...');
-		console.log(this.designTypes);
 		this.designTypes.unshift("All");
 
 
-		if ( window.screen.width < 960 )
-		{
-			this.mobile = true;
-		}
-
-		// Set up the observers
-		this.subscribeToData();
-
-		this.DesignEntityService.getAll();
-        this.marketplace$ = this.DesignEntityService.entities$
-
-
-
-		// Trigger the function to get all valid designs
-		this.DesignsService.getValidDesigns();
-
-		// Trigger the function to see if the user has any signoff chances
-		this.SignoffReqsService.getSignoffReqsForUser( this.userData.uid );
-
-
-	}
+		// The observable for the signoff reqs from the store
+		this.signoffReqs$ = this.SignoffEntityService.entities$
+			.pipe(
+				tap((signoffReqs) => {
+					// This needs to call a function that gets the images and stores their addresses
+					this.signoffs = [];
+					for (let a=0; a<signoffReqs.length; a++)
+					{
+						this.signoffs.push(signoffReqs[a]['designId']);
+					}
+				})
+			)
+		this.signoffReqs$.subscribe();
 
 
 
 
+		// The observable for the design data from the store
+		this.makDesigns$ = this.DesignEntityService.entities$
 
 
 
-
-	// -----------------------------------------------------------------------------------------------------
-	//
-	// @ CRUD FUNCTIONS FOR A DESIGN
-	//
-	// -----------------------------------------------------------------------------------------------------
-
-	// Read
-	subscribeToData()
-	{
-
-		// Subscribe to the valid designs
-		this.DesignsService.designAllStatus
-		.pipe(takeUntil(this._unsubscribeAll))
-		.subscribe((designs)=>
-		{ 
-			if ( designs.length > 0 )
+		// Listen to the images observable
+		this.designStore.subscribe(state => {
+			
+			if (state.designs.designs.type)
 			{
-				this.marketplaceList = designs;
-				this.formatMarketplaceData();
+				let temp = JSON.parse(JSON.stringify(state.designs.designs));
+				delete temp.type
+				this.images = Object.values(temp);
+			}else
+			{
+				this.images = Object.values(state.designs.designs);					
 			}
-
+			
 		});
 
 
-		// Subscribe to the signoff reqs for the user
-		this.SignoffReqsService.signoffReqUserStatus
-		.pipe(takeUntil(this._unsubscribeAll))
-		.subscribe((signoffReqs)=>
-		{ 
-			this.signoffReqs = signoffReqs;
-
-			if (this.marketplaceList)
-			{
-				for (let a=0; a<this.marketplaceList.length; a++)
-				{
-					this.marketplaceList[a]['userReview'] = false;
-				}
-
-				let flag = true;
-				for (let b=0; b<this.signoffReqs.length; b++)
-				{
-					flag = true;
-					for (let a=0; a<this.marketplaceList.length; a++)
-					{
-						if ( this.marketplaceList[a]['id'] == this.signoffReqs[b]['designId'])
-						{
-							this.marketplaceList[a]['userReview'] = true;
-							flag = false;
-						}
-
-					}
 
 
-					if (flag)
-					{
-
-						this.DesignsService.fetchDesignData( this.signoffReqs[b]['designId'] )
-							.subscribe(result=> {
-
-								let addFlag = true;
-								let tempData = result.docs[0].data();
-								tempData['userReview'] = true;
-								for (let c=0; c<this.marketplaceList.length; c++)
-								{
-									if (this.marketplaceList[c]['id']==tempData['id'])
-									{
-										addFlag=false;
-									}
-								}
-								if (addFlag)
-								{
-									this.marketplaceList.push( JSON.parse(JSON.stringify(tempData )));
-									this.formatMarketplaceData();
-								}
-							});
-					}
-				}
-
-			}
-
-		});
 
 	}
 
@@ -224,44 +169,6 @@ export class MarketplaceComponent implements OnInit {
 
 
 
-
-
-
-	// -----------------------------------------------------------------------------------------------------
-	//
-	// @ FUNCTIONS TO FORMAT OR PREPARE THE DATA AND PAGE
-	//
-	// -----------------------------------------------------------------------------------------------------
-
-  	/*
-  	*
-  	*	This function formats the image data necessary
-  	*
-  	*/
-	formatMarketplaceData()
-	{
-
-		for (var a=0; a<this.marketplaceList.length; a++)
-		{
-
-			this.marketplaceList[a]['imageUrls'] = [];
-			for (var b=0; b<this.marketplaceList[a].marketplace.images.length; b++)
-			{
-
-				const myRef = this.afStorage.ref(this.marketplaceList[a].marketplace.images[b]['path']);
-				this.marketplaceList[a]['imageUrls'].push(myRef.getDownloadURL());
-
-				if (this.marketplaceList[a].marketplace.images[b]['mainImage'])
-				{
-					this.marketplaceList[a]['background'] = myRef.getDownloadURL();
-				}
-			}
-
-		}
-
-		this.dataFlag = true;
-
-	}
 
 
 

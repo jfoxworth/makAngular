@@ -8,14 +8,14 @@
         <!-- / SELECTION MENU -->
 
 
-
-        <ng-container *ngIf="dataFlag else Loading">
+        <ng-container>
 
             <!-- SIDEBAR -->
             <design-sidebar [designData]="designData" 
                             [versionList]="versionList"
                             [versionData]="versionData"
-                            [signoffData]="designSignoffList"
+                            [projectData]="projectData"
+                            [signoffData]="signoffList"
                             [userData]="userData"
                             [flowersJSON]="flowersJSON"
                             [flowerFlag]="flowerFlag"
@@ -44,23 +44,6 @@
         </div>
         <!-- / CENTER -->
 
-
-
-        <ng-template #Loading>
-            <div style="display: block;
-                width: 100%;
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                left:48%;">
-
-                <div class="logo">
-                    <img style="animation: rotation 2s infinite linear;" width="128px" src="assets/images/makLogo.png"><br>
-                    <h1>Loading ...</h1>
-                </div>
-
-            </div>
-        </ng-template>
 
     </div>
     <!-- / CONTENT-->

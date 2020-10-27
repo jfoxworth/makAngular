@@ -1,18 +1,44 @@
+
+
+// Standard Angular Items
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+
+
+
+// RXJS Stuff
+import { Subject, Observable } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import * as _ from 'lodash';
 
+
+// Fuse Specific Stuff
 import { FuseConfigService } from '@fuse/services/config.service';
 import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 
 import { navigation } from 'app/navigation/navigation';
 
 
+
+// Services
 import { AuthService } from 'app/main/services/auth.service';
 import { UserService } from 'app/main/services/user-service.service';
 import { FirebaseService } from 'app/main/services/firebase.service';
+
+
+
+// Models
+import { UserData } from 'app/main/models/userData';
+
+
+
+// NgRX
+import {select, Store} from '@ngrx/store';
+import { isLoggedIn, isLoggedOut } from 'app/main/selectors/auth.selectors';
+import { AppState } from 'app/main/reducers';
+import { AuthState } from 'app/main/reducers';
+import { login, logout, writeUser } from 'app/main/actions/auth.actions';
+
 
 
 
@@ -32,9 +58,11 @@ export class ToolbarComponent implements OnInit, OnDestroy
 	navigation			: any;
 	selectedLanguage	: any;
 	userStatusOptions	: any[];
-	userData 			: any;
+	userData 			: UserData;
+	tempData 			: UserData;
 	userInfo 			: any;
 	profileImage 		: any;
+    isLoggedIn$ 		: Observable<boolean>;
 
 	// Private
 	private _unsubscribeAll: Subject<any>;
@@ -47,32 +75,45 @@ export class ToolbarComponent implements OnInit, OnDestroy
 	 * @param {TranslateService} _translateService
 	 */
 	constructor(
-		private _fuseConfigService: FuseConfigService,
-		private _fuseSidebarService: FuseSidebarService,
-		private _translateService: TranslateService,
-		public authService: AuthService,
-		private UserService : UserService,
-		private FirebaseService : FirebaseService,
+		private _fuseConfigService		: FuseConfigService,
+		private _fuseSidebarService		: FuseSidebarService,
+		private _translateService		: TranslateService,
+		public authService 				: AuthService,
+		private UserService 			: UserService,
+		private FirebaseService 		: FirebaseService,
+		private store 					: Store<AuthState>,
 	)
 	{
 
-		// Get the user data
-		this.userData = JSON.parse(localStorage.getItem('user'));
+        this.isLoggedIn$ = this.store
+            .pipe(
+                select(isLoggedIn)
+            );
 
-		if ( ( this.userData === undefined ) || ( this.userData === null ) )
-		{
-			this.profileImage = this.UserService.getProfileImage( {} );
 
-		}else
-		{
-			console.log(this.userData.uid);
-			this.userInfo = this.FirebaseService.getDocById( 'users', this.userData.uid ).then(response=> {
-				this.userInfo=response.data();
-				this.profileImage = this.UserService.getProfileImage( this.userInfo );
+        // See if user is logged in from previous session
+        // or is logged in now.
+		this.tempData = JSON.parse(localStorage.getItem('UserData'));
+		
+		this.store
+			.pipe(
+				take(1))
+			.subscribe(state => {
 
-			});		
-		}
+				if ( ( this.tempData ) && ( !state.UserData ) )
+				{
+					this.store.dispatch(writeUser({UserData : this.tempData}));
+					this.profileImage = this.UserService.getProfileImage( this.tempData );				
+					this.userData = this.tempData;
+				}
 
+				if ( state.UserData )
+				{
+					this.profileImage = this.UserService.getProfileImage( state.UserData );				
+					this.userData = state.UserData;
+				}
+
+		})
 
 
 
@@ -196,4 +237,8 @@ export class ToolbarComponent implements OnInit, OnDestroy
 		// Use the selected language for translations
 		this._translateService.use(lang.id);
 	}
+
+
+
+
 }

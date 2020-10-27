@@ -1,4 +1,12 @@
 
+/*
+
+	This is the component for viewing a single design project. The user
+	is able to create a project or view the design in the design center
+
+*/
+
+
 // Common Angular Items
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -9,6 +17,7 @@ import { ActivatedRoute } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/internal/operators';
+import { concatMap, delay, filter, first, map, mergeMap, shareReplay, tap, withLatestFrom } from 'rxjs/operators';
 
 
 
@@ -17,7 +26,7 @@ import { MatCarousel, MatCarouselComponent } from '@ngmodule/material-carousel';
 import { MatButtonModule } from '@angular/material/button';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTooltipModule } from '@angular/material/tooltip';
-
+import { MatCarouselSlide, MatCarouselSlideComponent } from '@ngmodule/material-carousel';
 
 
 // Models
@@ -36,9 +45,19 @@ import { DesignsService } from 'app/main/services/designs.service';
 import { MarketplaceService } from 'app/main/services/marketplace.service';
 import { SignoffReqsService } from 'app/main/services/signoff-reqs.service';
 import { DesignSignoffsService } from 'app/main/services/design-signoffs.service';
+import { makDesignEntityService } from 'app/main/services/entity/makDesign-entity.service';
+import { signoffReqEntityService } from 'app/main/services/entity/signoffReq-entity.service';
+import { makProjectEntityService } from 'app/main/services/entity/makProject-entity.service';
 
 import { AngularFireStorage } from '@angular/fire/storage';
 
+
+
+
+// NGRX Items
+import { Store } from "@ngrx/store";
+import { AppState } from 'app/main/reducers';
+import { DesignState } from 'app/main/reducers';
 
 
 
@@ -60,14 +79,24 @@ export class MarketplaceProductComponent implements OnInit {
 	signoffList 			: signoffReq[];
 	userData 				: any;
 	private _unsubscribeAll : Subject<any>;
+	makDesign$ 				: Observable<makDesign>;
+	signoffReqs$ 			: Observable<signoffReq[]>;
+	makProjects$ 			: Observable<makProject[]>;
+	signoffs 				: string[];
+	images 					: never[];
 
 
-	constructor(private route 				: ActivatedRoute,
-				private DesignsService 		: DesignsService,
-				private ProjectsService 	: ProjectsService,
-				private SignoffReqsService	: SignoffReqsService,
-				private afStorage 			: AngularFireStorage,
-				private MarketplaceService 	: MarketplaceService ) 
+	constructor(private route 					: ActivatedRoute,
+				private DesignsService 			: DesignsService,
+				private ProjectsService 		: ProjectsService,
+				private SignoffReqsService		: SignoffReqsService,
+				private afStorage 				: AngularFireStorage,
+				private MarketplaceService 		: MarketplaceService,
+				private DesignEntityService 	: makDesignEntityService,
+				private ProjectEntityService 	: makProjectEntityService,
+				private SignoffEntityService 	: signoffReqEntityService,
+				private store 					: Store<AppState>,
+				private designStore 			: Store<DesignState>)
 	{
 		this._unsubscribeAll = new Subject();		
 	}
@@ -80,22 +109,62 @@ export class MarketplaceProductComponent implements OnInit {
 		this.id = this.route.snapshot.paramMap.get('itemId');
 
 
-		// Subscribe to observers
-		this.subscribeToData();
-			
-		// Get the design data
-		this.DesignsService.getDesignById( this.id );
+		// The observable for the signoff reqs from the store
+		this.signoffReqs$ = this.SignoffEntityService.entities$
+			.pipe(
+				tap((signoffReqs) => {
+					// This needs to call a function that gets the images and stores their addresses
+					this.signoffs = [];
+					for (let a=0; a<signoffReqs.length; a++)
+					{
+						this.signoffs.push(signoffReqs[a]['designId']);
+					}
+				})
+			)
+		this.signoffReqs$.subscribe();
 
 
-		// Get the projects that this user has with this design
-		if ( ( this.userData !== null ) && ( this.userData !== undefined ) )
-		{
-			this.ProjectsService.getProjectsForUserDesign( this.userData.uid, this.id )
-			//this.projectList = this.FirebaseService.getCollectionTwoParams('projects', 'creatorId', this.userData.uid, 'designId', this.id);
-		}else
-		{
-			this.projectList = [];
-		}
+
+
+		// The observable for the design data from the store
+		this.makDesign$ = this.DesignEntityService.entities$
+		.pipe(
+			mergeMap(makDesigns => makDesigns.filter(makDesign => makDesign.id == this.id))
+		);
+
+
+
+		// The observable for the projects for this design
+		this.makProjects$ = this.ProjectEntityService.entities$
+		.pipe(
+			map(makProjects => makProjects.filter(makProject => makProject.designId == this.id))
+		);
+
+
+		// Listen to the images observable
+		this.designStore.subscribe(state => {
+
+				if (state.designs.designs.type)
+				{
+					let temp = JSON.parse(JSON.stringify(state.designs.designs));
+					delete temp.type
+					this.images = Object.values(temp);				
+				}else
+				{
+					let temp = JSON.parse(JSON.stringify(state.designs.designs));
+					this.images = Object.values(temp);
+				}
+
+				for (let a=0; a<this.images.length; a++)
+				{
+					if ( this.images[a]['itemId'] != this.id )
+					{
+						this.images.splice(a,1);
+						a=a-1;				
+					}
+				}
+		});
+
 
 
 	}
@@ -112,70 +181,8 @@ export class MarketplaceProductComponent implements OnInit {
 
 
 	//Create
-	addProject( projectObj ){
-		this.ProjectsService.createProject( projectObj, this.marketplaceItem );
-	}
-
-
-	// Read
-	subscribeToData()
-	{
-
-		// Subscribe to the design
-		this.DesignsService.designStatus
-		.pipe(takeUntil(this._unsubscribeAll))
-		.subscribe((design)=>
-		{ 
-			if ( design.category )
-			{
-				this.marketplaceItem = design;
-				this.formatData();
-				this.dataFlag=true;
-
-				// Trigger the function to see if the user has any signoff chances
-				if ( this.userData )
-				{
-					this.SignoffReqsService.getSignoffReqsForDesignUser( this.userData.uid, design.id );
-				}else
-				{
-					this.signoffList = [];
-				}
-
-			}
-
-		});
-
-
-
-		// Subscribe to the projects for this user and design
-		this.ProjectsService.projectUDStatus
-		.pipe(takeUntil(this._unsubscribeAll))
-		.subscribe((projects)=>
-		{ 
-			console.log('Projects');
-			console.log(projects);
-			if ( projects.length > 0 )
-			{
-				this.projectList = projects;
-				this.projectDataFlag = true;
-			}
-
-		});
-
-
-		// Subscribe to the signoff reqs for this user and design
-		this.SignoffReqsService.signoffReqDesignUserStatus
-		.pipe(takeUntil(this._unsubscribeAll))
-		.subscribe((signoffs)=>
-		{ 
-			console.log('signoffs');
-			console.log(signoffs);
-			this.signoffList = signoffs;
-
-		});
-
-
-
+	addProject( ){
+		this.ProjectsService.createProject( this.marketplaceItem, '' );
 	}
 
 
@@ -186,28 +193,9 @@ export class MarketplaceProductComponent implements OnInit {
 
 
 
-	// -----------------------------------------------------------------------------------------------------
-	//
-	// @ FUNCTION TO FORMAT THE DATA
-	//
-	// -----------------------------------------------------------------------------------------------------
-
-	formatData(){
-
-		this.marketplaceItem['imageUrls'] = [];
-		for (var a=0; a<this.marketplaceItem.marketplace.images.length; a++)
-		{
-			const ref = this.afStorage.ref(this.marketplaceItem.marketplace.images[a]['path']);
-			this.marketplaceItem['imageUrls'].push(ref.getDownloadURL());
-
-			if (this.marketplaceItem.marketplace.images[a]['mainImage'])
-			{
-				this.marketplaceItem['background'] = ref.getDownloadURL();
-			}
-		}
 
 
-	}
+
 
 
 

@@ -17,8 +17,9 @@ import { RouterModule, Routes, ActivatedRoute } from '@angular/router';
 
 
 // RXJS Items
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { concatMap, delay, filter, first, map, shareReplay, tap, withLatestFrom } from 'rxjs/operators';
 
 
 
@@ -34,6 +35,10 @@ import { VersionsService } from 'app/main/services/versions.service';
 import { AuthService } from 'app/main/services/auth.service';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 
+import { makDesignEntityService } from 'app/main/services/entity/makDesign-entity.service';
+import { makVersionEntityService } from 'app/main/services/entity/makVersion-entity.service';
+import { makProjectEntityService } from 'app/main/services/entity/makProject-entity.service';
+
 
 
 // Models
@@ -41,6 +46,15 @@ import { makDesign } from 'app/main/models/makDesign';
 import { makProject } from 'app/main/models/makProject';
 import { makVersion } from 'app/main/models/makVersion';
 
+
+
+// NGRX Items
+import { Store } from "@ngrx/store";
+import { AppState } from 'app/main/reducers';
+import { DesignState } from 'app/main/reducers';
+import { designImagesSave } from 'app/main/actions/design.actions';
+import { designImagesReducer } from 'app/main/reducers/index';
+import { DesignActions } from 'app/main/actions/designAction-types';
 
 
 
@@ -65,6 +79,9 @@ export class InvoiceModernComponent implements OnInit, OnDestroy
 	designData 		: makDesign;
 	projectData 	: makProject;
 	measurements 	: any = [];
+	makDesigns$ 	: Observable<makDesign[]>;
+	makProjects$ 	: Observable<makProject[]>;
+	makVersions$ 	: Observable<makVersion[]>;
 
 	private _unsubscribeAll: Subject<any>;
 
@@ -75,12 +92,16 @@ export class InvoiceModernComponent implements OnInit, OnDestroy
 	 * 
 	 */
 	constructor(
-		private InvoiceService 		: InvoiceService,
-		private DesignsService 		: DesignsService,
-		private ProjectsService 	: ProjectsService,
-		private VersionsService 	: VersionsService,
-		private route				: ActivatedRoute,
-		private AuthService 		: AuthService
+		private InvoiceService 			: InvoiceService,
+		private DesignsService 			: DesignsService,
+		private ProjectsService 		: ProjectsService,
+		private VersionsService 		: VersionsService,
+		private route					: ActivatedRoute,
+		private AuthService 			: AuthService,
+		private DesignEntityService 	: makDesignEntityService,
+		private ProjectEntityService 	: makProjectEntityService,
+		private VersionEntityService 	: makVersionEntityService,
+		private designStore 			: Store<DesignState>
 	)
 	{
 		this._unsubscribeAll = new Subject();
@@ -100,16 +121,34 @@ export class InvoiceModernComponent implements OnInit, OnDestroy
 		this.versionId = this.route.snapshot.paramMap.get('versionId');
 
 		console.log('Version ID is '+this.versionId);
+
+/*
 		if ( this.versionId === 'design' )
 		{
 			this.designId = this.route.snapshot.paramMap.get('designId');
 			this.viewType = 'design';
-		}
 
+			this.makDesigns$ = this.DesignEntityService.entities$
+			.pipe(
+				map(makDesigns => makDesigns.filter(makDesign => makDesign.id == this.designId))
+			);
+
+		}else
+		{
+			// The observable for the version data from the store
+			this.makVersions$ = this.VersionEntityService.entities$
+			.pipe(
+				map(makVersions => makVersions.filter(makVersion => makVersion.id == this.versionId))
+			);
+
+
+		}
+*/
 
 		this.subscribeToData();
 		this.VersionsService.getVersionById( this.versionId );
-		
+
+
 
 	}
 

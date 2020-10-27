@@ -22,6 +22,7 @@ import { signoffReq } from 'app/main/models/signoffReq';
 
 // Services
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { signoffReqDataService } from 'app/main/services/entity/signoffReq-data.service';
 
 
 @Injectable({providedIn: 'root'})
@@ -42,7 +43,8 @@ export class SignoffReqsService
 	 *
 	 */
 	constructor(
-		public afs 			: AngularFirestore,
+		public afs 						: AngularFirestore,
+		private signoffReqDataService 	: signoffReqDataService,
 	)
 	{
 		this.signoffReqStatus 				= new BehaviorSubject([]);
@@ -65,30 +67,7 @@ export class SignoffReqsService
 	// Create
 	createSignoffReq( userObj, design )
 	{
-
-		var userData = JSON.parse(localStorage.getItem('user'));
-
-		let signoffReqObj = {
-			'id' 			: '',
-			'dateCreated'	: Date.now(),
-			'creatorId'		: userData.uid,
-			'creatorEmail'	: userData.email,
-			'designId' 		: design.id,
-			'userId' 		: userObj.uid,
-			'userEmail'		: userObj.email,
-			'deleted' 		: false
-		}
-
-		var docRef = this.afs.collection('signoffReqs').add( signoffReqObj )
-    	.then((docRef) => {
-
-    		console.log('The item is ');
-    		console.log(docRef);
-
-			this.afs.collection('signoffReqs').doc(docRef.id).update({'id':docRef.id });
-		});
-
-
+		this.signoffReqDataService.createSignoffReq( userObj, design );
 	}
 
 
@@ -171,7 +150,8 @@ export class SignoffReqsService
 	// Update
 	updateSignoffReq ( signoffReqObj )
 	{
-		this.afs.collection('signoffReqs').doc( signoffReqObj.uid ).update( signoffReqObj );		
+		this.signoffReqDataService.updateSignoffReq( signoffReqObj );
+//		this.afs.collection('signoffReqs').doc( signoffReqObj.uid ).update( signoffReqObj );		
 	}
 
 
@@ -179,7 +159,8 @@ export class SignoffReqsService
 	// Delete
 	deleteSignoffReq ( signoffReqId )
 	{
-		this.afs.collection('signoffReqs').doc( signoffReqId ).update( { 'deleted' : true } );		
+		this.signoffReqDataService.deleteSignoffReq( signoffReqId );
+//		this.afs.collection('signoffReqs').doc( signoffReqId ).update( { 'deleted' : true } );		
 	}
 
 

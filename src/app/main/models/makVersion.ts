@@ -24,6 +24,7 @@ export interface makVersion {
 	tax 			: number;		// The amount of tax that must be paid on the item
 	totalCost 		: number; 		// The total cost of the item
 	deposit 		: number; 		// The amount that the customer must put down as a deposit
+	uploadedImage 	: any; 			// A placeholder for the logo image that is uploaded as part of the design
 	deleted 		: boolean;		// If true, then the item has been deleted
 
 }

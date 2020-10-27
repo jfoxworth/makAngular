@@ -1,13 +1,9 @@
-
 <!--
 
 	This is the marketplace page. It simply displays the designs with a status set to 1.
 	When the user clicks on an item, the product page is shown.
 
 -->
-
-{{marketplace | async}}
-
 <div id="marketplace" style="background-color:#FFF" 
 				class="page-layout simple">
 
@@ -51,20 +47,19 @@
 
 			<div class="marketplaceitems" 
 				 fxLayout="row wrap" 
-				 fxLayoutAlign="center" 
-				 *ngIf="dataFlag">
+				 fxLayoutAlign="center">
 				
-				<ng-container *ngFor="let si of marketplaceList">
+				<ng-container *ngFor="let si of (makDesigns$ | async)">
 
 					<div class="marketplaceitem" 
 						 [ngClass]="si.category" 
 						 fxFlex="100" 
 						 fxFlex.gt-sm="33" 
-						 *ngIf="(si.category==selectedType || selectedType=='All')">
+						 *ngIf="(si.category==selectedType || selectedType=='All') && si.status==1">
 
 
 						<div style="position:relative;top:10px; left:10px; height:0px">
-							<mat-icon *ngIf="si.userReview"
+							<mat-icon *ngIf="signoffs.includes(si.id)"
 									  style="cursor:pointer"
 		                          	  matTooltip="You have sign off permissions">
 								assignment_turned_in
@@ -75,16 +70,25 @@
 
 							<div class="marketplaceitem-content" 
 								 fxLayout="column" 
-								 fxFlex="1 1 auto">
+								 fxFlex="1 1 auto"
+								 *ngIf="images">
 
-								<div class="content" fxLayout="column" fxLayoutAlign="center right" fxFlex="1 1 auto"
-									 [style.background]="'url(' + (si.background | async) + ')'" >
+								<ng-container *ngFor="let image of images">
 
-									<div style="background-color:#ccc; width:60%; padding:5px 10px">	 
-										<div class="h1 siTitle">{{si.title}}</div>
-										<div class="description">{{si.company.name}}</div>
+									<div class="content" 
+										 fxLayout="column" 
+										 fxLayoutAlign="center right" 
+										 fxFlex="1 1 auto"
+										 *ngIf="(image.itemId==si.uid) && (image.mainImage)"
+										 [style.background]="'url(' + image.imageURL + ')'" >
+
+										<div style="background-color:#ccc; width:60%; padding:5px 10px">	 
+											<div class="h1 siTitle">{{si.title}}</div>
+											<div class="description">{{si.company.name}}</div>
+										</div>
 									</div>
-								</div>
+
+								</ng-container>
 
 							</div>
 
@@ -93,10 +97,6 @@
 					</div>
 
 				</ng-container>
-
-				<div class="no-marketplaceitems" *ngIf="marketplaceList.length === 0">
-					No marketplace items found!
-				</div>
 
 			</div>
 

@@ -33,6 +33,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 
+
+// Models
+import { UserData } from 'app/main/models/userData';
+
+
 // Services
 import { UserService } from 'app/main/services/user-service.service';
 import { AuthService } from 'app/main/services/auth.service';
@@ -43,12 +48,15 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firest
 
 
 
-export interface UserData {
+// NgRX
+import {select, Store} from '@ngrx/store';
+import { isLoggedIn, isLoggedOut } from 'app/main/selectors/auth.selectors';
+import { AppState } from 'app/main/reducers';
+import { AuthState } from 'app/main/reducers';
+import { login, logout } from 'app/main/actions/auth.actions';
 
-	userData:any;
-	userInfo:any;
 
-}
+
 
 //import { locale as english } from './i18n/en';
 //import { locale as turkish } from './i18n/tr';
@@ -78,7 +86,8 @@ export class ProfileComponent implements OnInit
 		private UserService 					: UserService,
 		private AuthService 					: AuthService,
         private SnackBar 						: MatSnackBar,
-        private afStorage 						: AngularFireStorage
+        private afStorage 						: AngularFireStorage,
+		private store 							: Store<AuthState>,
 	)
 	{
 
@@ -88,8 +97,9 @@ export class ProfileComponent implements OnInit
 	}
 
 
-	userData 		: any = {};				// Info for the logged in user				
-	userInfo 		: any = {};				// Info for the user whose page is being viewed
+	userData 		: UserData;				// Info for the logged in user				
+	userInfo 		: UserData;				// Info for the user whose page is being viewed
+	tempData 		: UserData;
 	canEdit			: boolean = false;		// Can the viewer edit the profile
 	displayName 	: string;
 	userId 			: string;
@@ -111,16 +121,38 @@ export class ProfileComponent implements OnInit
 	ngOnInit() {
 
 
-		this.userData = JSON.parse(localStorage.getItem('userData'));
+        // See if user is logged in from previous session
+        // or is logged in now.
+		this.tempData = JSON.parse(localStorage.getItem('UserData'));
+		
+		this.store.subscribe(state => {
+
+			this.tempData = JSON.parse(localStorage.getItem('UserData'));
+
+			if ( ( this.tempData ) && ( !state.UserData ) )
+			{
+				//this.store.dispatch(login({UserData : this.tempData}));
+				this.profileImage = this.UserService.getProfileImage( this.tempData );
+				this.userData = this.tempData;
+			}
+
+			if ( state.UserData )
+			{
+				this.tempData = state.UserData;
+				this.profileImage = this.UserService.getProfileImage( this.tempData );				
+				this.userData = this.tempData;
+			}
+
+		});
+
+
 		this.userId = this.route.snapshot.paramMap.get('id');
 
 		// No user defined by URL or by login
 		if ( ( (this.userId == '') || ( this.userId === null ) || ( this.userId === undefined ) ) &&
-		   ( ( this.userData === null ) || ( this.userData === undefined ) || ( this.userData == 'undefined' ) ) )
+		   ( !this.userData ) ) 
 		{
 
-			this.userInfo = {};
-			this.userData = {};
 			this.displayStyle = "NoUser";
 
 
@@ -131,7 +163,7 @@ export class ProfileComponent implements OnInit
 
 
 		// Looking at user defined by the URL, but the user is logged in
-		}else if ( ( this.userData !== null ) && ( this.userData !== undefined ) && ( this.userData !== {} ) )
+		}else if ( this.userData )
 		{
 
 			this.userInfo = this.userData;

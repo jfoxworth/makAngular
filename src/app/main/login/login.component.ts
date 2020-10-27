@@ -73,4 +73,20 @@ export class LoginComponent implements OnInit
             password: ['', Validators.required]
         });
     }
+
+
+
+
+
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Functions
+    // -----------------------------------------------------------------------------------------------------
+
+
+    login( email, password )
+    {
+        this.authService.SignIn( this.loginForm.get('email').value, this.loginForm.get('password').value )
+    }
+
 }

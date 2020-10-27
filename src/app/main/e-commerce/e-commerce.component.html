@@ -26,14 +26,17 @@
 -->
 
 
-<div id="projects" style="background-color:#FFF" class="page-layout simple inner-scroll">
+<div id="projects" style="background-color:#FFF" class="page-layout simple">
+
+
+
 
 	<!-- HEADER -->
 	<div class="header accent" fxLayout="row"></div>
 	<!-- / HEADER -->
 
 	<!-- CONTENT -->
-	<div class="content">
+	<div class="content" *ngIf="(makProjects$ | async)">
 
 
 		<!-- CENTER -->
@@ -50,8 +53,7 @@
 
 						<div fxFlex="80%" 
 							 fxLayout="column"
-							 style="margin:0px 10%"
-							 *ngIf="versionList && projectList">
+							 style="margin:0px 10%">
 
 							<h1 class="mt-32 mb-20">Select a Project 
 
@@ -75,104 +77,110 @@
 							<mat-divider></mat-divider>
 
 
-							<div *ngIf="projectList.length==0">
+							<div *ngIf="(makProjects$ | async).length==0">
 								You currently have no designs. Go to the marketplace and select a design to add to your list of projects.
 							</div>
 
 
-								<div class="cards"
-									 *ngIf="displayType=='cards'">
+							<div class="cards"
+								 *ngIf="displayType=='cards'">
 
-						           <!-- CARD 2 -->
-						            <div class="card"
-						            	 *ngFor="let project of projectList"
-						            	 [ngClass]="{'currentItem' : project==currentProject}"
-						            	 (click)="setCurrentProject( project )">
+					           <!-- CARD 2 -->
+					            <div class="card"
+					            	 *ngFor="let project of (makProjects$ | async)"
+					            	 [ngClass]="{'currentItem' : project==currentProject}"
+					            	 (click)="setCurrentProject( project )">
 
-						                <!-- PREVIEW -->
-						                <div class="card-preview">
+					                <!-- PREVIEW -->
+					                <div class="card-preview">
 
-						                    <div class="fuse-card">
+					                    <div class="fuse-card">
 
-						                        <div class="p-16">
-						                            <div class="h1">{{project.name}}</div>
-						                            <div class="h5 secondary-text">{{ project.dateCreated | date:'short' }}</div>
-						                        </div>
+					                        <div class="p-16">
+					                            <div class="h1">{{project.name}}</div>
+					                            <div class="h5 secondary-text">{{ project.dateCreated | date:'short' }}</div>
+					                        </div>
 
-						                        <div class="p-16 pt-0 line-height-1.75">
-						                        	<span style="font-weight:bold; margin-right:10px;">Type : {{project.designType}}</span>
-						                            {{ project.description }}
-						                        </div>
+					                        <div class="p-16 pt-0 line-height-1.75">
+					                        	<span style="font-weight:bold; margin-right:10px;">Type : {{project.designType}}</span>
+					                            {{ project.description }}
+					                        </div>
 
-						                        <div class="p-8 pt-0" fxLayout="row" fxLayoutAlign="start center">
-													
-													<mat-icon style="cursor:pointer" 
-															  matTooltip="Open in design studio"
-															  [routerLink]="['/designStudio/project/'+project.uid]">
-														color_lens
-													</mat-icon>
-													<mat-icon style="cursor:pointer" 
-															  matTooltip="View Quotes for this project"
-															  [routerLink]="['/invoice/'+versionList[versionList.length-1]['uid']]">
-														attach_money
-													</mat-icon>
+					                        <div class="p-8 pt-0" fxLayout="row" fxLayoutAlign="start center">
+												
+												<mat-icon style="cursor:pointer" 
+														  matTooltip="Open in design studio"
+														  [routerLink]="['/designStudio/project/'+project.uid]">
+													color_lens
+												</mat-icon>
 
-						                        </div>
+												<mat-icon style="cursor:pointer" 
+														  matTooltip="Delete this project"
+														  (click)="deleteProject(project.id)">
+													cancel
+												</mat-icon>
 
-						                    </div>
+					                        </div>
 
-						                </div>
-						                <!-- / PREVIEW -->
+					                    </div>
 
-						            </div>
-						            <!-- / CARD 2 -->
+					                </div>
+					                <!-- / PREVIEW -->
 
-								</div>
-							
+					            </div>
+					            <!-- / CARD 2 -->
 
-							<table class="displayTable" *ngIf="displayType=='list'">
+							</div>
+						
+							<div inner-scroll>
 
-								<tr	(click)="setCurrentProject( project ) "
-								   target="_blank"
-								   class="projectRow"
-								   [ngClass]="{'currentItem' : project==currentProject}"
-								   *ngFor="let project of projectList">
-
-									<td class="mat-subheading-2 w-100">
-										<mat-icon style="cursor:pointer" 
-												  matTooltip="Open in design studio"
-												  [routerLink]="['/designStudio/project/'+project.uid]">
-											color_lens
-										</mat-icon>
-
-										<mat-icon style="cursor:pointer" 
-												  matTooltip="View Quotes for this project"
-												  [routerLink]="['/invoice/'+versionList[versionList.length-1]['uid']]">
-											attach_money
-										</mat-icon>
-									</td>
-
-									<td class="mat-subheading-2 w-200" >
-											{{ project.name }} 
-									</td>
+								<table class="displayTable" *ngIf="displayType=='list'">
 
 
-									<td class="mat-subheading-2 w-200">
-											{{ project.dateCreated | date:'short' }} 
-									</td>
+									<tr	(click)="setCurrentProject( project ) "
+									   target="_blank"
+									   class="projectRow"
+									   [ngClass]="{'currentItem' : project==currentProject}"
+									   *ngFor="let project of (makProjects$ | async)">
+
+										<td class="mat-subheading-2 w-100 mr-12">
+											<mat-icon style="cursor:pointer" 
+													  matTooltip="Open in design studio"
+													  [routerLink]="['/designStudio/project/'+project.uid]">
+												color_lens
+											</mat-icon>
+
+											<mat-icon style="cursor:pointer" 
+													  matTooltip="Delete this project"
+													  (click)="deleteProject(project.id)">
+												cancel
+											</mat-icon>
+
+										</td>
+
+										<td class="mat-subheading-2 w-200" >
+												{{ project.name }} 
+										</td>
 
 
-									<td class="mat-body-1" > 
-										
-										<span style="font-weight:bold; margin-right:10px;">Type : {{project.designType}}</span> 
-										<span style="font-weight:bold; margin-right:10px;">Versions : {{project.versions.length}}</span>
-										{{ project.description }}
-									</td>
-
-								</tr>
+										<td class="mat-subheading-2 w-200">
+												{{ project.dateCreated | date:'short' }} 
+										</td>
 
 
-							</table>
+										<td class="mat-body-1" > 
+											
+											<span style="font-weight:bold; margin-right:10px;">Type : {{project.designType}}</span> 
+											<span style="font-weight:bold; margin-right:10px;">Versions : {{project.versions.length}}</span>
+											{{ project.description }}
+										</td>
+
+									</tr>
+
+
+								</table>
+
+							</div>
 
 						</div>
 
@@ -182,11 +190,12 @@
 					<mat-tab id="projectDataTab" label="Project Data" flex="100%">
 
 						<div flex="100%" 
-							 layout="column" 
+							 fxLayout="column" 
 							 style="width:100%"
-							 *ngIf="projectDataFlag">
+							 *ngIf="currentProject">
 
-							<h2 class="mt-32 mb-20">
+							<h2 class="mt-32 mb-20"
+								fxFlex="100%">
 								Project Data -					 
 									<mat-icon style="cursor:pointer" 
 											  matTooltip="Open in design studio"
@@ -198,9 +207,9 @@
 					  
 
 							<!-- TOP ROW OF PROJECT DATA -->
-							<div fxLayout="row" fxLayoutAlign="center" flex="100%">
+							<div fxLayoutAlign="center" fxFlex="80%" fxOffset="10%">
 
-								<div fxFlex="50%"fxLayout="column" class="text-center">
+								<div fxFlex="100%" fxLayout="column" class="text-center">
 									<mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
 										<mat-label>Project Name</mat-label>
 										<input matInput
@@ -247,11 +256,41 @@
 								</div>
 
 
-								<div fxFlex="50" fxLayout="column" fxLayoutAlign="center center">
+								<div fxLayout="column" fxLayoutAlign="center center">
 
+									<!--
 									<div fxFlex="80" style="margin:0px 10%">
 										<img [src]="(designImageUrl | async)">
 									</div>
+									-->
+
+
+									<mat-carousel
+										style="height:500px;"
+										timings="250ms ease-in"
+										[autoplay]="true"
+										interval="5000"
+										color="accent"
+										maxWidth="auto"
+										maxHeight="500px"
+										proportion="100"
+										[loop]="true"
+										[hideArrows]="false"
+										[hideIndicators]="false"
+										[useKeyboard]="true"
+										[useMouseWheel]="false"
+										orientation="ltr"
+										*ngIf="currentProject.id">
+
+										<mat-carousel-slide
+											#matCarouselSlide
+											*ngFor="let slide of images; let i = index"
+											[image]="slide.imageURL"
+											overlayColor="#00000040"
+											[hideOverlay]="false">		
+										</mat-carousel-slide>
+									
+									</mat-carousel>
 
 
 									<div fxLayout="row" 
@@ -311,6 +350,7 @@
 							</div>
 
 
+
 							<!-- Row showing the version list -->
 							<div fxLayout="row" fxLayoutAlign="center" flex="100%">
 
@@ -322,26 +362,31 @@
 											<th></th>
 										</tr>
 									</thead>
-									<tbody>
-										<tr *ngFor="let version of versionList; index as j"
-											class="projectRow"
-										    [ngClass]="{'currentItem' : version==currentVersion}"
-											(click)="onVersionSelected( j )">
-											<td>{{j+1}} - {{version.name}}</td>
-											<td>
-												<mat-icon style="cursor:pointer" 
-														  matTooltip="View Quotes for this version"
-														  [routerLink]="['/invoice/'+version['uid']]">
-													attach_money
-												</mat-icon>
-												<mat-icon style="cursor:pointer" 
-														  matTooltip="Make copy as latest version"
-														  (click)="createNewVersion( j )">
-													add_circle
-												</mat-icon>
-											</td>
-										</tr>
-									</tbody>
+	
+									<ng-container *ngFor="let version of (makVersions$ | async); index as j">
+	
+										<tbody *ngIf="version.projectId == currentProject.id">
+											<tr class="projectRow"
+											    [ngClass]="{'currentItem' : version==currentVersion}"
+												(click)="currentVersion = version">
+												<td>{{version.dateCreated | date}} - {{version.name}}</td>
+												<td>
+													<mat-icon style="cursor:pointer" 
+															  matTooltip="View Quotes for this version"
+															  [routerLink]="['/invoice/'+version['uid']]">
+														attach_money
+													</mat-icon>
+													<mat-icon style="cursor:pointer" 
+															  matTooltip="Make copy as latest version"
+															  (click)="createNewVersion( j )">
+														add_circle
+													</mat-icon>
+												</td>
+											</tr>
+										</tbody>
+
+									</ng-container>
+
 								</table>
 
 
@@ -352,7 +397,7 @@
 							<div fxLayout="row" 
 								 fxLayoutAlign="center" 
 								 flex="100%"
-								 *ngIf="versionDataFlag">
+								 *ngIf="currentVersion">
 
 								<!-- VERSIONS DATA -->
 								<div fxLayout="column" 
@@ -441,7 +486,8 @@
 
 									<table mat-table [dataSource]="currentVersion.measurements" 
 										   class="mat-elevation-z8"
-										   style="box-shadow:none;">
+										   style="box-shadow:none;"
+										   *ngIf="currentVersion">
 
 									  <ng-container matColumnDef="name">
 										<th mat-header-cell *matHeaderCellDef> Name </th>

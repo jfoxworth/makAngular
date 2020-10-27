@@ -54,7 +54,7 @@
 						class="submit-button" 
 						aria-label="LOG IN"
 						[disabled]="loginForm.invalid"
-						(click)="authService.SignIn( loginForm.get('email').value, loginForm.get('password').value )">
+						(click)="login( loginForm.get('email').value, loginForm.get('password').value )">
 					LOGIN
 				</button>
 

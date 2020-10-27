@@ -88,7 +88,7 @@ import { Ng5SliderModule } from 'ng5-slider';
 // NGRX Items
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { metaReducers, reducers } from './reducers';
+import { metaReducers, reducers } from 'app/main/reducers';
 import { EntityDataModule } from '@ngrx/data';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { RouterState, StoreRouterConnectingModule } from '@ngrx/router-store';

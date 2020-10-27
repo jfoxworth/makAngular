@@ -9,6 +9,10 @@ import { FuseSearchBarModule, FuseShortcutsModule } from '@fuse/components';
 import { FuseSharedModule } from '@fuse/shared.module';
 
 import { ToolbarComponent } from 'app/layout/components/toolbar/toolbar.component';
+import { StoreModule } from '@ngrx/store';
+import { authReducer } from 'app/main/reducers';
+
+
 
 @NgModule({
     declarations: [
@@ -23,7 +27,8 @@ import { ToolbarComponent } from 'app/layout/components/toolbar/toolbar.componen
 
         FuseSharedModule,
         FuseSearchBarModule,
-        FuseShortcutsModule
+        FuseShortcutsModule,
+        StoreModule.forFeature('auth', authReducer)
     ],
     exports     : [
         ToolbarComponent

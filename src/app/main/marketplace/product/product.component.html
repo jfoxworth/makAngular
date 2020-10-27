@@ -12,7 +12,7 @@
 	<ng-template #Loading><h1>Loading</h1></ng-template>
 
 	<!-- CONTENT -->
-	<div class="content p-24" *ngIf="dataFlag else Loading">
+	<div class="content p-24" *ngIf="(makDesign$ | async)">
 
 		<div style="width:90%; margin:0px 5%;">
 
@@ -25,23 +25,23 @@
 					 style="width:40%; margin:0px 5%">
 
 
-					<div class="itemTypeText">{{marketplaceItem.category}}</div>
+					<div class="itemTypeText">{{(makDesign$ | async).category}}</div>
 
 
-					<div class="mat-display-2 itemTypeTitle">{{marketplaceItem.title}}</div>
+					<div class="mat-display-2 itemTypeTitle">{{(makDesign$ | async).title}}</div>
 
 
-					<div class="mat-title itemDescription">{{marketplaceItem.marketplace.description}}</div>
+					<div class="mat-title itemDescription">{{(makDesign$ | async).marketplace.description}}</div>
 
 
 					<div class="itemCompanySection" fxLayout="row">
 
-						<img class="itemCompanyLogo" [src]="marketplaceItem.company.logo">
+						<img class="itemCompanyLogo" [src]="(makDesign$ | async).company.logo">
 
 						<div class="itemCompanyDetails" fxLayout="column">
 
-							<div class="mat-title itemCompanyName">{{marketplaceItem.company.name}}</div>
-							<div class="mat-subheading-1 itemCompanyLocation">{{marketplaceItem.company.location}}</div>
+							<div class="mat-title itemCompanyName">{{(makDesign$ | async).company.name}}</div>
+							<div class="mat-subheading-1 itemCompanyLocation">{{(makDesign$ | async).company.location}}</div>
 
 						</div>
 
@@ -51,21 +51,15 @@
 					<mat-divider></mat-divider>
 
 					<div fxFlex="100"
-						 fxAlign="center center"
-						 *ngIf="projectDataFlag">
+						 fxAlign="center center">
 
-						<div *ngIf="projectList.length==0">
-							<h2>You have no projects using this design</h2>
-						</div>
-
-
-						<div *ngIf="projectList.length>0"
+						<div *ngIf="(makProjects$ | async)"
 							 fxAlign="center center"
 							 fxFlex="100">
 
-							<h2>You have {{projectList.length}} projects using this design</h2>
+							<h2>You have {{(makProjects$ | async).length}} projects using this design</h2>
 
-							<div *ngFor="let pi of projectList"
+							<div *ngFor="let pi of (makProjects$ | async)"
 								 fxLayout="row"
 								 style="cursor:pointer"
 								 [routerLink]="['/designStudio/project/'+pi.uid]">
@@ -91,7 +85,7 @@
 					<button mat-button 
 							class="primary mt-40"
 							id="addProjectButton"
-							(click)="addProject(marketplaceItem)"
+							(click)="addProject()"
 							*ngIf="userData !== undefined">
 						ADD AS NEW PROJECT
 					</button>
@@ -101,7 +95,7 @@
 							class="mt-40 primary"
 							color=""
 							id="viewDesignStudioButton"
-							[routerLink]="'/designStudio/design/'+marketplaceItem.uid">
+							[routerLink]="'/designStudio/design/'+(makDesign$ | async).uid">
 						VIEW DESIGN IN STUDIO
 					</button>
 
@@ -110,7 +104,7 @@
 							class="accent mt-40"
 							color=""
 							id="viewDesignSignoffButton"
-							[routerLink]="'/designSignoff/'+marketplaceItem.uid">
+							[routerLink]="'/designSignoff/'+(makDesign$ | async).uid">
 						VIEW / ADD SIGNOFFS
 					</button>
 
@@ -124,17 +118,48 @@
 				<div fxLayout="column" 
 					 class="mt-32"
 					 flex="45%"
-					 style="width:40%; margin:0px 5%">
+					 style="width:40%; margin:0px 5%; height:500px;"
+					 *ngIf="images">
 
 
+
+
+					<mat-carousel
+						style="height:500px;"
+						timings="250ms ease-in"
+						[autoplay]="true"
+						interval="5000"
+						color="accent"
+						maxWidth="auto"
+						maxHeight="500px"
+						proportion="100"
+						[loop]="true"
+						[hideArrows]="false"
+						[hideIndicators]="false"
+						[useKeyboard]="true"
+						[useMouseWheel]="false"
+						orientation="ltr">
+
+						<mat-carousel-slide
+							#matCarouselSlide
+							*ngFor="let slide of images; let i = index"
+							[image]="slide.imageURL"
+							overlayColor="#00000040"
+							[hideOverlay]="false">		
+						</mat-carousel-slide>
+					
+					</mat-carousel>
+
+<!--
 					<mat-grid-list cols="2" rowHeight="2:1">
-						<mat-grid-tile *ngFor="let thisImage of marketplaceItem.imageUrls; index as i">
+						<mat-grid-tile *ngFor="let thisImage of (makDesign$ | async).imageUrls; index as i">
 							<img [src]="(thisImage | async)" width="300">
 						</mat-grid-tile>
 					</mat-grid-list>
+-->
 
 
-					<!-- <carousel [thisitem]="marketplaceItem"></carousel> -->
+					<!-- <carousel [thisitem]="makDesign$"></carousel> -->
 
 				</div>
 				<!--/  IMAGES -->

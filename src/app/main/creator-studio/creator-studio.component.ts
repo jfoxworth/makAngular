@@ -21,6 +21,7 @@ import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/internal/operators';
+import { concatMap, delay, filter, first, map, mergeMap, shareReplay, tap, withLatestFrom } from 'rxjs/operators';
 
 
 // Child Dialogs
@@ -49,6 +50,9 @@ import { ProjectsService } from 'app/main/services/projects.service';
 import { DesignsService } from 'app/main/services/designs.service';
 import { UserService } from 'app/main/services/user-service.service';
 import { SignoffReqsService } from 'app/main/services/signoff-reqs.service';
+import { makDesignEntityService } from 'app/main/services/entity/makDesign-entity.service';
+import { signoffReqEntityService } from 'app/main/services/entity/signoffReq-entity.service';
+import { makProjectEntityService } from 'app/main/services/entity/makProject-entity.service';
 
 
 
@@ -104,6 +108,9 @@ export class CreatorStudioComponent implements OnInit {
 	potentialUser 		: any = {};
 	testUser 			: string;
 	reqList 			: signoffReq[];
+	makDesigns$ 		: Observable<makDesign[]>;
+	signoffReqs$ 		: Observable<signoffReq[]>;
+	signoffs 			: string[];
 
 	// Variables needed for the BG image
 	carouselUrls : Array<any> = [];
@@ -123,6 +130,8 @@ export class CreatorStudioComponent implements OnInit {
 					private AuthService  			: AuthService,
 					private SnackBar 				: MatSnackBar,
 					private afStorage 				: AngularFireStorage,
+					private DesignEntityService 	: makDesignEntityService,
+					private SignoffEntityService 	: signoffReqEntityService, 
 					public vcRef 					: ViewContainerRef ) 
 	{
 		this._unsubscribeAll = new Subject();
@@ -149,10 +158,39 @@ export class CreatorStudioComponent implements OnInit {
 
 
 		// Pull the list of existing designs for this user	
-		this.DesignsService.getDesignsForUser( this.userData.uid );
+		//this.DesignsService.getDesignsForUser( this.userData.uid );
 
 		// Subscribe to that data
-		this.subscribeToData();
+		//this.subscribeToData();
+
+
+		// The observable for the signoff reqs from the store
+		this.signoffReqs$ = this.SignoffEntityService.entities$
+			.pipe(
+				tap((signoffReqs) => {
+					// This needs to call a function that gets the images and stores their addresses
+					this.signoffs = [];
+					for (let a=0; a<signoffReqs.length; a++)
+					{
+						this.signoffs.push(signoffReqs[a]['designId']);
+					}
+				})
+			)
+		this.signoffReqs$.subscribe();
+
+
+
+		// The observable for the design data from the store
+		this.makDesigns$ = this.DesignEntityService.entities$
+		.pipe(
+			map(makDesigns => makDesigns.filter(makDesign => makDesign.creatorId == this.userData.uid))
+		);
+		this.makDesigns$.subscribe((makDesigns)=>{
+			if (this.currentDesign===undefined)
+			{
+				this.currentDesign = JSON.parse(JSON.stringify(makDesigns[0]));
+			}
+		})
 
 	}
 
@@ -163,6 +201,26 @@ export class CreatorStudioComponent implements OnInit {
 	// -----------------------------------------------------------------------------------------------------
 	// @ Functions
 	// -----------------------------------------------------------------------------------------------------
+
+
+
+	// -----------------------------------------------------------------------------------------------------
+	//
+	// @ DRAG AND DROP FUNCTIONS
+	//
+	// -----------------------------------------------------------------------------------------------------
+
+	/**
+	 * When a parameter is dropped into a list
+	 */
+	setCurrent(design) {
+		console.log('the design is ...');
+		console.log(design);
+		this.currentDesign = JSON.parse(JSON.stringify(design));
+		console.log('the current design is ...');
+		console.log(this.currentDesign);
+		//this.formatDesignData()
+	}
 
 
 
