@@ -1,0 +1,81 @@
+<div layout="column" 
+flex="100%" 
+style="width:100%"
+*ngIf="currentDesign!==undefined">
+
+    <h2 class="mt-32 mb-20">Pricing Data</h2>
+
+    <div fxLayout="row" 
+        fxLayoutAlign="center center"
+        *ngIf="changesExist" 
+        flex="100%">
+
+    <button mat-raised-button 
+            color="primary"
+            (click)="saveDesignChanges(); changesExist=false;"
+            style="margin:10px 35%; width:30%">
+        Save Changes
+    </button>
+
+    </div>
+
+
+    <div fxLayout="column" 
+        fxLayoutAlign="center" 
+        flex="100%">
+
+    <div class="mat-subheading-1" style="color:#898989">The first box below holds the price that will be shown to the user in the marketplace before any alterations are made. It is an estimation of what the typical customer would pay if they altered little.</div>
+
+    <!-- INITIAL PRICE -->
+    <mat-form-field appearance="outline" 
+                    floatLabel="always" 
+                    class="w-40-p mt-20 mb-32"
+                    style="margin-left:30%">
+        <mat-label>Initial Price</mat-label>
+        <input matInput placeholder="Initial Price"
+                name="price"
+                #price="ngModel"
+                [(ngModel)]="currentDesign['initialPrice']"
+                (blur)="changesExist=true"
+                required>
+    </mat-form-field>
+
+    <div [hidden]="price.valid || price.pristine || !price.errors?.minlength"
+            class="alert alert-danger">
+            The price is required
+    </div>
+
+
+    <div class="mat-subheading-1" style="color:#898989">The box below lets the designer establish how the price for each item is calculated. Typically, this is multiplying a length times a width times a cost per square inch or foot or multiplying a length times price per foot or inch.</div>
+
+    <div class="mat-subheading-1" style="color:#898989">Type the formula to calculate the cost in the box. Use the names of the desired parameters. As you type, the recognized parameters, operators, and numbers will appear below in grey, green, and blue. Unrecognized elements will appear in red. Formulas with unrecognized elements cannot be used to calculate price.</div>
+
+
+    <!-- PRICE FORMULA -->
+    <mat-form-field appearance="outline" floatLabel="always" 
+                    class="w-80-p mt-20 mb-32"
+                    style="margin-left:10%">
+        <mat-label>Price Formula</mat-label>
+        <input matInput placeholder="Formula for price"
+                name="priceFormula"
+                [(ngModel)]="currentDesign['priceFormula']"
+                (keyup)="checkPriceFormula()"
+                (blur)="changesExist=true"
+                required>
+    </mat-form-field>
+
+
+    <!-- PRICE COMPONENTS -->
+    <div fxLayout="row"
+            class="w-80-p"
+            style="margin:0px 10%">
+        <div *ngFor="let pi of currentDesign.priceArray; let i = index">
+            <div [ngClass]="pi.status">{{pi.text}}</div>
+        </div>
+    </div>
+
+    <!-- {{this.currentDesign.priceArray | json}} -->
+
+    </div>
+
+</div>

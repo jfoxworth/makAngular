@@ -86,7 +86,7 @@
 							class="primary mt-40"
 							id="addProjectButton"
 							(click)="addProject()"
-							*ngIf="userData !== undefined">
+							*ngIf="userData">
 						ADD AS NEW PROJECT
 					</button>
  
@@ -150,16 +150,6 @@
 					
 					</mat-carousel>
 
-<!--
-					<mat-grid-list cols="2" rowHeight="2:1">
-						<mat-grid-tile *ngFor="let thisImage of (makDesign$ | async).imageUrls; index as i">
-							<img [src]="(thisImage | async)" width="300">
-						</mat-grid-tile>
-					</mat-grid-list>
--->
-
-
-					<!-- <carousel [thisitem]="makDesign$"></carousel> -->
 
 				</div>
 				<!--/  IMAGES -->

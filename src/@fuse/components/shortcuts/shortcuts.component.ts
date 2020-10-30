@@ -139,10 +139,10 @@ export class FuseShortcutsComponent implements OnInit, AfterViewInit, OnDestroy
 				url  : '/designStudio'
 			},
 			{
-				title: 'Design Store',
+				title: 'The Marketplace',
 				type : 'item',
 				icon : 'store',
-				url  : '/store'
+				url  : '/marketplace'
 			}
 		];
 

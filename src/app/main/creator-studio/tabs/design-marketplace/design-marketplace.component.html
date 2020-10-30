@@ -1,0 +1,114 @@
+<div layout="column" 
+flex="100%" 
+style="width:100%"
+*ngIf="currentDesign!==undefined">
+
+    <!-- TOP ROW SHOWING MAIN STORE PAGE DEMO -->
+    <h2 class="mt-32 mb-20">Marketplace Demonstration</h2>
+
+    <div fxLayout="row" fxLayoutAlign="center" flex="100%">
+
+    <div fxFlex="33%" fxLayout="column" class="text-center ml-25-p">
+
+        <div class="mat-subheading-2 pr-50" style="color:#898989">The column to the right shows how the product will appear on the main store page. It displays the background image as well as the title and company name. The section below shows the detailed view that a user will see if they click on the product on the store page.</div>
+    </div>
+
+
+    <div fxFlex="17%"></div>
+
+    <div fxFlex="50%" fxLayout="column" class="text-center ml-25-p" fxLayoutAlign="center right">
+
+
+        <div class="storeitem" fxFlex="100">
+
+            <div class="storeitem-content" 
+                    fxLayout="column" 
+                    fxFlex="1 1 auto">
+
+                
+
+                <div *ngFor="let thisImage of carouselUrls; index as j">
+
+                    <div *ngIf="currentDesign.marketplace.images[j]['mainImage']==true"
+                            class="content mainImage" 
+                            fxLayout="column" 
+                            fxLayoutAlign="center right" 
+                            [ngStyle]="{'width':'300px', 'height':'250px', 'background-image':'url(' + (thisImage | async) + ')'}" >
+
+                        <div style="background-color:#ccc; width:60%; padding:5px 10px">	 
+                            <div class="h1">{{currentDesign.title}}</div>
+                            <div class="description">{{currentDesign.company.name}}</div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    </div>
+
+
+
+
+
+    <mat-divider class="mt-52 mb-52"></mat-divider>
+
+    <!-- TOP ROW SHOWING MAIN STORE PAGE DEMO -->
+    <h2 class="mt-32 mb-20">Marketplace Demonstration</h2>
+
+    <div fxLayout="row" fxLayoutAlign="center" flex="100%">
+
+
+    <!-- STORE DATA -->
+    <div fxLayout="column" 
+        class="mt-32"
+        flex="45"
+        style="width:40%; margin:0px 5%">
+
+
+    <div class="itemTypeText">{{currentDesign.category}}</div>
+
+
+    <div class="mat-display-2 itemTypeTitle">{{currentDesign.title}}</div>
+
+
+    <div class="mat-title itemDescription">{{currentDesign.marketplace.description}}</div>
+
+
+    <div class="itemCompanySection" fxLayout="row">
+
+        <img class="itemCompanyLogo" [src]="currentDesign.company.logo">
+
+        <div class="itemCompanyDetails" fxLayout="column">
+
+            <div class="mat-title itemCompanyName">{{currentDesign.company.name}}</div>
+            <div class="mat-subheading-1 itemCompanyLocation">{{currentDesign.company.location}}</div>
+
+        </div>
+
+    </div>
+
+    </div>
+    <!--/  STORE DATA -->
+
+
+
+    <!-- Images -->
+    <div fxFlex="45" fxLayout="column">
+
+        <div *ngFor="let thisImage of carouselUrls; index as i">
+            <img [src]="thisImage | async" width="100%">
+    </div>
+    
+    </div>
+    <!-- /Images-->
+
+
+    </div>
+
+</div>

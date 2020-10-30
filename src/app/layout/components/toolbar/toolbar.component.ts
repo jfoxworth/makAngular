@@ -105,13 +105,17 @@ export class ToolbarComponent implements OnInit, OnDestroy
 					this.store.dispatch(writeUser({UserData : this.tempData}));
 					this.profileImage = this.UserService.getProfileImage( this.tempData );				
 					this.userData = this.tempData;
-				}
-
-				if ( state.UserData )
+				
+				}else if ( state.UserData )
 				{
 					this.profileImage = this.UserService.getProfileImage( state.UserData );				
 					this.userData = state.UserData;
+				
+				}else
+				{
+					this.profileImage = this.UserService.getProfileImage( {} );				
 				}
+
 
 		})
 

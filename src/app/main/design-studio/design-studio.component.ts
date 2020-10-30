@@ -197,7 +197,6 @@ export class DesignStudioComponent  {
 			if ( JSON.parse(localStorage.getItem('makDesign')) )
 			{
 				this.designData = JSON.parse(localStorage.getItem('makDesign'));
-//				this.projectData = JSON.parse(localStorage.getItem('makProject'));
 				this.versionData = JSON.parse(localStorage.getItem('makVersion'));
 				this.versionList.push(this.versionData);
 			
@@ -392,13 +391,6 @@ export class DesignStudioComponent  {
 		this.versionList.push(this.versionData);
 		this.initializeAll();
 
-		// Load model from shapediver and initialize model and menu
-		/*
-		this.designData = this.FirebaseService.getDocById( 'designs', this.designId ).then(response=> {
-			this.designData=response.data();
-			this.initializeAll();
-		});
-		*/
 
 	}
 
@@ -415,6 +407,22 @@ export class DesignStudioComponent  {
 	initializeMenu() {
 
 		console.log('Initializing the menu for type : '+this.studioType);
+
+
+		if ( this.studioType == 'studio' )
+		{
+
+			// First, remove the cost and design options from the parameter menu
+			for (let a=this.designData.parameterMenus.length-1; a>=0; a--)
+			{
+				if ( ( this.designData.parameterMenus[a].name=="makStudio" ) || 
+					 ( this.designData.parameterMenus[a].name=="cost" ))
+				{
+					this.designData.parameterMenus.splice(a, 1);
+				}
+			}
+		}
+
 
 		console.log('The parameter menus are ... ');
 		console.log(this.designData.parameterMenus);

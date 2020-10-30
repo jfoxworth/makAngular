@@ -1,0 +1,266 @@
+<div flex="100%" 
+     layout="column" 
+     style="width:100%"
+     *ngIf="currentDesign">
+
+
+    <div fxLayout="row" 
+        fxLayoutAlign="center center"
+        *ngIf="changesExist" 
+        flex="100%">
+
+        <button mat-raised-button 
+                color="primary"
+                (click)="saveDesignChanges(); changesExist=false;"
+                style="margin:10px 35%; width:30%">
+            Save Changes
+        </button>
+
+    </div>
+
+    <!-- TOP ROW OF PROJECT DATA -->
+    <div fxLayout="row" 
+        fxLayoutAlign="center" 
+        flex="100%">
+
+    <div fxFlex="45%" 
+            fxLayout="column" 
+            class="text-center" 
+            style="margin-right:5%">
+
+
+        <h2 class="mt-32 mb-20">General Design Data</h2>
+
+
+        <!-- THE DESIGN NAME -->
+        <mat-form-field appearance="outline" 
+                        floatLabel="always" 
+                        class="w-100-p form-group">
+            <mat-label>Design Name</mat-label>
+            <input type="text"
+                    class="form-control"
+                    matInput 
+                    placeholder="Design Name"
+                    name="title"
+                    #title="ngModel"
+                    [(ngModel)]="currentDesign['title']"
+                    (blur)="changesExist=true"
+                    required 
+                    minlength="5" 
+                    maxlength="150">
+            <mat-error [hidden]="title.valid || title.pristine || !title.errors?.minlength">
+                Design title is required with at least 5 characters
+            </mat-error>
+        </mat-form-field>
+
+        <div [hidden]="title.valid || title.pristine || !title.errors?.minlength"
+                class="alert alert-danger">
+            Design title is required with at least 5 characters
+        </div>
+
+
+
+
+
+        <!-- THE DESIGN DESCRIPTION -->
+        <mat-form-field style="min-height:190px" 
+                        appearance="outline"
+                        class="w-100-p form-group">
+            <mat-label>Design Description</mat-label>
+            <textarea style="min-height:190px"
+                        matInput 
+                        class="form-control"
+                        placeholder="Product Description"
+                        name="description"
+                        #description="ngModel"
+                        [(ngModel)]="currentDesign['marketplace']['description']"
+                        (blur)="changesExist=true"
+                        required
+                        minlength="20"
+                        rows="5">
+            </textarea>
+        </mat-form-field>
+
+
+        <div [hidden]="description.valid || description.pristine || !description.errors?.minlength"
+                class="alert alert-danger">
+                The description must be at least 20 characters long
+        </div>
+
+
+
+
+
+        <!-- THE SHAPEDIVER TICKET NUMBER -->
+        <mat-form-field appearance="outline" 
+                        floatLabel="always" 
+                        class="w-100-p form-group">
+            <mat-label>Shapediver Ticket Number</mat-label>
+            <input matInput
+                    placeholder="Shapediver ticket"
+                    name="ticket"
+                    #ticket="ngModel"
+                    [(ngModel)]="currentDesign['shapediverTicket']"
+                    (blur)="changesExist=true"
+                    required>
+        </mat-form-field>
+
+
+        <div [hidden]="ticket.valid || ticket.pristine || !ticket.errors?.minlength"
+                class="alert alert-danger">
+                The shapediver ticket is required
+        </div>
+
+
+
+
+        <!-- THE STATUS OF THE ITEM IN THE MARKETPLACE -->
+        <mat-form-field class="mb-40 form-group">
+            <mat-label>Status of Item</mat-label>
+            <mat-select name="status"
+                        #status="ngModel"
+                            [(ngModel)]="currentDesign.status"
+                            (change)="changesExist=true">
+                    <mat-option [value]="0">
+                    Disabled
+                </mat-option>
+                    <mat-option [value]="1">
+                    Active
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+
+        <!-- Whether or not sign offs are required -->
+        <div class="mat-body-2">It is possible to require that other users sign off on this design. By clicking the box below, you can establish this requirement and will be offered the option to add as many users as desired in a new tab. These signoffs do not affect the ability of the creator to set the status of the design.</div>
+
+        <mat-checkbox [(ngModel)]="currentDesign.signoffRequired"
+                        name="signoff"
+                        (click)="saveDesignChanges()">
+            Signoffs Required
+        </mat-checkbox>
+
+
+    </div>
+
+
+    <div fxFlex="45%"
+            fxLayout="column" 
+            class="text-center" 
+            style="margin-right:5% form-group">
+
+
+        <h2 class="mt-32 mb-20">Marketplace Data and Images</h2>
+
+        <!-- THE TYPE -->
+        <mat-form-field class="mb-40" 
+                        name="designType">
+            <mat-label>Category of design</mat-label>
+            <mat-select name="category"
+                        #category="ngModel"
+                        [(ngModel)]="currentDesign.category"
+                        (change)="changesExist=true"
+                        required>
+                    <mat-option *ngFor="let thisType of designType" [value]="thisType">
+                    {{thisType}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <div [hidden]="category.valid || category.pristine || !category.errors?.minlength"
+                class="alert alert-danger">
+                The category is required
+        </div>
+
+
+
+        <!-- THE COMPANY -->
+        <mat-form-field class="mb-40" 
+                        name="companyId">
+            <mat-label>Company selling design</mat-label>
+            <mat-select (selectionChange)="setCompany()"
+                            [(ngModel)]="currentDesign.companyId"
+                            #companyId="ngModel"
+                            (change)="changesExist=true"
+                            required
+                            name="company">
+                    <mat-option *ngFor="let thisCompany of companies" [value]="thisCompany.id">
+                    {{thisCompany.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <div [hidden]="companyId.valid || companyId.pristine || !companyId.errors?.minlength"
+                class="alert alert-danger">
+                The company is required
+        </div>
+
+
+
+
+        <div fxFlex="100%">
+
+            <div fxFlex="70%">Use the button to add images to be displayed in the marketplace or in the carousel. Select the image to be used as the marketplace image.</div>
+
+            <div fxFlex="30%">
+
+                <input class="ng-hide mainBg" 
+                            id="input-file-id" 
+                        multiple type="file"
+                        accept=".png,.jpg,.jpeg,.gif"
+                        (change)="onBGUpload($event, 'mainBg')" />
+
+                <label for="input-file-id" 
+                        style="background-color:#456382; cursor:pointer; border-radius:8px; padding:10px; margin:10px 0px 40px 0px; color: white;"
+                        color="primary" 
+                        class="md-button md-raised md-primary">
+                    Add Image
+                </label>
+
+            </div>
+
+        </div>
+
+
+
+
+        <div fxFlex="100%"
+                fxLayout="row"
+                class="mt-20">
+            
+            <div *ngFor="let thisImage of carouselUrls; index as i">
+
+                <div fxLayout="column">
+
+                    <div fxLayout="row">
+
+                        <mat-icon style="cursor:pointer"
+                                    (click)="currentDesign.marketplace.images.splice(i, 1); carouselUrls.splice(i,1); changesExist=true">
+                            cancel
+                        </mat-icon>											 		
+
+                        <mat-icon style="cursor:pointer"
+                                    *ngIf="currentDesign.marketplace.images[i]['mainImage']==false"
+                                    (click)="setMainImage(i); changesExist=true">
+                            keyboard_arrow_up
+                        </mat-icon>	
+
+                    </div>	
+
+                        <img [src]="thisImage | async" width="150" height="150">
+
+                    </div>
+                
+            </div>
+        
+        </div>
+
+
+        
+
+    </div>
+
+
+    </div>
+
+</div>

@@ -107,12 +107,22 @@ export class makProjectDataService extends DefaultDataService<makProject> {
 	// Read - all projects for user
 	getAll(): Observable<makProject[]> {
 
-		var userData = JSON.parse(localStorage.getItem('UserData'));
-
-		return <Observable<makProject[]>> this.afs.collection('projects', ref => ref
+		if ( localStorage.getItem('UserData') )
+		{
+			console.log('Here 0');
+			var userData = JSON.parse(localStorage.getItem('UserData'));
+			return <Observable<makProject[]>> this.afs.collection('projects', ref => ref
 			.where('creatorId', '==', userData.uid )
 			.where('deleted', '==', false))
 			.valueChanges()
+		}else
+		{
+			console.log('Here 1');
+			return <Observable<makProject[]>> this.afs.collection('projects', ref => ref
+			.where('creatorId', '==', '0' )
+			.where('deleted', '==', false))
+			.valueChanges()
+		}
 	
 
 	}

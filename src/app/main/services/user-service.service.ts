@@ -126,7 +126,7 @@ export class UserService {
 	**/
 	getProfileImage( userData ) {
 
-		if ( userData.imageType  === undefined )
+		if ( !userData.imageType )
 		{
 			var path = '/profile/default.jpeg';
 		}else{

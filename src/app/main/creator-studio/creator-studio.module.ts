@@ -48,6 +48,7 @@ import { EntityDataService, EntityDefinitionService, EntityMetadataMap } from '@
 
 // The Components
 import { CreatorStudioComponent } from 'app/main/creator-studio/creator-studio.component';
+import { DesignListComponent } from './tabs/design-list/design-list.component';
 import { editParameterDialog } from './parameter-dialog/parameter-dialog.component';
 import { SubmenuDialog } from './submenu-dialog/submenu-dialog.component';
 
@@ -83,6 +84,11 @@ import { makProjectDataService } from 'app/main/services/entity/makProject-data.
 import { MakDesignsResolver } from 'app/main/resolvers/makDesigns.resolver';
 import { SignoffReqsResolver } from 'app/main/resolvers/signoffReqs.resolver';
 import { MakProjectsResolver } from 'app/main/resolvers/makProjects.resolver';
+import { DesignDataComponent } from './tabs/design-data/design-data.component';
+import { DesignParametersComponent } from './tabs/design-parameters/design-parameters.component';
+import { DesignPriceComponent } from './tabs/design-price/design-price.component';
+import { DesignMarketplaceComponent } from './tabs/design-marketplace/design-marketplace.component';
+import { DesignSignoffsComponent } from './tabs/design-signoffs/design-signoffs.component';
 
 
 
@@ -120,8 +126,14 @@ const entityMetadata: EntityMetadataMap = {
 @NgModule({
     declarations: [
         CreatorStudioComponent,
+        DesignListComponent,
         editParameterDialog,
         SubmenuDialog,
+        DesignDataComponent,
+        DesignParametersComponent,
+        DesignPriceComponent,
+        DesignMarketplaceComponent,
+        DesignSignoffsComponent,
     ],
     imports     : [
         RouterModule.forChild(routes),

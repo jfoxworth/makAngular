@@ -1,0 +1,54 @@
+<div layout="column" 
+flex="100%" 
+style="width:100%"
+*ngIf="(userData.uid == currentDesign.creatorId) && currentDesign.signoffRequired">
+
+    <h2 class="mt-32 mb-20">Users who can sign off</h2>
+
+    <div class="">To add a user to the list of those that can provide input to the design or sign off on it, enter the user name in the box below and press enter. If that user name is found, a button will appear giving you the option to add that user. Once the user is added, they will see the sign off option on this tab.</div>
+
+
+    <div class="text-center">
+
+    <div class="mt-40 mb-40 text-center">
+        <mat-form-field class="w-400">
+        <mat-label>User Email</mat-label>
+            <input matInput 
+                    placeholder="User Name" 
+                    [(ngModel)]="testUser" 
+                    name="testUser"
+                    (keyup.enter)="checkUserEmail(testUser)">
+        </mat-form-field>
+    </div>
+
+    <div class="mb-20 text-center">
+        <button mat-button 
+                class="primary"
+                *ngIf="potentialUser.email"
+                (click)="createDesignReq( potentialUser )">
+            Add User to Signoff
+        </button>
+    </div>
+
+
+    <div *ngFor="let userReq of reqList"
+            fxLayout="row"
+            class="text-center w-300 pt-12 pb-12"
+            style="margin:auto">
+
+        <img class="profileAvatar avatar" 
+                [src]="(userReq.userImage | async)">
+
+        <div class="mt-8 ml-20 w-220 text-center">{{userReq.userEmail}}</div>
+
+        <mat-divider></mat-divider>
+
+    </div>
+
+    </div>
+
+
+
+
+</div>
+

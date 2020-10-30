@@ -11,8 +11,8 @@ import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/r
 
 
 // RxJS Items
-import { Observable } from 'rxjs';
 import { filter, first, map, tap } from 'rxjs/operators';
+import { BehaviorSubject, Subject, Observable } from 'rxjs';
 
 
 
@@ -34,7 +34,7 @@ export class MakProjectsResolver implements Resolve<boolean> {
             .pipe(
                 tap(loaded => {
                     if (!loaded) {
-                       this.makProjectEntityService.getAll();
+                    this.makProjectEntityService.getAll();
                     }
                 }),
                 filter(loaded => !!loaded),
