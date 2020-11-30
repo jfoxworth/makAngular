@@ -1,6 +1,5 @@
 
 
-
 /*
 
 	This is the controller for the primary component of the app - the
@@ -22,6 +21,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 // RXJS 
 import { debounceTime, distinctUntilChanged, takeUntil, finalize } from 'rxjs/operators';
 import { BehaviorSubject, fromEvent, merge, Observable, Subject } from 'rxjs';
+import { concatMap, delay, filter, first, map, shareReplay, tap, withLatestFrom } from 'rxjs/operators';
 
 
 // Fuse specific items
@@ -40,6 +40,12 @@ import { DesignSignoffsService } from 'app/main/services/design-signoffs.service
 import { SignoffReqsService } from 'app/main/services/signoff-reqs.service';
 import { FirebaseService } from 'app/main/services/firebase.service';
 
+import { makDesignEntityService } from 'app/main/services/entity/makDesign-entity.service';
+import { makVersionEntityService } from 'app/main/services/entity/makVersion-entity.service';
+import { makProjectEntityService } from 'app/main/services/entity/makProject-entity.service';
+import { signoffReqEntityService } from 'app/main/services/entity/signoffReq-entity.service';
+
+
 
 // Firestore Items
 import { AngularFireStorage } from '@angular/fire/storage';
@@ -51,6 +57,17 @@ import { makProject } from 'app/main/models/makProject';
 import { makVersion } from 'app/main/models/makVersion';
 import { signoffReq } from 'app/main/models/signoffReq';
 import { designSignoff } from 'app/main/models/designSignoffs';
+import { UserData } from 'app/main/models/userData';
+
+
+
+// NGRX Items
+import { Store } from "@ngrx/store";
+import { AppState } from 'app/main/reducers';
+import { DesignState } from 'app/main/reducers';
+import { designImagesSave } from 'app/main/actions/design.actions';
+import { designImagesReducer } from 'app/main/reducers/index';
+import { DesignActions } from 'app/main/actions/designAction-types';
 
 
 
@@ -59,37 +76,47 @@ import { designSignoff } from 'app/main/models/designSignoffs';
 	templateUrl: './design-studio.component.html',
 	styleUrls: ['./design-studio.component.scss']
 })
-export class DesignStudioComponent implements AfterViewInit {
+export class DesignStudioComponent  {
 
 	require : any;
 	window : any;
 	SDVApp : any;
 
 	shapediver:any;
-	designData:any = { 'parameterMenus' : [{ 'parameters': [ { 'images':[] }]}] };
-	projectData : any;
-	versionData : any;
-	versionList : any = [];
 
-	//designData 			: makDesign;
-	//projectData 		: makProject;
-	//versionData 		: makVersion;
-	//versionList 		: makVersion[];
+
+//	designData:any = { 'parameterMenus' : [{ 'parameters': [ { 'images':[] }]}] };
+//	projectData : any;
+//	versionData : any;
+
+	makDesigns$ 		: Observable<makDesign[]>;
+	makProjects$ 		: Observable<makProject[]>;
+	makVersions$ 		: Observable<makVersion[]>;
+	makSignoffReqs$ 	: Observable<signoffReq[]>;
+	makDesignSignoffs$ 	: Observable<designSignoff[]>;
+
+	designList 			: makDesign[];
+	projectList 		: makProject[];
+	versionList 		: makVersion[];
+	signoffList 		: designSignoff[];
+	signoffReqList 		: signoffReq[];
+
+	designData 			: makDesign=<makDesign>{};
+	projectData 		: makProject;
+	versionData 		: makVersion;
+	signoffData 		: designSignoff;
+
+
 	versionCollection 	: any;
 	searchInput 		: any;
 	studioType 			: string;
-	dataFlag 			: boolean = false;
-	designId 			: string;
-	projectId 			: string;
-	versionId 			: string;
 	shapediverApi 		: any;
 	shapeData 			: any;
 	flowersJSON 		: any;
 	flowerFlag 			: boolean = false;
 	editableVersion 	: boolean = true;
-	userData 			: any;
-	signoffData 		: signoffReq[];
-	designSignoffList 	: designSignoff[];
+	userData 			: UserData;
+	paramName 			: any;
 
 
 	private _unsubscribeAll: Subject<any>;
@@ -107,6 +134,12 @@ export class DesignStudioComponent implements AfterViewInit {
 					private route 						: ActivatedRoute,
 					private activeRoute 				: ActivatedRoute,
 					private SnackBar 					: MatSnackBar,
+					private DesignEntityService 		: makDesignEntityService,
+					private SignoffReqEntityService 	: signoffReqEntityService,
+					private ProjectEntityService 		: makProjectEntityService,
+					private VersionEntityService 		: makVersionEntityService,
+					private store 						: Store<AppState>,
+					private designStore 				: Store<DesignState>,
 					@Inject(DOCUMENT) private document 	: Document) 
 	{ 
 		this._unsubscribeAll = new Subject();
@@ -118,45 +151,63 @@ export class DesignStudioComponent implements AfterViewInit {
 
 	ngOnInit() {
 
-		this.userData = JSON.parse(localStorage.getItem('user'));
-		this.subscribeToData();
 
-	}
+		this.userData = JSON.parse(localStorage.getItem('UserData'));
 
 
+		// The observable for the design data from the store. Since no design is 
+		this.makDesigns$ = this.DesignEntityService.entities$
+		this.makDesigns$.subscribe( (makDesigns)=>{
+			this.designList = makDesigns;
+			//this.setDesign('jBRzSildNc16fQjAmLkh');
+		});
+
+
+		// The observable for the projects for this design
+		this.makProjects$ = this.ProjectEntityService.entities$
+		this.makProjects$.subscribe( (makProjects)=>{
+			this.projectList = makProjects;
+		});
+
+
+		// The observable for the projects for this design
+		this.makVersions$ = this.VersionEntityService.entities$
+		this.makVersions$.subscribe( (makVersions) =>{
+			this.versionList = makVersions;
+		});
+
+
+		// The observable for the signoff reqs from the store
+		this.makSignoffReqs$ = this.SignoffReqEntityService.entities$
+		this.makSignoffReqs$ .subscribe( (makSignoffReqs) =>{
+			this.signoffReqList = makSignoffReqs;
+		});
 
 
 
-	
 
-
-	ngAfterViewInit() {
-
-
-		// If the viewer is looking at a design that is not yet approved
-		// The url is /design/{ID of design}
+		// Came to the /designStudio page with nothing else
 		if ( this.route.snapshot.url[1] === undefined )
 		{
+
 			console.log('Here 1');
 			this.studioType = 'studio';
-			this.designId = 'jBRzSildNc16fQjAmLkh';
-			this.DesignsService.getDesignById( this.designId );
 
-			/*
-
-			this.designData = this.FirebaseService.getDocById( 'designs', this.designId ).then(response=> {
-				this.designData=response.data();
-				this.versionData = this.blankVersion();
+			// What if there is a stored design in local memory
+			if ( JSON.parse(localStorage.getItem('makDesign')) )
+			{
+				this.designData = JSON.parse(localStorage.getItem('makDesign'));
+				this.versionData = JSON.parse(localStorage.getItem('makVersion'));
 				this.versionList.push(this.versionData);
+			
+			}else
+			{
 
-				console.log('1. The design data is ...');
-				console.log(this.designData);
-
-				this.initializeAll();
-
-			});
-
-			*/
+				this.setDesign('jBRzSildNc16fQjAmLkh');
+				this.versionData = <makVersion>JSON.parse(JSON.stringify(this.VersionsService.blankVersion()));
+				this.versionList.push(this.versionData);
+			}
+			this.initializeAll();
 
 
 		// WHen a user is navigating using the icon menu to a preset design
@@ -166,20 +217,10 @@ export class DesignStudioComponent implements AfterViewInit {
 
 			console.log('Here 2');
 			this.studioType = 'studio';
-			this.designId = this.route.snapshot.url[1].toString();
-			this.DesignsService.getDesignById( this.designId );
-
-			/*
-			this.designData = this.FirebaseService.getDocById( 'designs', this.designId ).then(response=> {
-				this.designData=response.data();
-				this.versionData = this.blankVersion();
-				this.versionList.push(this.versionData);
-				console.log('2. The design data is ...');
-				console.log(this.designData);
-				this.initializeAll();
-
-			});
-			*/
+			this.setDesign( this.route.snapshot.url[1].toString() );
+			this.versionData = <makVersion>JSON.parse(JSON.stringify(this.VersionsService.blankVersion()));
+			this.versionList.push(this.versionData);
+			this.initializeAll();
 
 
 		// WHen a user is looking at a design that is likely not live
@@ -188,23 +229,10 @@ export class DesignStudioComponent implements AfterViewInit {
 
 			console.log('Here 3');
 			this.studioType = 'design';
-			this.designId = this.route.snapshot.paramMap.get('designId');
-			this.DesignsService.getDesignById( this.designId );
-
-			/*
-
-			this.designData = this.FirebaseService.getDocById( 'designs', this.designId ).then(response=> {
-				this.designData=response.data();
-				this.versionData = this.blankVersion();
-				this.versionList.push(this.versionData);
-				console.log('3. The design data is ...');
-				console.log(this.designData);
-				this.initializeAll();
-
-			});
-
-			*/
-
+			this.setDesign( this.route.snapshot.paramMap.get('designId') );
+			this.versionData = <makVersion>JSON.parse(JSON.stringify(this.VersionsService.blankVersion()));
+			this.versionList.push(this.versionData);
+			this.initializeAll();
 
 
 		// If the viewer is looking at a project - the nominal case of a user working on a project
@@ -213,86 +241,20 @@ export class DesignStudioComponent implements AfterViewInit {
 
 			console.log('Here 4');
 			this.studioType = 'project';
-			this.projectId = this.route.snapshot.paramMap.get('projectId');
-			this.ProjectsService.getProjectById( this.projectId );
-
-/*
-			this.projectData = this.FirebaseService.getDocById( 'projects', this.projectId ).then(response=> {
-				
-				this.projectData = response.data();
-
-				this.designData = this.FirebaseService.getDocById('designs',this.projectData.designId ).then(response=>{
-
-					this.designData = response.data();
-
-
-					this.FirebaseService.getDocsByParam( 'versions', 'projectId', this.projectData.uid )
-						.subscribe(result => {
-							console.log('The result is ');
-							console.log(result);
-							var tempArray = [];
-							var docData;
-							result.forEach((doc) => {
-								docData=doc.data();
-								docData.uid=doc.id;
-								console.log(doc.id, '=>', doc.data());
-								tempArray.push(docData);
-							});
-							this.versionList = tempArray;
-							console.log(this.versionList);
-							//this.versionData = this.versionList[this.versionList.length-1];
-							//console.log('The version data is ...');
-							//console.log(this.versionData);
-							this.initializeAll();
-						});
-					});
-
-			});
-*/
+			this.setProject(  this.route.snapshot.paramMap.get('projectId') );
+			this.initializeAll();
 
 
 		// The user is looking at the design studio - possibly not logged in
 		}else
 		{
-
-			console.log('Here 5');
 			this.studioType = 'studio';
-			this.designId = 'jBRzSildNc16fQjAmLkh';
-			this.DesignsService.getDesignById( this.designId );
-
-			/*
-
-			this.designData = this.FirebaseService.getDocById( 'designs', this.designId ).then(response=> {
-				this.designData=response.data();
-				this.versionData = this.blankVersion();
-				this.versionList.push(this.versionData);
-				console.log('4. The design data is ...');
-				console.log(this.designData);
-				this.initializeAll();
-			});
-
-			*/
+			this.setDesign('jBRzSildNc16fQjAmLkh');
+			this.initializeAll();
 
 		}
 
 	}
-
-
-
-
-
-
-
-	ngOnDestroy() {
-
-		this.dataFlag 		= false;
-		this.designData 	= [];
-		this.projectData 	= [];
-		this.versionData 	= [];
-		console.log('On the destroy data hook');
-
-	}
-
 
 
 
@@ -305,150 +267,94 @@ export class DesignStudioComponent implements AfterViewInit {
 
 
 
+
 	// -----------------------------------------------------------------------------------------------------
 	//
-	// @ FUNCTIONS TO SUBSCRIBE TO DATA
+	// @ FUNCTIONS TO SET THE DESIGN, PROJECT, or VERSION
 	//
 	// -----------------------------------------------------------------------------------------------------
 
-	// Read
-	subscribeToData()
+	setDesign( designId )
 	{
+		this.designList.forEach( (design) =>{
 
-		// Subscribe to the design data
-		this.DesignsService.designStatus
-		.pipe(takeUntil(this._unsubscribeAll))
-		.subscribe((design)=>
-		{ 
-
-			console.log('The design data being returned is ...');
-			console.log(design);
-
-
-			// Assign the design data
-			this.designData = JSON.parse(JSON.stringify(design));
-
-			// See if this user has signoff privileges
-			if ( ( this.designData.id ) && ( this.userData.uid ) )
+			if ( design.id == designId )
 			{
-				this.SignoffReqsService.getSignoffReqsForDesignUser( this.userData.uid, this.designData.id )
+				this.designData = JSON.parse(JSON.stringify(design));
 			}
-
-			// If this is a new item (no user logged in), create a blank version
-			if ( ( this.studioType == 'studio' ) || ( this.studioType == 'design' ) )
-			{
-				this.versionData 	= this.VersionsService.blankVersion();
-				this.versionList.push(this.versionData);
-				this.initializeAll();
-			}
-
-
-			// If this is a project, get the versions for it
-			if ( ( this.studioType == 'project' ) && ( design.id ) )
-			{
-				this.VersionsService.getVersionsForProject( this.designData.id );
-			}
-
+		
 		});
+	}
 
 
+	setProject( projectId )
+	{
+		this.projectList.forEach( (project) =>{
 
-		// Subscribe to the project data
-		this.ProjectsService.projectOneStatus
-		.pipe(takeUntil(this._unsubscribeAll))
-		.subscribe((project)=>
-		{ 
-
-			this.projectData = project;
-
-			if ( ( this.studioType = 'project' ) && ( this.projectData.designId ) )
+			if ( project.id == projectId )
 			{
-				this.DesignsService.getDesignById( this.projectData.designId );
+				this.projectData = JSON.parse(JSON.stringify(project));
+				if ( project.designId != this.designData.id ) { this.setDesign( project.designId ) }
+
+				let maxVersion=0;
+				if ( !this.versionData )
+				{
+
+						this.versionList.forEach((version)=>{
+							if ( ( version.dateCreated > maxVersion ) && 
+								 ( version.projectId == projectId ) )
+							{
+								this.setVersion( version.id );
+								maxVersion = version.dateCreated;
+							}
+						});
+				}else{
+				
+					if ( this.versionData.projectId != this.projectData.id )
+					{
+						this.versionList.forEach((version)=>{
+							if ( ( version.dateCreated > maxVersion ) && 
+								 ( version.projectId == projectId ) )
+							{
+								this.setVersion( version.id );
+								maxVersion = version.dateCreated;
+							}
+						});
+					}
+				}
 			}
-
+		
 		});
+	}
 
 
+	setVersion( versionId )
+	{
+		this.versionList.forEach( (version) =>{
 
-
-		// Subscribe to the version data
-		this.VersionsService.versionStatus
-		.pipe(takeUntil(this._unsubscribeAll))
-		.subscribe((versions)=>
-		{ 
-
-			this.versionData = versions;
-
-			if ( this.versionData[0] )
+			if ( version.id == versionId )
 			{
-				this.initializeAll();
+				this.versionData = JSON.parse(JSON.stringify(version));
+
+				if ( this.versionData.projectId != this.projectData.id )
+				{
+					this.setProject( version.projectId );
+				}
 			}
-
+		
 		});
-
-
-
-
-		// Subscribe to the signoff reqs
-		this.SignoffReqsService.signoffReqDesignUserStatus
-		.pipe(takeUntil(this._unsubscribeAll))
-		.subscribe((signoffReqs)=>
-		{ 
-
-			this.signoffData = signoffReqs;
-
-			if ( this.signoffData.length > 0 )
-			{
-				this.DesignSignoffsService.getdesignSignoffsForDesign( this.designData.id );
-			}
-
-		});
-
-
-
-
-
-
-		// Subscribe to the design signoffs 
-		this.DesignSignoffsService.designSignoffStatus
-		.pipe(takeUntil(this._unsubscribeAll))
-		.subscribe((signoffs)=>
-		{ 
-			this.designSignoffList = signoffs;
-
-		});
-
-
-
-
 	}
 
 
 
-	/*
-	*
-	*	Create a blank version
-	*
-	*/
-	blankVersion() {
 
-		let tempVer = { 'version' : 1,
-						'values' : {},
-						'parameterMenus' : [] };
 
-		for ( var a=1; a<this.designData.parameterMenus.length-1; a++ )
-		{
-			tempVer['parameterMenus'][a] = { 'parameters':[] };
 
-			for ( var b=0; b<this.designData.parameterMenus[a]['parameters'].length; b++ )
-			{
-				tempVer['parameterMenus'][a]['parameters'][b] = {  };
-			}
-		}
-
-		return tempVer
-	}
-
+	// -----------------------------------------------------------------------------------------------------
+	//
+	// @ FUNCTIONS TO initialize and load the model and the menu
+	//
+	// -----------------------------------------------------------------------------------------------------
 
 
 	/*
@@ -458,12 +364,9 @@ export class DesignStudioComponent implements AfterViewInit {
 	*/
 	initializeAll() {
 
-		this.dataFlag=true;
 		this.initializeMenu();
 		this.initializeModel();
 	}
-
-
 
 
 
@@ -480,17 +383,15 @@ export class DesignStudioComponent implements AfterViewInit {
 		// Wipe the div so that the shapediver can reset
 		document.getElementById('modelDiv').innerHTML = ''
 		
-		// Set the design ID
-		this.designId = modelId;
 
 
-		// Load model from shapediver and initialize model and menu
-		/*
-		this.designData = this.FirebaseService.getDocById( 'designs', this.designId ).then(response=> {
-			this.designData=response.data();
-			this.initializeAll();
-		});
-		*/
+		this.setDesign( modelId );
+		this.versionData = <makVersion>JSON.parse(JSON.stringify(this.VersionsService.blankVersion()));
+		this.versionList = [];
+		this.versionList.push(this.versionData);
+		this.initializeAll();
+
+
 	}
 
 
@@ -507,6 +408,22 @@ export class DesignStudioComponent implements AfterViewInit {
 
 		console.log('Initializing the menu for type : '+this.studioType);
 
+
+		if ( this.studioType == 'studio' )
+		{
+
+			// First, remove the cost and design options from the parameter menu
+			for (let a=this.designData.parameterMenus.length-1; a>=0; a--)
+			{
+				if ( ( this.designData.parameterMenus[a].name=="makStudio" ) || 
+					 ( this.designData.parameterMenus[a].name=="cost" ))
+				{
+					this.designData.parameterMenus.splice(a, 1);
+				}
+			}
+		}
+
+
 		console.log('The parameter menus are ... ');
 		console.log(this.designData.parameterMenus);
 
@@ -518,6 +435,7 @@ export class DesignStudioComponent implements AfterViewInit {
 		}else if ( this.studioType == 'project' )
 		{
 			this.designData.parameterMenus.unshift(this.DesignStudioService.getProjectMenu());			
+			this.designData.parameterMenus.push(this.DesignStudioService.getSignoffMenu( ));
 
 		}else if ( this.studioType == 'studio' )
 		{
@@ -527,15 +445,6 @@ export class DesignStudioComponent implements AfterViewInit {
 
 		// Set the menus for cost and signoff and get the menu locations
 		this.designData.parameterMenus.push(this.DesignStudioService.getCostMenu( this.studioType ));
-		this.designData.parameterMenus.push(this.DesignStudioService.getSignoffMenu( ));
-		this.designData.menuLocations = this.DesignStudioService.getMenuLocations();
-
-
-		// Add the array to hide/show the side menus
-		this.designData.menuShow = [];
-		this.designData.parameterMenus.forEach((value, index) => {
-			this.designData.menuShow[index] =  false;
-		});
 
 
 
@@ -709,6 +618,13 @@ export class DesignStudioComponent implements AfterViewInit {
 			console.log(paramChanges);
 
 
+			if ( this.studioType == "studio" )
+			{
+				localStorage.setItem('makDesign', JSON.stringify(this.designData));
+				localStorage.setItem('makProject', JSON.stringify(this.projectData));
+				localStorage.setItem('makVersion', JSON.stringify(this.versionData));
+			}
+
 
 		 }, 4000);
 
@@ -752,6 +668,29 @@ export class DesignStudioComponent implements AfterViewInit {
 
 		// Update the version data
 		if ( this.studioType == 'project' ){ this.saveVersion( this.versionData ); }
+
+
+
+		// If the user is simply designing in the studio, save that design to 
+		// local memory so that it will reload when they return.
+		if ( this.studioType == 'studio' )
+		{
+
+			// First, remove the cost and design options from the parameter menu
+			let tempData = JSON.parse(JSON.stringify(this.designData));
+			for (let a=tempData.parameterMenus.length-1; a>=0; a--)
+			{
+				if ( ( tempData.parameterMenus[a].name=="makStudio" ) || 
+					 ( tempData.parameterMenus[a].name=="cost" ))
+				{
+					tempData.parameterMenus.splice(a, 1);
+				}
+			}
+
+			localStorage.setItem('makDesign', JSON.stringify(tempData));
+			localStorage.setItem('makProject', JSON.stringify(this.projectData));
+			localStorage.setItem('makVersion', JSON.stringify(this.versionData));
+		}
 
 	}
 
@@ -800,7 +739,7 @@ export class DesignStudioComponent implements AfterViewInit {
 		for (let i = 0; i < 6; i++) {
 			text += possible.charAt(Math.floor(Math.random() * possible.length));
   		}
-		var path = '/studio/logo/'+this.versionData.uid+'-'+text+'.'+imageType;			
+		var path = '/studio/logo/'+this.versionData.id+'-'+text+'.'+imageType;			
 
 		console.log('Uploading image to Upload Logo');
 		// Send the update to shapediver so that the model is updated
@@ -827,7 +766,7 @@ export class DesignStudioComponent implements AfterViewInit {
 	*/
 	saveVersion( versionData ) 
 	{
-		console.log('Saving version '+versionData.uid);
+		console.log('Saving version '+versionData.id);
 
 		this.VersionsService.updateVersion( versionData );
 		this.SnackBar.open('Version changes saved','', {duration: 4000});
@@ -855,11 +794,6 @@ export class DesignStudioComponent implements AfterViewInit {
 	{
 		console.log('Creating new version ');
 		this.VersionsService.createVersion( '', this.projectData, this.versionData, this.designData )
-		/*
-		let tempVer = this.versionData;
-		tempVer['version'] = this.versionList.length;
-		this.FirebaseService.createDocInCollection('versions', tempVer);
-		*/
 	}
 
 
@@ -873,6 +807,7 @@ export class DesignStudioComponent implements AfterViewInit {
 	*/
 	setVersionData( thisVersion ) 
 	{
+		thisVersion = JSON.parse(JSON.stringify(thisVersion))
 		console.log('setting version to '+thisVersion.version);
 
 		let paramChanges=[];
@@ -880,7 +815,7 @@ export class DesignStudioComponent implements AfterViewInit {
 
 		// The initial call to this function has no defined versionData
 		if ( this.versionData === undefined){
-			this.versionData = thisVersion;
+			this.versionData = JSON.parse(JSON.stringify(thisVersion));
 		}
 
 		this.shapeData.data.forEach( (element) => {
@@ -921,7 +856,7 @@ export class DesignStudioComponent implements AfterViewInit {
 		this.updateMultipleParameters( paramChanges );			
 
 		// Set the version data
-		this.versionData = thisVersion;
+		this.versionData = JSON.parse(JSON.stringify(thisVersion));
 
 		// Set the price
 		this.calcPrice();
@@ -968,7 +903,7 @@ export class DesignStudioComponent implements AfterViewInit {
 	setDragDrop( )
 	{
 
-		if ( this.designData.uid == "1pbM0lb5hcHureiiX239" )
+		if ( this.designData.id == "1pbM0lb5hcHureiiX239" )
 		{
 
 			var flowersID;
@@ -1116,7 +1051,7 @@ export class DesignStudioComponent implements AfterViewInit {
 
 		
 
-		}else if ( this.designData.uid == "eLHfWkL4GA2LFeuoVQkx" )
+		}else if ( this.designData.id == "eLHfWkL4GA2LFeuoVQkx" )
 		{
 
 

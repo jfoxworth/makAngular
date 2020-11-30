@@ -20,6 +20,9 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCarouselSlide, MatCarouselSlideComponent } from '@ngmodule/material-carousel';
+import { MatCarousel, MatCarouselComponent } from '@ngmodule/material-carousel';
+
 
 
 
@@ -27,7 +30,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BehaviorSubject, fromEvent, merge, Observable, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/internal/operators';
-
+import { finalize } from 'rxjs/operators';
+import { concatMap, delay, filter, first, shareReplay, tap, withLatestFrom } from 'rxjs/operators';
 
 
 // Fuse Specific Items
@@ -43,6 +47,10 @@ import { VersionsService } from 'app/main/services/versions.service';
 import { ProjectsService } from 'app/main/services/projects.service';
 import { DesignsService } from 'app/main/services/designs.service';
 
+import { makDesignEntityService } from 'app/main/services/entity/makDesign-entity.service';
+import { makVersionEntityService } from 'app/main/services/entity/makVersion-entity.service';
+import { makProjectEntityService } from 'app/main/services/entity/makProject-entity.service';
+
 
 
 // Models
@@ -56,6 +64,17 @@ import { makVersion } from 'app/main/models/makVersion';
 // Firestore Items
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
+
+
+
+
+// NGRX Items
+import { Store } from "@ngrx/store";
+import { AppState } from 'app/main/reducers';
+import { DesignState } from 'app/main/reducers';
+import { designImagesSave } from 'app/main/actions/design.actions';
+import { designImagesReducer } from 'app/main/reducers/index';
+import { DesignActions } from 'app/main/actions/designAction-types';
 
 
 //import { DataSource } from '@angular/cdk/collections';
@@ -92,19 +111,29 @@ export class EcommerceComponent implements OnInit
 	versionDataFlag 	: boolean = false;
 	designDataFlag 		: boolean = false;
 
+	makDesigns$ 		: Observable<makDesign[]>;
+	makProjects$ 		: Observable<makProject[]>;
+	makVersions$ 		: Observable<makVersion[]>;
+	images 				: never[];
+
+
 
 	// Private
 	private _unsubscribeAll: Subject<any>;
 
 	constructor(
-		private EcommerceService	: EcommerceService,
-		private VersionsService		: VersionsService,
-		private ProjectsService		: ProjectsService,
-		private DesignsService		: DesignsService,
-		private MarketplaceService 	: MarketplaceService,
-		public afs 					: AngularFirestore,
-		private SnackBar 			: MatSnackBar,
-		private afStorage  			: AngularFireStorage,
+		private EcommerceService		: EcommerceService,
+		private VersionsService			: VersionsService,
+		private ProjectsService			: ProjectsService,
+		private DesignsService			: DesignsService,
+		private MarketplaceService 		: MarketplaceService,
+		public afs 						: AngularFirestore,
+		private SnackBar 				: MatSnackBar,
+		private afStorage  				: AngularFireStorage,
+		private DesignEntityService 	: makDesignEntityService,
+		private ProjectEntityService 	: makProjectEntityService,
+		private VersionEntityService 	: makVersionEntityService,
+		private designStore 			: Store<DesignState>
 	)
 	{
 		// Set the private defaults
@@ -142,11 +171,33 @@ export class EcommerceComponent implements OnInit
 		// Get the status texts
 		this.stageTexts = this.EcommerceService.getStageTexts();
 
-		// Subscribe to the observables for the data
-		this.ProjectsService.getProjectsForUser( this.userData.uid ); 
-		this.subscribeToData();
+		// The observable for the design data from the store
+		this.makDesigns$ = this.DesignEntityService.entities$;
+
+		// The observable for the projects for this design
+		this.makProjects$ = this.ProjectEntityService.entities$
+
+		// The observable for the projects for this design
+		this.makVersions$ = this.VersionEntityService.entities$
 
 
+		// Listen to the images observable
+		this.designStore.subscribe(state => {
+
+			console.log(state);
+				if (state.designs.designs.type)
+				{
+					let temp = JSON.parse(JSON.stringify(state.designs.designs));
+					delete temp.type
+					this.images = Object.values(temp);				
+				}else
+				{
+					let temp = JSON.parse(JSON.stringify(state.designs.designs));
+					this.images = Object.values(temp);
+				}
+
+				console.log(this.images);
+		});
 	}
 
 
@@ -178,66 +229,7 @@ export class EcommerceComponent implements OnInit
 		this.SnackBar.open('New version created','', {duration: 4000});
 	}
 
-	// Read
-	subscribeToData()
-	{
-		// Subscribe to the project list for this user
-		this.ProjectsService.projectStatus
-		.pipe(takeUntil(this._unsubscribeAll))
-		.subscribe((projects)=>
-		{ 
 
-			if ( projects.length > 0 )
-			{
-				this.projectList = projects;
-				this.setCurrentProject( this.projectList[0] );
-				this.projectDataFlag = true;
-				console.log('The project data is ');
-				console.log(this.projectList);
-			}
-		});
-
-
-		// Subscribe to the version list
-		this.VersionsService.versionStatus
-		.pipe(takeUntil(this._unsubscribeAll))
-		.subscribe((versions)=>
-		{ 
-
-			if ( versions.length > 0 )
-			{
-				this.versionList = versions;
-				this.currentVersion = this.versionList[this.versionList.length-1];
-				if ( this.currentVersion ) { this.versionDataFlag = true; }
-				console.log('The version data is ');
-				console.log(this.versionList);
-			}
-		});
-
-
-		// Subscribe to the design
-		this.DesignsService.designStatus
-		.pipe(takeUntil(this._unsubscribeAll))
-		.subscribe((design)=>
-		{ 
-
-			this.currentDesign=design;
-
-			// Get the main background image
-			if ( design.marketplace)
-			{
-				for (var a=0; a<this.currentDesign.marketplace.images.length; a++)
-				{
-					if ( this.currentDesign.marketplace.images[a]['mainImage'] )
-					{
-						const ref = this.afStorage.ref(this.currentDesign.marketplace.images[a]['path']);
-						this.designImageUrl = ref.getDownloadURL();
-					}
-				}
-			}
-		});
-
-	}
 
 
 	// Update Version
@@ -259,6 +251,14 @@ export class EcommerceComponent implements OnInit
 
 	}
 
+
+	// Delete Project
+	deleteProject( projectId ) 
+	{
+		this.ProjectsService.deleteProject( projectId );
+		this.SnackBar.open('Project Deleted','', {duration: 4000});
+
+	}
 
 
 
@@ -288,7 +288,7 @@ export class EcommerceComponent implements OnInit
 	onVersionSelected( versionIndex : number): void
 	{
 
-		this.currentVersion = this.versionList[versionIndex];
+		this.currentVersion = JSON.parse(JSON.stringify(this.versionList[versionIndex]));
 		this.currentVersion.measurements = [];
 		for (const property in this.currentVersion.values) {
 			this.currentVersion.measurements.push({'name': property, 'value': this.currentVersion.values[property] });
@@ -302,12 +302,10 @@ export class EcommerceComponent implements OnInit
 	 */
 	setCurrentProject( project : makProject )
 	{
-		console.log('The project I am sending is ...');
-		console.log(project);
 
-		this.currentProject = project; 
-		this.VersionsService.getVersionsForProject( project.id ); 
-		this.DesignsService.getDesignById( project.designId );
+		this.currentProject = JSON.parse(JSON.stringify(project)); 
+		//this.VersionsService.getVersionsForProject( project.id ); 
+		//this.DesignsService.getDesignById( project.designId );
 	}
 
 

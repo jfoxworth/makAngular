@@ -15,23 +15,17 @@
 
 // Standard Angular Items
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
-
+import { CommonModule } from '@angular/common';
 
 // RXJS Items
 import { finalize } from 'rxjs/operators';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/internal/operators';
-
-
-// Child Dialogs
-import { editParameterDialog } from './parameter-dialog/parameter-dialog.component';
-import { SubmenuDialog } from './submenu-dialog/submenu-dialog.component';
-
+import { concatMap, delay, filter, first, map, mergeMap, shareReplay, tap, withLatestFrom } from 'rxjs/operators';
 
 
 // Angular Material Items
 import { MatCarousel, MatCarouselComponent } from '@ngmodule/material-carousel';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -49,6 +43,9 @@ import { ProjectsService } from 'app/main/services/projects.service';
 import { DesignsService } from 'app/main/services/designs.service';
 import { UserService } from 'app/main/services/user-service.service';
 import { SignoffReqsService } from 'app/main/services/signoff-reqs.service';
+import { makDesignEntityService } from 'app/main/services/entity/makDesign-entity.service';
+import { signoffReqEntityService } from 'app/main/services/entity/signoffReq-entity.service';
+import { makProjectEntityService } from 'app/main/services/entity/makProject-entity.service';
 
 
 
@@ -84,7 +81,7 @@ export interface DialogData {
   templateUrl: './creator-studio.component.html',
   styleUrls: ['./creator-studio.component.scss', 
   			  '../e-commerce/e-commerce.component.scss', 
-  			  '../store/product/product.component.scss', 
+  			  '../marketplace/product/product.component.scss', 
   			  '../design-studio/sidebar/sidebar.component.scss',
   			  '../design-studio/slider.component.scss']
 })
@@ -101,9 +98,9 @@ export class CreatorStudioComponent implements OnInit {
 	dataFlag 			: boolean = false;
 	dataFlag2 			: boolean = false;
 	changesExist 		: boolean = false;
-	potentialUser 		: any = {};
-	testUser 			: string;
-	reqList 			: signoffReq[];
+	makDesigns$ 		: Observable<makDesign[]>;
+	signoffReqs$ 		: Observable<signoffReq[]>;
+	signoffs 			: string[];
 
 	// Variables needed for the BG image
 	carouselUrls : Array<any> = [];
@@ -113,8 +110,7 @@ export class CreatorStudioComponent implements OnInit {
 	private _unsubscribeAll: Subject<any>;
 
 
-	constructor(	public dialog 					: MatDialog, 
-					private CreatorStudioService 	: CreatorStudioService,
+	constructor(	private CreatorStudioService 	: CreatorStudioService,
 					private VersionsService 		: VersionsService,
 					private ProjectsService 		: ProjectsService,
 					private DesignsService 			: DesignsService,
@@ -123,6 +119,8 @@ export class CreatorStudioComponent implements OnInit {
 					private AuthService  			: AuthService,
 					private SnackBar 				: MatSnackBar,
 					private afStorage 				: AngularFireStorage,
+					private DesignEntityService 	: makDesignEntityService,
+					private SignoffEntityService 	: signoffReqEntityService, 
 					public vcRef 					: ViewContainerRef ) 
 	{
 		this._unsubscribeAll = new Subject();
@@ -148,11 +146,34 @@ export class CreatorStudioComponent implements OnInit {
 		this.menuLocations	= this.CreatorStudioService.getMenuLocations();
 
 
-		// Pull the list of existing designs for this user	
-		this.DesignsService.getDesignsForUser( this.userData.uid );
 
-		// Subscribe to that data
-		this.subscribeToData();
+		// The observable for the signoff reqs from the store
+		this.signoffReqs$ = this.SignoffEntityService.entities$
+			.pipe(
+				tap((signoffReqs) => {
+					// This needs to call a function that gets the images and stores their addresses
+					this.signoffs = [];
+					for (let a=0; a<signoffReqs.length; a++)
+					{
+						this.signoffs.push(signoffReqs[a]['designId']);
+					}
+				})
+			)
+		this.signoffReqs$.subscribe();
+
+
+
+		// The observable for the design data from the store
+		this.makDesigns$ = this.DesignEntityService.entities$
+		.pipe(
+			map(makDesigns => makDesigns.filter(makDesign => makDesign.creatorId == this.userData.uid))
+		);
+		this.makDesigns$.subscribe((makDesigns)=>{
+			if (this.currentDesign===undefined)
+			{
+				this.currentDesign = JSON.parse(JSON.stringify(makDesigns[0]));
+			}
+		})
 
 	}
 
@@ -166,29 +187,15 @@ export class CreatorStudioComponent implements OnInit {
 
 
 
-
 	// -----------------------------------------------------------------------------------------------------
 	//
-	// @ DRAG AND DROP FUNCTIONS
+	// @ SET THE CURRENT DESIGN
 	//
 	// -----------------------------------------------------------------------------------------------------
 
-	/**
-	 * When a parameter is dropped into a list
-	 */
-	drop(event: CdkDragDrop<string[]>) {
-		console.log(event.container);
-		console.log(event.previousContainer);
-		if (event.previousContainer === event.container) {
-			moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-		} else {
-			transferArrayItem(event.previousContainer.data,
-							  event.container.data,
-							  event.previousIndex,
-							  event.currentIndex);
-		}
-  	}
-
+	setCurrent(design) {
+		this.currentDesign = JSON.parse(JSON.stringify(design));
+	}
 
 
 
@@ -211,46 +218,6 @@ export class CreatorStudioComponent implements OnInit {
 	}
 
 
-	// Read
-	subscribeToData()
-	{
-
-		// Subscribe to the signoff reqs observer
-		this.subscribeToSignOffData();
-
-		// Subscribe to the designs for the user
-		this.DesignsService.designUserStatus
-		.pipe(takeUntil(this._unsubscribeAll))
-		.subscribe((designs)=>
-		{ 
-			if ( designs.length > 0 )
-			{
-				this.designList = designs;
-				this.currentDesign=this.designList[0];
-				this.formatDesignData();
-			}
-
-			// Get the main background image
-			/*
-			for (var a=0; a<designs.length; a++)
-			{
-				for (var b=0; b<designs[a].marketplace.images.length; b++)
-				{
-					if ( designs[a].marketplace.images[b]['mainImage'] )
-					{
-						const ref = this.afStorage.ref(designs[a].marketplace.images[b]['path']);
-						this.designImageUrl = ref.getDownloadURL();
-					}
-				}
-			}
-			*/
-
-		});
-
-
-
-
-	}
 
 	// Update
 	saveDesignChanges( ) 
@@ -613,136 +580,6 @@ export class CreatorStudioComponent implements OnInit {
 	}
 
 
-
-
-
-
-
-	// -----------------------------------------------------------------------------------------------------
-	//
-	// @ FUNCTIONS RELATING TO OPENING THE DIALOGS
-	//
-	// -----------------------------------------------------------------------------------------------------
-
-	/**
-	 * Dialog to edit a parameter
-	 */
-	openDialog(i,j) {
-		console.log('In the open dialog with '+i+' - '+j);
-		const dialogRef = this.dialog.open( editParameterDialog, {
-			panelClass: 'parameter-dialog',
-			data: { currentDesign: this.currentDesign, 
-					i:i, 
-					j:j, 
-					parameterTypes: this.CreatorStudioService.getParameterTypes(),
-					parameterUrls: this.parameterUrls }
-		});
-
-		dialogRef.afterClosed().subscribe(result => {
-		  console.log('The dialog was closed');
-		  console.log(result);
-		});
-
-	}
-
-
-
-
-
-	/**
-	 * Dialog to edit a submenu
-	 */
-	openSubmenuDialog(i) {
-		console.log('In the open submenu dialog with '+i);
-		const dialogRef = this.dialog.open( SubmenuDialog, {
-			panelClass: 'submenu-dialog',
-			data: { currentDesign: this.currentDesign, 
-					i:i,
-					iconOptions : this.CreatorStudioService.getIconOptions()
-				  }
-		});
-
-		dialogRef.afterClosed().subscribe(result => {
-		  console.log('The dialog was closed');
-		  console.log(result);
-		});
-
-	}
-
-
-
-
-
-
-
-	// -----------------------------------------------------------------------------------------------------
-	//
-	// @ FUNCTIONS RELATING TO THE SIGNOFFS
-	//
-	// -----------------------------------------------------------------------------------------------------
-
-	// Check if a user or team name is valid
-	checkUserEmail( name )
-	{
-		console.log(name);
-
-		this.UserService.checkUserEmail( name )
-		.subscribe(result=> {
-			console.log(result.docs);
-
-			if ( result.docs.length>0 )
-			{ 
-				this.potentialUser = result.docs[0].data();
-
-			}else
-			{
-				this.potentialUser = {};
-			}
-		});
-
-	}
-
-
-
-	// -----------------------------------------------------------------------------------------------------
-	//
-	// @ CRUD FUNCTIONS FOR A DESIGN REQ
-	//
-	// -----------------------------------------------------------------------------------------------------
-
-	// Create
-	createDesignReq( userObj ): void
-	{
-		this.SignoffReqsService.createSignoffReq( userObj, this.currentDesign );
-		this.potentialUser = {};
-	}
-
-
-	// Read
-	subscribeToSignOffData()
-	{
-
-		// Subscribe to the designs for the user
-		this.SignoffReqsService.signoffReqStatus
-		.pipe(takeUntil(this._unsubscribeAll))
-		.subscribe((reqs)=>
-		{ 
-
-			if ( reqs.length > 0 )
-			{
-				for (let a=0; a<reqs.length; a++)
-				{
-					this.UserService.fetchUserData( reqs[a].userId )
-						.subscribe(result=> {
-							reqs[a]['userImage'] = this.UserService.getProfileImage( result.docs[0].data() );
-						});
-
-				}
-			}
-			this.reqList = reqs;
-		});
-
-	}
 
 
 

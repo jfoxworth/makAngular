@@ -6,9 +6,24 @@ import { takeUntil } from 'rxjs/operators';
 
 import { FuseMatchMediaService } from '@fuse/services/match-media.service';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
-import { FirebaseService } from 'app/main/services/firebase.service';
 
 import { Router } from '@angular/router';
+
+// Models
+import { UserData } from 'app/main/models/userData';
+
+
+// NgRX
+import { select, Store } from '@ngrx/store';
+import { AuthState } from 'app/main/reducers';
+import { AppState } from 'app/main/reducers';
+
+
+// Services
+import { AuthService } from 'app/main/services/auth.service';
+import { UserService } from 'app/main/services/user-service.service';
+import { FirebaseService } from 'app/main/services/firebase.service';
+
 
 @Component({
 	selector   : 'fuse-shortcuts',
@@ -17,13 +32,14 @@ import { Router } from '@angular/router';
 })
 export class FuseShortcutsComponent implements OnInit, AfterViewInit, OnDestroy
 {
-	shortcutItems: any[];
-	navigationItems: any[];
-	filteredNavigationItems: any[];
-	searching: boolean;
-	mobileShortcutsPanelActive: boolean;
-	userData : any;
-	userInfo : any;
+	shortcutItems 				: any[];
+	navigationItems 			: any[];
+	filteredNavigationItems		: any[];
+	searching 					: boolean;
+	mobileShortcutsPanelActive	: boolean;
+	userData 					: UserData;
+	userInfo 					: any;
+	tempData 					: UserData;
 
 	@Input()
 	navigation: any;
@@ -47,13 +63,15 @@ export class FuseShortcutsComponent implements OnInit, AfterViewInit, OnDestroy
 	 * @param {Renderer2} _renderer
 	 */
 	constructor(
-		private _cookieService: CookieService,
-		private _fuseMatchMediaService: FuseMatchMediaService,
-		private _fuseNavigationService: FuseNavigationService,
-		private _mediaObserver: MediaObserver,
-		private _renderer: Renderer2,
-		private router: Router,
-		private FirebaseService : FirebaseService,
+		private _cookieService 			: CookieService,
+		private _fuseMatchMediaService 	: FuseMatchMediaService,
+		private _fuseNavigationService 	: FuseNavigationService,
+		private _mediaObserver 			: MediaObserver,
+		private _renderer 				: Renderer2,
+		private router 					: Router,
+		private FirebaseService 		: FirebaseService,
+		private UserService 			: UserService,
+		private store 					: Store<AuthState>,
 	)
 	{
 		// Set the defaults
@@ -77,19 +95,34 @@ export class FuseShortcutsComponent implements OnInit, AfterViewInit, OnDestroy
 	 */
 	ngOnInit(): void
 	{
+
+
+
+        // See if user is logged in from previous session
+        // or is logged in now.
+		this.tempData = JSON.parse(localStorage.getItem('UserData'));
+		
+		this.store.subscribe(state => {
+
+			this.tempData = JSON.parse(localStorage.getItem('UserData'));
+
+			if ( ( this.tempData ) && ( !state.UserData ) )
+			{
+				this.userData = this.tempData;
+			}
+
+			if ( state.UserData )
+			{
+				this.userData = state.UserData;
+			}
+
+		});
+
+
+
+
 		// Get the navigation items and flatten them
 		this.filteredNavigationItems = this.navigationItems = this._fuseNavigationService.getFlatNavigation(this.navigation);
-
-		// Get the user data
-		if ( ( localStorage.getItem('userData') === undefined ) || 
-			 ( localStorage.getItem('userData') === null ) ||
-			 ( localStorage.getItem('userData') == 'undefined' ) )
-		{
-			this.userData = undefined;
-		}else
-		{
-			this.userData = JSON.parse(localStorage.getItem('userData'));
-		}
 
 
 		this.shortcutItems = [
@@ -106,10 +139,10 @@ export class FuseShortcutsComponent implements OnInit, AfterViewInit, OnDestroy
 				url  : '/designStudio'
 			},
 			{
-				title: 'Design Store',
+				title: 'The Marketplace',
 				type : 'item',
 				icon : 'store',
-				url  : '/store'
+				url  : '/marketplace'
 			}
 		];
 
@@ -158,10 +191,10 @@ export class FuseShortcutsComponent implements OnInit, AfterViewInit, OnDestroy
 							url  : '/designStudio'
 						},
 						{
-							title: 'Design Store',
+							title: 'The Marketplace',
 							type : 'item',
 							icon : 'store',
-							url  : '/store'
+							url  : '/marketplace'
 						},
 						{
 							title: 'Creator Studio',
@@ -208,10 +241,10 @@ export class FuseShortcutsComponent implements OnInit, AfterViewInit, OnDestroy
 							url  : '/designStudio'
 						},
 						{
-							title: 'Design Store',
+							title: 'The Markeplace',
 							type : 'item',
 							icon : 'store',
-							url  : '/store'
+							url  : '/marketplace'
 						}
 					];
 

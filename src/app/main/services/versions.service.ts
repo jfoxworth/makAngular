@@ -23,6 +23,7 @@ import { makVersion } from 'app/main/models/makVersion';
 
 // Services
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { makVersionDataService } from 'app/main/services/entity/makVersion-data.service';
 
 
 @Injectable({providedIn: 'root'})
@@ -41,7 +42,8 @@ export class VersionsService
 	 *
 	 */
 	constructor(
-		public afs 			: AngularFirestore,
+		public afs 						: AngularFirestore,
+		private makVersionDataService 	: makVersionDataService,
 	)
 	{
 		this.versionStatus 		= new BehaviorSubject([]);
@@ -61,41 +63,7 @@ export class VersionsService
 	// Create
 	createVersion( type, project, versions, design )
 	{
-
-		var userData = JSON.parse(localStorage.getItem('user'));
-
-		let versionObj = {
-			'id'			: '',
-			'dateCreated'	: Date.now(),
-			'creatorId'		: userData.uid,
-			'creatorName'	: userData.username,
-			'description'	: "This is the description of this version",
-			'designId' 		: design.id,
-			'initialOpen'	: false,
-			'name'			: 'New Version',
-			'price'			: 0,
-			'projectId'		: project.id,
-			'values'		: {},
-			'version'		: versions.length+1,
-			'deleted' 		: false,
-			'measurements' 	: '',
-			'tax'			: 0,
-			'totalCost'		: 0,
-			'deposit'		: 0
-		}
-
-		if ( type != 'default' )
-		{
-			versionObj['values'] = versions[versions.length-1][type]['values'];
-		}
-
-		var docRef = this.afs.collection('versions').add( versionObj )
-    	.then((docRef) => {
-
-			this.afs.collection('versions').doc(docRef.id).update({'id':docRef.id });
-		});
-
-
+		this.makVersionDataService.createVersion( type, project, versions, design );
 	}
 
 
@@ -141,7 +109,8 @@ export class VersionsService
 	// Update
 	updateVersion ( versionObj )
 	{
-		this.afs.collection('versions').doc( versionObj.uid ).update( versionObj );		
+		this.makVersionDataService.updateVersion( versionObj );
+//		this.afs.collection('versions').doc( versionObj.uid ).update( versionObj );		
 	}
 
 
@@ -149,7 +118,8 @@ export class VersionsService
 	// Delete
 	deleteVersion ( versionId )
 	{
-		this.afs.collection('versions').doc( versionId ).update( { 'deleted' : true } );		
+		this.makVersionDataService.deleteVersion( versionId );
+//		this.afs.collection('versions').doc( versionId ).update( { 'deleted' : true } );		
 	}
 
 
@@ -174,10 +144,12 @@ export class VersionsService
 			userData = { 'uid' : '', 'email': '' }
 		}
 		
+
 		return {
+			'id'			: '',
 			'dateCreated'	: Date.now(),
 			'creatorId'		: userData.uid,
-			'creatorEmail'	: userData.email,
+			'creatorName'	: userData.username,
 			'description'	: "This is the description of this version",
 			'designId' 		: '',
 			'initialOpen'	: false,
@@ -186,7 +158,11 @@ export class VersionsService
 			'projectId'		: '',
 			'values'		: {},
 			'version'		: 1,
-			'deleted' 		: false
+			'deleted' 		: false,
+			'measurements' 	: '',
+			'tax'			: 0,
+			'totalCost'		: 0,
+			'deposit'		: 0
 		}
 
 	}

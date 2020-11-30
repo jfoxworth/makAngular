@@ -24,6 +24,8 @@ import { makDesign } from 'app/main/models/makDesign';
 
 // Services
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { makDesignEntityService } from 'app/main/services/entity/makDesign-entity.service';
+import { makDesignDataService } from 'app/main/services/entity/makDesign-data.service';
 
 
 @Injectable({providedIn: 'root'})
@@ -43,7 +45,9 @@ export class DesignsService
 	 *
 	 */
 	constructor(
-		public afs 			: AngularFirestore,
+		public afs 						: AngularFirestore,
+		private makDesignEntityService	: makDesignEntityService,
+		private makDesignDataService	: makDesignDataService
 	)
 	{
 		this.designStatus 		= new BehaviorSubject([]);
@@ -67,42 +71,7 @@ export class DesignsService
 	// Create
 	createDesign( )
 	{
-
-		var userData = JSON.parse(localStorage.getItem('user'));
-
-		let designObj = {
-			'id' 				: '',
-			'title' 			: 'Design Title',
-			'dateCreated'		: Date.now(),
-			'creatorId'			: userData.uid,
-			'creatorName'		: userData.username,
-			'category'			: 'Wall',
-			'company'			: '',
-			'companyId'			: '',
-			'initialPrice'		: 0,
-			'description'		: '',
-			'marketplace'		: '',
-			'price'				: 0,
-			'priceString' 		: '',
-			'priceFormula'		: '',
-			'priceArray'		: '',
-			'priceShowForm' 	: '',
-			'priceStatus'		: false,
-			'priceValid'		: false,
-			'shapediverTicket'	: '',
-			'status'			: 0,
-			'parameterMenus' 	: '',
-			'signoffRequired'	: false,
-			'deleted' 			: false
-		}
-
-		var docRef = this.afs.collection('designs').add( designObj )
-    	.then((docRef) => {
-
-			this.afs.collection('designs').doc(docRef.id).update({'id':docRef.id });
-		});
-
-
+		this.makDesignDataService.createDesign( )
 	}
 
 
@@ -169,15 +138,16 @@ export class DesignsService
 	// Update a design
 	updateDesign( designObj )
 	{
-		console.log('I am updating the design ...');
-		console.log(designObj);
-		this.afs.collection('designs').doc( designObj.uid ).update( designObj );		
+		//this.afs.collection('designs').doc( designObj.uid ).update( designObj );		
+
+		this.makDesignDataService.updateDesign( designObj )
 	}
 
 	// Delete
 	deleteDesign ( designId )
 	{
-		this.afs.collection('designs').doc( designId ).update( { 'deleted' : true } );		
+		this.makDesignDataService.deleteDesign( designId )
+		//this.afs.collection('designs').doc( designId ).update( { 'deleted' : true } );		
 	}
 
 

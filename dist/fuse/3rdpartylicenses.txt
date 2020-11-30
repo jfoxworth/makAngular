@@ -626,6 +626,24 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
+@ngrx/data
+MIT
+
+@ngrx/effects
+MIT
+
+@ngrx/entity
+MIT
+
+@ngrx/router-store
+MIT
+
+@ngrx/store
+MIT
+
+@ngrx/store-devtools
+MIT
+
 @ngx-translate/core
 MIT
 

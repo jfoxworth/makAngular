@@ -1,4 +1,8 @@
+
+
 import { Component, OnInit, Input, Output, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
+
 
 // New ng5 slider
 import { Ng5SliderModule } from 'ng5-slider';
@@ -7,8 +11,10 @@ import { Options } from 'ng5-slider';
 import { EventEmitter } from '@angular/core';
 
 // Services
+import { DesignStudioService } from 'app/main/services/design-studio.service';
 import { CreatorStudioService } from 'app/main/services/creator-studio.service';
 import { DesignSignoffsService } from 'app/main/services/design-signoffs.service';
+import { ProjectsService } from 'app/main/services/projects.service';
 
 
 
@@ -18,6 +24,7 @@ import { makProject } from 'app/main/models/makProject';
 import { makVersion } from 'app/main/models/makVersion';
 import { signoffReq } from 'app/main/models/signoffReq';
 import { designSignoff } from 'app/main/models/designSignoffs';
+import { UserData } from 'app/main/models/userData';
 
 
 
@@ -50,23 +57,31 @@ export class SidebarComponent implements OnInit {
 	@Output() createNewVersion = new EventEmitter();
 	@Output() loadModel = new EventEmitter();
 
+
 	thisValue 		: number=5;
 	blobSelectIndex : number = 0;
 	signoffStatus 	: number = 0;
 	signoffComments : string;
+	menuLocations 	: number[][] = this.DesignStudioService.getMenuLocations();
+	menuShow 		: boolean[] = [false, false, false];
 
-	@Input('designData') designData:any;
-	@Input('versionList') versionList:any;
-	@Input('versionData') versionData:any;
+
+	@Input('designData') designData:makDesign;
+	@Input('projectData') projectData:makProject;
+	@Input('versionData') versionData:makVersion;
+	@Input('versionList') versionList:makVersion[];
 	@Input('signoffData') signoffData:designSignoff[];
-	@Input('userData') userData:any;
+	@Input('userData') userData:UserData;
 	@Input('flowersJSON') flowersJSON:any;
 	@Input('flowerFlag') flowerFlag:any;
 	@Input('editableVersion') editableVersion:boolean;
 	
 
 	constructor( private CreatorStudioService 	: CreatorStudioService,
-				 private DesignSignoffsService 	: DesignSignoffsService
+				 private DesignSignoffsService 	: DesignSignoffsService,
+				 private DesignStudioService 	: DesignStudioService,
+				 private ProjectsService 		: ProjectsService,
+				 private router 				: Router
 	 ) { }
 
 
@@ -78,10 +93,10 @@ export class SidebarComponent implements OnInit {
   	// FUNCTION TO HIDE/SHOW SIDE MENU BASED UPON WHAT IS CLICKED
 	menuClick(param): void {
 		this.designData.parameterMenus.forEach((value, index) => {
-			this.designData.menuShow[index] =  false;
+			this.menuShow[index] =  false;
 		});
 
-		this.designData.menuShow[param] =  true;
+		this.menuShow[param] =  true;
 	}
 
 
@@ -90,14 +105,15 @@ export class SidebarComponent implements OnInit {
     // WHEN THE USER CLOSES THE WINDOW
     onMenuClose() {
 		this.designData.parameterMenus.forEach((value, index) => {
-			this.designData.menuShow[index] =  false;
+			this.menuShow[index] =  false;
 		});
     }
 
 
     // When a user wants to add a new project based upon a design
-    addMyProject( designId:string ) {
-    	console.log('I should be adding a new design with the ID of '+designId);
+    addMyProject( ) {
+		this.ProjectsService.createProject( this.designData, this.versionData  );
+		this.router.navigateByUrl('/products');
     }
 
 

@@ -22,6 +22,8 @@ import { designSignoff } from 'app/main/models/designSignoffs';
 
 // Services
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { designSignoffDataService } from 'app/main/services/entity/designSignoff-data.service';
+
 
 
 @Injectable({providedIn: 'root'})
@@ -40,7 +42,8 @@ export class DesignSignoffsService
 	 *
 	 */
 	constructor(
-		public afs 			: AngularFirestore,
+		public afs 							: AngularFirestore,
+		private designSignoffDataService	: designSignoffDataService
 	)
 	{
 		this.designSignoffStatus 		= new BehaviorSubject([]);
@@ -62,35 +65,17 @@ export class DesignSignoffsService
 	// Create
 	createDesignSignoff( userObj, designId, status, comments )
 	{
-
-		var userData = JSON.parse(localStorage.getItem('user'));
-
-		let designSignoffObj = {
-			'id' 			: '',
-			'creatorId'		: userObj.uid,
-			'creatorEmail'	: userObj.email,
-			'designId' 		: designId,
-			'comments' 		: comments,
-			'approve' 		: status,
-			'deleted' 		: false,
-			'dateCreated'	: Date.now(),
-		}
-
-		var docRef = this.afs.collection('designSignoffs').add( designSignoffObj )
-    	.then((docRef) => {
-
-    		console.log('The item is ');
-    		console.log(docRef);
-
-			this.afs.collection('designSignoffs').doc(docRef.id).update({'id':docRef.id });
-		});
-
-
+		this.designSignoffDataService.createDesignSignoff( userObj, designId, status, comments );
 	}
 
 
 
 
+	getdesignSignoffsForDesign( designId:string )
+	{ 
+		this.designSignoffDataService.getdesignSignoffsForDesign( designId );
+	}
+/*
 	// Read
 	getdesignSignoffsForDesign( designId:string )
 	{ 
@@ -121,13 +106,14 @@ export class DesignSignoffsService
 			
 		});
 	}
-
+*/
 
 
 	// Update
 	updatedesignSignoff ( designSignoffObj )
 	{
-		this.afs.collection('designSignoffs').doc( designSignoffObj.uid ).update( designSignoffObj );		
+		this.designSignoffDataService.updateDesignSignoff( designSignoffObj );
+		//this.afs.collection('designSignoffs').doc( designSignoffObj.uid ).update( designSignoffObj );		
 	}
 
 
@@ -135,7 +121,8 @@ export class DesignSignoffsService
 	// Delete
 	deletedesignSignoff ( designSignoffId )
 	{
-		this.afs.collection('designSignoffs').doc( designSignoffId ).update( { 'deleted' : true } );		
+		this.designSignoffDataService.deleteDesignSignoff( designSignoffId );
+//		this.afs.collection('designSignoffs').doc( designSignoffId ).update( { 'deleted' : true } );		
 	}
 
 

@@ -2,7 +2,7 @@
 <!-- FOR LOOP FOR THE HEXAGON MENU THAT THE USER HAS SET -->
 <div class="hexagon" 
 	 *ngFor="let menuitem of designData['parameterMenus']; let i=index;"
-	 [ngStyle]="{'position':'absolute', 'left':designData['menuLocations'][i][0]+'px', 'top':designData['menuLocations'][i][1]+'px'}" 
+	 [ngStyle]="{'position':'absolute', 'left':menuLocations[i][0]+'px', 'top':menuLocations[i][1]+'px'}" 
 	 (click)="menuClick(i)">
 
 	<span>
@@ -17,15 +17,15 @@
 
 
 <!-- THE SIDEBAR MENU THAT DEPENDS UPON WHAT IS SELECTED -->
-<fuse-sidebar id="mainSidebar" 
-			  class="sidebar" 
+<fuse-sidebar class="sidebar" 
 			  position="left" 
 			  lockedOpen="gt-sm"
 			  style="position:absolute; left:220px; top:100px;"
-			  *ngFor="let menuitem of designData['parameterMenus']; let i=index;">
+			  *ngFor="let menuitem of designData['parameterMenus']; let i=index;"
+			  [name]="i">
 
-
-	<div *ngIf="designData['menuShow'][i]">
+	<div *ngIf="menuShow[i]"
+		 class="pb-28">
 	
 
 		<!-- The icon to close the left menus -->
@@ -91,17 +91,19 @@
 					Create New Version
 				</button>
 
-				<div *ngFor="let version of versionList; let i=index"
-					 (click)="setVersionData.emit(version)"
-					 fxLayout="row"
-					 fxLayoutAlign="center center"
-					 class="mb-12 mt-12"
-					 style="cursor:pointer; font-size:1.1em; width:90%; margin:0px 5%; padding:10px 0px"
-					 [ngClass]="{'current' : version.version == versionData.version}">
-					
-					<div fxFlex="40" style="text-align:center">Version {{version.version}}</div>
-					<div fxFlex="60" style="text-align:center">{{version.name}}</div>
-				</div>
+				<ng-container *ngFor="let version of versionList; let i=index">
+					<div *ngIf="version.projectId == projectData.id"
+						 (click)="setVersionData.emit(version)"
+						 fxLayout="row"
+						 fxLayoutAlign="center center"
+						 class="mb-12 mt-12"
+						 style="cursor:pointer; font-size:1.1em; width:90%; margin:0px 5%; padding:10px 0px"
+						 [ngClass]="{'current' : version.version == versionData.version}">
+						
+						<div fxFlex="40" style="text-align:center">Version {{version.version}}</div>
+						<div fxFlex="60" style="text-align:center">{{version.name}}</div>
+					</div>
+				</ng-container>
 
 			</div>
 
@@ -207,9 +209,9 @@
 
 				<div class="w-140 mb-40"
 					 *ngIf="userData !== undefined">
-					<div style="margin-top:10px; padding:5px 0px; color:#CCC"
+					<div style="margin-top:10px; padding:5px 0px; color:#CCC; cursor:pointer"
 						 class="text-center primary-A100 w-120 mt-20 mb-20 heading-2"
-						 (click)=addMyProject(designData.uid)>
+						 (click)=addMyProject()>
 						Create Project with this Design
 					</div>
 				</div>
@@ -239,7 +241,7 @@
 					 fxLayoutAlign="center center">
 					<button mat-stroked-button 
 							color="accent"
-							[routerLink]="'/invoice/'+versionData.uid">
+							[routerLink]="'/invoice/'+designData.id+'/'+projectData.id+'/'+versionData.id">
 						Get Quote
 					</button>
 				</div>
@@ -559,7 +561,7 @@
 						</mat-form-field>
 					</div>
 
-					<div class="h3 text-center mb-12 w-200">Flower Size</div>
+					<div class="h3 text-center mb-12 mt-12">Flower Size</div>
 				
 					<input matInput 
 						   id=""
@@ -571,7 +573,7 @@
 
 
 
-					<div class="h3 text-center mb-12 w-200">Flower Rotation</div>
+					<div class="h3 text-center mb-12 mt-12">Flower Rotation</div>
 				
 					<input matInput 
 						   id=""
@@ -584,7 +586,7 @@
 
 
 
-					<div class="h3 text-center mb-12 w-200">Position - X</div>
+					<div class="h3 text-center mb-12 mt-12">Position - X</div>
 				
 					<input matInput 
 						   id=""
@@ -596,7 +598,7 @@
 
 
 
-					<div class="h3 text-center mb-12 w-200">Position - Y</div>
+					<div class="h3 text-center mb-12 mt-12">Position - Y</div>
 				
 					<input matInput 
 						   id=""
@@ -611,7 +613,7 @@
 					<button mat-raised-button 
 							color="accent"
 							(click)="deleteItemFromBlob( blobSelectIndex )"
-							class="mb-20">
+							class="mb-20 mt-20">
 						Delete This Flower
 					</button>
 

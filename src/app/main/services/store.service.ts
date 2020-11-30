@@ -32,7 +32,7 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firest
 @Injectable({
 	providedIn: 'root'
 })
-export class StoreService {
+export class MarketplaceService {
 
 
 

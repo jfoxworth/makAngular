@@ -25,6 +25,7 @@ import { makProject } from 'app/main/models/makProject';
 // Services
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { VersionsService } from 'app/main/services/versions.service';
+import { makProjectDataService } from 'app/main/services/entity/makProject-data.service';
 
 
 
@@ -45,8 +46,9 @@ export class ProjectsService
 	 *
 	 */
 	constructor(
-		public afs 					: AngularFirestore,
-		private VersionsService 	: VersionsService
+		public afs 						: AngularFirestore,
+		private VersionsService 		: VersionsService,
+		private makProjectDataService 	: makProjectDataService,
 	)
 	{
 		this.projectStatus 		= new BehaviorSubject([]);
@@ -68,35 +70,9 @@ export class ProjectsService
 
 
 	// Create
-	createProject( projObj, desObj )
+	createProject( designObj, versionObj )
 	{
-
-		var userData = JSON.parse(localStorage.getItem('user'));
-
-
-		let project = {
-			'id'			: '',
-			'creatorId' 	: userData.uid,
-			'creatorName' 	: userData.userName,
-			'dateCreated'	: Date.now(),
-			'description'	: "This is the description of this project",
-			'designId' 		: desObj.uid,
-			'designType'	: desObj.category,
-			'initialOpen'	: false,
-			'name'			: 'My Project',
-			'status'		: '0',
-			'versions'		: '1',
-			'deleted'		: false,
-		}
-
-		var docRef = this.afs.collection('projects').add( project )
-    	.then((docRef) => {
-
-			this.afs.collection('designs').doc(docRef.id).update({'id':docRef.id });
-			this.VersionsService.createVersion( 'default', projObj, [], desObj );
-		});
-
-
+		this.makProjectDataService.createProject( designObj, versionObj )
 	}
 
 
@@ -156,13 +132,15 @@ export class ProjectsService
 	// Update
 	updateProject ( projectObj )
 	{
-		this.afs.collection('projects').doc( projectObj.uid ).update( projectObj );		
+		this.makProjectDataService.updateProject( projectObj )
+//		this.afs.collection('projects').doc( projectObj.uid ).update( projectObj );		
 	}
 
 	// Delete
 	deleteProject ( projectId )
 	{
-		this.afs.collection('projects').doc( projectId ).update( { 'deleted' : true } );		
+		this.makProjectDataService.deleteProject( projectId )
+//		this.afs.collection('projects').doc( projectId ).update( { 'deleted' : true } );		
 	}
 
 

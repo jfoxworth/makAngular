@@ -8,6 +8,10 @@ import { Router } from "@angular/router";
 import { BehaviorSubject, Observable } from 'rxjs';
 
 
+// Models
+import { UserData } from 'app/main/models/userData';
+
+
 // Services
 import { User } from "app/main/services/users";
 import { auth } from 'firebase/app';
@@ -16,22 +20,37 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firest
 import { AngularFireStorage } from '@angular/fire/storage';
 
 
+// NgRX
+import {select, Store} from '@ngrx/store';
+import { isLoggedIn, isLoggedOut } from 'app/main/selectors/auth.selectors';
+import { AppState } from 'app/main/reducers';
+import { AuthState } from 'app/main/reducers';
+
+
+
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
 	userStatus 		: BehaviorSubject<any>;
+	tempData 		: UserData;
+
 
 	constructor(
         public afs 			: AngularFirestore, 	// Inject Firestore service
         public afAuth 		: AngularFireAuth, 		// Inject Firebase auth service
         public router 		: Router,
         public ngZone 		: NgZone,  				// NgZone service to remove outside scope warning
-        private afStorage 	: AngularFireStorage
+        private afStorage 	: AngularFireStorage,
+		private store 		: Store<AuthState>,
   	) { 
 		this.userStatus 	= new BehaviorSubject([]);
   	}
+
+
+
+
 
 
 
@@ -107,7 +126,7 @@ export class UserService {
 	**/
 	getProfileImage( userData ) {
 
-		if ( userData.imageType  === undefined )
+		if ( !userData.imageType )
 		{
 			var path = '/profile/default.jpeg';
 		}else{

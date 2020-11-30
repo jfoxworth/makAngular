@@ -1,0 +1,109 @@
+<!--
+
+	This is the marketplace page. It simply displays the designs with a status set to 1.
+	When the user clicks on an item, the product page is shown.
+
+-->
+<div id="marketplace" style="background-color:#FFF" 
+				class="page-layout simple">
+
+	<!-- TOP BACKGROUND -->
+	<div class="top-bg accent"></div>
+	<!-- / TOP BACKGROUND -->
+
+
+
+	<!-- HEADER -->
+	<div class="header accent" fxLayout="row"></div>
+	<!-- / HEADER -->
+
+
+
+
+
+	<!-- CENTER -->
+	<div class="content">
+
+
+		<!-- CENTER -->
+		<div class="center p-24" fusePerfectScrollbar>
+
+			<h1 class="text-center">The Marketplace</h1>
+
+			<!-- Select the type -->
+			<mat-form-field appearance="outline"
+							floatLabel="always"
+							class=""
+							name="myName"
+							style="width:60%; margin:0px 20%;">
+				<mat-label>Select Type</mat-label>
+				<mat-select [(ngModel)]="selectedType">
+					<mat-option *ngFor="let thisType of designTypes" [value]="thisType">
+						{{thisType}}
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+
+
+			<div class="marketplaceitems" 
+				 fxLayout="row wrap" 
+				 fxLayoutAlign="center">
+				
+				<ng-container *ngFor="let si of (makDesigns$ | async)">
+
+					<div class="marketplaceitem" 
+						 [ngClass]="si.category" 
+						 fxFlex="100" 
+						 fxFlex.gt-sm="33" 
+						 *ngIf="(si.category==selectedType || selectedType=='All') && si.status==1">
+
+
+						<div style="position:relative;top:10px; left:10px; height:0px">
+							<mat-icon *ngIf="signoffs.includes(si.id)"
+									  style="cursor:pointer"
+		                          	  matTooltip="You have sign off permissions">
+								assignment_turned_in
+							</mat-icon>
+						</div>
+
+						<a [routerLink]="'/marketplace/' + si.uid + '/' + si.title">
+
+							<div class="marketplaceitem-content" 
+								 fxLayout="column" 
+								 fxFlex="1 1 auto"
+								 *ngIf="images">
+
+								<ng-container *ngFor="let image of images">
+
+									<div class="content" 
+										 fxLayout="column" 
+										 fxLayoutAlign="center right" 
+										 fxFlex="1 1 auto"
+										 *ngIf="(image.itemId==si.uid) && (image.mainImage)"
+										 [style.background]="'url(' + image.imageURL + ')'" >
+
+										<div style="background-color:#ccc; width:60%; padding:5px 10px">	 
+											<div class="h1 siTitle">{{si.title}}</div>
+											<div class="description">{{si.company.name}}</div>
+										</div>
+									</div>
+
+								</ng-container>
+
+							</div>
+
+						</a>
+
+					</div>
+
+				</ng-container>
+
+			</div>
+
+		</div>
+		<!-- / CONTENT CARD -->
+
+	</div>
+	<!-- / CENTER -->
+
+</div>

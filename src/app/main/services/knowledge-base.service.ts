@@ -15,6 +15,7 @@ export class KnowledgeBaseService implements Resolve<any>
      * @param {HttpClient} _httpClient
      */
     constructor(
+        private _httpClient: HttpClient
     )
     {
         // Set the defaults
@@ -32,7 +33,7 @@ export class KnowledgeBaseService implements Resolve<any>
     {
         return new Promise((resolve, reject) => {
             Promise.all([
-               // this.getKnowledgeBase()
+                this.getKnowledgeBase()
             ]).then(
                 () => {
                     resolve();
@@ -47,7 +48,7 @@ export class KnowledgeBaseService implements Resolve<any>
      */
     getKnowledgeBase()
     {
-        /*
+        
         return new Promise((resolve, reject) => {
 
             this._httpClient.get('api/knowledge-base')
@@ -58,6 +59,6 @@ export class KnowledgeBaseService implements Resolve<any>
                 }, reject);
         });
 
-        */
+        
     }
 }
