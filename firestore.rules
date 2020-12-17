@@ -1,0 +1,75 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+  
+    match /users/{userId}/{anyUserFile=**} {
+      allow write, update: if request.auth.uid == userId;
+      allow create: if request.auth.uid != null;
+      allow read: if true;
+    }
+
+    match /designs/{design} {
+      allow create:  if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.designer == true
+      allow read: if true
+      allow update: if true
+    									
+    }
+
+
+    match /designPermissions/{designPermissionId} {
+      allow read: if true;
+    }
+    
+
+    match /projects/{project} {
+      allow create:  if request.auth.uid != null;
+      allow read: if true
+      allow update: if request.auth.uid != null;
+    									
+    }
+
+
+    match /versions/{version} {
+      allow create:  if request.auth.uid != null;
+      allow read: if true;
+      allow update: if request.auth.uid != null;
+    									
+    }
+
+    match /messages/{message} {
+      allow create:  if request.auth.uid != null;
+      allow read: if true;
+      allow update: if request.auth.uid != null;
+    									
+    }
+    
+    match /conversations/{conversation} {
+      allow create:  if request.auth.uid != null;
+      allow read: if true;
+    }
+
+
+		match /convParticipants/{convPart} {
+      allow create:  if request.auth.uid != null;
+      allow read: if true;
+      allow update: if request.auth.uid != null;
+    }								
+
+
+
+		match /signoffReqs/{signoffReq} {
+      allow create, update:  if request.auth.uid != null;
+      allow read: if true;
+      allow delete: if request.auth.uid != null;
+    }								
+
+
+
+		match /designSignoffs/{designSignoff} {
+      allow create, update:  if request.auth.uid != null;
+      allow read: if true;
+    }								
+
+    }
+
+}

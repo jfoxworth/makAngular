@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'mak-contact',
   templateUrl: './contact.component.html',
-  styleUrls: ['./contact.component.scss', '../comm-styles.scss']
+  styleUrls: ['./contact.component.scss']
 })
 export class ContactComponent implements OnInit {
 
