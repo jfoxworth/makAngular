@@ -1,0 +1,51 @@
+
+
+
+<div fxLayout="row" fxLayoutAlign="center" flex="100%">
+
+  <table class="displayTable"
+        fxFlex="60" style="margin:0px 5%">
+    <thead>
+      <tr>
+        <th>VERSION NUMBER AND NAME</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <ng-container *ngFor="let version of makVersions; index as j">
+
+      <tbody *ngIf="version.projectId == currentProject.id">
+
+        <tr class="projectRow"
+            [ngClass]="{'currentItem' : currentVersion ? version.id==currentVersion.id : false}"
+            (click)="setCurrentVersion.emit( version )">
+
+          <td>{{version.dateCreated | date}} - {{version.name}}</td>
+
+          <td>
+
+            <mat-icon style="cursor:pointer"
+                  matTooltip="View Quotes for this version"
+                  [routerLink]="['/invoice/'+version['uid']]">
+              attach_money
+            </mat-icon>
+
+            <mat-icon style="cursor:pointer"
+                  matTooltip="Make copy as latest version"
+                  (click)="createNewVersion.emit( {verNum:j} )">
+              add_circle
+            </mat-icon>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </ng-container>
+
+  </table>
+
+
+
+</div>

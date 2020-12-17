@@ -1,3 +1,7 @@
+
+@import "src/styles.scss";
+
+
 .ng-hide {
   display:none;
 }
@@ -11,8 +15,8 @@
     font-size:1.3em;
 }
 .alert-success {
-    background-color: #36f456;  
-} 
+    background-color: #36f456;
+}
 .alert{
     padding: 10px;
     margin-bottom: 15px;

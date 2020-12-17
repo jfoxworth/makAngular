@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { EntityCollectionServiceBase, EntityCollectionServiceElementsFactory } from '@ngrx/data';
-import { makVersion } from 'app/main/models/makVersion';
+import { makVersion } from '../../models/makVersion';
 
 
 @Injectable()

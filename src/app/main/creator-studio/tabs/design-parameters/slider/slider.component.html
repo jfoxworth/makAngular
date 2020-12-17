@@ -1,0 +1,29 @@
+<div fxLayout="row"
+     *ngIf="parameter.type=='slider'">
+
+  <div class="h3 text-center mb-12">{{parameter.label}}</div>
+</div>
+
+<div *ngIf="parameter.type=='slider'"
+     class="w-280 mb-20 text-center"
+     fxLayout="row">
+
+  <div class="w-160 mr-20 ml-20 custom-slider">
+    <ng5-slider [(value)]="parameter['value']"
+                [options]="{floor: parameter['min'],
+                            ceil: parameter['max'],
+                            step: parameter['step'],
+                            showTicks: parameter['showTicks'],
+                            showTicksValues: parameter['showTicksValues']}">
+    </ng5-slider>
+  </div>
+
+
+
+  <input matInput
+        id=""
+        [(value)]="parameter['value']"
+        style="width:70px; height:40px; margin-top:10px; border:1px solid #ACACAC"
+        class="inputItem w-70 mat-subheading-2 pt-5 pb-5 text-center" >
+
+</div>

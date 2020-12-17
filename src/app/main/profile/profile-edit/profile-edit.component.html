@@ -1,0 +1,105 @@
+
+
+      <div class="content mt-40"
+       fxLayoutAlign="center center"
+       fxLayout="column">
+
+
+          <div fxLayout="column" style="width:400px">
+
+              <div class="bio-line"
+                   fxLayout="column"
+                   fxLayoutAlign="center center">
+                  <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+                      <mat-label>Title</mat-label>
+                      <input matInput
+                             class="form-control"
+                             placeholder="Enter Title"
+                             name="title"
+                             [(ngModel)]="userData['title']"
+                             (blur)="saveProfile.emit(userData)"
+                             (keyup.enter)="saveProfile.emit(userData)"
+                             minlength="5"
+                             maxlength="150"
+                             required>
+                  </mat-form-field>
+              </div>
+
+
+              <div class="bio-line" >
+                  <mat-form-field style="min-height:190px" appearance="outline" floatLabel="always" class="w-100-p">
+                      <mat-label>Short Bio</mat-label>
+                      <textarea style="min-height:190px"
+                                matInput
+                                placeholder="Enter Your Bio Here"
+                                name="shortbio"
+                                [(ngModel)]="userData['shortBio']"
+                                (blur)="saveProfile.emit(userData)"
+                                (keyup.enter)="saveProfile.emit(userData)"
+                                rows="5"
+                                required
+                                minlength="25">
+                      </textarea>
+                  </mat-form-field>
+              </div>
+
+              <div class="bio-line"
+                   fxLayout="column"
+                   fxLayoutAlign="center center">
+                  <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+                      <mat-label>Display Name</mat-label>
+                      <input matInput
+                             class="form-control"
+                             placeholder="Enter Display Name"
+                             name="email"
+                             [(ngModel)]="userData['displayName']"
+                             (blur)="saveProfile.emit(userData)"
+                             (keyup.enter)="saveProfile.emit(userData)"
+                             minlength="5"
+                             maxlength="150"
+                             required>
+                  </mat-form-field>
+              </div>
+
+
+
+              <div class="bio-line"
+                   fxLayout="column"
+                   fxLayoutAlign="center center">
+                  <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+                      <mat-label>Website</mat-label>
+                      <input matInput
+                             class="form-control"
+                             placeholder="Enter Website"
+                             name="website"
+                             [(ngModel)]="userData['website']"
+                             (blur)="saveProfile.emit(userData)"
+                             (keyup.enter)="saveProfile.emit(userData)"
+                             minlength="5"
+                             maxlength="150"
+                             required>
+                  </mat-form-field>
+              </div>
+
+
+
+          </div>
+
+
+
+    <div fxLayout="row"
+       fxLayoutAlign="center"
+       class="w-80-p">
+      <button mat-raised-button
+              color="primary"
+              id="doneEditing"
+              (click)="changeViewType.emit({number:1})"
+              style="margin:10px 25%; width:50%">
+        Done Editing
+      </button>
+    </div>
+
+
+          <!--- <profile-about [userInfo]='userInfo' [userInfo]="userInfo"></profile-about> -->
+
+  </div>

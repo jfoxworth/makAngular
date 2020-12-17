@@ -15,14 +15,10 @@ import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/r
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 
-// Fuse items
-import { FuseUtils } from '@fuse/utils';
-
-
 // Services
-import { AuthService } from 'app/main/services/auth.service';
+import { AuthService } from '../services/auth.service';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-import { UserService } from 'app/main/services/user-service.service';
+import { UserService } from '../services/user.service';
 
 
 
@@ -74,7 +70,7 @@ export class ChatService
 
 
 		console.log('In the service');
- 		
+
 		this.getConversations();
  		/*
  		this.getConversations()
@@ -144,7 +140,7 @@ export class ChatService
 								{
 									if ( this.conversations[b]['messages'] === undefined )
 									{
-										this.conversations[b]['messages'] = [];	
+										this.conversations[b]['messages'] = [];
 									}
 								}
 								for (var b=0; b<thisResult.length; b++)
@@ -171,7 +167,7 @@ export class ChatService
 	 */
 	getMessages( conversationId : string ):Observable<any> {
 
-		// Get projects collection, create an id, and then set a new project 
+		// Get projects collection, create an id, and then set a new project
 		// with the data for this design
 		console.log('In get messages');
 		return this.afs.collection('messages', ref => ref.where('conversationId', '==', conversationId)).valueChanges();
@@ -239,7 +235,7 @@ export class ChatService
 					this.contactStatus.next(this.contacts);
 					console.log('The contacts are ');
 					console.log(this.contacts);
-				});	
+				});
 		}
 
 

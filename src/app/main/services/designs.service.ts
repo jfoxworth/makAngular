@@ -11,28 +11,20 @@
 
 // Standard Angular Items
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-
 
 // RXJS Stuff
-import { BehaviorSubject, Observable } from 'rxjs';
-
-
-// Models
-import { makDesign } from 'app/main/models/makDesign';
+import { BehaviorSubject } from 'rxjs';
 
 
 // Services
-import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-import { makDesignEntityService } from 'app/main/services/entity/makDesign-entity.service';
-import { makDesignDataService } from 'app/main/services/entity/makDesign-data.service';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { makDesignDataService } from '../services/entity/makDesign-data.service';
+import { makDesign } from '../models/makDesign';
 
 
 @Injectable({providedIn: 'root'})
 export class DesignsService
 {
-
-
 	designStatus 		: BehaviorSubject<any>;
 	designAllStatus 	: BehaviorSubject<any>;
 	designUserStatus 	: BehaviorSubject<any>;
@@ -45,9 +37,8 @@ export class DesignsService
 	 *
 	 */
 	constructor(
-		public afs 						: AngularFirestore,
-		private makDesignEntityService	: makDesignEntityService,
-		private makDesignDataService	: makDesignDataService
+                public afs 						        : AngularFirestore,
+                private makDesignDataService	: makDesignDataService
 	)
 	{
 		this.designStatus 		= new BehaviorSubject([]);
@@ -77,7 +68,7 @@ export class DesignsService
 
 	// Read one design
 	getDesignById( designId:string )
-	{ 
+	{
 		console.log('The design ID is ');
 		console.log(designId);
 		this.afs.collection('designs').doc( designId )
@@ -89,13 +80,13 @@ export class DesignsService
 
 			//result['uid'] = designId;
 			this.designStatus.next(result);
-			
+
 		});
 	}
 
 	// Read all designs
 	getValidDesigns( )
-	{ 
+	{
  		this.afs.collection('designs', ref => ref
  			.where('status', '==', 1 )
  			.where('deleted', '==', false))
@@ -110,8 +101,8 @@ export class DesignsService
 	}
 
 	// Read all designs for a user
-	getDesignsForUser( userId )
-	{ 
+	getDesignsForUser( userId:string )
+	{
 		console.log('The user ID is '+userId);
  		this.afs.collection('designs', ref => ref
  			.where('creatorId', '==', userId )
@@ -127,7 +118,7 @@ export class DesignsService
 	}
 
 
-	fetchDesignData( designId ) 
+	fetchDesignData( designId )
 	{
 		return this.afs.collection('designs', ref => ref.where('id', '==', designId ))
 		.get();
@@ -136,19 +127,28 @@ export class DesignsService
 
 
 	// Update a design
-	updateDesign( designObj )
+	updateDesign( tD:makDesign )
 	{
-		//this.afs.collection('designs').doc( designObj.uid ).update( designObj );		
+		for (var a=1; a<tD['parameterMenus'].length; a++)
+		{
+			for (var b=0; b<tD['parameterMenus'][a]['parameters'].length; b++)
+			{
+				for (var c=0; c<tD['parameterMenus'][a]['parameters'][b]['images'].length; c++)
+				{
+					tD['parameterMenus'][a]['parameters'][b]['images'][c]['imageUrl'] = '';
+				}
+			}
+		}
 
-		this.makDesignDataService.updateDesign( designObj )
+		this.makDesignDataService.updateDesign( tD ).then(mine=>console.log(mine))
 	}
 
 	// Delete
-	deleteDesign ( designId )
+	deleteDesign ( designId:string )
 	{
-		this.makDesignDataService.deleteDesign( designId )
-		//this.afs.collection('designs').doc( designId ).update( { 'deleted' : true } );		
+		this.makDesignDataService.deleteDesign( designId );
 	}
+
 
 
 }

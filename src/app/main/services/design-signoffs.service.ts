@@ -17,12 +17,12 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 
 // Models
-import { designSignoff } from 'app/main/models/designSignoffs';
+import { designSignoff } from '../models/designSignoffs';
 
 
 // Services
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-import { designSignoffDataService } from 'app/main/services/entity/designSignoff-data.service';
+import { designSignoffDataService } from '../services/entity/designSignoff-data.service';
 
 
 
@@ -72,13 +72,13 @@ export class DesignSignoffsService
 
 
 	getdesignSignoffsForDesign( designId:string )
-	{ 
+	{
 		this.designSignoffDataService.getdesignSignoffsForDesign( designId );
 	}
 /*
 	// Read
 	getdesignSignoffsForDesign( designId:string )
-	{ 
+	{
  		this.afs.collection('designSignoffs', ref => ref
  			.where('designId', '==', designId )
  			.where('deleted', '==', false))
@@ -96,14 +96,14 @@ export class DesignSignoffsService
 
 	// Read one designSignoff
 	getdesignSignoffById( designSignoffId:string )
-	{ 
+	{
 		this.afs.collection('designSignoffs').doc( designSignoffId )
 		.valueChanges()
 		.subscribe((result) => {
 
 			result['uid'] = designSignoffId;
 			this.designSignoffOneStatus.next(result);
-			
+
 		});
 	}
 */
@@ -113,7 +113,7 @@ export class DesignSignoffsService
 	updatedesignSignoff ( designSignoffObj )
 	{
 		this.designSignoffDataService.updateDesignSignoff( designSignoffObj );
-		//this.afs.collection('designSignoffs').doc( designSignoffObj.uid ).update( designSignoffObj );		
+		//this.afs.collection('designSignoffs').doc( designSignoffObj.uid ).update( designSignoffObj );
 	}
 
 
@@ -122,7 +122,7 @@ export class DesignSignoffsService
 	deletedesignSignoff ( designSignoffId )
 	{
 		this.designSignoffDataService.deleteDesignSignoff( designSignoffId );
-//		this.afs.collection('designSignoffs').doc( designSignoffId ).update( { 'deleted' : true } );		
+//		this.afs.collection('designSignoffs').doc( designSignoffId ).update( { 'deleted' : true } );
 	}
 
 

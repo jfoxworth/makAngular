@@ -1,0 +1,15 @@
+<!-- THE COMPANY -->
+<mat-form-field class="mb-40 w-100-p"
+      name="companyId">
+  <mat-label>Company selling design</mat-label>
+  <mat-select (selectionChange)="setCompany()"
+          (change)="saveCompChange( $event )"
+          [value]="currentDesign.company"
+          required
+          name="company">
+    <mat-option *ngFor="let thisCompany of companies" [value]="thisCompany.id">
+    {{thisCompany.name}}
+  </mat-option>
+  </mat-select>
+</mat-form-field>
+

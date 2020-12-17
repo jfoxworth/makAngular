@@ -1,0 +1,38 @@
+<div class="content p-24">
+
+  <div style="width:90%; margin:0px 5%;">
+
+    <div fxLayout="row" fxLayoutAlign="center" flex="100%">
+
+      <div fxLayout="column"
+         class="mt-32"
+         flex="45%"
+         style="width:40%; margin:0px 5%">
+
+        <mak-product-description [makDesign]="makDesign">
+        </mak-product-description>
+
+        <mat-divider></mat-divider>
+
+        <mak-projects-list [makProjects]="makProjects">
+        </mak-projects-list>
+
+        <mak-buttons-list [makDesign]="makDesign"
+                          [userData]="userData">
+        </mak-buttons-list>
+
+      </div>
+
+      <div fxLayout="column"
+         class="mt-32"
+         flex="45%"
+         style="width:40%; margin:0px 5%; height:500px;"
+         *ngIf="images">
+        <mak-carousel [images]="images"></mak-carousel>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

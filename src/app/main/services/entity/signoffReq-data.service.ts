@@ -8,8 +8,8 @@ import { HttpClient } from '@angular/common/http';
 
 
 // Data Model
-import { signoffReq } from 'app/main/models/signoffReq';
-import { UserData } from 'app/main/models/userData';
+import { signoffReq } from '../../models/signoffReq';
+import { UserData } from '../../models/userData';
 
 
 
@@ -21,17 +21,17 @@ import { pipe } from 'rxjs';
 
 // NGRX Items and NgRX Data
 import { Store } from "@ngrx/store";
-import { AuthState } from 'app/main/reducers';
+import { AuthState } from '../../store/reducers';
 import { DefaultDataService, HttpUrlGenerator } from '@ngrx/data';
 
 
 
 // Services
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-import { VersionsService } from 'app/main/services/versions.service';
+import { VersionsService } from '../../services/versions.service';
 
 
-import { environment } from 'environments/environment';
+import { environment } from '../../../../environments/environment';
 
 
 
@@ -39,7 +39,7 @@ import { environment } from 'environments/environment';
 export class signoffReqDataService extends DefaultDataService<signoffReq> {
 
 
-	constructor(http						: HttpClient, 
+	constructor(http						: HttpClient,
 				httpUrlGenerator 			: HttpUrlGenerator,
 				private VersionsService		: VersionsService,
 				public afs 					: AngularFirestore ) {
@@ -80,15 +80,13 @@ export class signoffReqDataService extends DefaultDataService<signoffReq> {
 	getAll(  ): Observable<signoffReq[]> {
 
 		var userData = JSON.parse(localStorage.getItem('UserData'));
-		console.log('THe user data is ...');
-		console.log(userData);
 		if ( userData )
 		{
 			return <Observable<signoffReq[]>> this.afs.collection('signoffReqs', ref => ref
 				.where('userId', '==', userData.uid )
 				.where('deleted', '==', false))
 				.valueChanges()
-		
+
 		}else
 		{
 			return <Observable<signoffReq[]>> this.afs.collection('signoffReqs', ref => ref
@@ -104,7 +102,7 @@ export class signoffReqDataService extends DefaultDataService<signoffReq> {
 	// Update
 	updateSignoffReq ( signoffReqObj )
 	{
-		this.afs.collection('signoffReqs').doc( signoffReqObj.uid ).update( signoffReqObj );		
+		this.afs.collection('signoffReqs').doc( signoffReqObj.uid ).update( signoffReqObj );
 	}
 
 
@@ -112,7 +110,7 @@ export class signoffReqDataService extends DefaultDataService<signoffReq> {
 	// Delete
 	deleteSignoffReq ( signoffReqId )
 	{
-		this.afs.collection('signoffReqs').doc( signoffReqId ).update( { 'deleted' : true } );		
+		this.afs.collection('signoffReqs').doc( signoffReqId ).update( { 'deleted' : true } );
 	}
 
 

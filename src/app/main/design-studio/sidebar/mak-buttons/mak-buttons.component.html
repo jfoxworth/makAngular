@@ -1,0 +1,15 @@
+
+<mat-grid-list cols="3" rowHeight="60px" class="mb-40">
+
+  <mat-grid-tile *ngFor="let buttonItem of valItem['buttons']; let k=index;"
+                 [matTooltip]="buttonItem['tooltip']">
+
+    <a mat-button [routerLink]="'/designStudio/'+buttonItem['id']"
+       (click)="loadModel.emit(buttonItem['id'])">
+
+      <img [src]="buttonItem['icon']" height="60px">
+   </a>
+
+  </mat-grid-tile>
+
+</mat-grid-list>

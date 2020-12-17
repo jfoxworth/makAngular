@@ -1,280 +1,33 @@
 
-<!--
 
-  This is the page that shows the profile page for the user
+<div id="profile" class="page-layout simple tabbed" >
 
--->
 
-<div id="profile" class="page-layout simple tabbed">
+  <div class="header p-20"
+                    fxLayout="column"
+                    fxLayoutAlign="top center">
 
-    <!-- NO USER HEADER -->
-    <div class="header p-24" 
-         fxLayout="column" 
-         fxLayoutAlign="center center"
-         *ngIf="displayStyle=='NoUser'">
+    <mak-profile-header *ngIf="viewType!=0"
+                      [userData]="viewUserData"
+                      [viewType]="viewType"
+                      [profileImage]="(profileImage | async)"
+                      (changeViewType)="changeViewType()">
+    </mak-profile-header>
 
-        <div class="user-info" 
-             fxLayout="column" 
-             fxLayoutAlign="center center" >
+    <mak-no-user *ngIf="viewType==0"></mak-no-user>
 
-             <h2 id="noUserText">No user selected and no user logged in</h2>
+    <mak-profile-user *ngIf="viewType==1"
+                      [userData]="viewUserData"
+                      [viewType]="viewType">
+    </mak-profile-user>
 
-        </div>
-    </div>
-    <!-- / NO USER HEADER -->
+    <mak-profile-edit *ngIf="viewType==3"
+                      [userData]="viewUserData"
+                      [viewType]="viewType"
+                      (saveProfile)="saveProfile($event)">
+    </mak-profile-edit>
 
-
-    <!-- HEADER -->
-    <div class="header p-24" 
-         fxLayout="column" 
-         fxLayoutAlign="center center"
-         *ngIf="displayStyle!='NoUser'">
-
-        <div class="user-info" 
-             fxLayout="column" 
-             fxLayoutAlign="center center" >
-
-            <div>
-                <img class="profileAvatar avatar huge" 
-                     [src]="(profileImage | async)"
-                     [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
-
-					<input class="ng-hide mainBg" 
-						   style="display:none"
-				   		   id="input-file-id" 
-						   multiple type="file"
-						   accept=".png,.jpg,.jpeg,.gif"
-						   (change)="onUpload($event)" />
-
-            
-					<label for="input-file-id" >
-		                <mat-icon class="secondary-text s-48 mat-icon-no-color"
-		                          style="position:absolute; top:0px; left:20px; color:#ccc; cursor:pointer;"
-		                          matTooltip="change profile photo"
-		                          aria-hidden="true"
-		                          *ngIf="canEdit">
-		                          add_circle_outline
-		                </mat-icon>
-		            </label>
-            
-            </div>
-
-
-            <div class="name"
-                 id="userEmailHeader"
-                 [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}"
-                 *ngIf="userInfo.displayName===null">
-                {{userInfo.email}}
-
-                <mat-icon class="secondary-text"
-                		  id="editButton"
-                          aria-hidden="true"
-                          style="cursor:pointer; position:relative;"
-                          matTooltip="edit profile data"
-                          (click)="displayStyle='edit'"
-                          *ngIf="canEdit">
-                          more_vert
-                </mat-icon>
-
-            </div>
-
-            <div class="name" 
-                 id="userDisplayNameHeader"
-                 [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}"
-                 *ngIf="userInfo.displayName!==null">
-                {{userInfo.displayName}}
-
-                <mat-icon class="secondary-text" 
-                		  id="editButton"
-                          aria-hidden="true"
-                          style="cursor:pointer; position:relative;"
-                          matTooltip="edit profile data"
-                          (click)="displayStyle='edit'"
-                          *ngIf="canEdit">
-                          more_vert
-                </mat-icon>
-
-            </div>
-
-
-
-
-        </div>
-
-        <!--
-        <div class="actions" fxLayout="row" fxLayoutAlign="end center" [@animate]="{value:'*',params:{delay:'200ms'}}">
-            <button mat-raised-button color="accent" aria-label="Follow">Follow</button>
-            <button mat-raised-button color="primary" aria-label="Send Message">Send Message</button>
-        </div>
-    -->
-
-    </div>
-    <!-- / HEADER -->
-
-
-    <!-- CONTENT -->
-    <ng-container *ngIf="dataFlag && displayStyle=='display'">
-    
-        <div class="content pt-120"
-         fxLayoutAlign="start center"
-         fxLayout="column">
-
-
-            <div class="bio-line mb-20"
-                 id="userTitle">
-                <div class="title">{{userInfo.title}}</div>
-            </div>
-
-
-            <div class="bio-line mb-40 mt-20"
-                 id="userShortBio">
-                <div class="title">{{userInfo.shortBio}}</div>
-            </div>
-
-            <div fxLayout="column">
-
-                <div class="bio-line mb-28"
-                     fxLayout="column"
-                     fxLayoutAlign="center center">
-                    <mat-icon class="secondary-text s-48 mat-icon-no-color" aria-hidden="true">email</mat-icon>
-                    <div class="info" id="userEmail">{{userInfo.email}}</div>
-                </div>
-
-
-                <div class="bio-line mb-28"
-                     fxLayout="column"
-                     fxLayoutAlign="center center">
-                    <mat-icon class="secondary-text s-48 mat-icon-no-color" aria-hidden="true">account_circle</mat-icon>
-                    <div class="info" id="userDisplayName">{{userInfo.displayName}}</div>
-                </div>
-
-                <div class="bio-line mb-28"
-                     fxLayout="column"
-                     fxLayoutAlign="center center">
-                    <mat-icon class="secondary-text s-48 mat-icon-no-color" aria-hidden="true">web</mat-icon>
-                    <div class="info" id="userWebsite">{{userInfo.website}}</div>
-                </div>
-
-            </div>
-
-
-            <!--- <profile-about [userInfo]='userInfo' [userInfo]="userInfo"></profile-about> -->
-
-        </div>
-
-    </ng-container>
-
-
-
-    <ng-container *ngIf="dataFlag && displayStyle=='edit'">
-    
-        <div class="content mt-160"
-         fxLayoutAlign="center center"
-         fxLayout="column">
-
-
-            <div fxLayout="column" style="width:400px">
-
-                <div class="bio-line mb-28"
-                     fxLayout="column"
-                     fxLayoutAlign="center center">
-                    <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
-                        <mat-label>Title</mat-label>
-                        <input matInput
-                               class="form-control" 
-                               placeholder="Enter Title"
-                               name="title"
-                               [(ngModel)]="userData['title']"
-                               (blur)="saveChanges()"
-                               (keyup.enter)="saveChanges()"
-                               minlength="5"
-                               maxlength="150"
-                               required>
-                    </mat-form-field>
-                </div>
-
-
-                <div class="bio-line mb-28" >
-                    <mat-form-field style="min-height:190px" appearance="outline" floatLabel="always" class="w-100-p">
-                        <mat-label>Short Bio</mat-label>
-                        <textarea style="min-height:190px"
-                                  matInput 
-                                  placeholder="Enter Your Bio Here"
-                                  name="shortbio"
-                                  [(ngModel)]="userData['shortBio']"
-                                  (blur)="saveChanges()"
-                                  (keyup.enter)="saveChanges()"
-                                  rows="5"
-                                  required
-                                  minlength="25">
-                        </textarea>
-                    </mat-form-field>
-                </div>
-
-                <div class="bio-line mb-28"
-                     fxLayout="column"
-                     fxLayoutAlign="center center">
-                    <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
-                        <mat-label>Display Name</mat-label>
-                        <input matInput
-                               class="form-control" 
-                               placeholder="Enter Display Name"
-                               name="email"
-                               [(ngModel)]="userData['displayName']"
-                               (blur)="saveChanges()"
-                               (keyup.enter)="saveChanges()"
-                               minlength="5"
-                               maxlength="150"
-                               required>
-                    </mat-form-field>
-                </div>
-
-
-
-                <div class="bio-line mb-28"
-                     fxLayout="column"
-                     fxLayoutAlign="center center">
-                    <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
-                        <mat-label>Website</mat-label>
-                        <input matInput
-                               class="form-control" 
-                               placeholder="Enter Website"
-                               name="website"
-                               [(ngModel)]="userData['website']"
-                               (blur)="saveChanges()"
-                               (keyup.enter)="saveChanges()"
-                               minlength="5"
-                               maxlength="150"
-                               required>
-                    </mat-form-field>
-                </div>
-
-
-
-            </div>
-
-
-
-			<div fxLayout="row" 
-				 fxLayoutAlign="center" 
-				 class="w-80-p">
-				<button mat-raised-button 
-						color="primary"
-						id="doneEditing"
-						(click)="displayStyle='display'"
-						style="margin:10px 25%; width:50%">
-					Done Editing
-				</button>
-			</div>
-
-
-            <!--- <profile-about [userInfo]='userInfo' [userInfo]="userInfo"></profile-about> -->
-
-        </div>
-
-    </ng-container>
-    <!-- / CONTENT -->
-
+  </div>
 
 
 

@@ -14,13 +14,13 @@ import { Observable } from 'rxjs';
 import { filter, first, map, tap } from 'rxjs/operators';
 
 
-import { makVersion } from 'app/main/models/makVersion';
+import { makVersion } from '../models/makVersion';
 
 
 
 // The mak version entity service
-import { makVersionEntityService } from 'app/main/services/entity/makVersion-entity.service';
-import { makVersionDataService } from 'app/main/services/entity/makVersion-data.service';
+import { makVersionEntityService } from '../services/entity/makVersion-entity.service';
+import { makVersionDataService } from '../services/entity/makVersion-data.service';
 
 
 @Injectable()
@@ -36,6 +36,7 @@ export class oneVersionResolver implements Resolve<makVersion> {
 
 	resolve(route: ActivatedRouteSnapshot,
 			state: RouterStateSnapshot): Observable<makVersion> {
+        console.log('Here');
 
 		return this.makVersionDataService.getVersionById( this.route.snapshot.paramMap.get('versionId') )
 

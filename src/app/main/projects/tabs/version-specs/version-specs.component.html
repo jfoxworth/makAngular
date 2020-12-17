@@ -1,0 +1,62 @@
+
+
+<!-- VERSIONS DATA -->
+<div class="mt-30"
+     style="margin:0px 5% 0px 0px;">
+
+  <h3>Data</h3>
+
+  <div class="mt-20 ">
+      Estimated price - {{currentVersion.price}}
+  </div>
+
+  <div class="mt-20 mb-30">
+    Date Created - {{currentVersion.dateCreated | date:'short'}}
+  </div>
+
+
+  <mat-form-field appearance="outline"
+          floatLabel="always"
+          class="w-100-p">
+    <mat-label>Version Name</mat-label>
+    <input matInput
+          class="form-control"
+          placeholder="Version Name"
+          name="vName"
+          #versionName="ngModel"
+          (blur)="saveVersion()"
+          [(ngModel)]="currentVersion.name"
+          required
+          minlength="5"
+          maxlength="150">
+  </mat-form-field>
+
+  <div [hidden]="versionName.valid || versionName.pristine || !versionName.errors?.minlength"
+      class="alert alert-danger">
+    Version name is required with at least 5 characters
+  </div>
+
+
+  <mat-form-field appearance="outline"
+          floatLabel="always"
+          class="w-100-p">
+    <mat-label>Version Description</mat-label>
+    <textarea matInput
+          placeholder="Version Description"
+          class="form-control"
+          name="versionDescription"
+          #versionDescription="ngModel"
+          (blur)="saveVersion()"
+          [(ngModel)]="currentVersion.description"
+          rows="5"
+          required>
+    </textarea>
+  </mat-form-field>
+
+  <div [hidden]="versionDescription.valid || versionDescription.pristine || !versionDescription.errors?.minlength"
+      class="alert alert-danger">
+    Version description is required with at least 25 characters
+  </div>
+
+</div>
+<!--/  VERSION DATA -->

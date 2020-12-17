@@ -1,0 +1,27 @@
+<button mat-raised-button
+color="primary"
+class="mt-30 w-100-p"
+id="addProjectButton"
+(click)="addProject()"
+*ngIf="userData">
+ADD AS NEW PROJECT
+</button>
+
+
+<button mat-raised-button
+class="mt-10 w-100-p"
+color="accent"
+id="viewDesignStudioButton"
+[routerLink]="'/designStudio/design/'+makDesign.id">
+VIEW DESIGN IN STUDIO
+</button>
+
+
+<button mat-raised-button
+class=" mt-10 w-100-p"
+color="accent"
+id="viewDesignSignoffButton"
+[routerLink]="'/designSignoff/'+makDesign.id"
+*ngIf="userData">
+VIEW / ADD SIGNOFFS
+</button>

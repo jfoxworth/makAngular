@@ -3,8 +3,8 @@
 /*
 *
 *
-*	The component simple takes an ID for a version and then pulls 
-* 	the design and project info and creates an invoice based upon 
+*	The component simple takes an ID for a version and then pulls
+* 	the design and project info and creates an invoice based upon
 * 	the data that it gets from there.
 *
 */
@@ -22,39 +22,17 @@ import { takeUntil } from 'rxjs/operators';
 import { concatMap, delay, filter, first, map, shareReplay, tap, withLatestFrom } from 'rxjs/operators';
 
 
-
-// Angular Material Items
-import { MatButtonModule } from '@angular/material/button';
-
-
 // Services
-import { InvoiceService } from 'app/main/services/invoice.service';
-import { DesignsService } from 'app/main/services/designs.service';
-import { ProjectsService } from 'app/main/services/projects.service';
-import { VersionsService } from 'app/main/services/versions.service';
-import { AuthService } from 'app/main/services/auth.service';
-import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-
-import { makDesignEntityService } from 'app/main/services/entity/makDesign-entity.service';
-import { makVersionEntityService } from 'app/main/services/entity/makVersion-entity.service';
-import { makProjectEntityService } from 'app/main/services/entity/makProject-entity.service';
+import { DesignsService } from '../../services/designs.service';
+import { ProjectsService } from '../../services/projects.service';
+import { VersionsService } from '../../services/versions.service';
 
 
 
 // Models
-import { makDesign } from 'app/main/models/makDesign';
-import { makProject } from 'app/main/models/makProject';
-import { makVersion } from 'app/main/models/makVersion';
-
-
-
-// NGRX Items
-import { Store } from "@ngrx/store";
-import { AppState } from 'app/main/reducers';
-import { DesignState } from 'app/main/reducers';
-import { designImagesSave } from 'app/main/actions/design.actions';
-import { designImagesReducer } from 'app/main/reducers/index';
-import { DesignActions } from 'app/main/actions/designAction-types';
+import { makDesign } from '../../models/makDesign';
+import { makProject } from '../../models/makProject';
+import { makVersion } from '../../models/makVersion';
 
 
 
@@ -69,19 +47,19 @@ export class InvoiceModernComponent implements OnInit, OnDestroy
 	invoice: any;
 
 	// Variables
-	versionId 		: string;
-	designId 		: string;
-	viewType 		: string = 'version';
+	versionId 		  : string;
+	designId 		    : string;
+	viewType 		    : string = 'version';
 	designDataFlag 	: boolean = false;
 	projectDataFlag : boolean = false;
 	versionDataFlag : boolean = false;
-	versionData 	: makVersion;
-	designData 		: makDesign;
-	projectData 	: makProject;
-	measurements 	: any = [];
-	makDesigns$ 	: Observable<makDesign[]>;
-	makProjects$ 	: Observable<makProject[]>;
-	makVersions$ 	: Observable<makVersion[]>;
+	versionData 	  : makVersion;
+	designData 	  	: makDesign;
+	projectData   	: makProject;
+	measurements  	: any = [];
+	makDesigns$   	: Observable<makDesign[]>;
+	makProjects$  	: Observable<makProject[]>;
+	makVersions$  	: Observable<makVersion[]>;
 
 	private _unsubscribeAll: Subject<any>;
 
@@ -89,19 +67,13 @@ export class InvoiceModernComponent implements OnInit, OnDestroy
 	/**
 	 * Constructor
 	 *
-	 * 
+	 *
 	 */
 	constructor(
-		private InvoiceService 			: InvoiceService,
 		private DesignsService 			: DesignsService,
 		private ProjectsService 		: ProjectsService,
 		private VersionsService 		: VersionsService,
 		private route					: ActivatedRoute,
-		private AuthService 			: AuthService,
-		private DesignEntityService 	: makDesignEntityService,
-		private ProjectEntityService 	: makProjectEntityService,
-		private VersionEntityService 	: makVersionEntityService,
-		private designStore 			: Store<DesignState>
 	)
 	{
 		this._unsubscribeAll = new Subject();
@@ -161,7 +133,7 @@ export class InvoiceModernComponent implements OnInit, OnDestroy
 		this.VersionsService.versionOneStatus
 		.pipe(takeUntil(this._unsubscribeAll))
 		.subscribe((version)=>
-		{ 
+		{
 
 			if ( version['designId'] )
 			{
@@ -184,7 +156,7 @@ export class InvoiceModernComponent implements OnInit, OnDestroy
 		this.DesignsService.designStatus
 		.pipe(takeUntil(this._unsubscribeAll))
 		.subscribe((design)=>
-		{ 
+		{
 
 			if ( design )
 			{
@@ -197,7 +169,7 @@ export class InvoiceModernComponent implements OnInit, OnDestroy
 		this.ProjectsService.projectOneStatus
 		.pipe(takeUntil(this._unsubscribeAll))
 		.subscribe((project)=>
-		{ 
+		{
 
 			if ( project )
 			{
@@ -229,7 +201,7 @@ export class InvoiceModernComponent implements OnInit, OnDestroy
 		this.versionData.tax = Math.round(this.versionData.price*0.0825*100) / 100;
 		this.versionData.totalCost = Math.round((this.versionData.price+this.versionData.tax)*100)/100;
 		this.versionData.deposit = Math.round(this.versionData.totalCost * 0.25*100)/100;
-	
+
 	}
 
 

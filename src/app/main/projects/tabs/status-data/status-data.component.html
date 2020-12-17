@@ -1,0 +1,62 @@
+
+
+<div flex="100%"
+layout="column"
+style="width:100%"
+*ngIf="currentProject !== undefined">
+
+
+<h2 class="mt-32 mb-20">Design and Purchase Status</h2>
+
+
+<div fxLayout="row"
+  fxLayoutAlign="center center">
+  <div *ngFor="let stage of projectStages; index as j;"
+    fxLayoutAlign="center center"
+    [class]="projectStatus[j] ? 'arrow_box_green' : 'arrow_box_red' "
+    [ngStyle]="{'z-index':1000-j}"
+    (click)="setSelected( j )">
+    <span>{{stage}}</span>
+  </div>
+</div>
+
+<div fxLayout="row"
+  fxLayoutAlign="center center">
+  <div *ngFor="let stage of projectStages; index as j;"
+    fxLayoutAlign="center center">
+
+    <div [class]="projectStatus[j] ? 'green_right' : '' "
+      *ngIf="selectedStatus[j]"></div>
+
+    <div [class]="!projectStatus[j] ? 'red_right' : '' "
+      *ngIf="selectedStatus[j]"></div>
+
+    <div *ngIf="!selectedStatus[j]"
+      class="filler"></div>
+
+    <div class="filler"></div>
+
+  </div>
+
+</div>
+
+
+
+<div fxLayout="row"
+  fxLayoutAlign="center center">
+
+  <div *ngFor="let text of stageTexts; index as j;"
+    fxLayoutAlign="center center">
+
+    <div fxFlex="50"
+      *ngIf="selectedStatus[j] && projectStatus[j]">{{text.done}}</div>
+
+    <div fxFlex="50"
+      *ngIf="selectedStatus[j] && !projectStatus[j]">{{text.notdone}}</div>
+
+  </div>
+
+</div>
+
+
+</div>

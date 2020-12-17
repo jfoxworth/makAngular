@@ -1,0 +1,56 @@
+
+
+<div class="h3 text-center mb-12 w-200">{{valItem['label']}}</div>
+
+<ng-container *ngIf="valItem.images.length==3">
+
+  <div fxLayout="row"
+      *ngIf="editableVersion"
+      fxFlex="100">
+
+    <div *ngFor="let thisImage of valItem['images'];"
+        fxLayoutAlign="center center"
+        fxLayout="column"
+        class="mt-12 mb-20"
+        style="cursor:pointer; text-align:center"
+        fxFlex="30"
+        [matTooltip]="thisImage.label"
+        (click)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':thisImage['value']});">
+
+      <div fxFlex="100"
+          fxLayout="center"
+          style="height:75px; width:75px">
+          <img width="75" height="75" class="selectImage" [src]="(thisImage.imageUrl | async)">
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div fxLayout="row"
+      *ngIf="!editableVersion"
+      fxFlex="100">
+
+    <div *ngFor="let thisImage of valItem['images'];"
+        fxLayoutAlign="center center"
+        fxLayout="column"
+        class="mt-12 mb-20"
+        style="cursor:pointer; text-align:center"
+        fxFlex="30"
+        [matTooltip]="thisImage.label">
+
+      <div fxFlex="100"
+          fxLayout="center"
+          style="height:75px; width:75px">
+          <img width="75" height="75" class="selectImage" [src]="(thisImage.imageUrl | async)">
+      </div>
+
+    </div>
+
+  </div>
+
+
+</ng-container>
+
+

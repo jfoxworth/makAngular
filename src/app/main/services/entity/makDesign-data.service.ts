@@ -8,8 +8,8 @@ import { HttpClient } from '@angular/common/http';
 
 
 // Data Model
-import { makDesign } from 'app/main/models/makDesign';
-import { UserData } from 'app/main/models/userData';
+import { makDesign } from '../../models/makDesign';
+import { UserData } from '../../models/userData';
 
 
 
@@ -22,17 +22,17 @@ import { pipe } from 'rxjs';
 
 // NGRX Items and NgRX Data
 import { Store } from "@ngrx/store";
-import { AuthState } from 'app/main/reducers';
+import { AuthState } from '../../store/reducers';
 import { DefaultDataService, HttpUrlGenerator } from '@ngrx/data';
 
 
 
 // Services
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-import { MarketplaceService } from 'app/main/services/marketplace.service';
+import { MarketplaceService } from '../marketplace.service';
 
 
-import { environment } from 'environments/environment';
+import { environment } from '../../../../environments/environment';
 
 
 
@@ -40,7 +40,7 @@ import { environment } from 'environments/environment';
 export class makDesignDataService extends DefaultDataService<makDesign> {
 
 
-	constructor(http						: HttpClient, 
+	constructor(http						: HttpClient,
 				httpUrlGenerator 			: HttpUrlGenerator,
 				public afs 					: AngularFirestore,
 				private store				: Store<AuthState>,
@@ -71,7 +71,7 @@ export class makDesignDataService extends DefaultDataService<makDesign> {
 			'initialPrice'		: 0,
 			'description'		: '',
 			'marketplace'		: {
-									'images' : []	
+									'images' : []
 			},
 			'price'				: 0,
 			'priceString'		 : '',
@@ -94,7 +94,7 @@ export class makDesignDataService extends DefaultDataService<makDesign> {
 		});
 
 
-	} 
+	}
 
 
 
@@ -116,24 +116,23 @@ export class makDesignDataService extends DefaultDataService<makDesign> {
 	{
 		return <Observable<makDesign>> this.afs.collection('designs').doc( designId )
 			.valueChanges()
-		
-	} 
+
+	}
 
 
 
 	// Update
 	updateDesign( updateItem : makDesign ):Promise<void>
 	{
-		return this.afs.collection('designs').doc( updateItem.id ).update( updateItem );		
-		
-	} 
+		return this.afs.collection('designs').doc( updateItem.id ).update( updateItem );
+	}
 
 
 	// Delete
 	deleteDesign( designId : string ):Promise<void>
 	{
-		return this.afs.collection('designs').doc( designId ).update( { 'deleted' : true } );		
-	} 
+		return this.afs.collection('designs').doc( designId ).update( { 'deleted' : true } );
+	}
 
 
 

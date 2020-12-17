@@ -1,30 +1,180 @@
+/*
+
+  This is the service for the design studio page. It returns the constants needed for the
+  component and handles a lot of items like setting the status, the default data, etc.
+
+*/
+
+
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
-import { BehaviorSubject, Subject, Observable } from 'rxjs';
+
+// Models
+import { makDesign } from '../models/makDesign';
+import { makProject } from '../models/makProject';
+import { makVersion } from '../models/makVersion';
+
+// Services
+import { VersionsService } from '../services/versions.service';
+
 
 @Injectable({providedIn: 'root'})
 export class DesignStudioService
 {
 
- 
 	design: any;
-	onDesignChanged: BehaviorSubject<any>;
+
+
+	/**
+	 * Constructor
+	 *
+	 */
+	constructor( private VersionsService : VersionsService
+
+  ){}
+
 
 
 
 
 
 	/**
-	 * Constructor
+	 * Set the studio type of the page
 	 *
-	 * @param {HttpClient} _httpClient
-	 */
-	constructor(
+	*/
+  setStudioType( routeString:string ):string
+  {
+    switch ( routeString )
+    {
+      case '':
+        return 'studio';
 
-	)
+      case "design":
+        return 'design';
+
+      case "project":
+        return 'project';
+
+      default:
+        return 'studio';
+    }
+  }
+
+
+
+
+
+	/**
+	 * Set the initial design data
+	 *
+	*/
+  setDesignData( studioType:string, designList:makDesign[], projectList:makProject[], localDesign, routeString:string, designString:string ):makDesign
+  {
+    switch ( studioType )
+    {
+      case 'studio':
+        return localDesign ? <makDesign>localDesign : this.setDesign('jBRzSildNc16fQjAmLkh', designList)
+
+      case "design":
+        return this.setDesign('jBRzSildNc16fQjAmLkh', designList);
+
+      case "project":
+        return this.setDesignFromProject(routeString, designList, projectList);
+
+      default:
+        return localDesign ? <makDesign>localDesign : this.setDesign('jBRzSildNc16fQjAmLkh', designList)
+    }
+  }
+
+
+  setDesign( designId:string, designList:makDesign[] )
 	{
-
+		return <makDesign>JSON.parse(JSON.stringify(designList.find( design => design.id == designId)))
 	}
+
+  setDesignFromProject( projectId:string, designList:makDesign[], projectList:makProject[] )
+	{
+    let thisProject = projectList.find(project => project.id==projectId )
+		return <makDesign>JSON.parse(JSON.stringify(designList.find( design => design.id == thisProject.designId)))
+	}
+
+
+
+
+
+
+
+	/**
+	 * Set the initial project data
+	 *
+	*/
+  setProjectData( studioType:string, projectList:makProject[], localProject, projectString:string ):makProject
+  {
+    switch ( studioType )
+    {
+      case 'studio':
+        return <makProject>{}
+
+      case "design":
+        return <makProject>{}
+
+      case "project":
+        return this.setProject(projectString, projectList);
+
+      default:
+        return localProject ? <makProject>localProject : <makProject>{}
+    }
+  }
+
+
+  setProject( projectId:string, projectList:makProject[] )
+	{
+		return <makProject>JSON.parse(JSON.stringify(projectList.find( design => design.id == projectId)))
+  }
+
+
+
+
+
+
+	/**
+	 * Set the initial version data
+	 *
+	*/
+  setVersionData( studioType:string, versionList:makVersion[], localVersion, projectString:string ):makVersion
+  {
+    switch ( studioType )
+    {
+      case 'studio':
+        return <makVersion>JSON.parse(JSON.stringify(this.VersionsService.blankVersion()))
+
+
+      case "design":
+        return <makVersion>JSON.parse(JSON.stringify(this.VersionsService.blankVersion()))
+
+      case "project":
+        return this.setVersionFromProject(projectString, versionList);
+
+      default:
+        return localVersion ? <makVersion>localVersion : <makVersion>{}
+    }
+  }
+
+
+  setVersionFromProject( projectId:string, versionList:makVersion[] )
+	{
+    return versionList.filter(ver=>{ ver.projectId == projectId ? true : false; })
+          .slice(0)
+          .sort((a,b)=>{return a.version-b.version})[0]
+	}
+
+
+
+
+
+
+
+
+
 
 
 
@@ -292,8 +442,7 @@ export class DesignStudioService
 	 *
 	 */
 
-	setPrice(currentDesign, currentVersion) {
-		//console.log('In the set price formula function');
+	setPrice(currentDesign:makDesign, currentVersion:makVersion) {
 
 
 		let priceString = '';
@@ -305,11 +454,11 @@ export class DesignStudioService
 
 			}else
 			{
-				priceString = priceString + currentDesign.priceArray[i].text;				
+				priceString = priceString + currentDesign.priceArray[i].text;
 			}
 		}
 
-		return Math.round(eval(priceString));
+    return Math.round(eval(priceString));
 
 
 	}

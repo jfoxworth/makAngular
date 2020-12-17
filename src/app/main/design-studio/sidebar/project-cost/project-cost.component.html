@@ -1,0 +1,16 @@
+<div class="w-280"
+     fxLayoutAlign="center center">
+  <div style="padding:5px 0px"
+      class="text-center primary-900 w-120 mt-12 mb-20">
+    {{versionData['price']}}
+  </div>
+</div>
+
+<div class="w-280 mb-40 mt-8"
+     fxLayoutAlign="center center">
+ <button mat-stroked-button 
+     color="accent"
+     [routerLink]="'/invoice/'+designData.id+'/'+projectData.id+'/'+versionData.id">
+   Get Quote
+ </button>
+</div>

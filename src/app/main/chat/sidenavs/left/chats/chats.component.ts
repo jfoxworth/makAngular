@@ -3,18 +3,13 @@ import { MediaObserver } from '@angular/flex-layout';
 import { takeUntil } from 'rxjs/operators';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
-
-import { fuseAnimations } from '@fuse/animations';
-import { FuseMatSidenavHelperService } from '@fuse/directives/fuse-mat-sidenav/fuse-mat-sidenav.service';
-
-import { ChatService } from 'app/main/services/chat.service';
+import { ChatService } from '../../../../services/chat.service';
 
 @Component({
 	selector	 : 'chat-chats-sidenav',
 	templateUrl  : './chats.component.html',
 	styleUrls	: ['./chats.component.scss'],
 	encapsulation: ViewEncapsulation.None,
-	animations   : fuseAnimations
 })
 export class ChatChatsSidenavComponent implements OnInit, OnDestroy
 {

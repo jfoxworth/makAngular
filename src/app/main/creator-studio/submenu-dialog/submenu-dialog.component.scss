@@ -1,22 +1,15 @@
-@import "src/@fuse/scss/fuse";
+
+@import "src/styles.scss";
 
 .submenu-dialog {
-
-    @include media-breakpoint('xs') {
-        width: 100%;
-    }
-
-    @include media-breakpoint('gt-xs') {
-        width: 640px;
-    }
-
+  width:600px;
     .mat-dialog-container {
         padding: 0;
 
         .compose-form {
 
             .mat-form-field {
-                width: 100%;
+                width: 80%;
             }
 
             .show-hide-extra-fields {

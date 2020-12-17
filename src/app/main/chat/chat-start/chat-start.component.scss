@@ -1,4 +1,4 @@
-@import "src/@fuse/scss/fuse";
+@import "src/styles.scss";
 
 chat-start {
     display: flex;
@@ -12,11 +12,6 @@ chat-start {
         text-align: center;
         border: 1px solid;
 
-        @include media-breakpoint('lt-md') {
-            width: 160px;
-            height: 160px;
-            line-height: 160px;
-        }
     }
 
     .app-title {

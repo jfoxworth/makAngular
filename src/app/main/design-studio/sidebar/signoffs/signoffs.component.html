@@ -1,0 +1,58 @@
+
+<div *ngFor="let signoff of signoffData; let i=index"
+   class="ml-20 mr-20">
+
+  <div class="mb-12 mt-12"
+     fxLayoutAlign="space-between center"
+     fxLayout="row">
+    <div *ngIf="signoff.approve">Approved</div>
+    <div *ngIf="!signoff.approve">Not Approved</div>
+    <div>{{signoff.dateCreated | date:'short'}}</div>
+  </div>
+  <div class="mb-12 mt-12">{{signoff.creatorEmail}}</div>
+  <div class="mb-12 mt-12">{{signoff.comments}}</div>
+
+  <mat-divider class="mt-8 mb-8"></mat-divider>
+
+</div>
+
+
+
+<div class="text-center w-100-p mt-32">
+
+  <div class="">
+    <mat-form-field>
+      <mat-select name="signoffStatus"
+              [(ngModel)]="signoffStatus">
+        <mat-option [value]="1">Approved</mat-option>
+        <mat-option [value]="0">Approved with Changes Noted</mat-option>
+        <mat-option [value]="2">Revise and Resubmit</mat-option>
+        <mat-option [value]="3">Rejected</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="w-80-p"
+     style="margin-left:10%">
+    <mat-form-field class="w-100-p">
+      <mat-label>Comments</mat-label>
+      <textarea matInput
+          [(ngModel)]="signoffComments"
+          name="signoffComments">
+            
+      </textarea>
+    </mat-form-field>
+  </div>
+
+
+  <div style="margin:20px auto">
+    <button mat-stroked-button 
+        class="primary" 
+        name="saveMe"
+        (click)="createNewSignoff()">
+      Save Signoff
+    </button>
+  </div>
+
+</div>
+

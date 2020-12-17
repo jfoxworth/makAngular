@@ -1,0 +1,46 @@
+<div fxFlex="80%"
+     fxLayout="column"
+     style="margin:0px 10%">
+
+  <h1 class="mt-32 mb-20">Select a Project
+
+    <mat-icon style="cursor:pointer"
+          class="ml-20"
+          matTooltip="Display as list"
+          (click)="displayType='list'">
+      dehaze
+    </mat-icon>
+
+    <mat-icon style="cursor:pointer"
+          class="ml-20"
+          matTooltip="Display as cards"
+          (click)="displayType='cards'">
+      apps
+    </mat-icon>
+
+  </h1>
+
+
+  <mat-divider></mat-divider>
+
+  <div *ngIf="makProjects.length==0">
+    You currently have no designs. Go to the marketplace and select a design to add to your list of projects.
+  </div>
+
+  <mak-project-list-card *ngIf="displayType=='cards'"
+    [makProjects]="makProjects"
+    [currentProject]="currentProject"
+    (setCurrentProject)="setCurrentProject.emit($event)"
+    (deleteProject)="deleteProject.emit($event)">
+  </mak-project-list-card>
+
+
+  <mak-project-list-list  *ngIf="displayType=='list'"
+    [makProjects]="makProjects"
+    [currentProject]="currentProject"
+    (setCurrentProject)="setCurrentProject.emit($event)"
+    (deleteProject)="deleteProject.emit($event)">
+  </mak-project-list-list>
+
+
+</div>

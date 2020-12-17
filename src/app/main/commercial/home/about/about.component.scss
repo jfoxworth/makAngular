@@ -1,0 +1,51 @@
+@import "src/styles.scss";
+
+.aboutTitle {
+	font-family : Roboto Slab;
+	font-weight : bold;
+	font-size:1em;
+	text-transform:uppercase;
+	letter-spacing: 0.84px;
+	margin-bottom:50px;
+}
+
+.aboutText {
+	font-family : Roboto, Light;
+	font-size:1.5em;
+	letter-spacing: 1.36px;
+	font-weight:300;
+	margin-bottom:50px;
+	width:95%;
+}
+
+.aboutButton {
+	font-family : Roboto;
+	font-size:1em;
+	text-transform:uppercase;
+	letter-spacing: 0.84px;
+
+}
+
+
+
+.aboutImage {
+	width:130px;
+	border-radius : 65px;
+}
+
+
+.aboutName {
+	font-family : Roboto;
+	font-size:0.85em;
+	letter-spacing: 0.84px;
+	width:150px;
+	text-align:left;
+	margin-top:15px;
+	line-height:18px;
+}
+
+.boldName {
+	font-weight:800;
+	float:left;
+}
+

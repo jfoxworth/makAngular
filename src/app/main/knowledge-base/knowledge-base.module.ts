@@ -1,50 +1,48 @@
+
+// Common Angular items
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
+
+// Material Items
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
-import { FuseSharedModule } from '@fuse/shared.module';
 
-import { KnowledgeBaseService } from 'app/main/services/knowledge-base.service';
-import { KnowledgeBaseComponent } from 'app/main/knowledge-base/knowledge-base.component';
-import { KnowledgeBaseArticleComponent } from 'app/main/knowledge-base/dialogs/article/article.component';
+import { KnowledgeBaseService } from '../services/knowledge-base.service';
+import { KnowledgeBaseComponent } from './knowledge-base.component';
 
-const routes = [
-    {
-        path     : 'knowledge-base',
-        component: KnowledgeBaseComponent,
-        resolve  : {
-            knowledgeBase: KnowledgeBaseService
-        }
-    }
-];
+
+import { NavbarModule } from '../Shared/navbar/navbar.module';
+import { TitleBannerModule } from '../Shared/title-banner/title-banner.module';
+
 
 @NgModule({
-    declarations   : [
-        KnowledgeBaseComponent,
-        KnowledgeBaseArticleComponent
-    ],
-    imports        : [
-        RouterModule.forChild(routes),
+  declarations: [
+    KnowledgeBaseComponent
+  ],
+  imports: [
+    CommonModule,
+    BrowserAnimationsModule,
+    FlexLayoutModule,
+    RouterModule,
 
-        MatButtonModule,
-        MatDialogModule,
-        MatIconModule,
-        MatListModule,
-        MatToolbarModule,
+    NavbarModule,
+    TitleBannerModule,
 
-        FuseSharedModule
-    ],
-    providers      : [
-        KnowledgeBaseService
-    ],
-    entryComponents: [
-        KnowledgeBaseArticleComponent
-    ]
+    MatButtonModule,
+    MatDialogModule,
+    MatIconModule,
+    MatListModule,
+    MatToolbarModule,
+  ],
+  providers      : [
+    KnowledgeBaseService
+  ],
 })
-export class KnowledgeBaseModule
-{
-}
+export class KnowledgeBaseModule { }

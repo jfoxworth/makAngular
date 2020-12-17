@@ -1,0 +1,40 @@
+<h2 class="mt-32 mb-20">General Design Data</h2>
+
+
+<!-- THE DESIGN NAME -->
+<mat-form-field appearance="outline"
+                floatLabel="always"
+                class="w-100-p form-group">
+    <mat-label>Design Name</mat-label>
+    <input type="text"
+            class="form-control"
+            matInput
+            placeholder="Design Name"
+            name="title"
+            [value]="currentDesign.title+''"
+            (blur)="saveNameChange($event)"
+            required
+            minlength="5"
+            maxlength="150">
+</mat-form-field>
+
+
+
+<!-- THE DESIGN DESCRIPTION -->
+<mat-form-field style="min-height:190px"
+                appearance="outline"
+                class="w-100-p form-group">
+    <mat-label>Design Description</mat-label>
+    <textarea style="min-height:190px"
+                matInput
+                class="form-control"
+                placeholder="Product Description"
+                name="description"
+                (blur)="saveDescChange($event)"
+                [value]="currentDesign.description+''"
+                required
+                minlength="20"
+                rows="5">
+    </textarea>
+</mat-form-field>
+

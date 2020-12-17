@@ -1,73 +1,51 @@
 
 // Standard Angular Items
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
+import { Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // Angular Material Items
 import { MatButtonModule } from '@angular/material/button';
 
 
-// Fuse specific items
-import { FuseSharedModule } from '@fuse/shared.module';
-
-
 // Services
-import { InvoiceService } from 'app/main/services/invoice.service';
+import { InvoiceService } from '../../services/invoice.service';
 
 
 // The component
-import { InvoiceModernComponent } from 'app/main/invoices/modern/modern.component';
+import { InvoiceModernComponent } from './modern.component';
+import { NavbarModule } from '../../Shared/navbar/navbar.module';
+import { TitleBannerModule } from '../../Shared/title-banner/title-banner.module';
 
 
 // NgRx Items
 import { EntityDataService, EntityDefinitionService, EntityMetadataMap } from '@ngrx/data';
+import { designImagesReducer } from '../../store/reducers';
+import { StoreModule } from '@ngrx/store';
 
 
 // Entity Service
-import { makDesignEntityService } from 'app/main/services/entity/makDesign-entity.service';
-import { makDesignDataService } from 'app/main/services/entity/makDesign-data.service';
-import { signoffReqEntityService } from 'app/main/services/entity/signoffReq-entity.service';
-import { signoffReqDataService } from 'app/main/services/entity/signoffReq-data.service';
-import { makProjectEntityService } from 'app/main/services/entity/makProject-entity.service';
-import { makProjectDataService } from 'app/main/services/entity/makProject-data.service';
-import { makVersionEntityService } from 'app/main/services/entity/makVersion-entity.service';
-import { makVersionDataService } from 'app/main/services/entity/makVersion-data.service';
-import { StoreModule } from '@ngrx/store';
+import { makDesignEntityService } from '../../services/entity/makDesign-entity.service';
+import { makDesignDataService } from '../../services/entity/makDesign-data.service';
+import { makProjectEntityService } from '../../services/entity/makProject-entity.service';
+import { makProjectDataService } from '../../services/entity/makProject-data.service';
+import { makVersionEntityService } from '../../services/entity/makVersion-entity.service';
+import { makVersionDataService } from '../../services/entity/makVersion-data.service';
 
 
 
 // The resolvers
-import { MakDesignsResolver } from 'app/main/resolvers/makDesigns.resolver';
-import { MakProjectsResolver } from 'app/main/resolvers/makProjects.resolver';
-import { MakVersionsResolver } from 'app/main/resolvers/makVersions.resolver';
-//import { oneVersionResolver } from 'app/main/resolvers/oneVersion.resolver';
-//import { oneProjectResolver } from 'app/main/resolvers/oneProject.resolver';
-//import { oneDesignResolver } from 'app/main/resolvers/oneDesign.resolver';
-
-
-
-
-const routes = [
-    {
-        path     : 'invoice/design/:designId',
-        component: InvoiceModernComponent,
-        resolve: {
-            makDesign: MakDesignsResolver,
-            makVersion: MakVersionsResolver
-        }
-    },
-    {
-        path     : 'invoice/:versionId',
-        component: InvoiceModernComponent,
-        resolve: {
-            makDesign: MakDesignsResolver,
-//            invoiceVersion: oneVersionResolver,
-//            invoiceProject: oneProjectResolver,
-//            invoiceDesign: oneDesignResolver
-        }
-    }
-];
+import { MakDesignsResolver } from '../../resolvers/makDesigns.resolver';
+import { MakProjectsResolver } from '../../resolvers/makProjects.resolver';
+import { MakVersionsResolver } from '../../resolvers/makVersions.resolver';
+import { AddressComponent } from './address/address.component';
+import { DesignSummaryComponent } from './design-summary/design-summary.component';
+import { DescriptionsComponent } from './descriptions/descriptions.component';
+import { CostListComponent } from './cost-list/cost-list.component';
+import { FooterComponent } from './footer/footer.component';
 
 
 
@@ -101,15 +79,26 @@ const entityMetadata: EntityMetadataMap = {
 
 @NgModule({
     declarations: [
-        InvoiceModernComponent
+        InvoiceModernComponent,
+        AddressComponent,
+        DesignSummaryComponent,
+        DescriptionsComponent,
+        CostListComponent,
+        FooterComponent
     ],
-    imports     : [
-        RouterModule.forChild(routes),
+    imports : [
+      StoreModule.forFeature('designs', designImagesReducer),
+      CommonModule,
+      BrowserModule,
+      FlexLayoutModule,
+      NavbarModule,
+      TitleBannerModule,
+      RouterModule,
+      BrowserAnimationsModule,
 
-        FuseSharedModule,
-        MatButtonModule
+      MatButtonModule
     ],
-    providers   : [
+    providers : [
         InvoiceService,
         makDesignEntityService,
         makDesignDataService,
@@ -120,9 +109,6 @@ const entityMetadata: EntityMetadataMap = {
         MakDesignsResolver,
         MakProjectsResolver,
         MakVersionsResolver,
-//        oneVersionResolver,
-//        oneProjectResolver,
-//        oneDesignResolver
     ]
 })
 export class InvoiceModernModule

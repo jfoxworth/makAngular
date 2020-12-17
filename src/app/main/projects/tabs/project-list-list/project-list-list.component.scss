@@ -1,0 +1,36 @@
+
+@import "src/styles.scss";
+
+.displayTable {
+
+    border-spacing:0px;
+}
+
+.displayTable > tr {
+    border-bottom:1px solid #eee;
+    border-spacing:0px;
+    padding:20px 0px;
+    display:inline-block;
+    width:100%;
+}
+
+.displayTable > tr > td {
+    border-spacing:0px;
+
+}
+
+
+.projectRow {
+    cursor:pointer;
+    border-spacing:0px;
+}
+
+.projectRow:hover {
+    background-color:#eee;
+}
+
+
+.currentItem {
+    color: #039be5 !important;
+}
+

@@ -1,0 +1,42 @@
+<ng-container>
+
+  <div class="content"
+   fxLayoutAlign="start center"
+   fxLayout="column">
+
+    <div fxLayout="column">
+
+      <div class="bio-line mt-20"
+            *ngIf="userData.shortBio.length>0"
+            id="userShortBio">
+        <div class="title">{{userData.shortBio}}</div>
+      </div>
+
+      <div class="bio-line mt-20"
+            fxLayout="column"
+            fxLayoutAlign="center center">
+        <mat-icon class="secondary-text s-48 mat-icon-no-color mb-10" aria-hidden="true">email</mat-icon>
+        <div class="info mb-20" id="userEmail">{{userData.email}}</div>
+      </div>
+
+
+      <div class="bio-line mt-20"
+            fxLayout="column"
+            fxLayoutAlign="center center">
+        <mat-icon class="secondary-text s-48 mat-icon-no-color mb-10" aria-hidden="true">account_circle</mat-icon>
+        <div class="info mb-20" id="userDisplayName">{{userData.displayName}}</div>
+      </div>
+
+      <div class="bio-line mt-20"
+            fxLayout="column"
+            fxLayoutAlign="center center">
+        <mat-icon class="secondary-text s-48 mat-icon-no-color mb-10" aria-hidden="true">web</mat-icon>
+        <div class="info mb-20" id="userWebsite">{{userData.website}}</div>
+      </div>
+
+    </div>
+
+  </div>
+
+</ng-container>
+

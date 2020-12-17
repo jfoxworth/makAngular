@@ -1,46 +1,33 @@
 
-<!-- FOR LOOP FOR THE HEXAGON MENU THAT THE USER HAS SET -->
-<div class="hexagon" 
-	 *ngFor="let menuitem of designData['parameterMenus']; let i=index;"
-	 [ngStyle]="{'position':'absolute', 'left':menuLocations[i][0]+'px', 'top':menuLocations[i][1]+'px'}" 
-	 (click)="menuClick(i)">
 
-	<span>
-		<mat-icon style="position:relative; left:12px; top:-5px" 
-				  class="w-30 text-center mat-display-1">{{menuitem.icon}}
-		</mat-icon>
-	</span>
-
-</div>
-
-
+<!-- The hexagon menu-->
+<mak-design-hexagons
+	[designData]="designData"
+	(menuClick)="menuClick($event)">
+</mak-design-hexagons>
 
 
 <!-- THE SIDEBAR MENU THAT DEPENDS UPON WHAT IS SELECTED -->
-<fuse-sidebar class="sidebar" 
-			  position="left" 
+<div class="sidebar"
+			  position="left"
 			  lockedOpen="gt-sm"
 			  style="position:absolute; left:220px; top:100px;"
-			  *ngFor="let menuitem of designData['parameterMenus']; let i=index;"
-			  [name]="i">
+			  *ngFor="let menuitem of designData['parameterMenus']; let i=index;">
 
 	<div *ngIf="menuShow[i]"
-		 class="pb-28">
-	
+		 class="pb-25 sidebar-inner">
 
 		<!-- The icon to close the left menus -->
 		<div style="position:absolute; top:6px; right:6px; cursor:pointer;"
 			 (click)="onMenuClose()">
 			<span>
-				<mat-icon style="" 
-						  class="text-right font-size-14">close
-				</mat-icon>
-			</span>	
+				<mat-icon class="text-right font-size-14">close</mat-icon>
+			</span>
 		</div>
 
 
 		<!-- The label for the side menu -->
-		<h2 class="mat-title text-center pt-20">{{menuitem.label}}</h2>
+		<div class="mat-title text-center pt-20">{{menuitem.label}}</div>
 
 		<mat-divider class="mb-20"></mat-divider>
 
@@ -50,238 +37,80 @@
 
 
 
-			<!-- The top design panel -->
+			<!-- The panel with the mak designs -->
 			<div *ngIf="valItem['type']=='makButtonSet'">
-
-				<mat-grid-list cols="3" rowHeight="60px" class="mb-40">
-				 
-
-				 	<mat-grid-tile *ngFor="let buttonItem of valItem['buttons']; let k=index;" 
-				 				   [matTooltip]="buttonItem['tooltip']">
-						<a mat-button [routerLink]="'/designStudio/'+buttonItem['id']"
-									  (click)="loadModel.emit(buttonItem['id'])">
-							<img [src]="buttonItem['icon']" >
-						</a>
-				  	</mat-grid-tile>
-
-				</mat-grid-list>
-
+				<mak-buttons [valItem]="valItem"
+										 (loadModel)="loadModel.emit($event)">
+				</mak-buttons>
 			</div>
 
 
 
-			<!-- The top design panel -->
+			<!-- The mak text items -->
 			<div *ngIf="valItem['type']=='makText'">
-
 				<div class="p-20">{{valItem['text']}}</div>
-
 			</div>
 
 
-			<!-- The top design panel -->
+
+			<!-- The versions panel -->
 			<div *ngIf="valItem['type']=='makProjectVersions'"
-				 fxLayoutAlign="center center"
-				 fxLayout="column"
-				 fxFlex="100">
-
-
-				<button mat-stroked-button 
-						color="accent"
-						(click)="createNewVersion.emit()">
-					Create New Version
-				</button>
-
-				<ng-container *ngFor="let version of versionList; let i=index">
-					<div *ngIf="version.projectId == projectData.id"
-						 (click)="setVersionData.emit(version)"
-						 fxLayout="row"
-						 fxLayoutAlign="center center"
-						 class="mb-12 mt-12"
-						 style="cursor:pointer; font-size:1.1em; width:90%; margin:0px 5%; padding:10px 0px"
-						 [ngClass]="{'current' : version.version == versionData.version}">
-						
-						<div fxFlex="40" style="text-align:center">Version {{version.version}}</div>
-						<div fxFlex="60" style="text-align:center">{{version.name}}</div>
-					</div>
-				</ng-container>
-
+					 fxLayoutAlign="center center"
+				 	 fxLayout="column"
+						fxFlex="100">
+				<mak-version-list [versionList]="versionList"
+													[projectData]="projectData"
+													[designData]="designData"
+													(setVersionData)="setVersionData.emit($event)">
+				</mak-version-list>
 			</div>
-
-
 
 
 
 			<!-- The signoff panel -->
 			<div *ngIf="valItem['type']=='makDesignSignoffs'"
-				 style="height:500px !important">
-
-
-				<div *ngFor="let signoff of signoffData; let i=index"
-					 class="ml-20 mr-20">
-
-					<div class="mb-12 mt-12"
-						 fxLayoutAlign="space-between center"
-						 fxLayout="row">
-						<div *ngIf="signoff.approve">Approved</div>
-						<div *ngIf="!signoff.approve">Not Approved</div>
-						<div>{{signoff.dateCreated | date:'short'}}</div>
-					</div>
-					<div class="mb-12 mt-12">{{signoff.creatorEmail}}</div>
-					<div class="mb-12 mt-12">{{signoff.comments}}</div>
-
-					<mat-divider class="mt-8 mb-8"></mat-divider>
-
-				</div>
-
-
-
-				<div class="text-center w-100-p mt-32">
-
-					<div class="">
-						<mat-form-field>
-							<mat-select name="signoffStatus"
-						  				[(ngModel)]="signoffStatus">
-								<mat-option [value]="1">Approved</mat-option>
-								<mat-option [value]="0">Approved with Changes Noted</mat-option>
-								<mat-option [value]="2">Revise and Resubmit</mat-option>
-								<mat-option [value]="3">Rejected</mat-option>
-						  </mat-select>
-						</mat-form-field>
-					</div>
-
-					<div class="w-80-p"
-						 style="margin-left:10%">
-						<mat-form-field class="w-100-p">
-							<mat-label>Comments</mat-label>
-							<textarea matInput
-									[(ngModel)]="signoffComments"
-									name="signoffComments">
-										
-							</textarea>
-						</mat-form-field>
-					</div>
-
-
-					<div style="margin:20px auto">
-						<button mat-stroked-button 
-								class="primary" 
-								name="saveMe"
-								(click)="createNewSignoff()">
-							Save Signoff
-						</button>
-					</div>
-
-				</div>
-
-
+				 	 style="height:500px !important">
+				<mak-design-signoffs [signoffData]="signoffData"
+														 [designData]="designData">
+				</mak-design-signoffs>
 			</div>
 
 
 
-
-
-
-
-
-
-
-			<!-- The cost item -->
+			<!-- The cost item for the studio with no login -->
 			<div *ngIf="valItem['type']=='makCostDesign' || valItem['type']=='makCostStudio'"
 				 fxLayoutAlign="center center"
 				 fxLayout="column">
-
-				<div class="w-140">
-					<div style="padding:5px 0px;"
-						 class="text-center primary-900 w-120 mb-20 mt-12">
-						{{versionData['price']}}
-					</div>
-				</div>
-
-				<div class="w-140 mb-40"
-					*ngIf="userData === undefined">
-					<div style="margin-top:10px; padding:5px 0px; color:#CCC"
-						 class="text-center primary-A100 w-120 mt-20 mb-20 heading-2"
-						 [routerLink]="'/login'">
-						Log In to Create Project
-					</div>
-				</div>
-
-
-				<div class="w-140 mb-40"
-					 *ngIf="userData !== undefined">
-					<div style="margin-top:10px; padding:5px 0px; color:#CCC; cursor:pointer"
-						 class="text-center primary-A100 w-120 mt-20 mb-20 heading-2"
-						 (click)=addMyProject()>
-						Create Project with this Design
-					</div>
-				</div>
-
-
+				<mak-design-cost [versionData]="versionData"
+												 [userData]="userData"
+												 [designData]="designData"
+												 [versionData]="versionData">
+				</mak-design-cost>
 			</div>
 
 
 
 
-
-			<!-- The cost item -->
+			<!-- The cost item for a logged in user in a project -->
 			<div *ngIf="valItem['type']=='makCostProject'"
-				 fxLayoutAlign="center center"
-				 fxLayout="column">
-
-
-				<div class="w-280"
-				 fxLayoutAlign="center center">
-					<div style="padding:5px 0px"
-						 class="text-center primary-900 w-120 mt-12 mb-20">
-						{{versionData['price']}}
-					</div>
-				</div>
-
-				<div class="w-280 mb-40 mt-8"
-					 fxLayoutAlign="center center">
-					<button mat-stroked-button 
-							color="accent"
-							[routerLink]="'/invoice/'+designData.id+'/'+projectData.id+'/'+versionData.id">
-						Get Quote
-					</button>
-				</div>
-
+				 	 fxLayoutAlign="center center"
+				 	 fxLayout="column">
+				<mak-project-cost [versionData]="versionData"
+													[designData]="designData"
+													[projectData]="projectData">
+				</mak-project-cost>
 			</div>
-
-
 
 
 
 
 			<!-- The drop down items -->
 			<div *ngIf="valItem['type']=='dropdown'"
-				 class="w-280 mt-20">
-
-				<div class="h3 text-center">{{valItem['label']}}</div>
-
-				<div class="w-240 ml-20"
-					 *ngIf="editableVersion">
-					<mat-form-field>
-					  <mat-select class="w-240"
-					  			  [(ngModel)]="valItem['value']"
-					  			  (selectionChange)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':valItem['value']});">
-						<mat-option *ngFor="let option of valItem.options" [value]="option.value">
-						  {{option.label}}
-						</mat-option>
-					  </mat-select>
-					</mat-form-field>
-				</div>
-
-				<div class="h4 text-center w-260"
-					 *ngIf="!editableVersion">
-					<span *ngFor="let option of valItem.options">
-						<span *ngIf="option.value == valItem.value">
-							{{option.label}}
-						</span>
-					</span>
-				</div>
-
-
+				 class="w-280 mt-20 text-center">
+				<mak-dropdown [valItem]="valItem"
+											[editableVersion]="editableVersion"
+											(updateParameter)="updateParameter.emit($event)">
+				</mak-dropdown>
 			</div>
 
 
@@ -289,42 +118,10 @@
 			<!-- The slider items -->
 			<div *ngIf="valItem['type']=='slider'"
 				 class="w-280 mt-20">
-
-				<div class="h3 text-center">{{valItem['label']}}</div>
-
-
-				<div fxLayout="row">
-
-					<div class="custom-slider w-160 mr-20 ml-20">
-						<ng5-slider [(value)]="valItem['value']" 
-									[options]="{floor: valItem['min'], 
-												ceil: valItem['max'], 
-												step: valItem['step'], 
-												readOnly : !editableVersion,
-												showTicks: valItem['showTicks'], 
-												showTicksValues: valItem['showTicksValues']}"
-									(valueChange)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':valItem['value']});">
-						</ng5-slider>
-					</div>
-
-					<input matInput 
-						   id=""
-						   *ngIf="editableVersion"
-						   style="width:70px; border:1px solid #ACACAC;" 
-						   class="inputItem w-70 mat-subheading-2 pt-5 pb-5 text-center mt-20" 
-						   [(ngModel)]="valItem['value']"
-						   (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':valItem['value']});">
-
-					<div *ngIf="!editableVersion"
-						 style="width:70px; border:1px solid #ACACAC;" 
-						 class="w-70 mat-subheading-2 pt-5 pb-5 text-center mt-20" >
-						{{valItem['value']}}
-					</div>
-
-				</div>
-
-
-
+				 <mak-slider [valItem]="valItem"
+				 							 [editableVersion]="editableVersion"
+											 (updateParameter)="updateParameter.emit($event)">
+				</mak-slider>
 			</div>
 
 
@@ -332,26 +129,10 @@
 
 			<!-- The text items -->
 			<div *ngIf="valItem['type']=='text'">
-
-				<div class="h3 text-center mt-12">{{valItem['label']}}</div>
-				<div class="w-280 text-center" layout="row">
-				
-					<input matInput 
-						   id=""
-						   *ngIf="editableVersion"
-						   style="width:200px; border:1px solid #ACACAC" 
-						   class="inputItem w-70 mat-subheading-2 pt-5 pb-5 text-center" 
-						   [(ngModel)]="valItem['value']"
-						   (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':valItem['value']});">
-
-					<div *ngIf="!editableVersion"
-						 style="width:200px; border:1px solid #ACACAC" 
-						 class="w-70 mat-subheading-2 pt-5 pb-5 text-center">
-						{{valItem['value']}}
-					</div>
-
-				</div>
-
+				<mak-text [valItem]="valItem"
+									[editableVersion]="editableVersion"
+									(updateParameter)="updateParameter.emit($event)">
+				</mak-text>
 			</div>
 
 
@@ -363,31 +144,10 @@
 				 fxLayout="row"
 				 fxFlex="100%"
 				 class="mt-8 mb-8">
-
-
-				<div class="h3 text-center mt-12"
-					 fxFlex="80%">
-					{{valItem['label']}}
-				</div>
-
-				<mat-slide-toggle
-					  fxFlex="20%"
-					  *ngIf="editableVersion"
-					  [(ngModel)]="valItem.value"
-					  (toggleChange)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':!valItem['value']});"
-					  class="mt-12"
-					  color="accent-900">
-				</mat-slide-toggle>
-
-				<mat-slide-toggle
-					  fxFlex="20%"
-					  *ngIf="!editableVersion"
-					  [(ngModel)]="valItem.value"
-					  (toggleChange)="valItem.value=!valItem.value"
-					  class="mt-12"
-					  color="accent-900">
-				</mat-slide-toggle>
-
+				<mak-toggle [valItem]="valItem"
+									[editableVersion]="editableVersion"
+									(updateParameter)="updateParameter.emit($event)">
+				</mak-toggle>
 			</div>
 
 
@@ -400,32 +160,10 @@
 				 fxFlex="100%"
 				 fxLayoutAlign="center center"
 				 class="mt-8 mb-8">
-
-
-				<input class="ng-hide"
-					   style="display:none" 
-			   		   id="uploadItem" 
-					   *ngIf="editableVersion"
-					   type="file"
-					   accept=".png,.jpg,.jpeg,.gif"
-					   (change)="uploadFile.emit($event, valItem['shapediver']);" >
-
-				<label for="uploadItem" 
-					   style="background-color:#456382; cursor:pointer; border-radius:8px; padding:10px; margin:10px 0px 0px 0px; color: white;"
-					   *ngIf="editableVersion"
-					   color="primary" 
-					   class="md-button md-raised md-primary">
-					{{valItem['label']}}
-				</label>
-
-				<div *ngIf="!editableVersion"
-					 style="background-color:#456382; cursor:pointer; border-radius:8px; padding:10px; margin:10px 0px 0px 0px; color: white;"
-					 color="primary" 
-					 class="md-button md-raised md-primary">
-					 {{valItem['label']}}
-				</div>
-
-
+				<mak-fileupload [valItem]="valItem"
+										[editableVersion]="editableVersion"
+										(uploadFile)="uploadFile.emit($event)">
+				</mak-fileupload>
 			</div>
 
 
@@ -434,29 +172,14 @@
 
 			<!-- The color selector -->
 			<div *ngIf="valItem['type']=='color select'"
-				 fxLayout="row"
-				 fxFlex="100%"
-				 fxLayoutAlign="center center"
-				 class="mt-8 mb-8">
-
-				<div class="w-280 text-center mt-20 mb-20" fxLayout="row">
-
-					<div class="h3 text-center mb-12 w-200">{{valItem['label']}}</div>
-
-					<input ejs-colorpicker 
-						   type="color" 
-						   id="colorpicker" 
-						   *ngIf="editableVersion"
-						   style="padding:0px"
-						   [(ngModel)]="valItem['colorValue']" 
-						   (change)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':formatColor(valItem['colorValue'])});" />
-
-					<div *ngIf="!editableVersion"
-						 style="width:50px; height:50px; background-color:valItem['colorValue']">
-					</div>
-
-				</div>
-
+					 fxLayout="row"
+					 fxFlex="100%"
+					 fxLayoutAlign="center center"
+					 class="mt-8 mb-8">
+				<mak-colorselect [valItem]="valItem"
+									  [editableVersion]="editableVersion"
+				 						(updateParameter)="updateParameter.emit($event)">
+				</mak-colorselect>
 			</div>
 
 
@@ -465,239 +188,32 @@
 
 			<!-- The image select items -->
 			<div *ngIf="valItem['type']=='image select'"
-				 fxLayout="column"
-				 fxFlex="100%"
-				 fxLayoutAlign="center center"
-				 class="mt-8 mb-8">
-
-				<div class="h3 text-center mb-12 w-200">{{valItem['label']}}</div>
-
-				<ng-container *ngIf="valItem.images.length==3">
-
-					<div fxLayout="row"
-						 *ngIf="editableVersion"
-						 fxFlex="100">
-
-						<div *ngFor="let thisImage of valItem['images'];"
-							 fxLayoutAlign="center center"
-							 fxLayout="column"
-							 class="mt-12 mb-20"
-							 style="cursor:pointer; text-align:center"
-							 fxFlex="30"
-							 [matTooltip]="thisImage.label"
-							 (click)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':thisImage['value']});">
-
-							<div fxFlex="100"
-								 fxLayout="center"
-								 style="height:75px; width:75px">
-									<img width="75" height="75" class="selectImage" [src]="(thisImage.imageUrl | async)">
-							</div>
-
-						</div>
-
-					</div>
-
-
-					<div fxLayout="row"
-						 *ngIf="!editableVersion"
-						 fxFlex="100">
-
-						<div *ngFor="let thisImage of valItem['images'];"
-							 fxLayoutAlign="center center"
-							 fxLayout="column"
-							 class="mt-12 mb-20"
-							 style="cursor:pointer; text-align:center"
-							 fxFlex="30"
-							 [matTooltip]="thisImage.label">
-
-							<div fxFlex="100"
-								 fxLayout="center"
-								 style="height:75px; width:75px">
-									<img width="75" height="75" class="selectImage" [src]="(thisImage.imageUrl | async)">
-							</div>
-
-						</div>
-
-					</div>
-
-
-				</ng-container>
-
-
-
+					 fxLayout="column"
+					 fxFlex="100%"
+					 fxLayoutAlign="center center"
+					 class="mt-8 mb-8">
+				<mak-imageselect [valItem]="valItem"
+											 	 [editableVersion]="editableVersion"
+												 (updateParameter)="updateParameter.emit($event)">
+				</mak-imageselect>
 			</div>
-
-
-
-
 
 
 
 			<!-- The blob item -->
 			<div *ngIf="valItem['type']=='blob' && flowerFlag">
-
-				<div class="h2 text-center mt-12 mb-20">{{valItem['label']}}</div>
-
-				<div class="w-280 text-center"
-					 layout="column"
-					 *ngIf="editableVersion">
-
-					<button mat-raised-button 
-							color="primary"
-							(click)="addNewItemToBlob()"
-							class="mt-20 mb-20">
-						Add New Flower
-					</button>
-
-
-					<div class="w-280 mt-20 mb-20">
-						<mat-form-field>
-						  <mat-select class="w-240"
-						  			  [(ngModel)]="blobSelectIndex">
-							<mat-option *ngFor="let option of flowersJSON['flowers']; index as p" [value]="p">
-							  Flower - {{p}}
-							</mat-option>
-						  </mat-select>
-						</mat-form-field>
-					</div>
-
-					<div class="h3 text-center mb-12 mt-12">Flower Size</div>
-				
-					<input matInput 
-						   id=""
-						   style="width:200px; border:1px solid #ACACAC" 
-						   *ngIf="flowersJSON['flowers'][blobSelectIndex]"
-						   class="inputItem w-240 mat-subheading-2 pt-5 pb-5 text-center" 
-						   [(ngModel)]="flowersJSON['flowers'][blobSelectIndex]['size']"
-						   (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':stringify(flowersJSON)});">
-
-
-
-					<div class="h3 text-center mb-12 mt-12">Flower Rotation</div>
-				
-					<input matInput 
-						   id=""
-						   style="width:200px; border:1px solid #ACACAC" 
-						   *ngIf="flowersJSON['flowers'][blobSelectIndex]"
-						   class="inputItem w-240 mat-subheading-2 pt-5 pb-5 text-center" 
-						   [(ngModel)]="flowersJSON['flowers'][blobSelectIndex]['rotation']"
-						   (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':stringify(flowersJSON)});">
-
-
-
-
-					<div class="h3 text-center mb-12 mt-12">Position - X</div>
-				
-					<input matInput 
-						   id=""
-						   style="width:200px; border:1px solid #ACACAC" 
-						   *ngIf="flowersJSON['flowers'][blobSelectIndex]"
-						   class="inputItem w-240 mat-subheading-2 pt-5 pb-5 text-center" 
-						   [(ngModel)]="flowersJSON['flowers'][blobSelectIndex]['position'][0]"
-						   (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':stringify(flowersJSON)});">
-
-
-
-					<div class="h3 text-center mb-12 mt-12">Position - Y</div>
-				
-					<input matInput 
-						   id=""
-						   style="width:200px; border:1px solid #ACACAC" 
-						   *ngIf="flowersJSON['flowers'][blobSelectIndex]"
-						   class="inputItem w-240 mat-subheading-2 pt-5 pb-5 text-center" 
-						   [(ngModel)]="flowersJSON['flowers'][blobSelectIndex]['position'][1]"
-						   (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':stringify(flowersJSON)});">
-
-
-
-					<button mat-raised-button 
-							color="accent"
-							(click)="deleteItemFromBlob( blobSelectIndex )"
-							class="mb-20 mt-20">
-						Delete This Flower
-					</button>
-
-
-
-				</div>
-
-
-
-				<div class="w-280 text-center"
-					 layout="column"
-					 *ngIf="!editableVersion">
-
-
-					<div class="w-280 mt-20 mb-20">
-						<mat-form-field>
-						  <mat-select class="w-240"
-						  			  [(ngModel)]="blobSelectIndex">
-							<mat-option *ngFor="let option of flowersJSON['flowers']; index as p" [value]="p">
-							  Flower - {{p}}
-							</mat-option>
-						  </mat-select>
-						</mat-form-field>
-					</div>
-
-
-
-					<div class="h3 text-center mb-12 w-200">Flower Size</div>
-				
-					<div style="width:200px; border:1px solid #ACACAC" 
-						 *ngIf="flowersJSON['flowers'][blobSelectIndex]"
-						 class="w-240 mat-subheading-2 pt-5 pb-5 text-center"> 
-						   {{flowersJSON['flowers'][blobSelectIndex]['size']}}
-					</div>
-
-
-
-
-
-					<div class="h3 text-center mb-12 w-200">Flower Rotation</div>
-				
-					<div style="width:200px; border:1px solid #ACACAC" 
-						 *ngIf="flowersJSON['flowers'][blobSelectIndex]"
-						 class="w-240 mat-subheading-2 pt-5 pb-5 text-center"> 
-						   {{flowersJSON['flowers'][blobSelectIndex]['rotation']}}
-					</div>
-
-
-
-
-					<div class="h3 text-center mb-12 w-200">Position - X</div>
-				
-					<div style="width:200px; border:1px solid #ACACAC" 
-						 *ngIf="flowersJSON['flowers'][blobSelectIndex]"
-						 class="w-240 mat-subheading-2 pt-5 pb-5 text-center"> 
-						   {{flowersJSON['flowers'][blobSelectIndex]['position'][0]}}
-					</div>
-
-
-
-					<div class="h3 text-center mb-12 w-200">Position - Y</div>
-
-					<div style="width:200px; border:1px solid #ACACAC" 
-						 *ngIf="flowersJSON['flowers'][blobSelectIndex]"
-						 class="w-240 mat-subheading-2 pt-5 pb-5 text-center"> 
-						   {{flowersJSON['flowers'][blobSelectIndex]['position'][1]}}
-					</div>
-
-
-				</div>
-
+				<mak-blobitems [valItem]="valItem"
+											 [editableVersion]="editableVersion"
+											 [flowersJSON]="flowersJSON"
+											 (updateParameter)="updateParameter.emit($event)">
+				</mak-blobitems>
 			</div>
-
-
 
 		</div>
 
-
-
 	</div>
 
-
-
-</fuse-sidebar>
+</div>
 
 
 

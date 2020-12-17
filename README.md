@@ -1,96 +1,44 @@
+# Mak Studio App
 
-# Mak Studio - Angular App
+## App explanation
+This app has two parts. The first shows the user the commercial side of the mak studio website. The 
+second shows the app that a user would use to design their own product (TBD).
 
-This repo is the angular app for Mak Studios. The app is a place where users can look at designs created by Mak, alter specific dimensions and other parameters, and then purchase that altered project. The user can save as many projects as desired and as many versions of those projects as desired.
+## App organization
 
+### Common Modules
+Common modules are those that are generally common to all apps. This includes a login and registration page, 404, email response, etc.
 
-## Components
+### Shared modules
+Shared modules are those that are used by one or more modules. This includes the toolbar across the top, the banner showing the page location, and other items.
 
-There are 14 top level components for the app. Seven of those components are viewable to a user that is logged in with specific credentials. Six are available if the user does not have creator permissions, and three that are visible if the user is not logged in.
+### Main modules
+These are modules that are specific to mak studio. Generally, each page in the app has its own module and there is a top level folder in the main folder for each module. In this app, the modules are ...
 
+<ul>
+  <li>Chat</li>
+  <li>Creator Studio</li>
+  <li>Design Studio</li>
+  <li>Invoices</li>
+  <li>Knowledge Base</li>
+  <li>Profile</li>
+  <li>Projects</li>
+  <li>The Marketplace</li>
+  <li>Shared</li>
+  <ul>
+    <li>Nav bar for design</li>
+    <li>Nav bar for commercial site</li>
+    <li>Title banner</li>
+  </ul>
+</ul>
 
-### Top level components
+### Data models
+There is a models folder with typescript interfaces for every model used and represented in this app. Those models have a corresponding table in the databases. Type casting is used extensively in this app.
 
-#### Profile component
-
-The profile component displays the information for the logged in user or for a user specified in the URL. A user can also change their display name, website, image, and other items.
-
-
-#### Chat / Messages
-
-The chat component lets the user exchange messages instantly with Mak Studio. In the future, this will also allow for messages with other users.
-
-#### Knowledge Base
-
-This is similar to a FAQ. It is a place where users can see how to use the app. This is one of the views available to all users.
-
-
-#### My Projects
-
-A tab where the user can view and alter their projects. Links to the invoice and to the design studio for each project is given.
-
-
-#### Design Studio
-
-The design studio provides a 3D view of the designs as well as a menu to alter the properties of that version. This is one of the views available to all users.
-
-
-#### Market Place
-
-The marketplace provides information on all available designs. The can see a description, images, an entry price, and other items. This is one of the views available to all users. The items in the market place are created in set in the creator studio.
-
-
-#### Creator Studio
-
-The creator studio is where specific users create and edit designs. The menu and the shapediver ticket are edited as well.
+### Components
+There isn't a great deal in the way of reusable components as there isn't a lot of overlapping data to be displayed. As a general rule, every module as a top level component that holds the layout for the page. Every effort is made to keep the component template at or less than the length of one screen. Every section of the page is then broken out into smaller components. A component is intended to handle one aspect of each page.
 
 
-
-### Second level components
-
-These are the items that are not directly available to users.
-
-
-#### Standard components
-
-These are the items that are not unique to the app. They include the login, the register, the the mail-confirm components. 
-
-
-#### Invoice
-
-The invoice component is a place where users can view the cost of the item as well as the final settings. They are provided with a link to purchase the version in question.
-
-
-
-## Code setup
-
-For every database table, there is an associated model. For each of those models, there is a service that handles the CRUD operations for that model. There are multiple read options with ones getting a single document by ID, getting all documents for the user, etc. All models are held in a separate folder with that name.
-
-
-There is a service for each component that handles organizational and formatting items for that component. All services are held in a separate folder with that name. As much as possible, the premise of "fat services and skinny components" is used where as much logic is possible is pushed onto the services.
-
-
-
-
-
-
-<!--
-
-## How to create the development server
-
-The standard command `ng serve` creates a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Build
-
-The standard `ng build` will build the project. The --prod will build the production code. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-
--->
+## Building the app and running it locally
+ng build --prod
+npm start

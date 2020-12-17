@@ -1,0 +1,31 @@
+<div fxFlex="100"
+     fxAlign="center center">
+
+<div fxAlign="center center"
+     fxFlex="100">
+
+ <h2>You have {{makProjects.length}} projects using this design</h2>
+
+ <div *ngFor="let pi of makProjects"
+      fxLayout="row"
+      class="mb-5"
+      style="cursor:pointer"
+      [routerLink]="['/designStudio/project/'+pi.id]">
+
+  <div fxFlex="40">{{pi.name}}</div>
+  <div fxFlex="40">{{pi.dateCreated | date:'short'}}</div>
+  <mat-icon style="cursor:pointer"
+            matTooltip="Open in design studio"
+            class="mr-10"
+            [routerLink]="['/designStudio/project/'+pi.id]">
+     color_lens
+   </mat-icon>
+   <mat-icon style="cursor:pointer"
+         matTooltip="Open projects"
+         [routerLink]="['/products']">
+     today
+   </mat-icon>
+
+ </div>
+</div>
+</div>

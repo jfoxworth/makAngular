@@ -14,13 +14,13 @@ import { Observable } from 'rxjs';
 import { filter, first, map, tap } from 'rxjs/operators';
 
 
-import { makDesign } from 'app/main/models/makDesign';
+import { makDesign } from '../models/makDesign';
 
 
 
 // The mak design entity service
-import { makDesignEntityService } from 'app/main/services/entity/makDesign-entity.service';
-import { makDesignDataService } from 'app/main/services/entity/makDesign-data.service';
+import { makDesignEntityService } from '../services/entity/makDesign-entity.service';
+import { makDesignDataService } from '../services/entity/makDesign-data.service';
 
 
 @Injectable()

@@ -1,51 +1,39 @@
+
+
 <div id="designStudio" class="page-layout simple inner-scroll">
 
-    <!-- CONTENT -->
-    <div class="content" style="height:100%">
+  <div class="content" style="height:100%">
 
-        <!-- SELECTION MENU --
-        <design-main-selector></design-main-selector>
-        <!-- / SELECTION MENU -->
+      <ng-container>
 
+          <mak-design-sidebar class="topmenu"
+                          [designData]="designData"
+                          [versionList]="versionList"
+                          [versionData]="versionData"
+                          [projectData]="projectData"
+                          [signoffData]="signoffList"
+                          [userData]="userData"
+                          [flowersJSON]="flowersJSON"
+                          [flowerFlag]="flowerFlag"
+                          [editableVersion]="editableVersion"
+                          (loadModel)="loadModel($event)"
+                          (setVersionData)="setVersionData($event)"
+                          (uploadFile)="uploadFile($event, paramName)"
+                          (updateParameter)="updateParameter($event)">
 
-        <ng-container>
+          </mak-design-sidebar>
 
-            <!-- SIDEBAR -->
-            <design-sidebar [designData]="designData" 
-                            [versionList]="versionList"
-                            [versionData]="versionData"
-                            [projectData]="projectData"
-                            [signoffData]="signoffList"
-                            [userData]="userData"
-                            [flowersJSON]="flowersJSON"
-                            [flowerFlag]="flowerFlag"
-                            [editableVersion]="editableVersion"
-                            (loadModel)="loadModel($event)"
-                            (createNewVersion)="createNewVersion()"
-                            (setVersionData)="setVersionData($event)"
-                            (uploadFile)="uploadFile($event, paramName)"
-                            (updateParameter)="updateParameter($event)">
-                                
-            </design-sidebar>
-            <!-- / SIDEBAR -->
+      </ng-container>
 
-        </ng-container>
+      <div class="center" >
 
-        <!-- CENTER -->
-        <div class="center" >
+          <div class="content"
+               id="modelDiv"
+               style="position:absolute; top:114px; left:0px; width:100%; height:100%; z-index:0">
+          </div>
 
-            <!-- CONTENT -->
-            <div class="content" 
-                 id="modelDiv" 
-                 style="position:absolute; top:0px; left:0px; width:100%; height:100%;">
-            </div>
-            <!-- / CONTENT -->
+      </div>
 
-        </div>
-        <!-- / CENTER -->
-
-
-    </div>
-    <!-- / CONTENT-->
+  </div>
 
 </div>

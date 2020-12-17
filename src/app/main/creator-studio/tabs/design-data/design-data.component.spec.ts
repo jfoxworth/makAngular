@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DesignDataComponent } from './design-data.component';
 
@@ -6,12 +6,12 @@ describe('DesignDataComponent', () => {
   let component: DesignDataComponent;
   let fixture: ComponentFixture<DesignDataComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       declarations: [ DesignDataComponent ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(DesignDataComponent);

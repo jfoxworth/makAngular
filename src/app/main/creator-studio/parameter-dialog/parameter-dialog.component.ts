@@ -4,8 +4,8 @@
 *
 *
 *	This is the controller for the parameter dialog. The data for the view
-*	comes from the main controller for the creator studio. The design is 
-*	altered from here, but no call is made to the server to update the 
+*	comes from the main controller for the creator studio. The design is
+*	altered from here, but no call is made to the server to update the
 * 	data. The user must press the button for that.
 *
 *
@@ -15,24 +15,13 @@
 // Common Angular Items and Dialog items
 import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DialogData } from 'app/main/creator-studio/creator-studio.component';
-
-
+import { DialogData } from '../../creator-studio/creator-studio.component';
 
 // RXJS Items
 import { finalize } from 'rxjs/operators';
 
-
-// New ng5 slider
-import { Ng5SliderModule } from 'ng5-slider';
-import { Options } from 'ng5-slider';
-
-
-
 // Services
-import { CreatorStudioService } from 'app/main/services/creator-studio.service';
-
-
+import { CreatorStudioService } from '../../services/creator-studio.service';
 
 // Firebase items
 import { AngularFireStorage } from '@angular/fire/storage';
@@ -49,8 +38,8 @@ export class editParameterDialog implements OnInit {
 
 	constructor(
 		private CreatorStudioService 	: CreatorStudioService,
-		private afStorage 				: AngularFireStorage,
-		public dialogRef 				: MatDialogRef<editParameterDialog>,
+		private afStorage 				    : AngularFireStorage,
+		public dialogRef 				      : MatDialogRef<editParameterDialog>,
 		@Inject(MAT_DIALOG_DATA) public data: DialogData) {}
 
 
@@ -68,7 +57,7 @@ export class editParameterDialog implements OnInit {
 	* When the user uploads a file
 	*
 	*/
-	uploadFile( event, paramId ) 
+	uploadFile( event, paramId )
 	{
 		console.log('Uploading an image file to the parameter '+paramId);
 
@@ -79,7 +68,7 @@ export class editParameterDialog implements OnInit {
 
 		// Get a unique id for the upload and the path
 		var text= this.CreatorStudioService.makeRandom(6);
-		var path = '/studio/select/'+this.data.currentDesign.uid+'-'+text+'.'+imageType;			
+		var path = '/studio/select/'+this.data.currentDesign.id+'-'+text+'.'+imageType;
 		let tL = this.data.currentDesign.parameterMenus[this.data.i]['parameters'][this.data.j]['images'].length;
 
 
@@ -87,10 +76,10 @@ export class editParameterDialog implements OnInit {
 		const ref = this.afStorage.ref(path);
 
 
-		// Store the path in the version variable 
+		// Store the path in the version variable
 		if ( this.data.currentDesign.parameterMenus[this.data.i]['parameters'][this.data.j]['images'] === undefined )
 		{
-			this.data.currentDesign.parameterMenus[this.data.i]['parameters'][this.data.j]['images'] = []	
+			this.data.currentDesign.parameterMenus[this.data.i]['parameters'][this.data.j]['images'] = []
 		}
 
 		// prefill the parameter Url
@@ -98,8 +87,8 @@ export class editParameterDialog implements OnInit {
 
 
 		// Update the version data
-		this.data.currentDesign.parameterMenus[this.data.i]['parameters'][this.data.j]['images'].push( {'path':path, 
-																										'id':this.data.currentDesign.uid+'-'+text,
+		this.data.currentDesign.parameterMenus[this.data.i]['parameters'][this.data.j]['images'].push( {'path':path,
+																										'id':this.data.currentDesign.id+'-'+text,
 																										'order' : tL,
 																										'label' : 'Image Label',
 																										'imageUrl' : '',

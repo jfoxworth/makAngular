@@ -1,0 +1,46 @@
+
+
+<div class="cards" fxLayout="row">
+
+  <div class="card mt-20"
+       *ngFor="let project of makProjects"
+       [ngClass]="{currentItem : currentProject ? project.id==currentProject.id : false}"
+       (click)="setCurrentProject.emit( project )">
+
+    <div class="card-preview">
+
+      <div class="fuse-card">
+
+        <div class="p-16">
+            <h4>{{project.name}}</h4>
+            <div class="h5 secondary-text">{{ project.dateCreated | date:'short' }}</div>
+        </div>
+
+        <div class="p-16 pt-0 line-height-1.75">
+          <span style="font-weight:bold; margin-right:10px;">Type : {{project.designType}}</span>
+            {{ project.description }}
+        </div>
+
+        <div class="p-8 pt-0" fxLayout="row" fxLayoutAlign="start center">
+
+          <mat-icon style="cursor:pointer"
+                matTooltip="Open in design studio"
+                [routerLink]="['/designStudio/project/'+project.id]">
+            color_lens
+          </mat-icon>
+
+          <mat-icon style="cursor:pointer"
+                matTooltip="Delete this project"
+                (click)="deleteProject.emit(project.id)">
+            cancel
+          </mat-icon>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

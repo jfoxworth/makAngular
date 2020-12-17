@@ -1,65 +1,36 @@
-@import "src/@fuse/scss/fuse";
 
 #profile {
 
-    .header {
-        height: 250px;
-        min-height: 250px;
-        max-height: 250px;
-        background: url('https://makstudio.s3.us-east-2.amazonaws.com/Backgrounds/kingsBG.png') no-repeat 0 45%;
-        background-size: cover;
+  .header {
+      height: 250px;
+      min-height: 250px;
+      max-height: 250px;
+      background: url('https://makstudio.s3.us-east-2.amazonaws.com/Backgrounds/kingsBG.png') no-repeat 0 45%;
+      background-size: cover;
 
-        .profile-image {
-            margin-right: 24px;
+      .profile-image {
+          margin-right: 24px;
 
-            @include media-breakpoint('sm') {
-                margin: 0 0 16px 0;
-            }
-        }
+      }
 
-        .user-info {
-            position:relative;
-            top:140px;
-        }
+      .user-info {
+          position:relative;
+          top:140px;
+      }
 
+      .name {
+          font-size: 34px;
 
-        .profileAvatar {
-            width:150px;
-            height:150px;
-            border-radius:50%;
-        }
+      }
 
-        .name {
-            font-size: 34px;
+      .actions {
 
-            @include media-breakpoint('sm') {
-                margin-bottom: 32px;
-            }
-        }
+          button {
+              text-transform: none;
+              padding: 0 16px;
+              margin: 0 0 0 8px;
+          }
+      }
+  }
 
-        .actions {
-
-            button {
-                text-transform: none;
-                padding: 0 16px;
-                margin: 0 0 0 8px;
-            }
-        }
-    }
-
-    .content {
-        flex: 1;
-
-        .bio-line {
-            font-size:1.2em;
-        }
-
-        mat-tab-group {
-            height: 100%;
-
-            .mat-tab-body-wrapper {
-                flex-grow: 1;
-            }
-        }
-    }
 }

@@ -2,26 +2,22 @@
 // Standard Angular Items
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
-
 // Models
-import { makDesign } from 'app/main/models/makDesign';
-
+import { makDesign } from '../../../models/makDesign';
 
 // Drag Drop Items
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-
 
 // Child Dialogs
 import { editParameterDialog } from '../../parameter-dialog/parameter-dialog.component';
 import { SubmenuDialog } from '../../submenu-dialog/submenu-dialog.component';
 
-
 // Material / Dialog Items
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-
 // Services
-import { CreatorStudioService } from 'app/main/services/creator-studio.service';
+import { CreatorStudioService } from '../../../services/creator-studio.service';
+import { DesignsService } from '../../../services/designs.service';
 
 
 
@@ -44,19 +40,54 @@ export interface DialogData {
 export class DesignParametersComponent implements OnInit {
 
   @Input('currentDesign') currentDesign:makDesign;
-  
-	@Output() saveDesignChanges = new EventEmitter();
-	@Output() addSubmenu = new EventEmitter();
-	@Output() addMenuItem = new EventEmitter();
+	@Output() updateDesign = new EventEmitter();
 
 	parameterUrls : Array<any> = [];
 
-  constructor( public dialog 					: MatDialog,
+  constructor( public dialog 					        : MatDialog,
                private CreatorStudioService 	: CreatorStudioService,
+               private DesignsService         : DesignsService,
     ) { }
 
   ngOnInit(  ): void {
   }
+
+
+
+
+	// -----------------------------------------------------------------------------------------------------
+	//
+	// @ SAVE THE DESIGN AND SHOW MESSAGE
+	//
+	// -----------------------------------------------------------------------------------------------------
+
+  updateParameters( params )
+	{
+		this.updateDesign.emit( {...this.currentDesign, parameterMenus:params } );
+  }
+
+
+
+	// -----------------------------------------------------------------------------------------------------
+	//
+	// @ ADD MENU AND SUBMENU
+	//
+	// -----------------------------------------------------------------------------------------------------
+
+	addSubmenu() {
+    let temp=JSON.parse(JSON.stringify(this.currentDesign['parameterMenus']))
+    this.updateParameters(temp.push(this.CreatorStudioService.getNewSubmenu()));
+	}
+
+	addMenuItem(menuIndex) {
+    let temp=JSON.parse(JSON.stringify(this.currentDesign['parameterMenus']))
+		this.updateParameters(temp[menuIndex]['parameters'].push(this.CreatorStudioService.getNewParameter()));
+	}
+
+
+
+
+
 
 
 
@@ -100,9 +131,9 @@ export class DesignParametersComponent implements OnInit {
 		console.log('In the open dialog with '+i+' - '+j);
 		const dialogRef = this.dialog.open( editParameterDialog, {
 			panelClass: 'parameter-dialog',
-			data: { currentDesign: this.currentDesign, 
-					i:i, 
-					j:j, 
+			data: { currentDesign: this.currentDesign,
+					i:i,
+					j:j,
 					parameterTypes: this.CreatorStudioService.getParameterTypes(),
 					parameterUrls: this.parameterUrls }
 		});
@@ -122,10 +153,11 @@ export class DesignParametersComponent implements OnInit {
 	 * Dialog to edit a submenu
 	 */
 	openSubmenuDialog(i) {
-		console.log('In the open submenu dialog with '+i);
+    console.log('In the open submenu dialog with '+i);
+    console.log(this.currentDesign);
 		const dialogRef = this.dialog.open( SubmenuDialog, {
 			panelClass: 'submenu-dialog',
-			data: { currentDesign: this.currentDesign, 
+			data: { currentDesign: this.currentDesign,
 					i:i,
 					iconOptions : this.CreatorStudioService.getIconOptions()
 				  }

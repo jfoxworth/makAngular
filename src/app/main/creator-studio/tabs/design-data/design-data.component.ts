@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
-import { makDesign } from 'app/main/models/makDesign';
+import { makDesign } from '../../../models/makDesign';
+import { DesignsService } from '../../../services/designs.service';
 
 @Component({
   selector: 'mak-design-data',
@@ -10,17 +11,15 @@ import { makDesign } from 'app/main/models/makDesign';
 export class DesignDataComponent implements OnInit {
 
   @Input('currentDesign') currentDesign:makDesign;
-  
-	@Output() saveDesignChanges = new EventEmitter();
-	@Output() setCompany = new EventEmitter();
-	@Output() onBGUpload = new EventEmitter();
-	@Output() setMainImage = new EventEmitter();
+	@Output() updateDesign = new EventEmitter();
 
 
-  constructor() { }
+  constructor( private DesignsService : DesignsService ) { }
 
   ngOnInit(): void {
   }
+
+
 
 }
 

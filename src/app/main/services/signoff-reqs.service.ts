@@ -17,12 +17,12 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 
 // Models
-import { signoffReq } from 'app/main/models/signoffReq';
+import { signoffReq } from '../models/signoffReq';
 
 
 // Services
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-import { signoffReqDataService } from 'app/main/services/entity/signoffReq-data.service';
+import { signoffReqDataService } from '../services/entity/signoffReq-data.service';
 
 
 @Injectable({providedIn: 'root'})
@@ -75,7 +75,7 @@ export class SignoffReqsService
 
 	// Read
 	getSignoffReqsForDesign( designId:string )
-	{ 
+	{
  		this.afs.collection('signoffReqs', ref => ref
  			.where('designId', '==', designId )
  			.where('deleted', '==', false))
@@ -93,14 +93,14 @@ export class SignoffReqsService
 
 	// Read one signoffReq
 	getSignoffReqById( signoffReqId:string )
-	{ 
+	{
 		this.afs.collection('signoffReqs').doc( signoffReqId )
 		.valueChanges()
 		.subscribe((result) => {
 
 			result['uid'] = signoffReqId;
 			this.signoffReqOneStatus.next(result);
-			
+
 		});
 	}
 
@@ -110,7 +110,7 @@ export class SignoffReqsService
 
 	// Read for user
 	getSignoffReqsForUser( userId:string )
-	{ 
+	{
 	 		this.afs.collection('signoffReqs', ref => ref
 	 			.where('userId', '==', userId )
 	 			.where('deleted', '==', false))
@@ -129,7 +129,7 @@ export class SignoffReqsService
 
 	// Read for user and design
 	getSignoffReqsForDesignUser( userId:string, designId:string )
-	{ 
+	{
 	 		this.afs.collection('signoffReqs', ref => ref
 	 			.where('userId', '==', userId )
 	 			.where('designId', '==', designId )
@@ -151,7 +151,7 @@ export class SignoffReqsService
 	updateSignoffReq ( signoffReqObj )
 	{
 		this.signoffReqDataService.updateSignoffReq( signoffReqObj );
-//		this.afs.collection('signoffReqs').doc( signoffReqObj.uid ).update( signoffReqObj );		
+//		this.afs.collection('signoffReqs').doc( signoffReqObj.uid ).update( signoffReqObj );
 	}
 
 
@@ -160,7 +160,7 @@ export class SignoffReqsService
 	deleteSignoffReq ( signoffReqId )
 	{
 		this.signoffReqDataService.deleteSignoffReq( signoffReqId );
-//		this.afs.collection('signoffReqs').doc( signoffReqId ).update( { 'deleted' : true } );		
+//		this.afs.collection('signoffReqs').doc( signoffReqId ).update( { 'deleted' : true } );
 	}
 
 

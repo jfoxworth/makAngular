@@ -1,0 +1,22 @@
+<div class="h3 text-center mt-12"
+     fxFlex="80%">
+     {{valItem['label']}}
+</div>
+
+<mat-slide-toggle
+                fxFlex="20%"
+                *ngIf="editableVersion"
+                [(ngModel)]="valItem.value"
+                (toggleChange)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':!valItem['value']});"
+                class="mt-12"
+                color="accent-900">
+</mat-slide-toggle>
+
+<mat-slide-toggle
+              fxFlex="20%"
+              *ngIf="!editableVersion"
+              [(ngModel)]="valItem.value"
+              (toggleChange)="valItem.value=!valItem.value"
+              class="mt-12"
+              color="accent-900">
+</mat-slide-toggle>

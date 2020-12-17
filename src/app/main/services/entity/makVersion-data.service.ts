@@ -5,43 +5,29 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-
-
 // Data Model
-import { makVersion } from 'app/main/models/makVersion';
-
-
+import { makVersion } from '../../models/makVersion';
 
 // RXJS Items
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { pipe } from 'rxjs';
-
 
 // NgRx Items
 import { DefaultDataService, HttpUrlGenerator } from '@ngrx/data';
 
-
-
 // Services
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-import { MarketplaceService } from 'app/main/services/marketplace.service';
-
-
-import { environment } from 'environments/environment';
-
+import { MarketplaceService } from '../marketplace.service';
 
 
 @Injectable()
 export class makVersionDataService extends DefaultDataService<makVersion> {
 
 
-	constructor(http						: HttpClient, 
-				httpUrlGenerator 			: HttpUrlGenerator,
-				public afs 					: AngularFirestore,
-				private MarketplaceService  : MarketplaceService ) {
+	constructor(  http						          : HttpClient,
+                httpUrlGenerator 			    : HttpUrlGenerator,
+                public afs 					      : AngularFirestore ) {
 
-		super('makVersion', http, httpUrlGenerator);
+    super('makVersion', http, httpUrlGenerator);
 
 	}
 
@@ -49,7 +35,7 @@ export class makVersionDataService extends DefaultDataService<makVersion> {
 
 
 	// Read - All versions from user
-	createVersion( type, project, versions, design ) 
+	createVersion( type, project, versions, design )
 	{
 
 		var userData = JSON.parse(localStorage.getItem('UserData'));
@@ -106,7 +92,7 @@ export class makVersionDataService extends DefaultDataService<makVersion> {
 
 	// Read one version
 	getVersionById( versionId:string ): Observable<makVersion>
-	{ 
+	{
 		return <Observable<makVersion>> this.afs.collection('versions').doc( versionId )
 		.valueChanges()
 	}
@@ -116,7 +102,7 @@ export class makVersionDataService extends DefaultDataService<makVersion> {
 	// Update
 	updateVersion ( versionObj )
 	{
-		this.afs.collection('versions').doc( versionObj.uid ).update( versionObj );		
+		this.afs.collection('versions').doc( versionObj.uid ).update( versionObj );
 	}
 
 
@@ -124,7 +110,7 @@ export class makVersionDataService extends DefaultDataService<makVersion> {
 	// Delete
 	deleteVersion ( versionId )
 	{
-		this.afs.collection('versions').doc( versionId ).update( { 'deleted' : true } );		
+		this.afs.collection('versions').doc( versionId ).update( { 'deleted' : true } );
 	}
 
 

@@ -1,0 +1,9 @@
+
+<!-- Whether or not sign offs are required -->
+<div class="mat-body-2">It is possible to require that other users sign off on this design. By clicking the box below, you can establish this requirement and will be offered the option to add as many users as desired in a new tab. These signoffs do not affect the ability of the creator to set the status of the design.</div>
+
+<mat-checkbox [value]="currentDesign.signoffRequired"
+                name="signoff"
+                (click)="saveSignoffChange($event)">
+    Signoffs Required
+</mat-checkbox>

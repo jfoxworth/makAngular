@@ -1,0 +1,24 @@
+<div fxLayout="row"
+     *ngIf="parameter.type=='dropdown'">
+
+  <div class="h3 text-center mb-12">{{parameter.label}}</div>
+</div>
+
+<div *ngIf="parameter.type=='dropdown'"
+     class="w-280 mb-20 text-center"
+     fxLayout="row">
+
+  <mat-form-field appearance="outline"
+                  floatLabel="always"
+                  class="w-100-p">
+
+    <mat-label>Select Options</mat-label>
+      <mat-select>
+        <mat-option *ngFor="let thisOption of parameter['options']"
+                    [value]="thisOption['value']">
+          {{thisOption['label']}}
+        </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+</div>

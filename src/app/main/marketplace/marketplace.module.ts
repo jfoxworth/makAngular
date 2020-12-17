@@ -1,89 +1,63 @@
 
-
 // Core Angular Items
 import { ModuleWithProviders, NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Routes, RouterModule } from '@angular/router';
 
-
-
-// Angular Material Items
-import { MatButtonModule } from '@angular/material/button';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatListModule } from '@angular/material/list';
-import { MatTooltipModule } from '@angular/material/tooltip';
+// Material Items
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCarouselModule } from '@ngmodule/material-carousel';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
+ //import { MatSnackBarModule } from '@angular/material';
 
-// Mak Components
-import { MarketplaceComponent } from 'app/main/marketplace/marketplace.component';
-import { MarketplaceProductComponent } from './product/product.component';
-
-
-
-// Fuse specific items
-import { FuseSidebarModule } from '@fuse/components';
-import { FuseWidgetModule } from '@fuse/components/widget/widget.module';
-import { FuseSharedModule } from '@fuse/shared.module';
-
+/* Mak Components */
+import { NavbarModule } from '../Shared/navbar/navbar.module';
+import { TitleBannerModule } from '../Shared/title-banner/title-banner.module';
+import { MarketplaceComponent } from './marketplace.component';
+import { MarketItemComponent } from './market-item/market-item.component';
+import { ProductComponent } from '../marketplace/product/product.component';
+import { DescriptionComponent } from './product/description/description.component';
 
 // NgRx Items
 import { EntityDataService, EntityDefinitionService, EntityMetadataMap } from '@ngrx/data';
-import { designImagesReducer } from 'app/main/reducers';
-import { AuthEffects } from 'app/main/effects/auth.effects';
+import { designImagesReducer } from '../store/reducers';
 import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
-
 
 // Entity Service
-import { makDesignEntityService } from 'app/main/services/entity/makDesign-entity.service';
-import { makDesignDataService } from 'app/main/services/entity/makDesign-data.service';
-import { signoffReqEntityService } from 'app/main/services/entity/signoffReq-entity.service';
-import { signoffReqDataService } from 'app/main/services/entity/signoffReq-data.service';
-import { makProjectEntityService } from 'app/main/services/entity/makProject-entity.service';
-import { makProjectDataService } from 'app/main/services/entity/makProject-data.service';
-import { designSignoffDataService } from 'app/main/services/entity/designSignoff-data.service';
-import { designSignoffEntityService } from 'app/main/services/entity/designSignoff-entity.service';
-
+import { makDesignEntityService } from '../services/entity/makDesign-entity.service';
+import { makDesignDataService } from '../services/entity/makDesign-data.service';
+import { signoffReqEntityService } from '../services/entity/signoffReq-entity.service';
+import { signoffReqDataService } from '../services/entity/signoffReq-data.service';
+import { makProjectEntityService } from '../services/entity/makProject-entity.service';
+import { makProjectDataService } from '../services/entity/makProject-data.service';
+import { designSignoffDataService } from '../services/entity/designSignoff-data.service';
+import { designSignoffEntityService } from '../services/entity/designSignoff-entity.service';
+import { makVersionDataService } from '../services/entity/makVersion-data.service';
+import { makVersionEntityService } from '../services/entity/makVersion-entity.service';
 
 
 // The resolvers
-import { MakDesignsResolver } from 'app/main/resolvers/makDesigns.resolver';
-import { SignoffReqsResolver } from 'app/main/resolvers/signoffReqs.resolver';
-import { MakProjectsResolver } from 'app/main/resolvers/makProjects.resolver';
+import { MakDesignsResolver } from '../resolvers/makDesigns.resolver';
+import { SignoffReqsResolver } from '../resolvers/signoffReqs.resolver';
+import { MakProjectsResolver } from '../resolvers/makProjects.resolver';
 
-
-
-// Servers
-import { AuthService } from 'app/main/services/auth.service';
-
-
-const routes = [
-	{
-		path	 : 'marketplace',
-		component: MarketplaceComponent,
-		resolve: {
-			makDesign: MakDesignsResolver,
-			signoffReq: SignoffReqsResolver,
-			makProject: MakProjectsResolver
-		}
-	},
-	{
-		path	 : 'marketplace/:itemId/:itemSlug',
-		component: MarketplaceProductComponent,
-		resolve: {
-			makDesign: MakDesignsResolver,
-			signoffReq: SignoffReqsResolver,
-			makProject: MakProjectsResolver
-		}
-	}
-];
+// Services
+import { AuthService } from '../services/auth.service';
+import { ProjectsComponent } from './product/projects/projects.component';
+import { ButtonsComponent } from './product/buttons/buttons.component';
+import { CarouselComponent } from './product/carousel/carousel.component';
+import { MakVersionsResolver } from '../resolvers/makVersions.resolver';
+import { MainProductComponent } from './product/main/main.component';
 
 
 // NgRX related metadata for NgData
@@ -108,33 +82,36 @@ const entityMetadata: EntityMetadataMap = {
 
 
 @NgModule({
-	declarations: [
-		MarketplaceComponent,
-		MarketplaceProductComponent,
-	],
-	imports	 : [
-		RouterModule.forChild(routes),
+  declarations: [
+    MarketplaceComponent,
+    MarketItemComponent,
+    ProductComponent,
+    DescriptionComponent,
+    ProjectsComponent,
+    ButtonsComponent,
+    CarouselComponent,
+    MainProductComponent,
+  ],
+  imports: [
 		StoreModule.forFeature('designs', designImagesReducer),
-		//EffectsModule.forFeature([AuthEffects]),
 
-		TranslateModule,
-
-		MatButtonModule,
-		MatDividerModule,
-		MatIconModule,
-		MatTabsModule,
-		MatCarouselModule,
-		MatListModule,
-		MatFormFieldModule,
-		MatSelectModule,
-		MatTooltipModule,
-
-		FuseSharedModule,
-		FuseSidebarModule
-	],
-	exports	 : [
-		MarketplaceComponent
-	],
+    BrowserAnimationsModule,
+    CommonModule,
+    RouterModule,
+    NavbarModule,
+    TitleBannerModule,
+    MatIconModule,
+    FlexLayoutModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatDividerModule,
+    MatCarouselModule,
+    MatTooltipModule
+  ],
 	providers   : [
 		makDesignEntityService,
 		makDesignDataService,
@@ -143,16 +120,19 @@ const entityMetadata: EntityMetadataMap = {
 		signoffReqEntityService,
 		signoffReqDataService,
 		makProjectEntityService,
-		makProjectDataService,
+    makProjectDataService,
+    makVersionDataService,
 		MakDesignsResolver,
 		MakProjectsResolver,
-		SignoffReqsResolver,
-	]
+    SignoffReqsResolver,
+    MakVersionsResolver,
+    makVersionEntityService
+  ],
+  exports : [
+    MainProductComponent
+  ]
 })
-
-export class MarketplaceModule
-{
-
+export class MarketplaceModule {
 
 	constructor(
 		private eds: EntityDefinitionService,
@@ -160,12 +140,14 @@ export class MarketplaceModule
 		private makDesignDataService: makDesignDataService,
 		private designSignoffDataService: designSignoffDataService,
 		private signoffReqDataService: signoffReqDataService,
-		private makProjectDataService: makProjectDataService ){
+    private makProjectDataService: makProjectDataService,
+    private makVersionDataService : makVersionDataService ){
 			eds.registerMetadataMap(entityMetadata);
 			entityDataService.registerService('makDesign', makDesignDataService);
 			entityDataService.registerService('signoffReq', signoffReqDataService);
 			entityDataService.registerService('designSignoff', designSignoffDataService);
 			entityDataService.registerService('makProject', makProjectDataService);
+			entityDataService.registerService('makVersion', makVersionDataService);
 		}
 
 	static forRoot(): ModuleWithProviders<MarketplaceModule> {
@@ -179,4 +161,3 @@ export class MarketplaceModule
 
 
 }
-

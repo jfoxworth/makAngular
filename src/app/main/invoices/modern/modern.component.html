@@ -1,167 +1,32 @@
-<!--
-
-    This component is an invoice. It is given an ID and presents the invoice 
-    based upon the data from the version in question 
--->
 <div id="invoice" class="modern page-layout blank" fxLayout="row">
 
-    <div class="invoice-container"
-         *ngIf="projectDataFlag && designDataFlag && versionDataFlag">
+  <div class="invoice-container"
+       *ngIf="projectDataFlag && designDataFlag && versionDataFlag">
 
-        <!-- INVOICE -->
-        <div class="card">
+      <div class="card">
 
-            <div class="header" fxLayout="row" fxLayoutAlign="space-between start">
+          <div class="header" fxLayout="row" fxLayoutAlign="space-between start">
+            <mak-address></mak-address>
+            <mak-design-summary [designData]="designData"
+                                [projectData]="projectData"
+                                [versionData]="versionData"></mak-design-summary>
+          </div>
 
-                <div class="ids" fxLayout="column">
+          <div class="content">
 
-                    <div fxLayout="row" class="seller" fxLayoutAlign="start center">
+            <mak-invoice-descriptions [designData]="designData"
+                                      [projectData]="projectData"
+                                      [versionData]="versionData"></mak-invoice-descriptions>
 
-                        <div class="logo">
-                            <img src="assets/images/logos/makTextBlack.png">
-                        </div>
+            <mak-cost-list [measurements]="measurements"
+                           [versionData]="versionData"></mak-cost-list>
 
-                        <div class="divider"></div>
+          </div>
 
-                        <div class="detail">
-                            <div class="title">MAK STUDIO</div>
-                            <div class="address">
-                                305 Velasco St.<br>
-                                Houston, TX 77003
-                            </div>
-                            <div class="phone">
-                                <span>Phone : 713.505.1234</span>
-                            </div>
-                            <div class="email">
-                                <span>Email : info@makstudio.us</span>
-                            </div>
-                            <div class="website">
-                                <span>Web : www.makstudio.us</span>
-                            </div>
-                        </div>
-                    </div>
+          <mak-invoice-footer></mak-invoice-footer>
 
-                </div>
+      </div>
 
-                <table class="summary">
-                    <tr class="code">
-                        <td class="label">QUOTE</td>
-                        <td class="value"></td>
-                    </tr>
-
-                    <tr>
-                        <td class="label">DESIGN NAME</td>
-                        <td class="value">{{designData.title}}</td>
-                    </tr>
-
-                    <tr>
-                        <td class="label">PROJECT NAME</td>
-                        <td class="value">{{projectData.name}}</td>
-                    </tr>
-
-                    <tr>
-                        <td class="label">VERSION</td>
-                        <td class="value">{{versionData.name}} - {{versionData.version}}</td>
-                    </tr>
-
-                </table>
-
-            </div>
-
-
-            <div class="content">
-
-                <div style="text-align:center"
-                     class="mb-20">
-                    <button mat-stroked-button 
-                            color="accent"
-                            [routerLink]="'/designStudio/project/'+projectData.uid">
-                        View Project in Studio
-                    </button>
-                </div>
-
-
-                <table class="mt-0 simple invoice-table">
-                    <tbody>
-
-                        <tr>
-                            <td>
-                                <div class="title">PROJECT DESCRIPTION</div>
-                                <div class="detail">{{projectData.description}}</div>
-                            </td>
-                            <td>
-                                <div class="title">VERSION DESCRIPTION</div>
-                                <div class="detail">{{versionData.description}}</div>
-                            </td>
-                        </tr>
-
-                    </tbody>
-                </table>
-
-
-
-
-                <table class="simple invoice-table">
-                    <thead>
-                        <tr>
-                            <th>VERSION MEASUREMENTS : </th>
-                            <th>ITEM</th>
-                            <th>VALUE</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let meas of measurements">
-                            <td></td>
-                            <td>
-                                <div class="title">{{meas.name}}</div>
-                            </td>
-                            <td>
-                                <div class="title">{{meas.value}}</div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-
-
-
-                <table class="simple invoice-table-footer">
-                    <tbody>
-                        <tr class="subtotal">
-                            <td>SUBTOTAL</td>
-                            <td>{{versionData.price}}</td>
-                        </tr>
-                        <tr class="subtotal">
-                            <td>TAX (8.25%)</td>
-                            <td>{{versionData.tax}}</td>
-                        </tr>
-                        <tr class="tax">
-                            <td>DEPOSIT (25%)</td>
-                            <td>{{versionData.deposit}}</td>
-                        </tr>
-                        <tr class="total">
-                            <td>TOTAL</td>
-                            <td>{{versionData.totalCost}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="footer">
-                <div class="note">This quote is a starting point.</div>
-                <div fxLayout="row" fxLayoutAlign="start start">
-                    <div class="logo">
-                        <img src="assets/images/logos/makTextBlack.png">
-                    </div>
-                    <div class="small-note">
-                        If you choose to purchase this item, when the deposit is received MAK Studio will contact the customer with 3D images of the final design. Once the final design is agreed to, construction and delivery will move forward. 
-                    </div>
-                </div>
-            </div>
-
- 
-        </div>
- 
-    </div>
+  </div>
 
 </div>

@@ -1,0 +1,55 @@
+
+
+<div layout="column"
+style="width:100%"
+*ngIf="currentProject !== undefined">
+
+
+<h2 class="mt-32 mb-20">Version Data</h2>
+
+
+
+<div fxLayout="row"
+  fxLayoutAlign="center center"
+  flex="100%">
+
+  <div fxFlex="20" style="margin:20px 5%">
+    <button mat-stroked-button
+        color="primary"
+        (click)="createNewVersion('default')">
+      New version (default)
+    </button>
+  </div>
+
+</div>
+
+<mak-version-list
+  [makVersions]="makVersions"
+  [currentVersion]="currentVersion"
+  [currentProject]="currentProject"
+  (setCurrentVersion)="setCurrentVersion($event)">
+
+</mak-version-list>
+
+<div fxLayout="row"
+     fxLayoutAlign="center"
+     *ngIf="currentVersion"
+     style="min-width:100%">
+
+
+  <mak-version-specs *ngIf="currentVersion"
+                     [currentVersion]="currentVersion"
+                     (displayMessage)="displayMessage.emit($event)"
+                     style="min-width:50%">
+  </mak-version-specs>
+
+  <mak-version-measurements *ngIf="currentVersion"
+                            [currentVersion]="currentVersion"
+                            style="min-width:50%">
+  </mak-version-measurements>
+
+
+</div>
+
+</div>
+
