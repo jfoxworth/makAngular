@@ -3,76 +3,49 @@
 /*
 
 	This is the controller for the primary component of the app - the
-	design studio. 
+	design studio.
 
 */
 
 // Common Angular Items
 import { Component, OnDestroy, Inject, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { DOCUMENT } from '@angular/common'; 
-import { FormControl, FormGroup } from '@angular/forms';
+import { DOCUMENT } from '@angular/common';
 import { RouterModule, Routes, ActivatedRoute } from '@angular/router';
-
 
 // Angular Material Items
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+// RXJS
+import { Observable, BehaviorSubject, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
-// RXJS 
-import { debounceTime, distinctUntilChanged, takeUntil, finalize } from 'rxjs/operators';
-import { BehaviorSubject, fromEvent, merge, Observable, Subject } from 'rxjs';
-import { concatMap, delay, filter, first, map, shareReplay, tap, withLatestFrom } from 'rxjs/operators';
-
-
-// Fuse specific items
-import { fuseAnimations } from '@fuse/animations';
-import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
-
+// NGRX Items
+import { Store } from "@ngrx/store";
+import { AuthState } from '../../main/store/reducers';
 
 // Services
-import { DesignStudioService } from 'app/main/services/design-studio.service';
-import { DesignsService } from 'app/main/services/designs.service';
-import { ProjectsService } from 'app/main/services/projects.service';
-import { VersionsService } from 'app/main/services/versions.service';
-import { AuthService } from 'app/main/services/auth.service';
-import { UserService } from 'app/main/services/user-service.service';
-import { DesignSignoffsService } from 'app/main/services/design-signoffs.service';
-import { SignoffReqsService } from 'app/main/services/signoff-reqs.service';
-import { FirebaseService } from 'app/main/services/firebase.service';
-
-import { makDesignEntityService } from 'app/main/services/entity/makDesign-entity.service';
-import { makVersionEntityService } from 'app/main/services/entity/makVersion-entity.service';
-import { makProjectEntityService } from 'app/main/services/entity/makProject-entity.service';
-import { signoffReqEntityService } from 'app/main/services/entity/signoffReq-entity.service';
-
-
+import { DesignStudioService } from '../services/design-studio.service';
+import { VersionsService } from '../services/versions.service';
+import { UserService } from '../services/user.service';
+import { makDesignEntityService } from '../services/entity/makDesign-entity.service';
+import { makVersionEntityService } from '../services/entity/makVersion-entity.service';
+import { makProjectEntityService } from '../services/entity/makProject-entity.service';
+import { signoffReqEntityService } from '../services/entity/signoffReq-entity.service';
 
 // Firestore Items
 import { AngularFireStorage } from '@angular/fire/storage';
 
-
 // Models
-import { makDesign } from 'app/main/models/makDesign';
-import { makProject } from 'app/main/models/makProject';
-import { makVersion } from 'app/main/models/makVersion';
-import { signoffReq } from 'app/main/models/signoffReq';
-import { designSignoff } from 'app/main/models/designSignoffs';
-import { UserData } from 'app/main/models/userData';
-
-
-
-// NGRX Items
-import { Store } from "@ngrx/store";
-import { AppState } from 'app/main/reducers';
-import { DesignState } from 'app/main/reducers';
-import { designImagesSave } from 'app/main/actions/design.actions';
-import { designImagesReducer } from 'app/main/reducers/index';
-import { DesignActions } from 'app/main/actions/designAction-types';
-
+import { makDesign } from '../models/makDesign';
+import { makProject } from '../models/makProject';
+import { makVersion } from '../models/makVersion';
+import { signoffReq } from '../models/signoffReq';
+import { designSignoff } from '../models/designSignoffs';
+import { UserData } from '../models/userData';
 
 
 @Component({
-	selector: 'app-design-studio',
+	selector: 'mak-design-studio',
 	templateUrl: './design-studio.component.html',
 	styleUrls: ['./design-studio.component.scss']
 })
@@ -84,66 +57,53 @@ export class DesignStudioComponent  {
 
 	shapediver:any;
 
-
-//	designData:any = { 'parameterMenus' : [{ 'parameters': [ { 'images':[] }]}] };
-//	projectData : any;
-//	versionData : any;
-
-	makDesigns$ 		: Observable<makDesign[]>;
-	makProjects$ 		: Observable<makProject[]>;
-	makVersions$ 		: Observable<makVersion[]>;
-	makSignoffReqs$ 	: Observable<signoffReq[]>;
+	makDesigns$ 		    : Observable<makDesign[]>;
+	makProjects$ 		    : Observable<makProject[]>;
+	makVersions$ 		    : Observable<makVersion[]>;
+	makSignoffReqs$ 	  : Observable<signoffReq[]>;
 	makDesignSignoffs$ 	: Observable<designSignoff[]>;
 
-	designList 			: makDesign[];
-	projectList 		: makProject[];
-	versionList 		: makVersion[];
-	signoffList 		: designSignoff[];
-	signoffReqList 		: signoffReq[];
+	designList 			    : makDesign[];
+	projectList 		    : makProject[];
+	versionList 		    : makVersion[];
+	signoffList 		    : designSignoff[];
+	signoffReqList 		  : signoffReq[];
 
-	designData 			: makDesign=<makDesign>{};
-	projectData 		: makProject;
-	versionData 		: makVersion;
-	signoffData 		: designSignoff;
+	designData 			    : makDesign=<makDesign>{};
+	projectData 		    : makProject;
+	versionData 		    : makVersion;
+	signoffData 		    : designSignoff;
 
+	studioType 			    : string;
+	shapediverApi 		  : any;
+	shapeData 			    : any;
+	flowersJSON 		    : any;
+	flowerFlag 			    : boolean = false;
+	editableVersion 	  : boolean = true;
+	userData 			      : UserData;
+	paramName 			    : any;
 
-	versionCollection 	: any;
-	searchInput 		: any;
-	studioType 			: string;
-	shapediverApi 		: any;
-	shapeData 			: any;
-	flowersJSON 		: any;
-	flowerFlag 			: boolean = false;
-	editableVersion 	: boolean = true;
-	userData 			: UserData;
-	paramName 			: any;
+  shapediverReturn$ : Observable<any>;
+  shapedataReturn$ : Observable<any>;
+  private _unsubscribeAll: Subject<any>;
 
-
-	private _unsubscribeAll: Subject<any>;
 
 
 	constructor(	private DesignStudioService 		: DesignStudioService,
-					private DesignsService 				: DesignsService,
-					private ProjectsService 			: ProjectsService,
-					private VersionsService 			: VersionsService,
-					private DesignSignoffsService		: DesignSignoffsService,
-					private SignoffReqsService 			: SignoffReqsService,
-					private AuthService 				: AuthService,
-					private FirebaseService 			: FirebaseService,
-					private afStorage 					: AngularFireStorage,
-					private route 						: ActivatedRoute,
-					private activeRoute 				: ActivatedRoute,
-					private SnackBar 					: MatSnackBar,
-					private DesignEntityService 		: makDesignEntityService,
-					private SignoffReqEntityService 	: signoffReqEntityService,
-					private ProjectEntityService 		: makProjectEntityService,
-					private VersionEntityService 		: makVersionEntityService,
-					private store 						: Store<AppState>,
-					private designStore 				: Store<DesignState>,
-					@Inject(DOCUMENT) private document 	: Document) 
-	{ 
-		this._unsubscribeAll = new Subject();
-	}
+                private VersionsService 		  	: VersionsService,
+                private UserService             : UserService,
+                private afStorage 			    		: AngularFireStorage,
+                private route 						      : ActivatedRoute,
+                private DesignEntityService 		: makDesignEntityService,
+                private SignoffReqEntityService : signoffReqEntityService,
+                private ProjectEntityService 		: makProjectEntityService,
+                private VersionEntityService 		: makVersionEntityService,
+                private SnackBar                : MatSnackBar,
+                private store                   : Store<AuthState>,
+                @Inject(DOCUMENT) private document 	: Document)
+	{
+    this._unsubscribeAll = new Subject();
+  }
 
 
 
@@ -151,108 +111,38 @@ export class DesignStudioComponent  {
 
 	ngOnInit() {
 
+    this.subscribeToObservables();
 
-		this.userData = JSON.parse(localStorage.getItem('UserData'));
+    this.UserService.userObject
+    .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe((user)=>{ this.userData = <UserData>user; });
 
+    this.studioType = this.DesignStudioService.setStudioType( this.route.snapshot.url[1] ? this.route.snapshot.url[1].toString() : '' );
 
-		// The observable for the design data from the store. Since no design is 
-		this.makDesigns$ = this.DesignEntityService.entities$
-		this.makDesigns$.subscribe( (makDesigns)=>{
-			this.designList = makDesigns;
-			//this.setDesign('jBRzSildNc16fQjAmLkh');
-		});
-
-
-		// The observable for the projects for this design
-		this.makProjects$ = this.ProjectEntityService.entities$
-		this.makProjects$.subscribe( (makProjects)=>{
-			this.projectList = makProjects;
-		});
-
-
-		// The observable for the projects for this design
-		this.makVersions$ = this.VersionEntityService.entities$
-		this.makVersions$.subscribe( (makVersions) =>{
-			this.versionList = makVersions;
-		});
-
-
-		// The observable for the signoff reqs from the store
-		this.makSignoffReqs$ = this.SignoffReqEntityService.entities$
-		this.makSignoffReqs$ .subscribe( (makSignoffReqs) =>{
-			this.signoffReqList = makSignoffReqs;
-		});
+    this.designData = this.DesignStudioService.setDesignData( this.studioType,
+                                                              this.designList,
+                                                              this.projectList,
+                                                              JSON.parse(localStorage.getItem('makDesign')),
+                                                              this.route.snapshot.url[1] ? this.route.snapshot.url[1].toString() : '',
+                                                              this.route.snapshot.paramMap.get('designId') ? this.route.snapshot.paramMap.get('designId') : '')
 
 
 
-
-		// Came to the /designStudio page with nothing else
-		if ( this.route.snapshot.url[1] === undefined )
-		{
-
-			console.log('Here 1');
-			this.studioType = 'studio';
-
-			// What if there is a stored design in local memory
-			if ( JSON.parse(localStorage.getItem('makDesign')) )
-			{
-				this.designData = JSON.parse(localStorage.getItem('makDesign'));
-				this.versionData = JSON.parse(localStorage.getItem('makVersion'));
-				this.versionList.push(this.versionData);
-			
-			}else
-			{
-
-				this.setDesign('jBRzSildNc16fQjAmLkh');
-				this.versionData = <makVersion>JSON.parse(JSON.stringify(this.VersionsService.blankVersion()));
-				this.versionList.push(this.versionData);
-			}
-			this.initializeAll();
+    this.projectData = this.DesignStudioService.setProjectData( this.studioType,
+                                                                this.projectList,
+                                                                localStorage.getItem('makProject') != 'undefined' ? JSON.parse(localStorage.getItem('makProject')) : '',
+                                                                this.route.snapshot.paramMap.get('projectId') ? this.route.snapshot.paramMap.get('projectId') : '')
 
 
-		// WHen a user is navigating using the icon menu to a preset design
-		}else if ( ( this.route.snapshot.url[1].toString() != 'design' ) &&
-				   ( this.route.snapshot.url[1].toString() != 'project') )
-		{
 
-			console.log('Here 2');
-			this.studioType = 'studio';
-			this.setDesign( this.route.snapshot.url[1].toString() );
-			this.versionData = <makVersion>JSON.parse(JSON.stringify(this.VersionsService.blankVersion()));
-			this.versionList.push(this.versionData);
-			this.initializeAll();
+    this.versionData = this.DesignStudioService.setVersionData( this.studioType,
+                                                                this.versionList,
+                                                                localStorage.getItem('makVersion') != 'undefined' ? JSON.parse(localStorage.getItem('makVersion')) : '',
+                                                                this.route.snapshot.paramMap.get('versionId') ? this.route.snapshot.paramMap.get('versionId') : '')
+    this.versionList.push(this.versionData);
 
+    this.initializeAll();
 
-		// WHen a user is looking at a design that is likely not live
-		}else if ( this.route.snapshot.url[1].toString() == 'design' )
-		{
-
-			console.log('Here 3');
-			this.studioType = 'design';
-			this.setDesign( this.route.snapshot.paramMap.get('designId') );
-			this.versionData = <makVersion>JSON.parse(JSON.stringify(this.VersionsService.blankVersion()));
-			this.versionList.push(this.versionData);
-			this.initializeAll();
-
-
-		// If the viewer is looking at a project - the nominal case of a user working on a project
-		}else if ( this.route.snapshot.url[1].toString() == 'project' )
-		{
-
-			console.log('Here 4');
-			this.studioType = 'project';
-			this.setProject(  this.route.snapshot.paramMap.get('projectId') );
-			this.initializeAll();
-
-
-		// The user is looking at the design studio - possibly not logged in
-		}else
-		{
-			this.studioType = 'studio';
-			this.setDesign('jBRzSildNc16fQjAmLkh');
-			this.initializeAll();
-
-		}
 
 	}
 
@@ -266,7 +156,28 @@ export class DesignStudioComponent  {
 	// -----------------------------------------------------------------------------------------------------
 
 
+  subscribeToObservables(){
 
+		this.makDesigns$ = this.DesignEntityService.entities$
+		this.makDesigns$.subscribe( (makDesigns)=>{
+			this.designList = makDesigns;
+		});
+
+		this.makProjects$ = this.ProjectEntityService.entities$
+		this.makProjects$.subscribe( (makProjects)=>{
+			this.projectList = makProjects;
+		});
+
+		this.makVersions$ = this.VersionEntityService.entities$
+		this.makVersions$.subscribe( (makVersions) =>{
+			this.versionList = makVersions;
+		});
+
+		this.makSignoffReqs$ = this.SignoffReqEntityService.entities$
+		this.makSignoffReqs$ .subscribe( (makSignoffReqs) =>{
+			this.signoffReqList = makSignoffReqs;
+		});
+  }
 
 	// -----------------------------------------------------------------------------------------------------
 	//
@@ -274,16 +185,9 @@ export class DesignStudioComponent  {
 	//
 	// -----------------------------------------------------------------------------------------------------
 
-	setDesign( designId )
+	setDesign( designId:string, designList:makDesign[] )
 	{
-		this.designList.forEach( (design) =>{
-
-			if ( design.id == designId )
-			{
-				this.designData = JSON.parse(JSON.stringify(design));
-			}
-		
-		});
+		this.designData = <makDesign>JSON.parse(JSON.stringify(designList.find( design => design.id == designId)))
 	}
 
 
@@ -294,14 +198,14 @@ export class DesignStudioComponent  {
 			if ( project.id == projectId )
 			{
 				this.projectData = JSON.parse(JSON.stringify(project));
-				if ( project.designId != this.designData.id ) { this.setDesign( project.designId ) }
+				if ( project.designId != this.designData.id ) { this.setDesign( project.designId, this.designList ) }
 
 				let maxVersion=0;
 				if ( !this.versionData )
 				{
 
 						this.versionList.forEach((version)=>{
-							if ( ( version.dateCreated > maxVersion ) && 
+							if ( ( version.dateCreated > maxVersion ) &&
 								 ( version.projectId == projectId ) )
 							{
 								this.setVersion( version.id );
@@ -309,11 +213,11 @@ export class DesignStudioComponent  {
 							}
 						});
 				}else{
-				
+
 					if ( this.versionData.projectId != this.projectData.id )
 					{
 						this.versionList.forEach((version)=>{
-							if ( ( version.dateCreated > maxVersion ) && 
+							if ( ( version.dateCreated > maxVersion ) &&
 								 ( version.projectId == projectId ) )
 							{
 								this.setVersion( version.id );
@@ -323,7 +227,7 @@ export class DesignStudioComponent  {
 					}
 				}
 			}
-		
+
 		});
 	}
 
@@ -341,7 +245,7 @@ export class DesignStudioComponent  {
 					this.setProject( version.projectId );
 				}
 			}
-		
+
 		});
 	}
 
@@ -376,16 +280,16 @@ export class DesignStudioComponent  {
 	*	Load a new model
 	*
 	*/
-	loadModel( modelId ) {
+	loadModel( modelId:string ) {
 
 		console.log('In the load model function with an ID of '+modelId);
 
 		// Wipe the div so that the shapediver can reset
 		document.getElementById('modelDiv').innerHTML = ''
-		
 
 
-		this.setDesign( modelId );
+
+		this.setDesign( modelId, this.designList );
 		this.versionData = <makVersion>JSON.parse(JSON.stringify(this.VersionsService.blankVersion()));
 		this.versionList = [];
 		this.versionList.push(this.versionData);
@@ -406,16 +310,13 @@ export class DesignStudioComponent  {
 	*/
 	initializeMenu() {
 
-		console.log('Initializing the menu for type : '+this.studioType);
-
-
 		if ( this.studioType == 'studio' )
 		{
 
 			// First, remove the cost and design options from the parameter menu
 			for (let a=this.designData.parameterMenus.length-1; a>=0; a--)
 			{
-				if ( ( this.designData.parameterMenus[a].name=="makStudio" ) || 
+				if ( ( this.designData.parameterMenus[a].name=="makStudio" ) ||
 					 ( this.designData.parameterMenus[a].name=="cost" ))
 				{
 					this.designData.parameterMenus.splice(a, 1);
@@ -423,23 +324,19 @@ export class DesignStudioComponent  {
 			}
 		}
 
-
-		console.log('The parameter menus are ... ');
-		console.log(this.designData.parameterMenus);
-
 		// Add and remove the windows for the project menu and cost
 		if ( this.studioType == 'design' )
 		{
 			this.designData.parameterMenus.unshift(this.DesignStudioService.getDesignMenu());
-		
+
 		}else if ( this.studioType == 'project' )
 		{
-			this.designData.parameterMenus.unshift(this.DesignStudioService.getProjectMenu());			
+			this.designData.parameterMenus.unshift(this.DesignStudioService.getProjectMenu());
 			this.designData.parameterMenus.push(this.DesignStudioService.getSignoffMenu( ));
 
 		}else if ( this.studioType == 'studio' )
 		{
-			this.designData.parameterMenus.unshift(this.DesignStudioService.getStudioMenu());			
+			this.designData.parameterMenus.unshift(this.DesignStudioService.getStudioMenu());
 		}
 
 
@@ -483,6 +380,7 @@ export class DesignStudioComponent  {
 
 
 
+
 	/*
 	*
 	* Called once when the app loads, this sets the menus
@@ -508,7 +406,7 @@ export class DesignStudioComponent  {
 
 
 		// Wait a few seconds and then place the data from the call into the model
-		setTimeout( () => { 
+		setTimeout( () => {
 
 			let paramChanges = [];
 			let isChanged = false;
@@ -549,7 +447,7 @@ export class DesignStudioComponent  {
 							// Set the design data
 							this.designData.parameterMenus[a]['parameters'][b]['value'] = this.versionData['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']];
 
-						
+
 							// If the parameter from shapediver has a different value than the one
 							// for this version, prep it to be shipped to update design
 							if ( this.versionData['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']] != element.value  )
@@ -563,7 +461,7 @@ export class DesignStudioComponent  {
 
 						// Handle the case where this is an uploaded image
 						if ( ( this.studioType == "project" ) &&
-							 ( element['type'] == 'File' ) && 
+							 ( element['type'] == 'File' ) &&
 							 ( this.designData.parameterMenus[a]['parameters'][b]['type'] == "upload" ) &&
 							 ( this.designData.parameterMenus[a]['parameters'][b]['shapediver'] == element.name) )
 						{
@@ -581,7 +479,7 @@ export class DesignStudioComponent  {
 						}
 
 
-						// Handle the case for the flowers / blob 
+						// Handle the case for the flowers / blob
 						if ( ( this.designData.parameterMenus[a]['parameters'][b]['type'] == "blob" ) &&
 							 ( this.designData.parameterMenus[a]['parameters'][b]['shapediver'] == element.name) )
 						{
@@ -597,8 +495,8 @@ export class DesignStudioComponent  {
 
 			});
 
-			this.calcPrice();	
-			this.setDragDrop();	
+			this.calcPrice();
+			this.setDragDrop();
 
 
 			if ( this.studioType == "project" )
@@ -607,7 +505,7 @@ export class DesignStudioComponent  {
 				if ( isChanged )
 				{
 					console.log('Updating parameters from initialize data ...');
-					this.updateMultipleParameters( paramChanges );					
+					this.updateMultipleParameters( paramChanges );
 				}
 			}
 
@@ -637,24 +535,21 @@ export class DesignStudioComponent  {
 
 
 
-
 	/*
 	*
 	* When the user changes a parameter on the template
 	* and the shapediver model is updated
 	*
 	*/
-	updateParameter( parameters ) 
+	updateParameter( parameters )
 	{
-		console.log('Updating the parameter '+parameters.name+' - '+parameters.id+' with the value '+parameters.value);
-		console.log(parameters);
 
 		// Send the update to shapediver so that the model is updated
 		if ( parameters['id'] !== undefined )
 		{
 			this.shapediverApi.parameters.updateAsync({id: parameters.id, value: parameters.value });
 		}else{
-			this.shapediverApi.parameters.updateAsync({name: parameters.name, value: parameters.value });			
+			this.shapediverApi.parameters.updateAsync({name: parameters.name, value: parameters.value });
 		}
 
 
@@ -671,7 +566,7 @@ export class DesignStudioComponent  {
 
 
 
-		// If the user is simply designing in the studio, save that design to 
+		// If the user is simply designing in the studio, save that design to
 		// local memory so that it will reload when they return.
 		if ( this.studioType == 'studio' )
 		{
@@ -680,7 +575,7 @@ export class DesignStudioComponent  {
 			let tempData = JSON.parse(JSON.stringify(this.designData));
 			for (let a=tempData.parameterMenus.length-1; a>=0; a--)
 			{
-				if ( ( tempData.parameterMenus[a].name=="makStudio" ) || 
+				if ( ( tempData.parameterMenus[a].name=="makStudio" ) ||
 					 ( tempData.parameterMenus[a].name=="cost" ))
 				{
 					tempData.parameterMenus.splice(a, 1);
@@ -702,11 +597,8 @@ export class DesignStudioComponent  {
 	* and the shapediver model is updated
 	*
 	*/
-	updateMultipleParameters( parameters ) 
+	updateMultipleParameters( parameters )
 	{
-		console.log('Updating parameters ...');
-		console.log(parameters);
-		//this.shapediverApi.parameters.updateAsync( parameters );
 		for (var a=0; a<parameters.length; a++)
 		{
 			this.shapediverApi.parameters.updateAsync( parameters[a] );
@@ -724,7 +616,7 @@ export class DesignStudioComponent  {
 	* When the user uploads a file
 	*
 	*/
-	uploadFile( event, paramName ) 
+	uploadFile( event, paramName )
 	{
 		console.log('Uploading a file to the parameter '+paramName);
 
@@ -739,7 +631,7 @@ export class DesignStudioComponent  {
 		for (let i = 0; i < 6; i++) {
 			text += possible.charAt(Math.floor(Math.random() * possible.length));
   		}
-		var path = '/studio/logo/'+this.versionData.id+'-'+text+'.'+imageType;			
+		var path = '/studio/logo/'+this.versionData.id+'-'+text+'.'+imageType;
 
 		console.log('Uploading image to Upload Logo');
 		// Send the update to shapediver so that the model is updated
@@ -764,39 +656,14 @@ export class DesignStudioComponent  {
 	* When the version needs to be saved
 	*
 	*/
-	saveVersion( versionData ) 
+	saveVersion( versionData )
 	{
 		console.log('Saving version '+versionData.id);
 
 		this.VersionsService.updateVersion( versionData );
 		this.SnackBar.open('Version changes saved','', {duration: 4000});
 
-		/*
-		this.FirebaseService.updateDocDataUsingId('versions', versionData.uid, versionData )
-		.then((snapshot) => {
-			this.SnackBar.open('Version changes saved','', {duration: 4000});
-		})
-		.catch((err) => {
-		  console.log('Error updating version', err);
-		});
-		*/
-
 	}
-
-
-
-	/*
-	*
-	* When a new version is to be created
-	*
-	*/
-	createNewVersion( ) 
-	{
-		console.log('Creating new version ');
-		this.VersionsService.createVersion( '', this.projectData, this.versionData, this.designData )
-	}
-
-
 
 
 
@@ -805,10 +672,9 @@ export class DesignStudioComponent  {
 	* When a version is selected
 	*
 	*/
-	setVersionData( thisVersion ) 
+	setVersionData( thisVersion )
 	{
 		thisVersion = JSON.parse(JSON.stringify(thisVersion))
-		console.log('setting version to '+thisVersion.version);
 
 		let paramChanges=[];
 		let isChanged=false;
@@ -832,18 +698,8 @@ export class DesignStudioComponent  {
 						}
 
 						this.designData.parameterMenus[a]['parameters'][b]['value'] = thisVersion['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']];
-						
-						//console.log('Comparing '+this.versionData['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']] +' to '+thisVersion['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']]);
-						/*
-						if ( this.versionData['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']] != 
-							 thisVersion['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']]  )
-						{
-							paramChanges.push({'name':element.name, 'value' : thisVersion['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']]});
-							isChanged = true;
-						}
-						*/
-							paramChanges.push({'name':element.name, 'value' : parseFloat(thisVersion['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']])});
-						
+            paramChanges.push({'name':element.name, 'value' : parseFloat(thisVersion['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']])});
+
 					}
 				}
 			}
@@ -851,9 +707,7 @@ export class DesignStudioComponent  {
 
 		// If any items in this version are different from the original
 		// design, update all of those parameters
-		console.log('Updating parameters from version data ...');
-		console.log(paramChanges);
-		this.updateMultipleParameters( paramChanges );			
+		this.updateMultipleParameters( paramChanges );
 
 		// Set the version data
 		this.versionData = JSON.parse(JSON.stringify(thisVersion));
@@ -880,7 +734,7 @@ export class DesignStudioComponent  {
 	* Calculate the price of a version
 	*
 	*/
-	calcPrice( ) 
+	calcPrice( )
 	{
 		this.versionData.price = this.DesignStudioService.setPrice(this.designData, this.versionData);
 		this.designData.price = this.DesignStudioService.setPrice(this.designData, this.versionData);
@@ -896,7 +750,8 @@ export class DesignStudioComponent  {
 
 	// -----------------------------------------------------------------------------------------------------
 	//
-	// @ FUNCTION TO SET THE DRAG AND DROP FOR THE CURRENT MODEL
+  // @ FUNCTION TO SET THE DRAG AND DROP FOR THE CURRENT MODEL
+  //    THIS IS KIND OF A MESS, BUT IT COMES DIRECTLY FROM SHAPEDIVER
 	//
 	// -----------------------------------------------------------------------------------------------------
 
@@ -909,7 +764,7 @@ export class DesignStudioComponent  {
 			var flowersID;
 			var panelsScenePath;
 			var menuNum = 0;
-			var paramNum = 0; 
+			var paramNum = 0;
 
 			for ( var a=1; a<this.designData.parameterMenus.length-1; a++ )
 			{
@@ -920,8 +775,6 @@ export class DesignStudioComponent  {
 						this.flowersJSON = JSON.parse(this.designData.parameterMenus[a]['parameters'][b]['value']);
 						menuNum=a;
 						paramNum=b;
-						console.log('Setting the this.flowersJSON to ...');
-						console.log(this.flowersJSON);
 					}
 				}
 			}
@@ -957,15 +810,15 @@ export class DesignStudioComponent  {
 
 
 			//look for flowers and panels assets
-			for (var i = 0; i < assets.length; ++i) 
+			for (var i = 0; i < assets.length; ++i)
 			{
-				if (assets[i].material != undefined) 
+				if (assets[i].material != undefined)
 				{
-					if (assets[i].name == "Flowers") 
+					if (assets[i].name == "Flowers")
 					{
 						flowersID = assets[i].id;
-					
-					}else if (assets[i].name == "Panels") 
+
+					}else if (assets[i].name == "Panels")
 					{
 						panelsScenePath = assets[i].scenePath;
 					}
@@ -1007,10 +860,6 @@ export class DesignStudioComponent  {
 					//update flower location
 					this.flowersJSON.flowers[draggedFlower].position = [res.dragPosAbs.x, res.dragPosAbs.z];
 
-
-					console.log('Updating the flowers with ...');
-					console.log(this.flowersJSON);
-
 					this.shapediverApi.parameters.updateAsync({ 'name': 'flowersJSON', 'value': JSON.stringify(this.flowersJSON) }).then(() => {
 						//check if there are any collisions with the new flower location
 						var checkFlower = this.shapediverApi.scene.getData({ name: "checkFlowers" }).data[0].data[draggedFlower];
@@ -1049,7 +898,7 @@ export class DesignStudioComponent  {
 
 
 
-		
+
 
 		}else if ( this.designData.id == "eLHfWkL4GA2LFeuoVQkx" )
 		{
@@ -1095,15 +944,15 @@ export class DesignStudioComponent  {
 			//look for flowers and panels assets
 			if ( assets !== undefined )
 			{
-				for (var i = 0; i < assets.length; ++i) 
+				for (var i = 0; i < assets.length; ++i)
 				{
-					if (assets[i].material != undefined) 
+					if (assets[i].material != undefined)
 					{
-						if (assets[i].name == "LogoAndText") 
+						if (assets[i].name == "LogoAndText")
 						{
 							logoID = assets[i].id;
-						
-						}else if (assets[i].name == "Panels") 
+
+						}else if (assets[i].name == "Panels")
 						{
 							panelsScenePath = assets[i].scenePath;
 						}
@@ -1157,7 +1006,7 @@ export class DesignStudioComponent  {
 
 
 		}
-		
+
 
 	}
 

@@ -1,10 +1,15 @@
-@import "src/@fuse/scss/fuse";
+
 
 chat-view {
     display: flex;
     flex: 1 0 auto;
     overflow: hidden;
     max-width: 100%;
+
+    .avatar {
+      height:40px;
+      width:40px;
+    }
 
     .chat {
 

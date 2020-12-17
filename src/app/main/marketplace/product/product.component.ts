@@ -1,109 +1,63 @@
-
-/*
-
-	This is the component for viewing a single design project. The user
-	is able to create a project or view the design in the design center
-
-*/
-
-
 // Common Angular Items
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-
-
 // RXJS Items
-import { finalize } from 'rxjs/operators';
-import { BehaviorSubject, Subject, Observable } from 'rxjs';
-import { takeUntil } from 'rxjs/internal/operators';
-import { concatMap, delay, filter, first, map, mergeMap, shareReplay, tap, withLatestFrom } from 'rxjs/operators';
-
-
-
-// Angular Material Items
-import { MatCarousel, MatCarouselComponent } from '@ngmodule/material-carousel';
-import { MatButtonModule } from '@angular/material/button';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatCarouselSlide, MatCarouselSlideComponent } from '@ngmodule/material-carousel';
-
+import { map, mergeMap, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 // Models
-import { makDesign } from 'app/main/models/makDesign';
-import { makProject } from 'app/main/models/makProject';
-import { makVersion } from 'app/main/models/makVersion';
-import { designSignoff } from 'app/main/models/designSignoffs';
-import { signoffReq } from 'app/main/models/signoffReq';
-
-
-
-
-// Services
-import { ProjectsService } from 'app/main/services/projects.service';
-import { DesignsService } from 'app/main/services/designs.service';
-import { MarketplaceService } from 'app/main/services/marketplace.service';
-import { SignoffReqsService } from 'app/main/services/signoff-reqs.service';
-import { DesignSignoffsService } from 'app/main/services/design-signoffs.service';
-import { makDesignEntityService } from 'app/main/services/entity/makDesign-entity.service';
-import { signoffReqEntityService } from 'app/main/services/entity/signoffReq-entity.service';
-import { makProjectEntityService } from 'app/main/services/entity/makProject-entity.service';
-
-import { AngularFireStorage } from '@angular/fire/storage';
-
-
-
+import { makDesign } from '../../models/makDesign';
+import { makProject } from '../../models/makProject';
+import { makVersion } from '../../models/makVersion';
+import { signoffReq } from '../../models/signoffReq';
 
 // NGRX Items
 import { Store } from "@ngrx/store";
-import { AppState } from 'app/main/reducers';
-import { DesignState } from 'app/main/reducers';
+import { DesignState } from '../../store/reducers';
 
-
-
-
+// Services
+import { makDesignEntityService } from '../../services/entity/makDesign-entity.service';
+import { signoffReqEntityService } from '../../services/entity/signoffReq-entity.service';
+import { makProjectEntityService } from '../../services/entity/makProject-entity.service';
+import { MarketplaceService } from '../../services/marketplace.service';
 
 
 @Component({
-  selector: 'marketplace-product',
+  selector: 'mak-product',
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.scss']
 })
-export class MarketplaceProductComponent implements OnInit {
+export class ProductComponent implements OnInit {
 
-	public id 				: string;
+	public id 							: string;
 	public marketplaceItem 	: makDesign;
-	dataFlag 				: boolean = false;
-	projectDataFlag 		: boolean = false;
-	projectList 			: makProject[];
-	signoffList 			: signoffReq[];
-	userData 				: any;
-	private _unsubscribeAll : Subject<any>;
-	makDesign$ 				: Observable<makDesign>;
-	signoffReqs$ 			: Observable<signoffReq[]>;
-	makProjects$ 			: Observable<makProject[]>;
-	signoffs 				: string[];
-	images 					: never[];
+	dataFlag 								: boolean = false;
+	projectDataFlag 				: boolean = false;
+	projectList 						: makProject[];
+	signoffList 						: signoffReq[];
+	userData 								: any;
+	makDesign$ 							: Observable<makDesign>;
+	signoffReqs$ 						: Observable<signoffReq[]>;
+	makProjects$ 						: Observable<makProject[]>;
+	signoffs 								: string[];
+	images 									: any[];
+
+  constructor(private route 		          	: ActivatedRoute,
+              private MarketplaceService    : MarketplaceService,
+              private DesignEntityService 	: makDesignEntityService,
+              private ProjectEntityService 	: makProjectEntityService,
+              private SignoffEntityService 	: signoffReqEntityService,
+              private designStore 					: Store<DesignState>)
+  {}
 
 
-	constructor(private route 					: ActivatedRoute,
-				private DesignsService 			: DesignsService,
-				private ProjectsService 		: ProjectsService,
-				private SignoffReqsService		: SignoffReqsService,
-				private afStorage 				: AngularFireStorage,
-				private MarketplaceService 		: MarketplaceService,
-				private DesignEntityService 	: makDesignEntityService,
-				private ProjectEntityService 	: makProjectEntityService,
-				private SignoffEntityService 	: signoffReqEntityService,
-				private store 					: Store<AppState>,
-				private designStore 			: Store<DesignState>)
-	{
-		this._unsubscribeAll = new Subject();		
-	}
 
-	ngOnInit(): void {
+
+  ngOnInit(): void {
 
 		this.userData = JSON.parse(localStorage.getItem('user'));
+
 
 		// Get the ID of the product being viewed
 		this.id = this.route.snapshot.paramMap.get('itemId');
@@ -113,7 +67,6 @@ export class MarketplaceProductComponent implements OnInit {
 		this.signoffReqs$ = this.SignoffEntityService.entities$
 			.pipe(
 				tap((signoffReqs) => {
-					// This needs to call a function that gets the images and stores their addresses
 					this.signoffs = [];
 					for (let a=0; a<signoffReqs.length; a++)
 					{
@@ -144,65 +97,13 @@ export class MarketplaceProductComponent implements OnInit {
 		// Listen to the images observable
 		this.designStore.subscribe(state => {
 
-				if (state.designs.designs.type)
-				{
-					let temp = JSON.parse(JSON.stringify(state.designs.designs));
-					delete temp.type
-					this.images = Object.values(temp);				
-				}else
-				{
-					let temp = JSON.parse(JSON.stringify(state.designs.designs));
-					this.images = Object.values(temp);
-				}
+      this.images = this.MarketplaceService.getProductImages(this.id, state.designs.designs);
 
-				for (let a=0; a<this.images.length; a++)
-				{
-					if ( this.images[a]['itemId'] != this.id )
-					{
-						this.images.splice(a,1);
-						a=a-1;				
-					}
-				}
 		});
 
 
 
-	}
-
-
-
-
-
-	// -----------------------------------------------------------------------------------------------------
-	//
-	// @ CRUD FUNCTIONS FOR A PROJECT
-	//
-	// -----------------------------------------------------------------------------------------------------
-
-
-	//Create
-	addProject( ){
-		this.ProjectsService.createProject( this.marketplaceItem, '' );
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  }
 
 
 }

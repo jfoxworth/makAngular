@@ -1,0 +1,22 @@
+.link-list {
+  color : #000;
+  font-family:'Roboto';
+  font-weight:400;
+  font-size:0.8em;
+  letter-spacing: 1px;
+  margin-left:300px;
+  position:relative;
+}
+
+.link-list >a {
+  color:#000;
+}
+
+.link-item {
+  margin:0px 20px;
+}
+
+.link-item >a {
+  color:#000;
+  text-decoration:none;
+}

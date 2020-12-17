@@ -4,19 +4,18 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 
 // Angular Material Items
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatRippleModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatTableModule } from '@angular/material/table';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSelectModule} from '@angular/material/select';
 import { MatGridListModule} from '@angular/material/grid-list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -32,88 +31,49 @@ import { MatDividerModule} from '@angular/material/divider';
 // New ng5 slider
 import { Ng5SliderModule } from 'ng5-slider';
 
-
-
-// Fuse specific items
-import { FuseConfirmDialogModule, FuseSidebarModule } from '@fuse/components';
-import { FuseSharedModule } from '@fuse/shared.module';
-
-
 // The components
-import { DesignStudioComponent } from 'app/main/design-studio/design-studio.component';
+import { NavbarModule } from '../Shared/navbar/navbar.module';
+import { TitleBannerModule } from '../Shared/title-banner/title-banner.module';
+import { DesignStudioComponent } from './design-studio.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-
+import { HexagonsComponent } from './sidebar/hexagons/hexagons.component';
+import { MakButtonsComponent } from './sidebar/mak-buttons/mak-buttons.component';
+import { VersionListComponent } from './sidebar/version-list/version-list.component';
+import { SignoffsComponent } from './sidebar/signoffs/signoffs.component';
+import { DesignCostComponent } from './sidebar/design-cost/design-cost.component';
+import { ProjectCostComponent } from './sidebar/project-cost/project-cost.component';
+import { DropdownComponent } from './sidebar/dropdown/dropdown.component';
+import { SliderComponent } from './sidebar/slider/slider.component';
+import { TextComponent } from './sidebar/text/text.component';
+import { ToggleComponent } from './sidebar/toggle/toggle.component';
+import { FileuploadComponent } from './sidebar/fileupload/fileupload.component';
+import { ColorselectComponent } from './sidebar/colorselect/colorselect.component';
+import { ImageselectComponent } from './sidebar/imageselect/imageselect.component';
+import { BlobitemsComponent } from './sidebar/blobitems/blobitems.component';
 
 // Services
-import { DesignStudioService } from 'app/main/services/design-studio.service';
-
-
+import { DesignStudioService } from '../services/design-studio.service';
 
 // NgRx Items
 import { EntityDataService, EntityDefinitionService, EntityMetadataMap } from '@ngrx/data';
-import { designImagesReducer } from 'app/main/reducers';
-import { AuthEffects } from 'app/main/effects/auth.effects';
+import { designImagesReducer } from '../store/reducers';
 import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
-
 
 // Entity Service
-import { makDesignEntityService } from 'app/main/services/entity/makDesign-entity.service';
-import { makDesignDataService } from 'app/main/services/entity/makDesign-data.service';
-import { signoffReqEntityService } from 'app/main/services/entity/signoffReq-entity.service';
-import { signoffReqDataService } from 'app/main/services/entity/signoffReq-data.service';
-import { makProjectEntityService } from 'app/main/services/entity/makProject-entity.service';
-import { makProjectDataService } from 'app/main/services/entity/makProject-data.service';
-import { makVersionEntityService } from 'app/main/services/entity/makVersion-entity.service';
-import { makVersionDataService } from 'app/main/services/entity/makVersion-data.service';
-
-
+import { makDesignEntityService } from '../services/entity/makDesign-entity.service';
+import { makDesignDataService } from '../services/entity/makDesign-data.service';
+import { signoffReqEntityService } from '../services/entity/signoffReq-entity.service';
+import { signoffReqDataService } from '../services/entity/signoffReq-data.service';
+import { makProjectEntityService } from '../services/entity/makProject-entity.service';
+import { makProjectDataService } from '../services/entity/makProject-data.service';
+import { makVersionEntityService } from '../services/entity/makVersion-entity.service';
+import { makVersionDataService } from '../services/entity/makVersion-data.service';
 
 // The resolvers
-import { MakDesignsResolver } from 'app/main/resolvers/makDesigns.resolver';
-import { SignoffReqsResolver } from 'app/main/resolvers/signoffReqs.resolver';
-import { MakProjectsResolver } from 'app/main/resolvers/makProjects.resolver';
-import { MakVersionsResolver } from 'app/main/resolvers/makVersions.resolver';
-
-
-
-
-
-const routes = [
-    {
-        path     : 'designStudio/design/:designId',
-        component: DesignStudioComponent,
-        resolve: {
-            makDesign: MakDesignsResolver,
-            makProject: MakProjectsResolver
-        }
-    },
-    {
-        path     : 'designStudio/project/:projectId',
-        component: DesignStudioComponent,
-        resolve: {
-            makDesign: MakDesignsResolver,
-            makProject: MakProjectsResolver,
-            makVersion: MakVersionsResolver
-        }
-    },
-    {
-        path     : 'designStudio/:designId',
-        component: DesignStudioComponent,
-        resolve: {
-            makDesign: MakDesignsResolver,
-            makProject: MakProjectsResolver
-        }
-    },
-    {
-        path     : 'designStudio',
-        component: DesignStudioComponent,
-        resolve: {
-            makDesign: MakDesignsResolver
-        }
-    }
-];
-
+import { MakDesignsResolver } from '../resolvers/makDesigns.resolver';
+import { SignoffReqsResolver } from '../resolvers/signoffReqs.resolver';
+import { MakProjectsResolver } from '../resolvers/makProjects.resolver';
+import { MakVersionsResolver } from '../resolvers/makVersions.resolver';
 
 
 
@@ -135,6 +95,13 @@ const entityMetadata: EntityMetadataMap = {
             optimisticUpdate: true
         }
     },
+    makVersion: {
+      entityDispatcherOptions: {
+          optimisticUpdate: true
+
+      }
+  },
+
 };
 
 
@@ -143,15 +110,34 @@ const entityMetadata: EntityMetadataMap = {
 @NgModule({
     declarations: [
         DesignStudioComponent,
-        SidebarComponent
-    ],
+        SidebarComponent,
+        HexagonsComponent,
+        MakButtonsComponent,
+        VersionListComponent,
+        SignoffsComponent,
+        DesignCostComponent,
+        ProjectCostComponent,
+        DropdownComponent,
+        SliderComponent,
+        TextComponent,
+        ToggleComponent,
+        FileuploadComponent,
+        ColorselectComponent,
+        ImageselectComponent,
+        BlobitemsComponent
+
+      ],
     imports     : [
-        RouterModule.forChild(routes),
         StoreModule.forFeature('designs', designImagesReducer),
         MatExpansionModule,
-        FuseSidebarModule,
-        FuseSharedModule,
-
+        BrowserAnimationsModule,
+        CommonModule,
+        NavbarModule,
+        TitleBannerModule,
+        FlexLayoutModule,
+        RouterModule,
+        FormsModule,
+        ReactiveFormsModule,
 
         // Material
         MatButtonModule,
@@ -168,9 +154,7 @@ const entityMetadata: EntityMetadataMap = {
         MatFormFieldModule,
         MatInputModule,
 
-
         Ng5SliderModule,
-
 
 
     ],
@@ -207,7 +191,7 @@ export class DesignStudioModule
             entityDataService.registerService('signoffReq', signoffReqDataService);
             entityDataService.registerService('makProject', makProjectDataService);
             entityDataService.registerService('makVersion', signoffReqDataService);
-			entityDataService.registerService('makVersion', makVersionDataService);
+      			entityDataService.registerService('makVersion', makVersionDataService);
         }
 
     static forRoot(): ModuleWithProviders<DesignStudioModule> {

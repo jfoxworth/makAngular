@@ -8,31 +8,24 @@ import { HttpClient } from '@angular/common/http';
 
 
 // Data Model
-import { designSignoff } from 'app/main/models/designSignoffs';
-import { UserData } from 'app/main/models/userData';
+import { designSignoff } from '../../models/designSignoffs';
 
 
 
 // RXJS Items
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { pipe } from 'rxjs';
 
 
 
 // NGRX Items and NgRX Data
 import { Store } from "@ngrx/store";
-import { AuthState } from 'app/main/reducers';
+import { AuthState } from '../../store/reducers';
 import { DefaultDataService, HttpUrlGenerator } from '@ngrx/data';
 
 
 
 // Services
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-import { MarketplaceService } from 'app/main/services/marketplace.service';
-
-
-import { environment } from 'environments/environment';
 
 
 
@@ -40,10 +33,10 @@ import { environment } from 'environments/environment';
 export class designSignoffDataService extends DefaultDataService<designSignoff> {
 
 
-	constructor(http						: HttpClient, 
-				httpUrlGenerator 			: HttpUrlGenerator,
-				public afs 					: AngularFirestore,
-				private store				: Store<AuthState> ) {
+	constructor(http						  : HttpClient,
+              httpUrlGenerator 	: HttpUrlGenerator,
+              public afs 				: AngularFirestore,
+              private store			: Store<AuthState> ) {
 
 		super('designSignoff', http, httpUrlGenerator);
 
@@ -94,7 +87,7 @@ export class designSignoffDataService extends DefaultDataService<designSignoff> 
 
 
 	getdesignSignoffsForDesign( designId:string ) : Observable<designSignoff[]>
-	{ 
+	{
  		return <Observable<designSignoff[]>>this.afs.collection('designSignoffs', ref => ref
  			.where('designId', '==', designId )
  			.where('deleted', '==', false))
@@ -119,14 +112,14 @@ export class designSignoffDataService extends DefaultDataService<designSignoff> 
 
 	// Read one designSignoff
 	getdesignSignoffById( designSignoffId:string )
-	{ 
+	{
 		this.afs.collection('designSignoffs').doc( designSignoffId )
 		.valueChanges()
 		.subscribe((result) => {
 
 			result['uid'] = designSignoffId;
 			this.designSignoffOneStatus.next(result);
-			
+
 		});
 	}
 */
@@ -135,7 +128,7 @@ export class designSignoffDataService extends DefaultDataService<designSignoff> 
 	// Update
 	updateDesignSignoff ( designSignoffObj )
 	{
-		this.afs.collection('designSignoffs').doc( designSignoffObj.uid ).update( designSignoffObj );		
+		this.afs.collection('designSignoffs').doc( designSignoffObj.uid ).update( designSignoffObj );
 	}
 
 
@@ -143,7 +136,7 @@ export class designSignoffDataService extends DefaultDataService<designSignoff> 
 	// Delete
 	deleteDesignSignoff ( designSignoffId )
 	{
-		this.afs.collection('designSignoffs').doc( designSignoffId ).update( { 'deleted' : true } );		
+		this.afs.collection('designSignoffs').doc( designSignoffId ).update( { 'deleted' : true } );
 	}
 
 

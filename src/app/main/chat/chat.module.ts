@@ -1,6 +1,14 @@
+
+// Common Angular Items
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+
+// Material Items
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,28 +18,23 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSidenavModule } from '@angular/material/sidenav';
+
 import { MatToolbarModule } from '@angular/material/toolbar';
 
-import { FuseSharedModule } from '@fuse/shared.module';
 
-import { ChatComponent } from 'app/main/chat/chat.component';
-import { ChatStartComponent } from 'app/main/chat/chat-start/chat-start.component';
-import { ChatViewComponent } from 'app/main/chat/chat-view/chat-view.component';
-import { ChatChatsSidenavComponent } from 'app/main/chat/sidenavs/left/chats/chats.component';
-import { ChatUserSidenavComponent } from 'app/main/chat/sidenavs/left/user/user.component';
-import { ChatLeftSidenavComponent } from 'app/main/chat/sidenavs/left/left.component';
-import { ChatRightSidenavComponent } from 'app/main/chat/sidenavs/right/right.component';
-import { ChatContactSidenavComponent } from 'app/main/chat/sidenavs/right/contact/contact.component';
 
-const routes: Routes = [
-    {
-        path: 'messages',
-        component: ChatComponent,
-        children: [],
-        resolve: {
-        }
-    }
-];
+// Mak Components
+import { NavbarModule } from '../Shared/navbar/navbar.module';
+import { TitleBannerModule } from '../Shared/title-banner/title-banner.module';
+import { ChatComponent } from './chat.component';
+import { ChatStartComponent } from './chat-start/chat-start.component';
+import { ChatViewComponent } from './chat-view/chat-view.component';
+import { ChatChatsSidenavComponent } from './sidenavs/left/chats/chats.component';
+import { ChatUserSidenavComponent } from './sidenavs/left/user/user.component';
+import { ChatLeftSidenavComponent } from './sidenavs/left/left.component';
+import { ChatRightSidenavComponent } from './sidenavs/right/right.component';
+import { ChatContactSidenavComponent } from './sidenavs/right/contact/contact.component';
+
 
 @NgModule({
     declarations: [
@@ -40,18 +43,21 @@ const routes: Routes = [
         ChatStartComponent,
         ChatChatsSidenavComponent,
         ChatUserSidenavComponent,
-        ChatLeftSidenavComponent,
-        ChatRightSidenavComponent,
         ChatContactSidenavComponent,
         ChatLeftSidenavComponent,
         ChatRightSidenavComponent,
-        ChatChatsSidenavComponent,
-        ChatUserSidenavComponent,
-        ChatContactSidenavComponent
     ],
     imports     : [
-        RouterModule.forChild(routes),
 
+        CommonModule,
+        TitleBannerModule,
+        BrowserAnimationsModule,
+        FlexLayoutModule,
+        RouterModule,
+        FormsModule,
+        ReactiveFormsModule,
+
+        NavbarModule,
         MatButtonModule,
         MatCardModule,
         MatFormFieldModule,
@@ -63,10 +69,10 @@ const routes: Routes = [
         MatSidenavModule,
         MatToolbarModule,
 
-        FuseSharedModule
     ],
     providers   : [
-    ]
+    ],
+    exports: [ MatSidenavModule ],
 })
 export class ChatModule
 {

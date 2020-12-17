@@ -1,6 +1,6 @@
 
 /*
-    This is the resolver for the mak version models. The function that it 
+    This is the resolver for the mak version models. The function that it
     calls pulls down all of the versions created by a user.
 */
 
@@ -17,14 +17,13 @@ import { filter, first, map, tap } from 'rxjs/operators';
 
 
 // The mak version entity service
-import { makVersionEntityService } from 'app/main/services/entity/makVersion-entity.service';
+import { makVersionEntityService } from '../services/entity/makVersion-entity.service';
 
 
 @Injectable()
 export class MakVersionsResolver implements Resolve<boolean> {
 
     constructor(private makVersionEntityService: makVersionEntityService) {
-
     }
 
     resolve(route: ActivatedRouteSnapshot,

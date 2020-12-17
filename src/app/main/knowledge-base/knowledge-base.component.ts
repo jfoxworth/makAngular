@@ -1,10 +1,16 @@
+
+// Common Angular Items
 import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
+
+// Material
 import { MatDialog } from '@angular/material/dialog';
+
+// RxJs
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { KnowledgeBaseService } from 'app/main/services/knowledge-base.service';
-import { KnowledgeBaseArticleComponent } from 'app/main/knowledge-base/dialogs/article/article.component';
+// Services
+import { KnowledgeBaseService } from '../services/knowledge-base.service';
 
 @Component({
     selector     : 'knowledge-base',
@@ -71,9 +77,5 @@ export class KnowledgeBaseComponent implements OnInit, OnDestroy
      */
     readArticle(article): void
     {
-        this._matDialog.open(KnowledgeBaseArticleComponent, {
-            panelClass: 'knowledgebase-article-dialog',
-            data      : {article: article}
-        });
     }
 }

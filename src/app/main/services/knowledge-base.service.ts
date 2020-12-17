@@ -1,3 +1,11 @@
+
+/*
+    This service represents an older implementation that has not been altered to the NgRx
+    pattern. It holds a resolver and an http request with an observable.
+
+*/
+
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
@@ -48,7 +56,7 @@ export class KnowledgeBaseService implements Resolve<any>
      */
     getKnowledgeBase()
     {
-        
+
         return new Promise((resolve, reject) => {
 
             this._httpClient.get('api/knowledge-base')
@@ -59,6 +67,6 @@ export class KnowledgeBaseService implements Resolve<any>
                 }, reject);
         });
 
-        
+
     }
 }

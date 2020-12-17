@@ -1,0 +1,25 @@
+
+
+<div class="h3 text-center mb-5">{{valItem['label']}}</div>
+
+<div class="w-240 ml-20"
+    *ngIf="editableVersion">
+  <mat-form-field>
+    <mat-select class="w-240"
+            [(ngModel)]="valItem['value']"
+            (selectionChange)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':valItem['value']});">
+    <mat-option *ngFor="let option of valItem.options" [value]="option.value">
+      {{option.label}}
+    </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<div class="h4 text-center w-260"
+    *ngIf="!editableVersion">
+  <span *ngFor="let option of valItem.options">
+    <span *ngIf="option.value == valItem.value">
+      {{option.label}}
+    </span>
+  </span>
+</div>

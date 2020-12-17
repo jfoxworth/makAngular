@@ -1,6 +1,22 @@
+
+
+.sidebar-inner {
+  width:300px;
+  background-color:#FFF;
+  border:1px solid #333;
+}
+
+.mat-title {
+  background-color:#ccc;
+  font-size:1.2em;
+  padding:15px 0px;
+  margin:0px;
+  border-bottom:1px solid #000;
+}
+
 .hexagon {
   position: relative;
-  width: 60px; 
+  width: 60px;
   height: 34.64px;
   background-color: #ffffff;
   margin: 17.32px 0;

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { EntityCollectionServiceBase, EntityCollectionServiceElementsFactory } from '@ngrx/data';
-import { designSignoff } from 'app/main/models/designSignoffs';
+import { designSignoff } from '../../models/designSignoffs';
 
 
 @Injectable()

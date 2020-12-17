@@ -1,0 +1,44 @@
+<table class="simple invoice-table">
+  <thead>
+      <tr>
+          <th>VERSION MEASUREMENTS : </th>
+          <th>ITEM</th>
+          <th>VALUE</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr *ngFor="let meas of measurements">
+          <td></td>
+          <td>
+              <div class="text-center title pt-5 pb-5">{{meas.name}}</div>
+          </td>
+          <td>
+              <div class="text-center title pt-5 pb-5">{{meas.value}}</div>
+          </td>
+      </tr>
+  </tbody>
+</table>
+
+
+
+
+<table class="simple invoice-table-footer">
+  <tbody>
+      <tr class="subtotal">
+          <td>SUBTOTAL</td>
+          <td>{{versionData.price}}</td>
+      </tr>
+      <tr class="subtotal">
+          <td>TAX (8.25%)</td>
+          <td>{{versionData.tax}}</td>
+      </tr>
+      <tr class="tax">
+          <td>DEPOSIT (25%)</td>
+          <td>{{versionData.deposit}}</td>
+      </tr>
+      <tr class="total">
+          <td>TOTAL</td>
+          <td>{{versionData.totalCost}}</td>
+      </tr>
+  </tbody>
+</table>

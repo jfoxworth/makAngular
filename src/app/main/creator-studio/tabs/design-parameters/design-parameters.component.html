@@ -1,106 +1,103 @@
-<div fxLayout="column" 
-fxFlex="100%" 
-style="width:100%"
-*ngIf="currentDesign!==undefined">
+
+<!--
+
+    This page holds the menus that are moved around to create the parameter menus for the design.
+    The first section holds the column headers that can be dragged around to change the order of the
+    menus. The second one holds the individual menu items that can either be moved around within the
+    menu or moved to another menu.
+
+-->
+
+
+
+<div fxLayout="column"
+     fxFlex="100%"
+     style="width:100%"
+     *ngIf="currentDesign!==undefined">
 
 
 <h2 class="mt-32 mb-20">Design Parameters</h2>
 
 
-<div fxLayout="row" 
-    fxLayoutAlign="center center"
-    *ngIf="changesExist" 
-    flex="100%">
-
-   <button mat-raised-button 
-           color="primary"
-           (click)="saveDesignChanges(); changesExist=false;"
-           style="margin:10px 35%; width:30%">
-       Save Changes
-   </button>
-
-</div>
-
-
 <div fxFlex="100%" class="mr-52">
-   <div class="mt-20 mat-subheading-2" style="color:#898989">The list below holds the items that will be displayed as icons and have submenus. For each design, there is an initial menu where the user can pick a different design and a final menu that displays the cost. Click on the green plus to add a new submenu and then add individual items and move them from menu to menu.</div>	
+   <div class="mt-20 mat-subheading-2" style="color:#898989">The list below holds the items that will be displayed as
+    icons and have submenus. For each design, there is an initial menu where the user can pick a different design and a
+    final menu that displays the cost. Click on the green plus to add a new submenu and then add individual items and
+    move them from menu to menu.</div>
 </div>
 
 
 <div fxFlex="100%">
 
-   <button mat-raised-button 
-           color="primary" 
+   <button mat-raised-button
+           color="primary"
            class=""
            aria-label="Add new submenu"
            style="width:40%; margin:40px 30%"
-           (click)="addSubmenu(); changesExist=true" >
+           (click)="addSubmenu();" >
          Add New Submenu
    </button>
 
 </div>
-   
+
 <div fxFlex="100%">
 
    <div class="example-container"
         fxLayout="row" >
 
-       <div
+      <!-- Headers for each column-->
+      <div
            cdkDropList
            cdkDropListOrientation="horizontal"
            class="example-list-hor"
            [cdkDropListData]="currentDesign['parameterMenus']"
            (cdkDropListDropped)="drop($event)">
-       
-           <div class="example-box-hor" 
-                fxLayout="row"
-                *ngFor="let item of currentDesign['parameterMenus']; index as i" cdkDrag>
-               <div class="menuDelete">
-                   <mat-icon class="ml-20" 
-                             style="position:relative; top:5px"
-                             (click)="currentDesign['parameterMenus'].splice(i, 1); changesExist=true">
-                       cancel
-                   </mat-icon>
-               </div>
-               <div class="menuIcon"><mat-icon>{{item.icon}}</mat-icon></div>
-               <div class="menuName">{{item.label}}</div>
-               <div class="">
-                   <button mat-icon-button color="primary" 
-                           class="add_button"
-                           aria-label="Add new parameter"
-                           (click)="addMenuItem(i); changesExist=true" >
-                         <mat-icon>add_circle</mat-icon>
-                   </button>
-                   <button mat-icon-button aria-label="" (click)="openSubmenuDialog(i); changesExist=true" >
-                       <mat-icon>more_vert</mat-icon>
-                   </button>
-               </div>
-           </div>
-       </div>
+
+        <div class="example-box-hor"
+              fxLayout="row"
+              *ngFor="let item of currentDesign['parameterMenus']; index as i" cdkDrag>
+
+          <div class="menuDelete">
+            <mat-icon class="ml-20"
+                      style="position:relative; top:5px"
+                      (click)="currentDesign['parameterMenus'].splice(i, 1);">
+                cancel
+            </mat-icon>
+          </div>
+
+          <div class="menuIcon"><mat-icon>{{item.icon}}</mat-icon></div>
+          <div class="menuName">{{item.label}}</div>
+
+          <div class="">
+            <button mat-icon-button color="primary"
+                    class="add_button"
+                    aria-label="Add new parameter"
+                    (click)="addMenuItem(i);" >
+                  <mat-icon>add_circle</mat-icon>
+            </button>
+            <button mat-icon-button aria-label="" (click)="openSubmenuDialog(i);" >
+                <mat-icon>more_vert</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
 
 
    </div>
 
 
    <!-- List of Menus -->
-   <div cdkDropListGroup class="" style="">
+   <div cdkDropListGroup class="" >
 
        <div fxLayout="row" style="margin-bottom:40px; flex-flow:row wrap">
 
-           <div class="example-container" 
+           <div class="example-container"
                 *ngFor="let menuItem of currentDesign['parameterMenus']; index as i">
 
-               <div class="example-container" 
+               <div class="example-container"
                     fxLayout="column">
 
-                   <!--
-                   <button mat-button class="add_menu mb-20 text-center" 
-                           (click)="addMenuItem(i)">
-                       <div class="">Add menu item<mat-icon class="ml-20" style="position:relative; top:5px">add_circle</mat-icon></div>
-                   </button>
-               -->
-
-                   <div class="example-container" 
+                   <div class="example-container"
                         fxLayout="column">
 
                        <div cdkDropList
@@ -108,229 +105,41 @@ style="width:100%"
                             [cdkDropListData]="menuItem['parameters']"
                             class="example-list"
                             (cdkDropListDropped)="drop($event)">
-                       
-                           <div class="example-box" 
-                                *ngFor="let parameter of menuItem.parameters, index as j"
-                                cdkDrag
-                                fxLayout="column">
 
-                               
-                               <!-- Top row with delete and dots -->
-                               <div fxLayout="row"
-                                    fxFlex="100%"
-                                    style="width:100%"
-                                    fxLayoutAlign="space-between">
-                                   <div class="menuDelete">
-                                       <mat-icon class="ml-20" 
-                                                 style="position:relative; top:5px"
-                                                 (click)="menuItem.parameters.splice(j, 1); changesExist=true">
-                                           cancel
-                                       </mat-icon>
-                                   </div>
-                                   <button mat-icon-button aria-label="" (click)="openDialog(i, j); changesExist=true" >
-                                       <mat-icon>more_vert</mat-icon>
-                                     </button>
-                                 </div>
-
-
-
-                                 <!-- Slider row -->
-                               <div fxLayout="row"
-                                    *ngIf="parameter.type=='slider'">
-                                   <div class="h3 text-center mb-12">{{parameter.label}}</div>
-                                 </div>
-                                 <div *ngIf="parameter.type=='slider'"
-                                      class="w-280 mb-20 text-center"
-                                      fxLayout="row">
-
-
-                                   <div class="w-160 mr-20 ml-20 custom-slider">
-                                       <ng5-slider [(value)]="parameter['value']" 
-                                                   [options]="{floor: parameter['min'], 
-                                                               ceil: parameter['max'], 
-                                                               step: parameter['step'], 
-                                                               showTicks: parameter['showTicks'], 
-                                                               showTicksValues: parameter['showTicksValues']}">
-                                       </ng5-slider>
-                                   </div>
-
-
-
-                                   <input matInput 
-                                          id=""
-                                          [(value)]="parameter['value']"
-                                          style="width:70px; height:40px; margin-top:10px; border:1px solid #ACACAC" 
-                                          class="inputItem w-70 mat-subheading-2 pt-5 pb-5 text-center" >
-
-                                 </div>
-
-
-
-
-                                 <!-- Select row -->
-                               <div fxLayout="row"
-                                    *ngIf="parameter.type=='dropdown'">
-                                   <div class="h3 text-center mb-12">{{parameter.label}}</div>
-                                 </div>
-
-                                 <div *ngIf="parameter.type=='dropdown'"
-                                      class="w-280 mb-20 text-center"
-                                      fxLayout="row">
-
-                                   <mat-form-field appearance="outline"
-                                                   floatLabel="always"
-                                                   class="w-100-p">
-                                       <mat-label>Select Options</mat-label>
-                                       <mat-select>
-                                           <mat-option *ngFor="let thisOption of parameter['options']" [value]="thisOption['value']">
-                                               {{thisOption['label']}}
-                                           </mat-option>
-                                       </mat-select>
-                                   </mat-form-field>
-
-                                 </div>
-
-
-
-
-                                 <!-- Text row -->
-                               <div fxLayout="row"
-                                    *ngIf="parameter.type=='text'">
-                                   <div class="h3 text-center mb-12">{{parameter.label}}</div>
-                                 </div>
-                                 <div *ngIf="parameter.type=='text'"
-                                      class="w-280 mb-20 text-center"
-                                      fxLayout="column">
-
-                                   <input matInput 
-                                          id=""
-                                          style="width:200px; border:1px solid #ACACAC" 
-                                          class="inputItem mat-subheading-2 pt-8 pb-8 ml-40 text-center" 
-                                          name="paramText"
-                                          [(ngModel)]="parameter.text">
-
-                               </div>
-
-
-
-
-
-                                 <!-- Color Select row -->
-                               <div fxLayout="row"
-                                    *ngIf="parameter.type=='color select'">
-
-                                   <div class="w-280 text-center mt-20 mb-20" fxLayout="row">
-
-                                       <div class="h3 text-center mb-12 w-200">{{parameter.label}}</div>
-
-                                       <input ejs-colorpicker type="color" id="colorpicker" />
-                                       
-                                   </div>
-
-                                 </div>
-
-
-
-
-                                 <!-- Image Select row -->
-                               <div fxLayout="row"
-                                    *ngIf="parameter.type=='image select'">
-
-                                   <div class="w-280 text-center mt-20 mb-20" 
-                                        fxLayout="column"
-                                        fxFlexAlign="center center">
-
-                                       <div class="h3 text-center mb-12 w-280"
-                                            fxFlexAlign="center center">
-                                           {{parameter.label}}
-                                       </div>
-
-                                       
-
-                                       <div *ngFor="let thisImage of parameter['images']; index as k"
-                                            fxLayoutAlign="center center"
-                                            fxLayout="column"
-                                            fxFlex="100">
-
-                                           <div fxFlex="100"
-                                                fxLayout="center">
-                                               <div style="height:75px; width:75px">
-                                                   <img width="75" [src]="(parameterUrls[i]['parameters'][j]['images'][k]['imageUrl'] | async)">
-                                               </div>
-                                           </div>
-
-                                           <div>{{thisImage.label}}</div>
-
-                                       </div>
-
-
-                                   </div>
-                                 </div>
-
-
-
-
-
-                               <!-- The toggle items -->
-                               <div *ngIf="parameter['type']=='toggle'">
-
-                                   <div class="w-280 text-center mt-20 mb-20" fxLayout="row">
-
-                                       <div class="h3 text-center mb-12 w-200">{{parameter.label}}</div>
-
-                                       <mat-slide-toggle
-                                             [(ngModel)]="parameter.value"
-                                             class="w-50 ml-20 mt-12"
-                                             name="paramValue"
-                                             color="accent-900">
-                                       </mat-slide-toggle>
-
-                                   </div>
-
-                               </div>
-
-
-
-                               <!-- The bloc items -->
-                               <div *ngIf="parameter['type']=='blob'">
-
-                                   <div class="w-280 text-center mt-20 mb-20" fxLayout="row">
-
-                                       <div class="h3 text-center mb-12 mt-12 w-200">{{parameter.label}} - Blob</div>
-
-                                   </div>
-
-
-                               </div>
-
-
-
-
-
-
-                                 <!-- Upload Item -->
-                                 <div *ngIf="parameter.type=='upload'"
-                                      class="w-280 mb-20 text-center"
-                                      fxLayout="row"
-                                      fxLayoutAlign="center center">
-
-                                   <input class="ng-hide" 
-                                             id="" />
-
-                                   <label for="input-file-id" 
-                                          style="background-color:#456382; cursor:pointer; border-radius:8px; padding:10px; margin:10px 0px 0px 0px; color: white;"
-                                          color="primary" 
-                                          class="md-button md-raised md-primary">
-                                       {{parameter.label}}
-                                   </label>
-
-                                 </div>
-
-
-
+                          <div class="example-box"
+                               *ngFor="let parameter of menuItem.parameters, index as j"
+                               cdkDrag
+                               fxLayout="column">
+
+
+                            <!-- Top row with delete and dots -->
+                            <div fxLayout="row"
+                                fxFlex="100%"
+                                style="width:100%"
+                                fxLayoutAlign="space-between">
+                              <div class="menuDelete">
+                                <mat-icon class="ml-20"
+                                          style="position:relative; top:5px"
+                                          (click)="menuItem.parameters.splice(j, 1);">
+                                    cancel
+                                </mat-icon>
+                              </div>
+                              <button mat-icon-button aria-label="" (click)="openDialog(i, j);" >
+                                <mat-icon>more_vert</mat-icon>
+                              </button>
+                            </div>
+
+                            <mak-parameter-slider [parameter]="parameter"></mak-parameter-slider>
+                            <mak-parameter-select [parameter]="parameter"></mak-parameter-select>
+                            <mak-parameter-text [parameter]="parameter"></mak-parameter-text>
+                            <mak-parameter-color [parameter]="parameter"></mak-parameter-color>
+                            <mak-parameter-image [parameter]="parameter" [parameterUrls]="parameterUrls" [i]="i" [j]="j"></mak-parameter-image>
+                            <mak-parameter-toggle [parameter]="parameter"></mak-parameter-toggle>
+                            <mak-parameter-bloc [parameter]="parameter"></mak-parameter-bloc>
+                            <mak-parameter-upload [parameter]="parameter"></mak-parameter-upload>
 
                            </div>
-                   
+
                        </div>
 
                    </div>

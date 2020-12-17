@@ -1,0 +1,305 @@
+
+
+#projects, #products {
+
+  .header {
+
+      background-image: url('https://makstudio.s3.us-east-2.amazonaws.com/Backgrounds/wallPanelFossil.png');
+      height:15px;
+      min-height:15px;
+      max-height:15px;
+
+      .product-image {
+          overflow: hidden;
+          width: 56px;
+          min-width: 56px;
+          max-width: 56px;
+          height: 56px;
+          min-height: 56px;
+          max-height: 56px;
+          border-radius: 4px;
+
+          img {
+              height: 100%;
+              width: auto;
+              max-width: none;
+          }
+      }
+
+      .subtitle {
+          margin: 6px 0 0 0;
+      }
+  }
+
+      .fuse-card{
+          max-width:400px;
+          cursor:pointer;
+      }
+
+      .cards {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: flex-start;
+          align-items: flex-start;
+
+          .card {
+              display: flex;
+              align-items: flex-start;
+              padding: 24px 24px 48px 24px;
+              margin-bottom: 26px;
+
+              .card-preview {
+                  display: flex;
+                  min-width: 400px;
+              }
+
+              .card-source {
+                  display: none;
+              }
+          }
+      }
+
+      &.source {
+
+          .cards {
+              flex-direction: column;
+
+              .card {
+                  width: 100%;
+                  margin-bottom: 24px;
+                  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+
+                  .card-source {
+                      background: #263238;
+                      display: flex !important;
+                      flex: 1;
+                      max-height: 275px;
+                      min-width: 275px;
+                      margin-left: 24px;
+                      overflow: auto;
+                      -webkit-overflow-scrolling: touch;
+                  }
+              }
+          }
+      }
+
+  .content {
+
+
+      .last_red {
+          border-right: 4px solid #700A0F;
+      }
+
+      .last_red:after {
+          border-right: 4px solid #700A0F;
+          margin:0px !important;
+      }
+
+      .arrow_box_red {
+          position: relative;
+          background: #ffffff;
+          border-top: 4px solid #700A0F;
+          border-bottom: 4px solid #700A0F;
+          border-right: 4px solid #700A0F;
+          width:140px;
+          height:60px;
+          text-transform : uppercase;
+          letter-spacing:1.2px;
+          padding:0px 0px 0px 15px;
+          cursor:pointer;
+      }
+
+      .arrow_box_red:hover {
+          text-decoration:underline;
+      }
+
+
+      .arrow_box_red:after, .arrow_box_red:before {
+          left: 100%;
+          top: 50%;
+          border: solid transparent;
+          content: " ";
+          height: 0;
+          width: 0;
+          position: absolute;
+          pointer-events: none;
+      }
+
+      .arrow_box_red:after {
+          border-color: rgba(255, 255, 255, 0);
+          border-left-color: #ffffff;
+          border-width: 20px;
+          margin-top: -20px;
+      }
+      .arrow_box_red:before {
+          border-color: rgba(112, 10, 15, 0);
+          border-left-color: #700A0F;
+          border-width: 26px;
+          margin-top: -26px;
+      }
+
+      .red_right {
+          width:68px;
+          border-right:4px solid #700A0F;
+          height:30px;
+      }
+
+
+
+
+
+      .arrow_box_green {
+          position: relative;
+          background: #ffffff;
+          border-top: 4px solid #0F700A;
+          border-bottom: 4px solid #0F700A;
+          border-right: 4px solid #0F700A;
+          border-left: 4px solid #0F700A;
+          width:140px;
+          height:60px;
+          cursor:pointer;
+          text-transform : uppercase;
+          letter-spacing:1.2px;
+          padding:0px 0px 0px 15px;
+      }
+      .arrow_box_green:after, .arrow_box_green:before {
+          left: 100%;
+          top: 50%;
+          border: solid transparent;
+          content: " ";
+          height: 0;
+          width: 0;
+          position: absolute;
+          pointer-events: none;
+      }
+
+      .arrow_box_green:after {
+          border-color: rgba(255, 255, 255, 0);
+          border-left-color: #ffffff;
+          border-width: 20px;
+          margin-top: -20px;
+      }
+      .arrow_box_green:before {
+          border-color: rgba(112, 10, 15, 0);
+          border-left-color: #0F700A;
+          border-width: 26px;
+          margin-top: -26px;
+      }
+      .first_green {
+          border-left: 4px solid #0F700A;
+      }
+      .arrow_box_green:hover {
+      }
+      .green_right {
+          width:68px;
+          border-right:4px solid #0F700A;
+          height:30px;
+      }
+
+      .filler {
+          width:68px;
+          height:30px;
+      }
+
+
+
+
+
+      .displayTable {
+
+          border-spacing:0px;
+      }
+
+      .displayTable > tr {
+          border-bottom:1px solid #eee;
+          border-spacing:0px;
+          padding:20px 0px;
+          display:inline-block;
+          width:100%;
+      }
+
+      .displayTable > tr > td {
+          border-spacing:0px;
+
+      }
+
+
+      .projectRow {
+          cursor:pointer;
+          border-spacing:0px;
+      }
+
+      .projectRow:hover {
+          background-color:#eee;
+      }
+
+
+      .currentItem {
+          color: #039be5 !important;
+      }
+
+
+      .mat-tab-group,
+      .mat-tab-body-wrapper,
+      .tab-content{
+          flex: 1 1 auto;
+          max-width: 100%;
+      }
+
+      .mat-tab-body-content {
+          // display: flex;
+      }
+
+      .mat-tab-label {
+          height: 64px;
+      }
+
+      .product-image {
+          overflow: hidden;
+          width: 128px;
+          height: 128px;
+          margin-right: 16px;
+          margin-bottom: 16px;
+          border-radius: 4px;
+
+          img {
+              height: 100%;
+              width: auto;
+              max-width: none;
+          }
+      }
+
+      .projectDetailLeft {
+          font-size:1.3em;
+          width:130px;
+          text-align:right;
+          padding:0px 5px 0px 0px;
+          margin:5px 0px;
+      }
+
+      .projectDetailCenter {
+          font-size:1.3em;
+          width:10px;
+          text-align:center;
+          margin:5px 0px;
+      }
+
+      .projectDetailRight {
+          font-size:1.3em;
+          width:130px;
+          text-align:left;
+          padding:0px 0px 0px 5px;
+          margin:5px 0px;
+      }
+
+
+
+      // Temporary prefix alignment fix
+      .mat-form-field-appearance-outline .mat-form-field-prefix,
+      .mat-form-field-appearance-outline .mat-form-field-suffix {
+          top: 0;
+      }
+  }
+
+}

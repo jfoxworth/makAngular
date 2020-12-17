@@ -4,10 +4,8 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatMenuModule } from '@angular/material/menu';
 
-import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
-
-import { ChatService } from 'app/main/services/chat.service';
-import { UserService } from 'app/main/services/user-service.service';
+import { ChatService } from '../../services/chat.service';
+import { UserService } from '../../services/user.service';
 
 
 
@@ -26,12 +24,10 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit
     contacts 		: any[] = [];
     replyInput 		: any;
     selectedChat 	: number = 0;
-	conversations	: any[];
-	dataFlag		: boolean = false;
-	userData		: any;
+	  conversations	: any[];
+	  dataFlag		: boolean = false;
+	  userData		: any;
 
-    @ViewChild(FusePerfectScrollbarDirective)
-    directiveScroll: FusePerfectScrollbarDirective;
 
     @ViewChildren('replyInput')
     replyInputField;
@@ -150,7 +146,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit
 	        }
 	    }
 
- 
+
     }
 
     /**
@@ -213,15 +209,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit
      */
     scrollToBottom(speed?: number): void
     {
-        speed = speed || 400;
-        if ( this.directiveScroll )
-        {
-            this.directiveScroll.update();
-
-            setTimeout(() => {
-                this.directiveScroll.scrollToBottom(0, speed);
-            });
-        }
     }
 
     /**

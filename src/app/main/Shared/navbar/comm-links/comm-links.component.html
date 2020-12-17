@@ -1,0 +1,33 @@
+<div fxLayout="row" fxLayoutAlign="center center">
+
+  <div class="link-list"
+       fxLayoutAlign="center center">
+
+    <div class="link-item"
+         [ngClass]="{'currentNav': route=='/ourWork', 'submenu':route!='/ourWork'}">
+      <a [routerLink]="'/ourWork'">OUR WORK</a>
+    </div>
+
+    <div class="link-item"
+         [ngClass]="{'currentNav': route=='/products', 'submenu':route!='/products'}">
+      <a [routerLink]="'/products'">PRODUCTS</a>
+    </div>
+
+    <div class="link-item"
+         [ngClass]="{'currentNav': route=='/services', 'submenu':route!='/services'}">
+      <a [routerLink]="'/services'">SERVICES</a>
+    </div>
+
+    <div class="link-item"
+        [ngClass]="{'currentNav': route=='/aboutUs', 'submenu':route!='/aboutUs'}">
+      <a [routerLink]="'/aboutUs'">ABOUT</a>
+    </div>
+
+    <div class="link-item"
+        [ngClass]="{'currentNav': route=='/contact', 'submenu':route!='/contact'}">
+      <a [routerLink]="'/contact'">CONTACT</a>
+    </div>
+
+    </div>
+
+</div>

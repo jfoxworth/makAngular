@@ -1,0 +1,152 @@
+
+
+
+<div class="h2 text-center mt-12 mb-20">{{valItem['label']}}</div>
+
+<div class="w-280 text-center"
+    layout="column"
+    *ngIf="editableVersion">
+
+  <button mat-raised-button 
+      color="primary"
+      (click)="addNewItemToBlob()"
+      class="mt-20 mb-20">
+    Add New Flower
+  </button>
+
+
+  <div class="w-280 mt-20 mb-20">
+    <mat-form-field>
+      <mat-select class="w-240"
+              [(ngModel)]="blobSelectIndex">
+      <mat-option *ngFor="let option of flowersJSON['flowers']; index as p" [value]="p">
+        Flower - {{p}}
+      </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="h3 text-center mb-12 mt-12">Flower Size</div>
+
+  <input matInput 
+        id=""
+        style="width:200px; border:1px solid #ACACAC" 
+        *ngIf="flowersJSON['flowers'][blobSelectIndex]"
+        class="inputItem w-240 mat-subheading-2 pt-5 pb-5 text-center" 
+        [(ngModel)]="flowersJSON['flowers'][blobSelectIndex]['size']"
+        (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':stringify(flowersJSON)});">
+
+
+
+  <div class="h3 text-center mb-12 mt-12">Flower Rotation</div>
+
+  <input matInput 
+        id=""
+        style="width:200px; border:1px solid #ACACAC" 
+        *ngIf="flowersJSON['flowers'][blobSelectIndex]"
+        class="inputItem w-240 mat-subheading-2 pt-5 pb-5 text-center" 
+        [(ngModel)]="flowersJSON['flowers'][blobSelectIndex]['rotation']"
+        (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':stringify(flowersJSON)});">
+
+
+
+
+  <div class="h3 text-center mb-12 mt-12">Position - X</div>
+
+  <input matInput 
+        id=""
+        style="width:200px; border:1px solid #ACACAC" 
+        *ngIf="flowersJSON['flowers'][blobSelectIndex]"
+        class="inputItem w-240 mat-subheading-2 pt-5 pb-5 text-center" 
+        [(ngModel)]="flowersJSON['flowers'][blobSelectIndex]['position'][0]"
+        (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':stringify(flowersJSON)});">
+
+
+
+  <div class="h3 text-center mb-12 mt-12">Position - Y</div>
+
+  <input matInput 
+        id=""
+        style="width:200px; border:1px solid #ACACAC" 
+        *ngIf="flowersJSON['flowers'][blobSelectIndex]"
+        class="inputItem w-240 mat-subheading-2 pt-5 pb-5 text-center" 
+        [(ngModel)]="flowersJSON['flowers'][blobSelectIndex]['position'][1]"
+        (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':stringify(flowersJSON)});">
+
+
+
+  <button mat-raised-button 
+      color="accent"
+      (click)="deleteItemFromBlob( blobSelectIndex )"
+      class="mb-20 mt-20">
+    Delete This Flower
+  </button>
+
+
+
+</div>
+
+
+
+<div class="w-280 text-center"
+    layout="column"
+    *ngIf="!editableVersion">
+
+
+  <div class="w-280 mt-20 mb-20">
+    <mat-form-field>
+      <mat-select class="w-240"
+              [(ngModel)]="blobSelectIndex">
+      <mat-option *ngFor="let option of flowersJSON['flowers']; index as p" [value]="p">
+        Flower - {{p}}
+      </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+
+
+  <div class="h3 text-center mb-12 w-200">Flower Size</div>
+
+  <div style="width:200px; border:1px solid #ACACAC" 
+      *ngIf="flowersJSON['flowers'][blobSelectIndex]"
+      class="w-240 mat-subheading-2 pt-5 pb-5 text-center"> 
+        {{flowersJSON['flowers'][blobSelectIndex]['size']}}
+  </div>
+
+
+
+
+
+  <div class="h3 text-center mb-12 w-200">Flower Rotation</div>
+
+  <div style="width:200px; border:1px solid #ACACAC" 
+      *ngIf="flowersJSON['flowers'][blobSelectIndex]"
+      class="w-240 mat-subheading-2 pt-5 pb-5 text-center"> 
+        {{flowersJSON['flowers'][blobSelectIndex]['rotation']}}
+  </div>
+
+
+
+
+  <div class="h3 text-center mb-12 w-200">Position - X</div>
+
+  <div style="width:200px; border:1px solid #ACACAC" 
+      *ngIf="flowersJSON['flowers'][blobSelectIndex]"
+      class="w-240 mat-subheading-2 pt-5 pb-5 text-center"> 
+        {{flowersJSON['flowers'][blobSelectIndex]['position'][0]}}
+  </div>
+
+
+
+  <div class="h3 text-center mb-12 w-200">Position - Y</div>
+
+  <div style="width:200px; border:1px solid #ACACAC" 
+      *ngIf="flowersJSON['flowers'][blobSelectIndex]"
+      class="w-240 mat-subheading-2 pt-5 pb-5 text-center"> 
+        {{flowersJSON['flowers'][blobSelectIndex]['position'][1]}}
+  </div>
+
+
+</div>
+

@@ -3,7 +3,7 @@
 *
 *	This service handles the items needed for the creator studio. This is
 *	a return of simple data that is used in the component, as well as
-*	using the URL and user setting to set the proper settings for the 
+*	using the URL and user setting to set the proper settings for the
 *	display.
 *
 *
@@ -28,7 +28,7 @@ export class CreatorStudioService {
 	 * A clean design object
 	 */
 	getNewDesign( thisId ) {
-		
+
 		return {
 		    'id'      				: thisId,
 		    'uid'      				: thisId,
@@ -41,9 +41,9 @@ export class CreatorStudioService {
 		    							'description' : 'Description of the product'
 		    							},
 		    'shapediverTicket' 		: '',
-		    'parameterMenus' 		: [{'label': 'Temp Title', 
-		    							'icon':'settings', 
-		    							'parameters': [	this.getNewParameter() ] 
+		    'parameterMenus' 		: [{'label': 'Temp Title',
+		    							'icon':'settings',
+		    							'parameters': [	this.getNewParameter() ]
 		    							}
 		    						   ],
 		    'pricingModel' 			: '',
@@ -269,8 +269,8 @@ export class CreatorStudioService {
 	 * An array of the available icons
 	 */
 	getIconOptions(){
-		return	['360', 'ac_unit', 'access_alarms', 'access_time', 'accessibility_new', 'account_balance', 'account_box', 'account_circle', 
-				'add_a_photo', 'add_alert', 'add_location', 'airplanemode_active', 'airport_shuttle', 'album', 'all_inbox', 'all_inclusive', 
+		return	['360', 'ac_unit', 'access_alarms', 'access_time', 'accessibility_new', 'account_balance', 'account_box', 'account_circle',
+				'add_a_photo', 'add_alert', 'add_location', 'airplanemode_active', 'airport_shuttle', 'album', 'all_inbox', 'all_inclusive',
 				'apps', 'assessment', 'aspect_ratio', 'assignment_ind', 'assignment', 'assistant_photo', 'attach_ile', 'autorenew', 'av_time', 'backup',
 				'backup',
 			'ballot',

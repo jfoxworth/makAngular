@@ -1,75 +1,44 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatToolbarModule } from '@angular/material/toolbar';
+import { CommonModule } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+
+// Material Items
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+//import { MatSnackBarModule } from '@angular/material';
 
-import { FuseSharedModule } from '@fuse/shared.module';
-
+/* Mak Components */
+import { NavbarModule } from '../Shared/navbar/navbar.module';
 import { ProfileComponent } from './profile.component';
-
-import { CommonModule } from '@angular/common';
-
-
-
-
-const routes: Routes = [
-    {
-        path     : 'profile',
-        component: ProfileComponent,
-        resolve  : {
-        }
-    },
-    {
-        path     : 'profile/:id',
-        component: ProfileComponent,
-        resolve  : {
-        }
-    }
-];
-
+import { NoUserComponent } from './no-user/no-user.component';
+import { ProfileHeaderComponent } from './profile-header/profile-header.component';
+import { ProfileUserComponent } from './profile-user/profile-user.component';
+import { ProfileEditComponent } from './profile-edit/profile-edit.component';
 
 @NgModule({
-    declarations: [
-        ProfileComponent,
-    ],
-    imports     : [
-        RouterModule.forChild(routes),
-
-        TranslateModule,
-
-        MatButtonModule,
-        MatDividerModule,
-        MatIconModule,
-        MatTabsModule,
-        MatDialogModule,
-        MatToolbarModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatSelectModule,
-        CommonModule,
-        MatTooltipModule,
-
-
-        FuseSharedModule
-    ],
-    exports     : [
-        ProfileComponent
-    ],
-    providers   : [
-
-    ]
+  declarations: [
+    ProfileComponent,
+    NoUserComponent,
+    ProfileHeaderComponent,
+    ProfileUserComponent,
+    ProfileEditComponent
+  ],
+  imports: [
+    BrowserAnimationsModule,
+    CommonModule,
+    NavbarModule,
+    MatIconModule,
+    FlexLayoutModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule
+  ]
 })
-
-export class ProfileModule
-{
-}
-
+export class ProfileModule { }

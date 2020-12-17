@@ -1,46 +1,23 @@
 {
-  "hosting": [
-    {
-      "target": "fuse",
-      "public": "dist/fuse",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ],
-      "rewrites": [
-        {
-          "source": "**",
-          "destination": "/index.html"
-        }
-      ]
-    }
-  ]
+  "database": {
+    "rules": "database.rules.json"
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
 }
-
-
-
-
-/*
-
-
-This was deleted as the first entry in the hosting array
-
-
-    {
-      "public": ".",
-      "ignore": [
-        "firebase.json",
-        "**.*",                 These two lines were altered
-        "**node_modules/**"     See above
-      ],
-      "rewrites": [
-        {
-          "source": "**",
-          "destination": "/index.html"
-        }
-      ]
-    },
-
-
-*/

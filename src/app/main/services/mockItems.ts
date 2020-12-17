@@ -1,5 +1,5 @@
 
-import { Observable } from "rxjs/Observable"
+import { Observable } from "rxjs"
 import { of } from 'rxjs';
 
 
@@ -17,7 +17,7 @@ export class mockItems {
 				 getDocById: (_d: any, _id:any) => new Promise((resolve, _reject) => resolve({data:()=>{ return this.FireStubData(_d, _id)}})),
 
 				 //getDocsByParam: (_d: any, _id:any, num:any) => new Observable((observer) => {'Me'}) }
-				 
+
 				 getDocsByParam: (_d: any, _id:any, num:any) => of(this.mockStoreData(_d)),
 
 				 getDocsByParamWithOrder: (_d: any, _id:any, num:any, order:any) => of(this.mockStoreData(_d)),
@@ -53,7 +53,7 @@ export class mockItems {
 				}
 			]
 
-			
+
 		}
 
 	}
@@ -175,7 +175,7 @@ export class mockItems {
 
 		}
 		return new afsStub()
-	}		
+	}
 
 
 
@@ -200,7 +200,7 @@ export class mockItems {
 
 	// Stub for the snack bar
 	public mockSnackBar() {
-		return { 
+		return {
 			Overlay : jasmine.createSpy('Overlay'),
 			open : ()=>{},
 			close : ()=>{}
@@ -225,7 +225,7 @@ export class mockItems {
 
 	// Stub for the Creator Studio
 	public mockCreatorStudio() {
-		return { 
+		return {
 			 getDesignTypes 	: () => { return ['Wall', 'Seating', 'Desk', 'Island', 'Sanitizer'] },
 			 getCompanies 		: () => {},
 			 getMenuLocations 	: () => {}
@@ -236,7 +236,7 @@ export class mockItems {
 
 	// Stub for the designs service
 	public mockDesignsService() {
-		return { 
+		return {
 				 'designStatus' 	: of( this.FireStubData('designs',0) ),
 				 'designAllStatus' 	: of( this.FireStubData('designs',0) ),
 				 'designUserStatus' : of( this.FireStubData('designs',0) ),
@@ -251,7 +251,7 @@ export class mockItems {
 
 	// Stub for the projects service
 	public mockProjectsService() {
-		return { 
+		return {
 				 'projectUDStatus' 			: of(),
 				 'projectStatus'			: of(),
 				 'getProjectsForUserDesign' : ()=>{ return '' },
@@ -263,7 +263,7 @@ export class mockItems {
 
 	// Stub for the signoff reqs service
 	public mockSignoffReqsService() {
-		return { 
+		return {
 				 'signoffReqUserStatus' 		: of(),
 				 'signoffReqDesignUserStatus'	: of(),
 				 'signoffReqStatus'				: of(),
@@ -278,7 +278,7 @@ export class mockItems {
 
 	// Stub for the design signoff service
 	public mockDesignSignoffService() {
-		return { 
+		return {
 			'designSignoffStatus'				: of(),
 			'getdesignSignoffsForDesign' 		: ()=>{ return },
 		}
@@ -289,7 +289,7 @@ export class mockItems {
 
 	// Stub for the version service
 	public mockVersionsService() {
-		return { 
+		return {
 				 'versionStatus'				: of(),
 		}
 	}
@@ -313,7 +313,7 @@ export class mockItems {
 						'set' : ()=>{},
 					}
 				}
-			
+
 		}
 	}
 
@@ -328,7 +328,7 @@ export class mockItems {
 						'set' : ()=>{},
 					}
 				}
-			
+
 		}
 	}
 
@@ -344,7 +344,7 @@ export class mockItems {
 						'set' : ()=>{},
 					}
 				}
-			
+
 		}
 	}
 
@@ -354,7 +354,7 @@ export class mockItems {
 
 	// Stub for Auth Service
 	public AngularAuthStub() {
-		return { 'authState': 
+		return { 'authState':
 					{
 				 		'subscribe' : ()=>{}
 				 	}
@@ -368,15 +368,15 @@ export class mockItems {
 
 	// Data Object for design data
 	public designDataStub() {
-		return { 'parameterMenus' : 
+		return { 'parameterMenus' :
 				[
 					{'parameters' : [] }
 				],
 				'menuShow' : [],
 				'menuLocations' : [ [] ]
-			 
-				
-			
+
+
+
 		}
 	}
 
@@ -384,8 +384,8 @@ export class mockItems {
 
 	// Data Object for version List
 	public versionListStub() {
-		return [] 
-			   
+		return []
+
 	}
 
 
@@ -393,9 +393,9 @@ export class mockItems {
 
 	// Data Object for version data
 	public versionDataStub() {
-		return { 
-				
-			
+		return {
+
+
 		}
 	}
 
@@ -405,9 +405,9 @@ export class mockItems {
 
 	// Data Object for user data
 	public userDataStub() {
-		return { 
-				
-			
+		return {
+
+
 		}
 	}
 
@@ -418,9 +418,9 @@ export class mockItems {
 
 	// Data Object for user data
 	public mockUserData() {
-		return { 
-				
-			
+		return {
+
+
 		}
 	}
 
@@ -430,7 +430,7 @@ export class mockItems {
 
 	// Data Object for user data
 	public mockUserService() {
-		return { 
+		return {
 			'uid' 					: 'mmAvAdd1GlgBebdV85OVRE1CSK43',
 			'getYearList' 			: ()=>{},
 			'getMonthList' 			: ()=>{},
@@ -472,7 +472,7 @@ export class mockItems {
 			}
 		]
 	}
-	
+
 
 	public MarketplaceServiceStub() {
 		return {}
@@ -524,8 +524,8 @@ export class mockItems {
 				'conversations' :  new Observable((observer) => {}),
 				'conversationStatus' : new Observable((observer) => {}),
 				'dataFlagStatus' : new Observable((observer) => {}),
-				'contactStatus' : new Observable((observer) => {}),				
-				
+				'contactStatus' : new Observable((observer) => {}),
+
 		}
 	}
 
@@ -537,7 +537,7 @@ export class mockItems {
 				'onKnowledgeBaseChanged' : {
 					'pipe' : (_d: any) => new Observable((observer) => {}),
 				}
-				
+
 		}
 	}
 
@@ -547,10 +547,10 @@ export class mockItems {
 		return {
 					'parameterMenus' : [ {
 											'parameters' : [ {
-																'images' : [] 
+																'images' : []
 															  }
-															] 
-										 } 
+															]
+										 }
 										],
 					'versionList' : []
 		}
@@ -704,7 +704,7 @@ export class mockItems {
 
 		}
 		return new navStub()
-	}		
+	}
 
 
 

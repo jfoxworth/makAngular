@@ -1,33 +1,26 @@
 
 
+
     .displayTable {
+  }
 
-        border-spacing:0px;
-    }
+  .displayTable > tr {
+      border-bottom:1px solid #ccc;
+      display:flex;
+  }
 
-    .displayTable > tr {
-        border-bottom:1px solid #898989;
-        border-spacing:0px;
-    }
-
-    .displayTable > tr > td {
-        padding:32px;
-        border-spacing:0px;
-    
-    }
+  .displayTable > tr > td {
+      padding:32px;
+  }
 
 
-    .designRow {
-        cursor:pointer;
-    }
+  .designRow {
+      cursor:pointer;
+  }
 
-    .designRow:hover {
-        background-color:#eee;
-    }
+  .designRow:hover {
+      background-color:#eee;
+  }
 
-
-    .currentItem {
-        color: #039be5 !important;
-    }
 
 

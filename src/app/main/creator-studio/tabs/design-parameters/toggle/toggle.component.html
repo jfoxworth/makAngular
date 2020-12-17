@@ -1,0 +1,17 @@
+<div *ngIf="parameter['type']=='toggle'">
+
+  <div class="w-280 text-center mt-20 mb-20" fxLayout="row">
+
+    <div class="h3 text-center mb-12 w-200">{{parameter.label}}</div>
+
+    <mat-slide-toggle
+          [(ngModel)]="parameter.value"
+          class="w-50 ml-20 mt-12"
+          name="paramValue"
+          color="accent-900">
+    </mat-slide-toggle>
+
+  </div>
+
+</div>
+

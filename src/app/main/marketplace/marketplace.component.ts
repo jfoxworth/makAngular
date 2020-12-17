@@ -1,119 +1,61 @@
 
-
-
-// Common Angular Items
+// Core Angular Items
 import { Component, OnInit } from '@angular/core';
 
-
-
-// RXJS Items
-import { finalize } from 'rxjs/operators';
-import { BehaviorSubject, Subject, Observable } from 'rxjs';
-import 'rxjs/add/observable/forkJoin';
-import { takeUntil } from 'rxjs/internal/operators';
-import { concatMap, delay, filter, first, map, shareReplay, tap, withLatestFrom } from 'rxjs/operators';
-
-
-// Angular Material Items
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { FuseSharedModule } from '@fuse/shared.module';
-
-
-
-
-// Services
-import { CreatorStudioService } from 'app/main/services/creator-studio.service';
-import { MarketplaceService } from 'app/main/services/marketplace.service';
-import { DesignsService } from 'app/main/services/designs.service';
-import { SignoffReqsService } from 'app/main/services/signoff-reqs.service';
-import { DesignSignoffsService } from 'app/main/services/design-signoffs.service';
-
-import { makDesignEntityService } from 'app/main/services/entity/makDesign-entity.service';
-import { signoffReqEntityService } from 'app/main/services/entity/signoffReq-entity.service';
-
-
-
-
-
-// Models
-import { makDesign } from 'app/main/models/makDesign';
-import { makProject } from 'app/main/models/makProject';
-import { makVersion } from 'app/main/models/makVersion';
-import { signoffReq } from 'app/main/models/signoffReq';
-import { designSignoff } from 'app/main/models/designSignoffs';
-import { imageObj } from 'app/main/models/imageObj';
-
-
-
-
-// Firestore Items
-import { AngularFireStorage } from '@angular/fire/storage';
-
-
+// RxJS
+import { Observable, Subject } from 'rxjs';
+import { tap, takeUntil } from 'rxjs/operators';
 
 // NGRX Items
 import { Store } from "@ngrx/store";
-import { AppState } from 'app/main/reducers';
-import { DesignState } from 'app/main/reducers';
-import { designImagesSave } from 'app/main/actions/design.actions';
-import { designImagesReducer } from 'app/main/reducers/index';
-import { DesignActions } from 'app/main/actions/designAction-types';
+import { DesignState } from '../store/reducers';
 
+// Models
+import { makDesign } from '../models/makDesign';
+import { signoffReq } from '../models/signoffReq';
+
+// Services
+import { UserService } from '../services/user.service';
+import { CreatorStudioService } from '../services/creator-studio.service';
+import { makDesignEntityService } from '../services/entity/makDesign-entity.service';
+import { signoffReqEntityService } from '../services/entity/signoffReq-entity.service';
+import { UserData } from '../models/userData';
 
 
 
 @Component({
-	selector: 'app-marketplace',
-	templateUrl: './marketplace.component.html',
-	styleUrls: ['./marketplace.component.scss']
+  selector: 'mak-marketplace',
+  templateUrl: './marketplace.component.html',
+  styleUrls: ['./marketplace.component.scss']
 })
 export class MarketplaceComponent implements OnInit {
 
-
-	makDesigns$ 	: Observable<makDesign[]>;
-	signoffReqs$ 	: Observable<signoffReq[]>;
-	marketplaceList : makDesign[];
-	currentItem 	: makDesign;
-	selectedType 	: string = "All";
-	designTypes 	: string[];
-	userData 		: any;
-	signoffReqs 	: designSignoff[];
-	signoffs 		: string[];
-	newArr 			: imageObj[];
-	images 			: never[];
-
-	private _unsubscribeAll: Subject<any>;
+  makDesigns$ 		: Observable<makDesign[]>;
+  signoffReqs$ 		: Observable<signoffReq[]>;
+  designTypes 		: string[];
+	signoffs 				: string[];
+	images 					: never[];
+  selectedType 		: string = "All";
+  userData        : UserData;
+  private _unsubscribeAll: Subject<any>;
 
 
+  constructor( private designStore : Store<DesignState>,
+               private CreatorStudioService : CreatorStudioService,
+               private DesignEntityService : makDesignEntityService,
+               private SignoffEntityService : signoffReqEntityService,
+               private UserService : UserService )
+  {
+    this._unsubscribeAll = new Subject();
+  }
+
+  ngOnInit(): void {
 
 
-	constructor(	private CreatorStudioService 		: CreatorStudioService,
-					private MarketplaceService 			: MarketplaceService,
-					private DesignsService 				: DesignsService,
-					private SignoffReqsService 			: SignoffReqsService,
-					private DesignSignoffsService 		: DesignSignoffsService,
-					private SnackBar 					: MatSnackBar,
-					private afStorage 					: AngularFireStorage,
-					private DesignEntityService 		: makDesignEntityService,
-					private SignoffEntityService 		: signoffReqEntityService,
-					private store 						: Store<AppState>,
-					private designStore 				: Store<DesignState>
-		) { 
-
-		// Get the user data
-		this.userData = JSON.parse(localStorage.getItem('user'));
-		this._unsubscribeAll = new Subject();
-	}
-
-	
-
-	ngOnInit(): void {
+    // Get the user data
+    this.UserService.userObject
+    .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe((user)=>{ this.userData = <UserData>user; });
 
 
 		// Get the design types
@@ -143,9 +85,9 @@ export class MarketplaceComponent implements OnInit {
 
 
 
-		// Listen to the images observable
+    // Listen to the images observable
 		this.designStore.subscribe(state => {
-			
+
 			if (state.designs.designs.type)
 			{
 				let temp = JSON.parse(JSON.stringify(state.designs.designs));
@@ -153,24 +95,12 @@ export class MarketplaceComponent implements OnInit {
 				this.images = Object.values(temp);
 			}else
 			{
-				this.images = Object.values(state.designs.designs);					
+				this.images = Object.values(state.designs.designs);
 			}
-			
-		});
 
+    });
 
-
-
-
-	}
-
-
-
-
-
-
-
-
-
+  }
 
 }
+

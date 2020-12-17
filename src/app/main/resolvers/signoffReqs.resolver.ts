@@ -17,7 +17,7 @@ import { filter, first, map, tap } from 'rxjs/operators';
 
 
 // The mak designs entity service
-import { signoffReqEntityService } from 'app/main/services/entity/signoffReq-entity.service';
+import { signoffReqEntityService } from '../services/entity/signoffReq-entity.service';
 
 
 @Injectable()

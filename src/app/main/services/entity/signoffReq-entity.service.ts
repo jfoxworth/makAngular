@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { EntityCollectionServiceBase, EntityCollectionServiceElementsFactory } from '@ngrx/data';
-import { signoffReq } from 'app/main/models/signoffReq';
+import { signoffReq } from '../../models/signoffReq';
 
 
 @Injectable()

@@ -1,47 +1,50 @@
-@import "src/@fuse/scss/fuse";
+
+body {
+  background-color:#f5f5f5;
+}
 
 #chat {
+  height:100%;
+  min-height:100%;
+  .center {
+      max-width: 1400px;
+      margin: 0 auto;
+      width:100%;
 
-    .center {
-        padding: 32px !important;
-        max-width: 1400px;
-        margin: 0 auto;
 
-        @include media-breakpoint('lt-lg') {
-            padding: 0 !important;
-        }
+      .content-card {
+          position: relative;
+          display: flex;
+          flex: 1;
+          border-radius: 20px;
+          height:80%;
+          margin:20px 0px 0px 0px;
 
-        .content-card {
-            position: relative;
-            display: flex;
-            flex: 1;
-            border-radius: 8px;
+          .mat-sidenav-container {
+              display: flex;
+              flex: 1;
+              width: 100%;
 
-            .mat-sidenav-container {
-                display: flex;
-                flex: 1;
-                width: 100%;
+              > .mat-sidenav-content,
+              > .mat-drawer-content {
+                  display: flex;
+                  flex: 1 1 auto;
+                  min-height: 100%;
+                  height: auto;
+              }
 
-                > .mat-sidenav-content,
-                > .mat-drawer-content {
-                    display: flex;
-                    flex: 1 1 auto;
-                    min-height: 100%;
-                    height: auto;
-                }
+              > .mat-drawer-content {
+                  max-width: 100%;
+              }
 
-                > .mat-drawer-content {
-                    max-width: 100%;
-                }
-
-                mat-sidenav {
-                    display: flex;
-                    flex-direction: column;
-                    width: 400px;
-                    max-width: 90%;
-                    overflow: hidden;
-                }
-            }
-        }
-    }
+              mat-sidenav {
+                  display: flex;
+                  flex-direction: column;
+                  width: 400px;
+                  max-width: 90%;
+                  overflow: hidden;
+              }
+          }
+      }
+  }
 }

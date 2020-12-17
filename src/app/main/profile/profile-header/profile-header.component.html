@@ -1,0 +1,69 @@
+
+
+<div class="user-info"
+     fxLayout="column"
+     fxLayoutAlign="center center" >
+
+  <div>
+      <img class="profileAvatar avatar huge"
+          [src]="profileImage">
+
+    <input class="ng-hide mainBg"
+        style="display:none"
+            id="input-file-id"
+        multiple type="file"
+        accept=".png,.jpg,.jpeg,.gif"
+        (change)="onUpload($event)" />
+
+
+      <label for="input-file-id" >
+        <mat-icon class="secondary-text s-48 mat-icon-no-color addCheck"
+                  matTooltip="change profile photo"
+                  aria-hidden="true"
+                  *ngIf="viewType==1 || viewType==3">
+                  add_circle_outline
+        </mat-icon>
+      </label>
+
+    </div>
+
+
+    <div class="name"
+        id="userEmailHeader"
+        [@animate]="{value:'*',params:{delay:'500ms',x:'-25px'}}"
+        *ngIf="userData.displayName===null">
+        {{userData.email}}
+
+        <mat-icon class="secondary-text"
+              id="editButton"
+                  aria-hidden="true"
+                  style="cursor:pointer; position:relative;"
+                  matTooltip="edit profile data"
+                  (click)="changeViewType.emit()"
+                  *ngIf="viewType==1 || viewType==3">
+                  more_vert
+        </mat-icon>
+
+    </div>
+
+    <div class="name"
+        id="userDisplayNameHeader"
+        *ngIf="userData.displayName!==null">
+        {{userData.displayName}}
+
+        <mat-icon class="secondary-text"
+              id="editButton"
+                  aria-hidden="true"
+                  style="cursor:pointer; position:relative;"
+                  matTooltip="edit profile data"
+                  (click)="changeViewType.emit()"
+                  *ngIf="viewType==1 || viewType==3">
+                  more_vert
+        </mat-icon>
+
+    </div>
+
+
+</div>
+
+

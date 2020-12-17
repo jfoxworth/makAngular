@@ -1,0 +1,25 @@
+<section id="mainProjects"
+         class="slider-element full-screen"
+         [style]="'background: url('+bgimage+') bottom center no-repeat; background-size: cover;'">
+
+	<div class="full-screen section nopadding nomargin noborder darkCover">
+
+		<div class="container dark full-screen">
+
+			<div class="vertical-middle">
+
+				<div class="cardTitle">{{title}}</div>
+
+				<div class="cardText">{{text}}</div>
+
+        <button type="button"
+                class="cardButton"
+                [routerLink]="link">{{linktext}}</button>
+
+			</div>
+
+		</div>
+
+	</div>
+
+</section>

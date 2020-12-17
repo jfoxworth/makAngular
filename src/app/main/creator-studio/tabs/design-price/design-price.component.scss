@@ -1,0 +1,47 @@
+
+
+
+.parameter {
+  border:1px solid #898989;
+  background-color:#ccc;
+  border-radius:5px;
+  padding:8px;
+  margin:0px 5px;
+}
+
+.operator {
+  border:1px solid #ccc;
+  border-radius:5px;
+  padding:8px;
+  margin:0px 5px;
+  background-color:#90EE90;
+}
+
+.number {
+  border:1px solid #ccc;
+  border-radius:5px;
+  padding:8px;
+  margin:0px 5px;
+  background-color:#89CFF0;
+}
+
+.parenthesis {
+  border:1px solid #898989;
+  border-radius:5px;
+  padding:8px;
+  margin:0px 5px;
+  background-color:#777;
+}
+
+.invalid {
+  border:1px solid red;
+  background-color:red;
+  border-radius:5px;
+  padding:8px;
+  color:#fff;
+  margin:0px 5px;
+}
+
+.invalid-price {
+color:red;
+}

@@ -1,0 +1,90 @@
+
+<!--
+
+
+	This is the page for the products. A user creates a new project in the marketplace
+	when they want to play with a particular design. There are four tabs on the page.
+
+	Tab 1 : Project List - A list of projects that the user has created. The user selects
+			one and then the remaining tabs are populated with the data for those projects.
+			There are links to open the project in the design studio and to open the quote.
+
+	Tab 2 : Project Data - A place for the user to edit data about the project. This
+			includes the name of the project and the description.
+
+	Tab 3 : Version Data - This is where the user creates and edits versions of this
+			project. Versions are different iterations with different design parameters.
+			On this tab, the user can create a new version, open a version in the design
+			parameter, see the quote, edit the name and description of the version and
+			see the different design parameters.
+
+	Tab 4 : Design and Purchase data : This tab shows the status of the project. Once the
+			user decides to purchase the project, this tab will show the status.
+			It is still a work in progress.
+
+-->
+
+<div id="projects"  class="primary-page">
+
+	<div class="content" *ngIf="(makProjects$ | async)">
+
+		<div class="center p-24">
+
+			<div class="content p-24" style="box-shadow:0px 0px 0px rgba(0,0,0,0) !important;">
+
+				<mat-tab-group fxFlex="80%"
+							   style="margin:0px 10%">
+
+					<mat-tab id="projectSelectionTab" label="Project Selection">
+
+						<mak-project-list *ngIf="makProjects$ | async as makProjects"
+							[makProjects]="makProjects"
+							[currentProject]="getCurrentProject(currentProjectId, makProjects$ | async)"
+							(setCurrentProject)="setCurrentProject($event)"
+							(deleteProject)="deleteProject($event)">
+						</mak-project-list>
+
+					</mat-tab>
+
+
+					<mat-tab id="projectDataTab" label="Project Data" flex="100%">
+
+						<mak-project-data *ngIf="currentProjectId"
+            [currentProject]="getCurrentProject(currentProjectId, makProjects$ | async)"
+            (updateProject)="updateProject($event)">
+						</mak-project-data>
+
+					</mat-tab>
+
+					<mat-tab id="versionDataTab" label="Version Data">
+
+						<mak-version-data *ngIf="currentProjectId"
+              [currentProject]="getCurrentProject(currentProjectId, makProjects$ | async)"
+							[makVersions]="makVersions$ | async"
+							(updateVersion)="updateVersion($event)">
+						</mak-version-data>
+
+					</mat-tab>
+
+					<mat-tab id="designAndPurchaseTab" label="Design and Purchase Status">
+
+						<mak-status-data *ngIf="currentProjectId"
+              [currentProject]="getCurrentProject(currentProjectId, makProjects$ | async)"
+							[projectStages]="projectStages"
+							[projectStatus]="projectStatus"
+							[selectedStatus]="selectedStatus"
+							[stageTexts]="stageTexts">
+						</mak-status-data>
+
+					</mat-tab>
+
+				</mat-tab-group>
+
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+

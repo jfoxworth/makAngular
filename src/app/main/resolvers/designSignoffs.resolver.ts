@@ -17,13 +17,13 @@ import { filter, first, map, tap } from 'rxjs/operators';
 
 
 // The mak projects entity service
-import { designSignoffEntityService } from 'app/main/services/entity/designSignoff-entity.service';
+import { designSignoffEntityService } from '../services/entity/designSignoff-entity.service';
 
 
 @Injectable()
 export class MakDesignSignoffsResolver implements Resolve<boolean> {
 
-    constructor(private designSignoffService: designSignoffEntityService) {
+    constructor(private designSignoffEntityService: designSignoffEntityService) {
 
     }
 

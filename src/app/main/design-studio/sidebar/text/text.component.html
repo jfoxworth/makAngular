@@ -1,0 +1,21 @@
+
+
+<div class="h3 text-center mt-12">{{valItem['label']}}</div>
+<div class="w-280 text-center" layout="row">
+
+  <input matInput 
+        id=""
+        *ngIf="editableVersion"
+        style="width:200px; border:1px solid #ACACAC" 
+        class="inputItem w-70 mat-subheading-2 pt-5 pb-5 text-center" 
+        [(ngModel)]="valItem['value']"
+        (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':valItem['value']});">
+
+  <div *ngIf="!editableVersion"
+      style="width:200px; border:1px solid #ACACAC" 
+      class="w-70 mat-subheading-2 pt-5 pb-5 text-center">
+    {{valItem['value']}}
+  </div>
+
+</div>
+

@@ -2,16 +2,13 @@ import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { fuseAnimations } from '@fuse/animations';
-
-import { ChatService } from 'app/main/services/chat.service';
+import { ChatService } from '../../../services/chat.service';
 
 @Component({
     selector     : 'chat-left-sidenav',
     templateUrl  : './left.component.html',
     styleUrls    : ['./left.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+    encapsulation: ViewEncapsulation.None
 })
 export class ChatLeftSidenavComponent implements OnInit, OnDestroy
 {

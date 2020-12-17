@@ -1,4 +1,6 @@
-@import "src/@fuse/scss/fuse";
+
+
+body{background-color:#ececec;}
 
 invoice-modern {
 
@@ -18,7 +20,7 @@ invoice-modern {
                     padding: 88px;
                     overflow: hidden;
                     background: #FFFFFF;
-                    @include mat-elevation(7);
+                    box-shadow:0 4px 5px -2px rgba(0,0,0,0.2),0 7px 10px 1px rgba(0,0,0,0.14), 0 2px 16px 1px rgba(0,0,0,0.12);
 
                     .header {
 
@@ -85,6 +87,7 @@ invoice-modern {
                             margin-top: 96px;
                             font-size: 15px;
                             color: rgba(0, 0, 0, 0.87);
+                            width:100%;
 
                             thead {
 
@@ -121,7 +124,7 @@ invoice-modern {
                         }
 
                         .invoice-table-footer {
-                            margin: 32px 0 96px 0;
+                            margin: 32px 0 96px auto;
 
                             tr {
 
@@ -170,6 +173,7 @@ invoice-modern {
                         // IE10 fix
                         .logo, .small-note {
                             -ms-flex: 0 1 auto;
+                            flex:0 1 auto;
                         }
 
                         .logo {

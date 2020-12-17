@@ -1,0 +1,36 @@
+
+
+
+<div class="h3 text-center mb-15">{{valItem['label']}}</div>
+
+
+<div fxLayout="row">
+
+  <div class="custom-slider w-160 mr-20 ml-20">
+    <ng5-slider [(value)]="valItem['value']"
+          [options]="{floor: valItem['min'],
+                ceil: valItem['max'],
+                step: valItem['step'],
+                readOnly : !editableVersion,
+                showTicks: valItem['showTicks'],
+                showTicksValues: valItem['showTicksValues']}"
+          (valueChange)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':valItem['value']});">
+    </ng5-slider>
+  </div>
+
+  <input matInput
+        id=""
+        *ngIf="editableVersion"
+        style="width:70px; border:1px solid #ACACAC;"
+        class="inputItem w-70 mat-subheading-2 pt-5 pb-5 text-center mt-20"
+        [(ngModel)]="valItem['value']"
+        (keyup.enter)="updateParameter.emit({'name':valItem['shapediver'], 'id':valItem['shapediverId'], 'value':valItem['value']});">
+
+  <div *ngIf="!editableVersion"
+      style="width:70px; border:1px solid #ACACAC;"
+      class="w-70 mat-subheading-2 pt-5 pb-5 text-center mt-20" >
+    {{valItem['value']}}
+  </div>
+
+</div>
+

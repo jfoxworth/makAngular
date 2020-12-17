@@ -1,25 +1,24 @@
 
 
 // Standard Angular Items
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 
 // Services
-import { UserService } from 'app/main/services/user-service.service';
-import { SignoffReqsService } from 'app/main/services/signoff-reqs.service';
+import { UserService } from '../../../services/user.service';
+import { SignoffReqsService } from '../../../services/signoff-reqs.service';
 
 
 // Models
-import { makDesign } from 'app/main/models/makDesign';
-import { signoffReq } from 'app/main/models/signoffReq';
+import { makDesign } from '../../../models/makDesign';
+import { signoffReq } from '../../../models/signoffReq';
+import { UserData } from 'src/app/main/models/userData';
 
 
 
 // RXJS Items
-import { finalize } from 'rxjs/operators';
-import { BehaviorSubject, Subject, Observable } from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/internal/operators';
-import { concatMap, delay, filter, first, map, mergeMap, shareReplay, tap, withLatestFrom } from 'rxjs/operators';
 
 
 
@@ -33,7 +32,7 @@ export class DesignSignoffsComponent implements OnInit {
 
 
 	@Input('currentDesign') currentDesign:makDesign;
-	@Input('userData') userData:any;
+	@Input('userData') userData:UserData;
 
 
   potentialUser 	        : any = {};
@@ -73,7 +72,7 @@ export class DesignSignoffsComponent implements OnInit {
 			console.log(result.docs);
 
 			if ( result.docs.length>0 )
-			{ 
+			{
 				this.potentialUser = result.docs[0].data();
 
 			}else
@@ -108,7 +107,7 @@ export class DesignSignoffsComponent implements OnInit {
 		this.SignoffReqsService.signoffReqStatus
 		.pipe(takeUntil(this._unsubscribeAll))
 		.subscribe((reqs)=>
-		{ 
+		{
 
 			if ( reqs.length > 0 )
 			{
@@ -116,7 +115,7 @@ export class DesignSignoffsComponent implements OnInit {
 				{
 					this.UserService.fetchUserData( reqs[a].userId )
 						.subscribe(result=> {
-							reqs[a]['userImage'] = this.UserService.getProfileImage( result.docs[0].data() );
+							reqs[a]['userImage'] = this.UserService.getProfileImage( <UserData>result.docs[0].data() );
 						});
 
 				}

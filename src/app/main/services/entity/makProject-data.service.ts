@@ -1,58 +1,32 @@
-/*
 
-	This is the resolver for the projects. Right now, it simply 
-	gets all of the projects for a user. In the future, an additonal
-	level of functionality may be added to allow to select a 
-	project based on ID.
-	
-*/
 
 
 // Common Angular Items
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
-
-
 // Data Model
-import { makProject } from 'app/main/models/makProject';
-import { UserData } from 'app/main/models/userData';
-
-
+import { makProject } from '../../models/makProject';
 
 // RXJS Items
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { pipe } from 'rxjs';
-
-
 
 // NGRX Items and NgRX Data
-import { Store } from "@ngrx/store";
-import { AuthState } from 'app/main/reducers';
 import { DefaultDataService, HttpUrlGenerator } from '@ngrx/data';
-
-
 
 // Services
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-import { VersionsService } from 'app/main/services/versions.service';
-
-
-import { environment } from 'environments/environment';
-
-
+import { VersionsService } from '../../services/versions.service';
 
 
 @Injectable()
 export class makProjectDataService extends DefaultDataService<makProject> {
 
 
-	constructor(http							: HttpClient, 
-				httpUrlGenerator 				: HttpUrlGenerator,
-				public afs 						: AngularFirestore,
-				public VersionsService  		: VersionsService
+	constructor(  http							    : HttpClient,
+                httpUrlGenerator 			: HttpUrlGenerator,
+                public afs 						: AngularFirestore,
+                public VersionsService: VersionsService
 	)
 	{
 
@@ -65,10 +39,6 @@ export class makProjectDataService extends DefaultDataService<makProject> {
 	// Create
 	createProject( designObj, versionObj )
 	{
-
-		console.log('In create project with ...');
-		console.log(designObj);
-		console.log(versionObj);
 
 		var userData = JSON.parse(localStorage.getItem('UserData'));
 
@@ -109,7 +79,6 @@ export class makProjectDataService extends DefaultDataService<makProject> {
 
 		if ( localStorage.getItem('UserData') )
 		{
-			console.log('Here 0');
 			var userData = JSON.parse(localStorage.getItem('UserData'));
 			return <Observable<makProject[]>> this.afs.collection('projects', ref => ref
 			.where('creatorId', '==', userData.uid )
@@ -117,13 +86,12 @@ export class makProjectDataService extends DefaultDataService<makProject> {
 			.valueChanges()
 		}else
 		{
-			console.log('Here 1');
 			return <Observable<makProject[]>> this.afs.collection('projects', ref => ref
 			.where('creatorId', '==', '0' )
 			.where('deleted', '==', false))
 			.valueChanges()
 		}
-	
+
 
 	}
 
@@ -134,19 +102,19 @@ export class makProjectDataService extends DefaultDataService<makProject> {
 	{
 		return <Observable<makProject>> this.afs.collection('projects').doc( projectId )
 			.valueChanges()
-		
-	} 
+
+	}
 
 	// Update
 	updateProject ( projectObj )
 	{
-		this.afs.collection('projects').doc( projectObj.uid ).update( projectObj );		
+		this.afs.collection('projects').doc( projectObj.id ).update( projectObj );
 	}
 
 	// Delete
 	deleteProject ( projectId )
 	{
-		this.afs.collection('projects').doc( projectId ).update( { 'deleted' : true } );		
+		this.afs.collection('projects').doc( projectId ).update( { 'deleted' : true } );
 	}
 
 }

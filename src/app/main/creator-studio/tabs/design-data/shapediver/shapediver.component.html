@@ -1,0 +1,13 @@
+
+<!-- THE SHAPEDIVER TICKET NUMBER -->
+<mat-form-field appearance="outline"
+                floatLabel="always"
+                class="w-100-p form-group">
+    <mat-label>Shapediver Ticket Number</mat-label>
+    <input matInput
+            placeholder="Shapediver ticket"
+            [value]="currentDesign['shapediverTicket']+''"
+            (blur)="saveShapeChange($event)"
+            required>
+</mat-form-field>
+

@@ -18,12 +18,12 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 
 // Models
-import { makVersion } from 'app/main/models/makVersion';
+import { makVersion } from '../models/makVersion';
 
 
 // Services
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-import { makVersionDataService } from 'app/main/services/entity/makVersion-data.service';
+import { makVersionDataService } from '../services/entity/makVersion-data.service';
 
 
 @Injectable({providedIn: 'root'})
@@ -71,7 +71,7 @@ export class VersionsService
 
 	// Read
 	getVersionsForProject( projectId:string )
-	{ 
+	{
 		console.log('The project ID is ...');
 		console.log(projectId);
 		console.log('The versions are ...');
@@ -93,14 +93,14 @@ export class VersionsService
 
 	// Read one version
 	getVersionById( versionId:string )
-	{ 
+	{
 		this.afs.collection('versions').doc( versionId )
 		.valueChanges()
 		.subscribe((result) => {
 
 			result['uid'] = versionId;
 			this.versionOneStatus.next(result);
-			
+
 		});
 	}
 
@@ -110,7 +110,6 @@ export class VersionsService
 	updateVersion ( versionObj )
 	{
 		this.makVersionDataService.updateVersion( versionObj );
-//		this.afs.collection('versions').doc( versionObj.uid ).update( versionObj );		
 	}
 
 
@@ -119,7 +118,6 @@ export class VersionsService
 	deleteVersion ( versionId )
 	{
 		this.makVersionDataService.deleteVersion( versionId );
-//		this.afs.collection('versions').doc( versionId ).update( { 'deleted' : true } );		
 	}
 
 
@@ -143,7 +141,7 @@ export class VersionsService
 		{
 			userData = { 'uid' : '', 'email': '' }
 		}
-		
+
 
 		return {
 			'id'			: '',

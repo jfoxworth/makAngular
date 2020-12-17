@@ -1,7 +1,6 @@
-<!-- CHAT -->
+
 <div class="chat" fxFlex fxLayout="column">
 
-	<!-- CHAT TOOLBAR -->
 	<mat-toolbar class="chat-toolbar">
 
 		<div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
@@ -17,65 +16,15 @@
 				</ng-container>
 
 			</div>
-			<!--
-			<div fxLayout="row" fxLayoutAlign="start center">
-
-				<!-- RESPONSIVE CHATS BUTTON--
-				<button mat-icon-button fxHide.gt-md class="responsive-chats-button mr-16"
-						fuseMatSidenavToggler="chat-left-sidenav"
-						aria-label="chats button">
-					<mat-icon>chat</mat-icon>
-				</button>
-				<!-- / RESPONSIVE CHATS BUTTON-->
-
-				<!-- CHAT CONTACT--
-				<div class="chat-contact" fxLayout="row" fxLayoutAlign="start center"
-					 fuseMatSidenavToggler="chat-right-sidenav" (click)="selectContact()">
-
-					<div class="avatar-wrapper">
-
-						<img [src]=""
-							 class="avatar"
-							 alt=""/>
-
-						<mat-icon class="s-16 status"
-								  [ngClass]="">
-						</mat-icon>
-					</div>
-
-					<div class="chat-contact-name">
-						name
-					</div>
-
-				</div>
-				<!-- / CHAT CONTACT--
-
-			</div>
-
-			<div>
-				<button mat-icon-button [matMenuTriggerFor]="contactMenu" aria-label="more">
-					<mat-icon>more_vert</mat-icon>
-				</button>
-
-				<mat-menu #contactMenu="matMenu">
-					<button mat-menu-item fuseMatSidenavToggler="chat-right-sidenav" (click)="selectContact()">
-						Contact Info
-					</button>
-				</mat-menu>
-			</div>
-		-->
 
 		</div>
 	</mat-toolbar>
-	<!-- / CHAT TOOLBAR -->
 
-	<!-- CHAT CONTENT -->
-	<div id="chat-content" fxFlex="1 1 auto"  fusePerfectScrollbar *ngIf="dataFlag">
 
-		<!-- CHAT MESSAGES -->
+	<div id="chat-content" fxFlex="1 1 auto"  *ngIf="dataFlag">
+
 		<div class="chat-messages" *ngIf="conversations[selectedChat]['messages']">
 
-			<!-- MESSAGE -->
 			<div *ngFor="let message of conversations[selectedChat]['messages']; let i = index" class="message-row"
 				 [ngClass]="{
 							'me': message.sender === userData.uid,
@@ -91,26 +40,22 @@
 							 class="avatar">
 					</ng-container>
 				</ng-container>
-				
+
 				<div class="bubble">
 					<div class="message">{{message.text}}</div>
 					<div class="time secondary-text">{{message.sendDate | date:'short'}}</div>
 				</div>
 
 			</div>
-			<!-- / MESSAGE -->
 
 		</div>
-		<!-- CHAT MESSAGES -->
 
 	</div>
-	<!-- / CHAT CONTENT -->
 
-	<!-- CHAT FOOTER -->
-	<div class="chat-footer" fxFlex="0 0 auto" fxLayout="column">
 
-		<!-- REPLY FORM -->
-		<div class="reply-form" fxFlex="0 0 auto" fxLayout="row" fxLayoutAlign="center center">
+  <div class="chat-footer" fxFlex="0 0 auto" fxLayout="column">
+
+    <div class="reply-form" fxFlex="0 0 auto" fxLayout="row" fxLayoutAlign="center center">
 
 			<form #replyForm="ngForm"
 				  (ngSubmit)="reply($event)"
@@ -129,10 +74,8 @@
 			</form>
 
 		</div>
-		<!-- / REPLY FORM -->
 
 	</div>
-	<!-- / CHAT FOOTER-->
 
 </div>
-<!-- / CHAT -->
+

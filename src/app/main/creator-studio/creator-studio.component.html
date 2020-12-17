@@ -2,7 +2,7 @@
 
 <!--
 
-		This is the creator studio. It is where designers create new designs. There are 
+		This is the creator studio. It is where designers create new designs. There are
 		seven tabs where this happens. This page is available only to designers.
 
 		Select a Design : In this tab, the user can add a new design or select an existing
@@ -31,124 +31,100 @@
 
 -->
 
+<div id="projects" class="">
 
-<div id="projects" style="background-color:#FFF" class="page-layout simple left-sidebar inner-sidebar inner-scroll">
+  <div class="content" *ngIf="(makDesigns$ | async)">
 
+		<div class="center p-24">
 
-	<!-- HEADER -->
-	<div class="header accent" fxLayout="row"></div>
-	<!-- / HEADER -->
+			<div class="content p-24"
+  				 fxFlex="80%"
+	  			 style="margin:0px 10%; box-shadow:0px 0px 0px rgba(0,0,0,0) !important;">
 
-	<!-- CONTENT -->
-	<div class="content" *ngIf="(makDesigns$ | async)">
-
-
-		<!-- CENTER -->
-		<div class="center p-24" fusePerfectScrollbar>
-
-			<!-- CONTENT -->
-			<div class="content p-24" 
-				 fxFlex="80%"
-				 style="margin:0px 10%; box-shadow:0px 0px 0px rgba(0,0,0,0) !important;">
-
-				<form #designForm="ngForm">
+				<!--<form #designForm="ngForm">-->
+        <form>
 
 					<mat-tab-group>
-						
 
 
-						<!-- THE DESIGN LIST -->
-						<mat-tab label="Select a Design" flex="100%">
+            <mat-tab label="Select a Design" flex="100%">
 
-							<mak-design-list [makDesigns$]="makDesigns$"
-											 [currentDesign]="currentDesign"
-											 (setCurrent)="setCurrent($event)"
-											 (newDesign)="newDesign($event)">
+              <mak-design-list [makDesigns]="(makDesigns$ | async)"
+                               [currentId]="currentId"
+                               [currentDesign]="getCurrentDesign(currentId, (makDesigns$ | async))"
+                               (setCurrent)="setCurrent($event)"
+                               (displayMessage)="displayMessage($event)">
 							</mak-design-list>
 
 						</mat-tab>
 
 
-						<!-- THE DESIGN DATA -->
 						<mat-tab label="Design Data" flex="100%">
 
-							<mak-design-data [currentDesign]="currentDesign"
-											 (saveDesignChanges)="saveDesignChanges($event)"
-											 (setCompany)="setCompany($event)"
-											 (onBgUpload)="onBGUpload($event, 'mainBg')"
-											 (setMainImage)="setMainImage($event)">
+              <mak-design-data *ngIf="currentId"
+                              [currentDesign]="getCurrentDesign(currentId, (makDesigns$ | async))"
+                              (updateDesign)="updateDesign($event)">
 							</mak-design-data>
-						  	
+
 						</mat-tab>
-						<!-- / DESIGN DATA -->
 
 
-
-						<!-- THE DESIGN PARAMETERS -->
 						<mat-tab label="Design Parameters">
 
-							<mak-design-parameters [currentDesign]="currentDesign"
-											 	   (saveDesignChanges)="saveDesignChanges($event)"
-												   (addSubmenu)="addSubmenu($event)"
-												   (addMenuItem)="addMenuItem($event)">
-							</mak-design-parameters>
-						  	
+              <mak-design-parameters *ngIf="currentId"
+                                    [currentDesign]="getCurrentDesign(currentId, (makDesigns$ | async))"
+                                    (updateDesign)="updateDesign($event)">
+              </mak-design-parameters>
+
 						</mat-tab>
-						<!-- / DESIGN PARAMETERS -->
-						
 
-						<!-- THE PRICING DATA -->
-						<mat-tab label="Pricing Data">
 
-							<mak-design-price [currentDesign]="currentDesign"
-											  (saveDesignChanges)="saveDesignChanges($event)">
-							</mak-design-price>
-						  	
+            <mat-tab label="Pricing Data">
+
+              <mak-design-price *ngIf="currentId"
+                                [currentDesign]="getCurrentDesign(currentId, (makDesigns$ | async))"
+                                (updateDesign)="updateDesign($event)">
+              </mak-design-price>
+
 						</mat-tab>
-						<!-- / PRICING DATA -->
 
 
-
-						<!-- MARKETPLACE DEMO -->
-						<mat-tab label="Marketplace Demo">
-
-							<mak-design-marketplace [currentDesign]="currentDesign">
-							</mak-design-marketplace>
-						  	
-						</mat-tab>
-						<!-- / MARKETPLACE DEMO -->
-
-
-						<!-- DESIGN STUDIO DEMO -->
-						<mat-tab label="Design Studio Demo">
+            <mat-tab label="Marketplace Demo">
+              <mak-product-display-main *ngIf="currentId"
+                                        [makDesign]="getCurrentDesign(currentId, (makDesigns$ | async))"
+                                        [makProjects]="[]"
+                                        [userData]="userData"
+                                        [images]="images">
+              </mak-product-display-main>
+            </mat-tab>
 
 
-							<div layout="column" 
-								 flex="100%" 
+            <mat-tab label="Design Studio Demo">
+
+							<div layout="column"
+								 flex="100%"
 								 style="width:100%"
-								 *ngIf="currentDesign!==undefined">
+								 *ngIf="currentId!==undefined">
 
 								<h2 class="mt-32 mb-20">Design Studio Demo</h2>
 
-								<div class="">To see a demo of this product in the design studio, <a [routerLink]="['/designStudio/design/'+currentDesign.uid]">click on this link</a>. The product will not be displayed within the marketplace until the status is changed to 'active' and it has been approved by the admin at Mak Studio.</div>
-
+								<div class="">To see a demo of this product in the design studio, <a [routerLink]="['/designStudio/design/'+currentId]">click on this link</a>. The product will not be displayed within the marketplace until the status is changed to 'active' and it has been approved by the admin at Mak Studio.</div>
 
 							</div>
-						
-						</mat-tab>
-						<!-- / DESIGN STUDIO DEMO -->
-
-
-						<!-- SIGNOFFS -->
-						<mat-tab label="Signoffs"
-								 *ngIf="currentDesign">
-
-							<mak-design-signoffs [currentDesign]="currentDesign"
-												 [userData]="userData">
-							</mak-design-signoffs>
 
 						</mat-tab>
-						<!-- / SIGNOFFS -->
+
+
+
+            <mat-tab label="Signoffs"
+								     *ngIf="currentId && userData.uid">
+
+              <mak-design-signoffs [currentDesign]="getCurrentDesign(currentId, (makDesigns$ | async))"
+                                   (updateDesign)="updateDesign($event)"
+                                   [userData]="userData">
+              </mak-design-signoffs>
+
+						</mat-tab>
 
 
 
@@ -159,12 +135,9 @@
 
 
 			</div>
-			<!-- / CONTENT -->
 
 		</div>
-		<!-- / CENTER -->
 
 	</div>
-	<!-- / CONTENT -->
 
 </div>

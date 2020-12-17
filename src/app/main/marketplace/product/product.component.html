@@ -1,165 +1,22 @@
+
 <div id="marketplace-product" class="page-layout simple fullwidth">
 
-	<!-- HEADER -->
-	<div class="header accent p-24" fxLayout="row" fxLayoutAlign="start center">
+
+  <div class="header accent p-24 white-text" fxLayout="row" fxLayoutAlign="start center">
 		<button mat-icon-button class="mr-0 mr-sm-16" [routerLink]="'/marketplace'">
 			<mat-icon>arrow_back</mat-icon>
 		</button>
-		<h2>Back to marketplace</h2>
+		<h4>Back to marketplace</h4>
 	</div>
-	<!-- / HEADER -->
-
-	<ng-template #Loading><h1>Loading</h1></ng-template>
-
-	<!-- CONTENT -->
-	<div class="content p-24" *ngIf="(makDesign$ | async)">
-
-		<div style="width:90%; margin:0px 5%;">
-
-			<div fxLayout="row" fxLayoutAlign="center" flex="100%">
-
-				<!-- STORE DATA -->
-				<div fxLayout="column" 
-					 class="mt-32"
-					 flex="45%"
-					 style="width:40%; margin:0px 5%">
 
 
-					<div class="itemTypeText">{{(makDesign$ | async).category}}</div>
+  <ng-template #Loading><h1>Loading</h1></ng-template>
 
-
-					<div class="mat-display-2 itemTypeTitle">{{(makDesign$ | async).title}}</div>
-
-
-					<div class="mat-title itemDescription">{{(makDesign$ | async).marketplace.description}}</div>
-
-
-					<div class="itemCompanySection" fxLayout="row">
-
-						<img class="itemCompanyLogo" [src]="(makDesign$ | async).company.logo">
-
-						<div class="itemCompanyDetails" fxLayout="column">
-
-							<div class="mat-title itemCompanyName">{{(makDesign$ | async).company.name}}</div>
-							<div class="mat-subheading-1 itemCompanyLocation">{{(makDesign$ | async).company.location}}</div>
-
-						</div>
-
-					</div>
-
-
-					<mat-divider></mat-divider>
-
-					<div fxFlex="100"
-						 fxAlign="center center">
-
-						<div *ngIf="(makProjects$ | async)"
-							 fxAlign="center center"
-							 fxFlex="100">
-
-							<h2>You have {{(makProjects$ | async).length}} projects using this design</h2>
-
-							<div *ngFor="let pi of (makProjects$ | async)"
-								 fxLayout="row"
-								 style="cursor:pointer"
-								 [routerLink]="['/designStudio/project/'+pi.uid]">
-								<div fxFlex="40">{{pi.name}}</div>
-								<!-- <div fxFlex="40">{{pi.dateCreated.toDate() | date:'fullDate'}}</div> -->
-								<div fxFlex="40">{{pi.dateCreated | date:'short'}}</div>
-								<mat-icon style="cursor:pointer" 
-										  matTooltip="Open in design studio"
-										  [routerLink]="['/designStudio/project/'+pi.uid]">
-									color_lens
-								</mat-icon>
-								<mat-icon style="cursor:pointer" 
-										  matTooltip="Open projects"
-										  [routerLink]="['/products']">
-									today
-								</mat-icon>
-
-							</div>
-						</div>
-					</div>
-
-
-					<button mat-button 
-							class="primary mt-40"
-							id="addProjectButton"
-							(click)="addProject()"
-							*ngIf="userData">
-						ADD AS NEW PROJECT
-					</button>
- 
-
-					<button mat-stroked-button 
-							class="mt-40 primary"
-							color=""
-							id="viewDesignStudioButton"
-							[routerLink]="'/designStudio/design/'+(makDesign$ | async).uid">
-						VIEW DESIGN IN STUDIO
-					</button>
-
-
-					<button mat-stroked-button 
-							class="accent mt-40"
-							color=""
-							id="viewDesignSignoffButton"
-							[routerLink]="'/designSignoff/'+(makDesign$ | async).uid">
-						VIEW / ADD SIGNOFFS
-					</button>
-
-
-				</div>
-				<!--/  STORE DATA -->
-
-
-
-				<!-- IMAGES -->
-				<div fxLayout="column" 
-					 class="mt-32"
-					 flex="45%"
-					 style="width:40%; margin:0px 5%; height:500px;"
-					 *ngIf="images">
-
-
-
-
-					<mat-carousel
-						style="height:500px;"
-						timings="250ms ease-in"
-						[autoplay]="true"
-						interval="5000"
-						color="accent"
-						maxWidth="auto"
-						maxHeight="500px"
-						proportion="100"
-						[loop]="true"
-						[hideArrows]="false"
-						[hideIndicators]="false"
-						[useKeyboard]="true"
-						[useMouseWheel]="false"
-						orientation="ltr">
-
-						<mat-carousel-slide
-							#matCarouselSlide
-							*ngFor="let slide of images; let i = index"
-							[image]="slide.imageURL"
-							overlayColor="#00000040"
-							[hideOverlay]="false">		
-						</mat-carousel-slide>
-					
-					</mat-carousel>
-
-
-				</div>
-				<!--/  IMAGES -->
-
-			</div>
-
-
-		</div>
-
-	</div>
-	<!-- / CONTENT -->
+  <mak-product-display-main *ngIf="(makDesign$ | async) && (makProjects$ | async)"
+                            [makDesign]="(makDesign$ | async)"
+                            [makProjects]="(makProjects$ | async)"
+                            [userData]="userData"
+                            [images]="images">
+  </mak-product-display-main>
 
 </div>

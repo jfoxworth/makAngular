@@ -13,22 +13,19 @@ import { Router } from "@angular/router";
 
 
 // Firebase items
-import { auth } from 'firebase/app';
 import { AngularFireAuth } from "@angular/fire/auth";
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 
 
 // Models
-import { User } from "app/main/models/user";
-import { UserData } from "app/main/models/userData";
+import { UserData } from "../models/userData";
 
 
 // NGRX Items
 import { select, Store } from "@ngrx/store";
-import { AuthState } from 'app/main/reducers';
-import { login, logout } from 'app/main/actions/auth.actions';
-import { AuthActions } from 'app/main/actions/authAction-types';
-
+import { AuthState } from '../../main/store/reducers';
+import { login, logout } from '../../main/store/actions/auth.actions';
+import { AuthActions } from '../../main/store/actions/authAction-types';
 
 
 @Injectable({
@@ -68,7 +65,7 @@ export class AuthService {
 			.then((result) => {
 				this.ngZone.run(() => {
 
-			
+
 			var docRef = this.afs.collection('users').doc(result.user.uid);
 			docRef.ref.get()
 			.then(response=> {
@@ -124,10 +121,6 @@ export class AuthService {
 		return (user !== null && user.emailVerified !== false) ? true : false;
 	}
 
-	// Sign in with Google
-	GoogleAuth() {
-		return this.AuthLogin(new auth.GoogleAuthProvider());
-	}
 
 	// Auth logic to run auth providers
 	AuthLogin(provider) {
@@ -149,7 +142,7 @@ export class AuthService {
 		const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
 		const userData: UserData = {
 			uid: user.uid ? user.uid : '',
-			email: user.email,
+      email: user.email,
 			displayName: user.displayName ? user.displayName : '',
 			photoURL: user.photoURL ? user.photoURL : '',
 			emailVerified: user.emailVerified ? user.emailVerified : '',
@@ -178,11 +171,11 @@ export class AuthService {
 	// Update Profile Data
 	UpdateProfile() {
 		return this.afAuth.currentUser
-			.then((result) => { result.updateProfile({			
+			.then((result) => { result.updateProfile({
 				displayName : "My Name",
 				photoURL: "https://example.com/jane-q-user/profile.jpg"
 		})
-		}); 
+		});
 	}
 
 }

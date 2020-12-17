@@ -17,7 +17,7 @@ import { BehaviorSubject, Subject, Observable } from 'rxjs';
 
 
 // The mak projects entity service
-import { makProjectEntityService } from 'app/main/services/entity/makProject-entity.service';
+import { makProjectEntityService } from '../services/entity/makProject-entity.service';
 
 
 @Injectable()

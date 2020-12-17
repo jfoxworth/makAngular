@@ -3,7 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
-import { ChatService } from 'app/main/services/chat.service';
+import { ChatService } from '../../../../services/chat.service';
 
 @Component({
     selector     : 'chat-user-sidenav',

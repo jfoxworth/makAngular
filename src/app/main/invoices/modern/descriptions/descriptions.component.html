@@ -1,0 +1,26 @@
+<div style="text-align:center"
+     class="mb-20">
+  <button mat-stroked-button
+        color="accent"
+        [routerLink]="'/designStudio/project/'+projectData.id">
+    View Project in Studio
+  </button>
+</div>
+
+
+<table class="mt-0 simple invoice-table">
+  <tbody>
+
+    <tr>
+        <td>
+            <div class="title">PROJECT DESCRIPTION</div>
+            <div class="detail">{{projectData.description}}</div>
+        </td>
+        <td>
+            <div class="title">VERSION DESCRIPTION</div>
+            <div class="detail">{{versionData.description}}</div>
+        </td>
+    </tr>
+
+  </tbody>
+</table>

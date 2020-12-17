@@ -10,22 +10,14 @@
 
 // Standard Angular Items
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-
 
 // RXJS Stuff
-import { BehaviorSubject, Observable } from 'rxjs';
-
-
-// Models
-import { makProject } from 'app/main/models/makProject';
-
+import { BehaviorSubject} from 'rxjs';
 
 // Services
-import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-import { VersionsService } from 'app/main/services/versions.service';
-import { makProjectDataService } from 'app/main/services/entity/makProject-data.service';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { makProjectDataService } from '../services/entity/makProject-data.service';
+import { makProject } from '../models/makProject';
 
 
 
@@ -47,7 +39,6 @@ export class ProjectsService
 	 */
 	constructor(
 		public afs 						: AngularFirestore,
-		private VersionsService 		: VersionsService,
 		private makProjectDataService 	: makProjectDataService,
 	)
 	{
@@ -58,6 +49,51 @@ export class ProjectsService
 
 
 
+
+
+  	// -----------------------------------------------------------------------------------------------------
+	//
+	// @ FUNCTIONS TO SIMPLY RETURN DATA TO THE COMPONENT
+	//
+	// -----------------------------------------------------------------------------------------------------
+
+	/**
+	*  Return the product stages
+	**/
+	getProductStages() :string[] {
+		return ['Design', 'Deposit', 'Approval', 'Fabrication', 'Balance', 'Delivery', 'Feedback']
+	}
+
+
+
+
+	/**
+	*  Return initial product settings
+	**/
+	getInitialStageStatus() :boolean[] {
+		return [true, false, false, false, false, false, false]
+	}
+
+
+
+	/**
+	*  Return initial selected status
+	**/
+	getInitialSelectedStatus() :boolean[] {
+		return [true, false, false, false, false, false, false]
+	}
+
+
+
+	/**
+	*  Return initial selected status
+	**/
+	getStageTexts() :object[] {
+		return [ { 'done' : 'While in the design phase, you can create as many versions as desired. Once you are happy with a version, you can look at a quote and then submit that version for purchase. When that is complete, a deposit can be made. After the deposit, Mak Studio will contact you for approval.',
+					'notdone' : 'NA'},
+				 { 'done' : 'Your deposit has been received.',
+				   'notdone' : 'Once you are happy with a design version, you can look at the quote from either this page or the design studio. From there, you can make a deposit to move forward.'  } ]
+	}
 
 
 
@@ -79,7 +115,7 @@ export class ProjectsService
 
 	// Read projects for user
 	getProjectsForUser( userId:string )
-	{ 
+	{
  		this.afs.collection('projects', ref => ref
  			.where('creatorId', '==', userId )
  			.where('deleted', '==', false)
@@ -97,14 +133,14 @@ export class ProjectsService
 
 	// Read one project
 	getProjectById( projectId:string )
-	{ 
+	{
 		this.afs.collection('projects').doc( projectId )
 		.valueChanges()
 		.subscribe((result) => {
 
 			result['uid'] = projectId;
 			this.projectOneStatus.next(result);
-			
+
 		});
 	}
 
@@ -112,7 +148,7 @@ export class ProjectsService
 
 	// Read projects from design for user
 	getProjectsForUserDesign( userId:string, designId:string )
-	{ 
+	{
  		this.afs.collection('projects', ref => ref
  			.where('creatorId', '==', userId )
  			.where('designId', '==', designId )
@@ -130,17 +166,16 @@ export class ProjectsService
 
 
 	// Update
-	updateProject ( projectObj )
+	updateProject ( projectObj:makProject )
 	{
+    console.log(projectObj)
 		this.makProjectDataService.updateProject( projectObj )
-//		this.afs.collection('projects').doc( projectObj.uid ).update( projectObj );		
 	}
 
 	// Delete
-	deleteProject ( projectId )
+	deleteProject ( projectId:string )
 	{
 		this.makProjectDataService.deleteProject( projectId )
-//		this.afs.collection('projects').doc( projectId ).update( { 'deleted' : true } );		
 	}
 
 

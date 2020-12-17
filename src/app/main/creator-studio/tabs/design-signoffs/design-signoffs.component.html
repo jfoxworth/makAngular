@@ -1,5 +1,5 @@
-<div layout="column" 
-flex="100%" 
+<div layout="column"
+flex="100%"
 style="width:100%"
 *ngIf="(userData.uid == currentDesign.creatorId) && currentDesign.signoffRequired">
 
@@ -13,16 +13,16 @@ style="width:100%"
     <div class="mt-40 mb-40 text-center">
         <mat-form-field class="w-400">
         <mat-label>User Email</mat-label>
-            <input matInput 
-                    placeholder="User Name" 
-                    [(ngModel)]="testUser" 
+            <input matInput
+                    placeholder="User Name"
+                    [(ngModel)]="testUser"
                     name="testUser"
                     (keyup.enter)="checkUserEmail(testUser)">
         </mat-form-field>
     </div>
 
     <div class="mb-20 text-center">
-        <button mat-button 
+        <button mat-button
                 class="primary"
                 *ngIf="potentialUser.email"
                 (click)="createDesignReq( potentialUser )">
@@ -36,7 +36,7 @@ style="width:100%"
             class="text-center w-300 pt-12 pb-12"
             style="margin:auto">
 
-        <img class="profileAvatar avatar" 
+        <img class="profileAvatar avatar"
                 [src]="(userReq.userImage | async)">
 
         <div class="mt-8 ml-20 w-220 text-center">{{userReq.userEmail}}</div>
@@ -47,8 +47,4 @@ style="width:100%"
 
     </div>
 
-
-
-
 </div>
-

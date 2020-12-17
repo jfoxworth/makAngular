@@ -6,7 +6,7 @@
 	tabs and is where a user sets up the menu for the design studio as well as the
 	appearance of the design on the market place.
 
-	As with other components, the data for the designs, the signoffs, and other 
+	As with other components, the data for the designs, the signoffs, and other
 	items are brought in through observables from firebase.
 
 
@@ -15,113 +15,99 @@
 
 // Standard Angular Items
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgForm } from '@angular/forms';
 
 // RXJS Items
-import { finalize } from 'rxjs/operators';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/internal/operators';
 import { concatMap, delay, filter, first, map, mergeMap, shareReplay, tap, withLatestFrom } from 'rxjs/operators';
 
-
 // Angular Material Items
-import { MatCarousel, MatCarouselComponent } from '@ngmodule/material-carousel';
-import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatGridListModule } from '@angular/material/grid-list';
-
 
 // Drag Drop Items
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
+// NGRX Items
+import { Store } from "@ngrx/store";
+import { DesignState } from '../store/reducers';
 
 // Services
-import { CreatorStudioService } from 'app/main/services/creator-studio.service';
-import { AuthService } from 'app/main/services/auth.service';
-import { VersionsService } from 'app/main/services/versions.service';
-import { ProjectsService } from 'app/main/services/projects.service';
-import { DesignsService } from 'app/main/services/designs.service';
-import { UserService } from 'app/main/services/user-service.service';
-import { SignoffReqsService } from 'app/main/services/signoff-reqs.service';
-import { makDesignEntityService } from 'app/main/services/entity/makDesign-entity.service';
-import { signoffReqEntityService } from 'app/main/services/entity/signoffReq-entity.service';
-import { makProjectEntityService } from 'app/main/services/entity/makProject-entity.service';
-
-
+import { UserService } from '../services/user.service';
+import { CreatorStudioService } from '../services/creator-studio.service';
+import { DesignsService } from '../services/designs.service';
+import { SignoffReqsService } from '../services/signoff-reqs.service';
+import { makDesignEntityService } from '../services/entity/makDesign-entity.service';
+import { signoffReqEntityService } from '../services/entity/signoffReq-entity.service';
+import { MarketplaceService } from '../services/marketplace.service';
 
 // Firestore Items
 import { AngularFireStorage } from '@angular/fire/storage';
 
-
-
-
 // Models
-import { makDesign } from 'app/main/models/makDesign';
-import { makProject } from 'app/main/models/makProject';
-import { makVersion } from 'app/main/models/makVersion';
-import { signoffReq } from 'app/main/models/signoffReq';
+import { makDesign } from '../models/makDesign';
+import { signoffReq } from '../models/signoffReq';
+import { UserData } from '../models/userData';
+
 
 
 
 
 export interface DialogData {
-  currentDesign: any;
   i:number;
   j:number;
   parameterTypes:string[]
   iconOptions:string[],
   parameterUrls: any;
+  currentDesign: makDesign;
 }
 
 
 
 
 @Component({
-  selector: 'app-creator-studio',
+  selector: 'mak-creator-studio',
   templateUrl: './creator-studio.component.html',
-  styleUrls: ['./creator-studio.component.scss', 
-  			  '../e-commerce/e-commerce.component.scss', 
-  			  '../marketplace/product/product.component.scss', 
+  styleUrls: ['./creator-studio.component.scss',
+  			  '../projects/projects.component.scss',
+  			  '../marketplace/product/product.component.scss',
   			  '../design-studio/sidebar/sidebar.component.scss',
   			  '../design-studio/slider.component.scss']
 })
 export class CreatorStudioComponent implements OnInit {
 
-	userData 			: any;
-	designList 			: makDesign[];
-	designType 			: any;
+	userData 			    : any;
 	designTemplate 		: any;
-	parameterTemplate 	: any;
-	currentDesign 		: makDesign;
-	companies 			: any;
+	parameterTemplate : any;
+	companies 			  : any;
 	menuLocations 		: any;
-	dataFlag 			: boolean = false;
-	dataFlag2 			: boolean = false;
-	changesExist 		: boolean = false;
-	makDesigns$ 		: Observable<makDesign[]>;
-	signoffReqs$ 		: Observable<signoffReq[]>;
-	signoffs 			: string[];
+	dataFlag 			    : boolean = false;
+	dataFlag2 			  : boolean = false;
+	changesExist 		  : boolean = false;
+	makDesigns$ 		  : Observable<makDesign[]>;
+	signoffReqs$ 		  : Observable<signoffReq[]>;
+  signoffs 			    : string[];
+  currentId         : string;
+  images            : any[];
 
 	// Variables needed for the BG image
-	carouselUrls : Array<any> = [];
 	imageUrls : Array<any> = [];
 	parameterUrls : Array<any> = [];
 
 	private _unsubscribeAll: Subject<any>;
 
 
-	constructor(	private CreatorStudioService 	: CreatorStudioService,
-					private VersionsService 		: VersionsService,
-					private ProjectsService 		: ProjectsService,
-					private DesignsService 			: DesignsService,
-					private UserService 			: UserService,
-					private SignoffReqsService 		: SignoffReqsService,
-					private AuthService  			: AuthService,
-					private SnackBar 				: MatSnackBar,
-					private afStorage 				: AngularFireStorage,
-					private DesignEntityService 	: makDesignEntityService,
-					private SignoffEntityService 	: signoffReqEntityService, 
-					public vcRef 					: ViewContainerRef ) 
+  constructor(	private UserService           : UserService,
+                private CreatorStudioService 	: CreatorStudioService,
+                private MarketplaceService    : MarketplaceService,
+                private DesignsService 			  : DesignsService,
+                private SignoffReqsService 		: SignoffReqsService,
+                private SnackBar 				      : MatSnackBar,
+                private afStorage 				    : AngularFireStorage,
+                private DesignEntityService 	: makDesignEntityService,
+                private SignoffEntityService 	: signoffReqEntityService,
+                public vcRef 					        : ViewContainerRef,
+                private designStore           : Store<DesignState>, )
 	{
 		this._unsubscribeAll = new Subject();
 	}
@@ -137,12 +123,12 @@ export class CreatorStudioComponent implements OnInit {
 
 	ngOnInit(): void {
 
-		this.userData = JSON.parse(localStorage.getItem('user'));
+    this.UserService.userObject
+    .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe((user)=>{ this.userData = <UserData>user; });
 
 
 		// Get the lists of things needed from the service
-		this.designType		= this.CreatorStudioService.getDesignTypes();
-		this.companies		= this.CreatorStudioService.getCompanies();
 		this.menuLocations	= this.CreatorStudioService.getMenuLocations();
 
 
@@ -151,12 +137,8 @@ export class CreatorStudioComponent implements OnInit {
 		this.signoffReqs$ = this.SignoffEntityService.entities$
 			.pipe(
 				tap((signoffReqs) => {
-					// This needs to call a function that gets the images and stores their addresses
 					this.signoffs = [];
-					for (let a=0; a<signoffReqs.length; a++)
-					{
-						this.signoffs.push(signoffReqs[a]['designId']);
-					}
+					signoffReqs.forEach((ts)=>{ this.signoffs.push(ts['designId']); })
 				})
 			)
 		this.signoffReqs$.subscribe();
@@ -167,13 +149,13 @@ export class CreatorStudioComponent implements OnInit {
 		this.makDesigns$ = this.DesignEntityService.entities$
 		.pipe(
 			map(makDesigns => makDesigns.filter(makDesign => makDesign.creatorId == this.userData.uid))
-		);
+    );
 		this.makDesigns$.subscribe((makDesigns)=>{
-			if (this.currentDesign===undefined)
-			{
-				this.currentDesign = JSON.parse(JSON.stringify(makDesigns[0]));
-			}
-		})
+      (this.currentId===undefined && makDesigns.length>0) ? this.setCurrent(makDesigns[0]):'';
+      makDesigns.length==0 ? this.currentId='':'';
+    });
+
+
 
 	}
 
@@ -186,405 +168,34 @@ export class CreatorStudioComponent implements OnInit {
 	// -----------------------------------------------------------------------------------------------------
 
 
+	setCurrent(design:makDesign) {
+    this.designStore.subscribe(state => {
+      this.images = this.MarketplaceService.getProductImages(design.id, state.designs.designs);
+    });
+    this.currentId=design.id;
+  }
 
-	// -----------------------------------------------------------------------------------------------------
-	//
-	// @ SET THE CURRENT DESIGN
-	//
-	// -----------------------------------------------------------------------------------------------------
+  getCurrentDesign(id:string, designs:makDesign[]):makDesign
+  {
+    return designs.find(des=>des.id==id)
+  }
 
-	setCurrent(design) {
-		this.currentDesign = JSON.parse(JSON.stringify(design));
-	}
-
-
-
-
-
-
-
-
-
-	// -----------------------------------------------------------------------------------------------------
-	//
-	// @ CRUD FUNCTIONS FOR A DESIGN
-	//
-	// -----------------------------------------------------------------------------------------------------
-
-	// Create
-	newDesign( ): void
+	updateDesign( changeObj:makDesign )
 	{
-		this.DesignsService.createDesign();
-	}
+		this.DesignsService.updateDesign( changeObj );
+		this.displayMessage({text:'Design is updated'});
+  }
 
-
-
-	// Update
-	saveDesignChanges( ) 
+  displayMessage( message )
 	{
-
-		let tD = JSON.parse( JSON.stringify( this.currentDesign ) );
-
-		// Clean the observables out from the design object
-		for (var a=1; a<tD['parameterMenus'].length; a++)
-		{
-			for (var b=0; b<tD['parameterMenus'][a]['parameters'].length; b++)
-			{
-				for (var c=0; c<tD['parameterMenus'][a]['parameters'][b]['images'].length; c++)
-				{
-					tD['parameterMenus'][a]['parameters'][b]['images'][c]['imageUrl'] = '';
-				}
-			}
-		}
-
-		console.log('The design is ...');
-		console.log(this.currentDesign);
-
-		this.DesignsService.updateDesign( this.currentDesign );
-		this.SnackBar.open('Design is updated','', {duration: 4000});
-		
+    this.SnackBar.open(message.text,'', {duration: 4000});
 	}
 
-
-	// Delete 
 	deleteDesign( designId )
 	{
 		this.DesignsService.deleteDesign( designId );
 	}
 
-
-
-
-
-
-
-
-
-
-	// -----------------------------------------------------------------------------------------------------
-	//
-	// @ FUNCTIONS TO EDIT PARAMETERS OF THE DESIGN
-	//
-	// -----------------------------------------------------------------------------------------------------
-
-
-	/**
-	 * When someone sets a company
-	 */
-	setCompany() {
-		console.log('Set the company ID to '+this.currentDesign.companyId);
-		for (let i = 0; i < this.companies.length; i++) {
-			console.log('Comparing '+this.companies[i]['id']+' to '+this.currentDesign.companyId);
-			if ( this.companies[i]['id'] == this.currentDesign.companyId )
-			{
-				this.currentDesign['company']['name'] = this.companies[i]['name'];
-				this.currentDesign['company']['id'] = this.companies[i]['id'];
-				this.currentDesign['company']['location'] = this.companies[i]['location'];
-				this.currentDesign['company']['logo'] = this.companies[i]['logo'];
-			}
-  		}
-
-  		console.log('Setting the current design');
-  		console.log(this.currentDesign);
-	}
-
-
-	/**
-	 * When someone adds a new submenu
-	 */
-	addSubmenu() {
-		this.currentDesign['parameterMenus'].push(this.CreatorStudioService.getNewSubmenu());
-	}
-
-
-	/**
-	 * When someone adds a new item to a submenu
-	 */
-	addMenuItem(menuIndex) {
-		this.currentDesign['parameterMenus'][menuIndex]['parameters'].push(this.CreatorStudioService.getNewParameter());
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	/**
-	 * Check the formula entered by the user for price
-	 */
-	checkPriceFormula() {
-		console.log('In the check price formula function');
-
-		this.currentDesign.priceArray=[];
-		var re = /[a-zA-Z]/g; 
-		var re2 = /[0-9.]/g; 
-		var re3 = /[\+\-\*\/]/g; 
-		var re4 = /[a-zA-Z0-9.]/g; 
-		let replaceString = this.currentDesign['priceFormula'];
-		let stringToSplit = this.currentDesign['priceFormula'].replace(/\+/g, '&&+&&');
-		stringToSplit = stringToSplit.replace(/\-/g, '&&-&&');
-		stringToSplit = stringToSplit.replace(/\*/g, '&&*&&');
-		stringToSplit = stringToSplit.replace(/\//g, '&&/&&');
-		stringToSplit = stringToSplit.replace(/\(/g, '&&(&&');
-		stringToSplit = stringToSplit.replace(/\)/g, '&&)&&');
-		stringToSplit = stringToSplit.replace(/^\s+/, '');
-		stringToSplit = stringToSplit.replace(/\s+$/, '');
-		stringToSplit = stringToSplit.replace(/&&\s+&&/g, '&&');
-		stringToSplit = stringToSplit.replace(/&&&&/g, '&&');
-		stringToSplit = stringToSplit.replace(/^&+/, '');
-		stringToSplit = stringToSplit.replace(/&+$/, '');
-		let splitString = stringToSplit.split('&&');
-
-
-		for (let i = 0; i < splitString.length; i++) {
-
-			splitString[i] = splitString[i].replace(/^\s+/, '');
-			splitString[i] = splitString[i].replace(/\s+$/, '');
-
-
-			for (let j = 0; j < this.currentDesign.parameterMenus.length; j++) {
-
-				for (let k = 0; k < this.currentDesign.parameterMenus[j].parameters.length; k++) {
-
-					console.log('Comparing '+splitString[i]+' to '+this.currentDesign.parameterMenus[j].parameters[k]['shapediver']);
-					if ( splitString[i] == this.currentDesign.parameterMenus[j].parameters[k]['shapediver'] )
-					{
-						console.log('Match');
-						this.currentDesign.priceArray[i] = { 'status' : 'parameter', 'text' : splitString[i] }	
-
-					}else if ( ( /^\d.+$/.test(splitString[i]) ) && ( !( /[a-zA-Z]+$/.test(splitString[i]) ) ) )
-					{
-						this.currentDesign.priceArray[i] = { 'status' : 'number', 'text' : splitString[i]};				
-					
-
-					}else if ( splitString[i].match(re3) &&  !/^\d.+$/.test(splitString[i]) && !( /[a-zA-Z]+$/.test(splitString[i]) ) )
-					{
-						this.currentDesign.priceArray[i] = { 'status' : 'operator', 'text' : splitString[i]};						
-					
-					}else if ( (splitString[i] == "(") || ( splitString[i] == ")" ) )
-					{
-						this.currentDesign.priceArray[i] = { 'status' : 'parenthesis', 'text' : splitString[i]};												
-
-					}else
-					{
-						if ( this.currentDesign.priceArray[i] === undefined )
-						{
-							this.currentDesign.priceArray[i] = { 'status' : 'invalid', 'text' : splitString[i]};						
-						}
-					}
-				}
-	  		}
-	  	}
-
-		for (let i = 0; i < this.currentDesign.priceArray.length; i++) {
-			var priceValid = true;
-			if ( this.currentDesign.priceArray[i].status == 'invalid' )
-			{
-				priceValid = false;
-			}
-		}
-		this.currentDesign.priceValid = priceValid;
-
-		if (priceValid) { this.setPrice(); }else { this.currentDesign.price = 0; } 
-
-	}
-
-
-
-
-
-	/*
-	*
-	* Set the price
-	*
-	*/
-	setPrice() {
-		console.log('In the set price formula function');
-
-
-		let priceString = '';
-		for (let i = 0; i < this.currentDesign.priceArray.length; i++) {
-
-			if ( this.currentDesign.priceArray[i].status == 'parameter' )
-			{
-				for (let j = 0; j < this.currentDesign.parameterMenus.length; j++) {
-
-					for (let k = 0; k < this.currentDesign.parameterMenus[j].parameters.length; k++) {
-
-						if ( this.currentDesign.parameterMenus[j].parameters[k]['shapediver'] == this.currentDesign.priceArray[i]['text'] )
-						{
-							priceString = priceString+this.currentDesign.parameterMenus[j].parameters[k]['value'];
-						}
-					}
-
-				}
-
-			}else
-			{
-				priceString = priceString + this.currentDesign.priceArray[i].text;				
-			}
-		}
-
-		this.currentDesign.priceString = priceString;
-		this.currentDesign.price = eval(priceString);
-
-		console.log('The current object is ');
-		console.log(this.currentDesign);
-
-	}
-
-
-
-
-
-	/*
-	*
-	* When the background image is uploaded
-	*
-	*/
-	onBGUpload(event) {
-
-
-		// Grab the background image
-		const file = event.target.files[0];
-		console.log('The target is ...');
-		console.log(event.target.files);
-
-		var imageType = file.type.replace('image/','');
-
-
-		let text = "";
-		let possible = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-		for (let i = 0; i < 6; i++) {
-			text += possible.charAt(Math.floor(Math.random() * possible.length));
-  		}
-		var path = '/marketplace/carousel/'+this.currentDesign.id+'-'+text+'.'+imageType;			
-
-
-		// Get URL
-		const ref = this.afStorage.ref(path);
-
-		// Upload file and subscribe to results
-		const task = this.afStorage.upload(path, event.target.files[0]);
-		task.snapshotChanges().pipe(
-        	finalize(() => this.carouselUrls.push(ref.getDownloadURL()) )
-    	 )
-    	.subscribe()
-
-
-
-		this.currentDesign.marketplace.images.push({ 'path': path, 'mainImage':false });
-		this.saveDesignChanges( );
-
-  	}
-
-
-
-
-
-
-
-
-  	/*
-  	*
-  	*	This function formats the image data necessary
-  	*
-  	*/
-	formatDesignData(){
-
-		this.carouselUrls = [];
-		this.parameterUrls = JSON.parse( JSON.stringify( this.currentDesign.parameterMenus ));
-
-		for (var b=0; b<this.currentDesign.marketplace.images.length; b++)
-		{
-
-			const ref = this.afStorage.ref(this.currentDesign.marketplace.images[b]['path']);
-			this.carouselUrls.push(ref.getDownloadURL());
-
-			for (var c=0; c<this.currentDesign.parameterMenus.length; c++)
-			{
-				for (var d=0; d<this.currentDesign.parameterMenus[c]['parameters'].length; d++)
-				{
-
-					if ( this.currentDesign.parameterMenus[c]['parameters'][d]['images'] === undefined )
-					{
-						this.currentDesign.parameterMenus[c]['parameters'][d]['images'] = [];
-					}
-					for (var e=0; e<this.currentDesign.parameterMenus[c]['parameters'][d]['images'].length; e++)
-					{
-
-						const ref = this.afStorage.ref(this.currentDesign.parameterMenus[c]['parameters'][d]['images'][e]['path']);
-						this.parameterUrls[c]['parameters'][d]['images'][e]['imageUrl'] = ref.getDownloadURL();
-					}
-				}
-			}
-		}
-		this.dataFlag=true;
-		this.SignoffReqsService.getSignoffReqsForDesign( this.currentDesign.id );
-
-	}
-
-
-
-
-  	/*
-  	*
-  	*	This function simply sets the main image
-  	*
-  	*/
-	setMainImage(thisIndex){
-		for (var a=0; a<this.currentDesign.marketplace.images.length; a++)
-		{
-			if ( a == thisIndex )
-			{
-				this.currentDesign.marketplace.images[a]['mainImage']=true;
-			}else
-			{
-				this.currentDesign.marketplace.images[a]['mainImage']=false;
-			}
-		}
-	}
-
-
-
-
-
-  	/*
-  	*
-  	*	This function simply sets the main image
-  	*
-  	*/
-	onColorChanged(){
-		console.log('Color changed');
-	}
-
-
-
-
-
-
 }
 
 
-	 

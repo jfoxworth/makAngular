@@ -3,27 +3,27 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-    production: false,
-    hmr       : false,
+  production: false,
+  hmr       : false,
 
-	firebase : {
-	  apiKey: "AIzaSyCecFeql2d7koZZjNZL98OYkjifgx547KQ",
-	  authDomain: "makstudio-78a40.firebaseapp.com",
-	  databaseURL: "https://makstudio-78a40.firebaseio.com",
-	  projectId: "makstudio-78a40",
-	  storageBucket: "makstudio-78a40.appspot.com",
-	  messagingSenderId: "653241713853",
-	  appId: "1:653241713853:web:16a569b1ad698eaba3a3d4"
-	}
+firebase : {
+  apiKey: "AIzaSyCecFeql2d7koZZjNZL98OYkjifgx547KQ",
+  authDomain: "makstudio-78a40.firebaseapp.com",
+  databaseURL: "https://makstudio-78a40.firebaseio.com",
+  projectId: "makstudio-78a40",
+  storageBucket: "makstudio-78a40.appspot.com",
+  messagingSenderId: "653241713853",
+  appId: "1:653241713853:web:16a569b1ad698eaba3a3d4"
+}
 
 
 };
 
 /*
- * For easier debugging in development mode, you can import the following file
- * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
- *
- * This import should be commented out in production mode because it will have a negative impact
- * on performance if an error is thrown.
- */
+* For easier debugging in development mode, you can import the following file
+* to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
+*
+* This import should be commented out in production mode because it will have a negative impact
+* on performance if an error is thrown.
+*/
 // import 'zone.js/dist/zone-error';  // Included with Angular CLI.

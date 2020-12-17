@@ -1,0 +1,27 @@
+
+
+
+
+<input class="ng-hide"
+      style="display:none" 
+          id="uploadItem" 
+      *ngIf="editableVersion"
+      type="file"
+      accept=".png,.jpg,.jpeg,.gif"
+      (change)="uploadFile.emit($event, valItem['shapediver']);" >
+
+<label for="uploadItem" 
+      style="background-color:#456382; cursor:pointer; border-radius:8px; padding:10px; margin:10px 0px 0px 0px; color: white;"
+      *ngIf="editableVersion"
+      color="primary" 
+      class="md-button md-raised md-primary">
+    {{valItem['label']}}
+</label>
+
+<div *ngIf="!editableVersion"
+    style="background-color:#456382; cursor:pointer; border-radius:8px; padding:10px; margin:10px 0px 0px 0px; color: white;"
+    color="primary" 
+    class="md-button md-raised md-primary">
+    {{valItem['label']}}
+</div>
+

@@ -1,0 +1,41 @@
+
+
+<div fxLayout="column"
+class="mt-32"
+style="margin:0px 0px 0px 5%;">
+
+
+<!--
+<div fxLayout="row" fxLayoutAlign="center" flex="100%">
+<button mat-raised-button
+    color="primary"
+    *ngIf="versionChangesExist"
+    (click)="saveVersion.emit(); versionChangesExist=false;"
+    style="margin:10px 15%; width:70%">
+  Save Version
+</button>
+</div>
+-->
+<h3>Measurements</h3>
+
+<table mat-table
+    [dataSource]="currentVersion.measurements"
+    class="mat-elevation-z8"
+    style="box-shadow:none;"
+    *ngIf="currentVersion">
+
+<ng-container matColumnDef="name">
+<th mat-header-cell *matHeaderCellDef> Name </th>
+<td mat-cell *matCellDef="let meas"> {{meas.name}} </td>
+</ng-container>
+
+<ng-container matColumnDef="value">
+<th mat-header-cell *matHeaderCellDef> Value </th>
+<td mat-cell *matCellDef="let meas"> {{meas.value}} </td>
+</ng-container>
+
+<tr mat-header-row *matHeaderRowDef="columnsToDisplayMeas"></tr>
+<tr mat-row *matRowDef="let row; columns: columnsToDisplayMeas;"></tr>
+</table>
+
+</div>

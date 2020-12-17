@@ -1,0 +1,54 @@
+
+<button mat-button [matMenuTriggerFor]="userMenu"
+        class="dropdown-sec mt-10">
+
+  <div fxLayout="row" fxLayoutAlign="center center">
+
+    <img class="avatar mr-0 mr-sm-16"
+        [src]="profileImage">
+
+    <span class="username mr-12"
+          *ngIf="userData"
+          fxHide fxShow.gt-sm>{{userData.displayName}}
+    </span>
+
+    <span class="username mr-12"
+          *ngIf="!userData"
+          fxHide fxShow.gt-sm>Login / Create Account
+    </span>
+
+    <mat-icon class="s-16" fxHide.xs>keyboard_arrow_down</mat-icon>
+
+  </div>
+
+</button>
+
+
+<mat-menu #userMenu="matMenu">
+
+  <button mat-menu-item [routerLink]="'/profile'"
+          *ngIf="userData">
+    <mat-icon>account_circle</mat-icon>
+    <span>My Profile</span>
+  </button>
+
+  <button mat-menu-item [routerLink]="'/messages'"
+          *ngIf="userData">
+    <mat-icon>mail</mat-icon>
+    <span>Inbox</span>
+  </button>
+
+  <button mat-menu-item class="" (click)="signOutUser()"
+          *ngIf="userData">
+    <mat-icon>exit_to_app</mat-icon>
+    <span>Logout</span>
+  </button>
+
+  <button mat-menu-item class="" [routerLink]="'/login'"
+          *ngIf="!userData">
+    <mat-icon>exit_to_app</mat-icon>
+    <span>Login</span>
+  </button>
+
+</mat-menu>
+
