@@ -61,7 +61,7 @@
 						<mak-version-data *ngIf="currentProjectId"
               [currentProject]="getCurrentProject(currentProjectId, makProjects$ | async)"
 							[makVersions]="makVersions$ | async"
-							(updateVersion)="updateVersion($event)">
+							(displayMessage)="displayMessage($event)">
 						</mak-version-data>
 
 					</mat-tab>

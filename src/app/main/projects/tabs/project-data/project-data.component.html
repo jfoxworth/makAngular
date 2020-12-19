@@ -16,39 +16,69 @@
   </h2>
 
 
-  <!-- TOP ROW OF PROJECT DATA -->
   <div fxLayoutAlign="center" fxFlex="80%" fxOffset="10%">
 
     <div fxFlex="100%" fxLayout="column" class="text-center">
 
-      <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
-        <mat-label>Project Name</mat-label>
-        <input matInput
-              id="projectName"
-              class="form-control"
-              placeholder="Product Name"
-              name="projectNameForm"
-              [value]="currentProject['name']"
-              (blur)="saveNameChange($event)"
-              minlength="5"
-              maxlength="150"
-              required>
-      </mat-form-field>
+      <form [formGroup]="dataform">
 
 
-      <mat-form-field style="min-height:190px" appearance="outline" floatLabel="always" class="w-100-p">
-        <mat-label>Project Description</mat-label>
-        <textarea style="min-height:190px"
-              matInput
-              id="projectDescription"
-              placeholder="Product Description"
-              [value]="currentProject['description']"
-              (blur)="saveDescChange($event)"
-              rows="5"
-              required
-              minlength="25">
-        </textarea>
-      </mat-form-field>
+        <!-- The name of the project and its form validation -->
+        <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+          <mat-label>Project Name</mat-label>
+          <input matInput
+                id="projectName"
+                class="form-control"
+                placeholder="Product Name"
+                name="projectNameForm"
+                formControlName="projectName"
+                (blur)="saveNameChange($event)">
+        </mat-form-field>
+
+        <div *ngIf="name.touched && name.invalid && !name.pristine">
+
+          <div *ngIf="name.errors.minlength"
+               class="alert alert-danger mb-20">
+                Project name is required with at least 5 characters
+          </div>
+          <div *ngIf="name.errors.cannotContainSpecialChars"
+               class="alert alert-danger mb-20">
+                The name of the project cannot contain special characters
+          </div>
+
+        </div>
+
+
+
+        <!-- The description of the project and its form validation -->
+        <mat-form-field style="min-height:190px" appearance="outline" floatLabel="always" class="w-100-p">
+          <mat-label>Project Description</mat-label>
+          <textarea style="min-height:190px"
+                matInput
+                id="projectDescription"
+                formControlName="projectDescription"
+                placeholder="Project Description"
+                (blur)="saveDescChange($event)"
+                rows="5">
+          </textarea>
+        </mat-form-field>
+
+
+        <div *ngIf="desc.touched && desc.invalid && !desc.pristine">
+
+          <div *ngIf="desc.errors.minlength"
+               class="alert alert-danger mb-20">
+                Project name is required with at least 25 characters
+          </div>
+          <div *ngIf="desc.errors.cannotContainSomeSpecialChars"
+               class="alert alert-danger mb-20">
+                The description of the project cannot contain special characters other than periods and commas
+          </div>
+
+        </div>
+
+
+      </form>
 
 
     </div>
