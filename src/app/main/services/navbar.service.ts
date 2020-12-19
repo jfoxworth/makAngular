@@ -35,8 +35,8 @@ export class NavbarService {
     url = url.split('/')[1];
     console.log(url);
     if ( url===undefined ){ return 'comm'; }
-    let navUrl =  [ '', 'ourWork', 'products', 'services', 'aboutUs', 'contact', 'profile', 'messages', 'knowledge-base', 'projects', 'designStudio', 'marketplace', 'creatorStudio', 'invoice', 'walls', 'seating', 'desks', 'islands' ];
-    let navType = ['comm', 'comm', 'comm', 'comm', 'comm', 'comm', 'design', 'design', 'design', 'design', 'design', 'design', 'design', 'design', 'comm', 'comm', 'comm', 'comm' ];
+    let navUrl =  [ '', 'ourWork', 'products', 'services', 'aboutUs', 'contact', 'profile', 'messages', 'knowledge-base', 'projects', 'designStudio', 'marketplace', 'creatorStudio', 'invoice', 'walls', 'seating', 'desks', 'islands', 'arm', 'daikin', 'ramada', 'houstonsfirst', 'jacobwhite' ];
+    let navType = ['comm', 'comm', 'comm', 'comm', 'comm', 'comm', 'design', 'design', 'design', 'design', 'design', 'design', 'design', 'design', 'comm', 'comm', 'comm', 'comm', 'comm', 'comm', 'comm', 'comm', 'comm' ];
     return navType[navUrl.indexOf(url)]
 
   }

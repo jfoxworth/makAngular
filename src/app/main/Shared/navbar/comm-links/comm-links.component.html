@@ -4,12 +4,12 @@
        fxLayoutAlign="center center">
 
     <div class="link-item"
-         [ngClass]="{'currentNav': route=='/ourWork', 'submenu':route!='/ourWork'}">
+         [ngClass]="{'currentNav': ourWorkArray.includes(route), 'submenu': !ourWorkArray.includes(route) }">
       <a [routerLink]="'/ourWork'">OUR WORK</a>
     </div>
 
     <div class="link-item"
-         [ngClass]="{'currentNav': route=='/products', 'submenu':route!='/products'}">
+         [ngClass]="{'currentNav': productsArray.includes(route), 'submenu': !productsArray.includes(route) }">
       <a [routerLink]="'/products'">PRODUCTS</a>
     </div>
 

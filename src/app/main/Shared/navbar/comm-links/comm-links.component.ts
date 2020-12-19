@@ -10,9 +10,16 @@ export class CommLinksComponent implements OnInit {
 
   @Input('route') route:string;
 
+
+  ourWorkArray  : string[];
+  productsArray : string[];
+
   constructor() { }
 
   ngOnInit(): void {
+
+    this.ourWorkArray  = [ '/ourWork', '/jacobwhite', '/arm', '/ramada', '/daikin', '/houstonsfirst' ];
+    this.productsArray = [ '/products', '/walls', '/seating', '/desks', '/islands' ];
   }
 
 

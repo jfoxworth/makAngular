@@ -44,6 +44,31 @@ import { FooterComponent } from './shared/footer/footer.component';
 import { RelatedRowComponent } from './shared/related-row/related-row.component';
 import { PageBlockComponent } from './shared/page-block/page-block.component';
 
+import { ArmComponent } from './arm/arm.component';
+import { ArmTopImageComponent } from './arm/topimage/topimage.component';
+import { ArmBrandComponent } from './arm/brand/brand.component';
+import { ArmFollowupComponent } from './arm/followup/followup.component';
+
+
+import { DaikinComponent } from './daikin/daikin.component';
+import { DaikinFollowupComponent } from './daikin/followup/followup.component';
+import { DaikinBrandComponent } from './daikin/brand/brand.component';
+import { DaikinTopImageComponent } from './daikin/topimage/topimage.component';
+
+import { RamadaComponent } from './ramada/ramada.component';
+import { RamadaFollowupComponent } from './ramada/followup/followup.component';
+import { RamadaTopImageComponent } from './ramada/topimage/topimage.component';
+import { RamadaBrandComponent } from './ramada/brand/brand.component';
+
+import { HoustonsFirstComponent } from './houstonsfirst/houstonsfirst.component';
+import { HoustonsFirstFollowupComponent } from './houstonsfirst/followup/followup.component';
+import { HoustonsFirstTopImageComponent } from './houstonsfirst/topimage/topimage.component';
+import { HoustonsFirstBrandComponent } from './houstonsfirst/brand/brand.component';
+import { JacobwhiteComponent } from './jacobwhite/jacobwhite.component';
+import { TopimageComponent } from './jacobwhite/topimage/topimage.component';
+import { BrandComponent } from './jacobwhite/brand/brand.component';
+import { FollowupComponent } from './jacobwhite/followup/followup.component';
+
 
 @NgModule({
   declarations: [
@@ -72,6 +97,30 @@ import { PageBlockComponent } from './shared/page-block/page-block.component';
     SquareComponent,
     CovidComponent,
     HomeAboutComponent,
+
+    ArmComponent,
+    ArmTopImageComponent,
+    ArmBrandComponent,
+    ArmFollowupComponent,
+
+    DaikinComponent,
+    DaikinFollowupComponent,
+    DaikinTopImageComponent,
+    DaikinBrandComponent,
+
+    RamadaComponent,
+    RamadaTopImageComponent,
+    RamadaFollowupComponent,
+    RamadaBrandComponent,
+    
+    HoustonsFirstComponent,
+    HoustonsFirstFollowupComponent,
+    HoustonsFirstBrandComponent,
+    HoustonsFirstTopImageComponent,
+    JacobwhiteComponent,
+    TopimageComponent,
+    BrandComponent,
+    FollowupComponent
 
   ],
   imports: [
