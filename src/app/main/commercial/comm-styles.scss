@@ -2,7 +2,7 @@
 
 body {
   line-height:1.5;
-  color:#555;
+  color:#555 !important;
   font-family:'Lato';
   font-size:1rem;
   font-weight:400;
@@ -34,9 +34,77 @@ body {
 }
 
 .full-screen {
-  height:100%;
-  width:100%;
+  height:100% !important;
+  width:100% !important;
 }
+
+
+
+
+
+
+.sectionTitle {
+  font-size:1em;
+  font-family:Roboto Slab;
+  font-Weight:800;
+  text-transform:uppercase;
+}
+
+.sectionLabel {
+  font-size:1.75em;
+  font-family:Roboto;
+  font-weight:300;
+}
+
+.sectionText {
+  font-size:1.5em;
+  font-family:Roboto;
+  font-weight:300;
+}
+
+
+
+
+
+.descHeader {
+  font-size:1.6em;
+  margin-bottom:50px;
+  font-weight:100;
+  color:#555;
+}
+
+.descText {
+  font-size:1.5em;
+  font-weight:100;
+  color:#555;
+}
+
+
+
+.listTitle {
+  font-size:1em;
+  font-family:Roboto;
+  font-weight:600;
+  margin-bottom:20px;
+}
+
+.listSection {
+  font-size:1em;
+  font-family:Roboto;
+  color:#555;
+}
+
+.listItem {
+  padding:2px;
+  border-bottom:1px solid #ccc;
+  font-size:0.9em;
+  color:#555;
+}
+
+
+
+
+
 
 .dark {
   color:#EEE;
@@ -595,4 +663,34 @@ padding-bottom:5px;
 .footer-logo {
   display: block;
   margin-bottom: 30px
+}
+
+
+
+
+
+
+
+.mt-30 {
+  margin-top:30px;
+}
+
+.mt-50 {
+  margin-top:50px;
+}
+
+.mb-30 {
+  margin-bottom:30px;
+}
+
+.mb-50 {
+  margin-bottom:50px;
+}
+
+.ml-20 {
+  margin-left:20px;
+}
+
+.mr-20 {
+  margin-right:20px;
 }

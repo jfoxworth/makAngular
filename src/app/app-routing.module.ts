@@ -14,6 +14,11 @@ import { WallsComponent } from './main/commercial/walls/walls.component';
 import { DesksComponent } from './main/commercial/desks/desks.component';
 import { SeatingComponent } from './main/commercial/seating/seating.component';
 import { IslandsComponent } from './main/commercial/islands/islands.component';
+import { ArmComponent } from './main/commercial/arm/arm.component';
+import { DaikinComponent } from './main/commercial/daikin/daikin.component';
+import { HoustonsFirstComponent } from './main/commercial/houstonsfirst/houstonsfirst.component';
+import { RamadaComponent } from './main/commercial/ramada/ramada.component';
+import { JacobwhiteComponent } from './main/commercial/jacobwhite/jacobwhite.component';
 
 import { LoginComponent } from './main/Common/login/login.component';
 import { ProfileComponent } from './main/profile/profile.component';
@@ -45,6 +50,11 @@ const routes: Routes = [
   { path : 'seating', component:SeatingComponent },
   { path : 'desks', component:DesksComponent },
   { path : 'islands', component:IslandsComponent },
+  { path : 'arm', component:ArmComponent },
+  { path : 'daikin', component:DaikinComponent },
+  { path : 'ramada', component:RamadaComponent },
+  { path : 'houstonsfirst', component:HoustonsFirstComponent },
+  { path : 'jacobwhite', component:JacobwhiteComponent },
 
 
   { path : 'login', component:LoginComponent },
