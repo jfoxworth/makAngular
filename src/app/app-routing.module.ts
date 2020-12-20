@@ -37,6 +37,10 @@ import { SignoffReqsResolver } from './main/resolvers/signoffReqs.resolver';
 import { MakProjectsResolver } from './main/resolvers/makProjects.resolver';
 import { MakVersionsResolver } from './main/resolvers/makVersions.resolver';
 
+// Guards
+import { AuthGuard } from './main/guards/auth.guard';
+import { DesignerGuard } from './main/guards/designer.guard';
+
 
 const routes: Routes = [
 
@@ -65,12 +69,15 @@ const routes: Routes = [
   { path : 'creatorStudio', component:CreatorStudioComponent,
     resolve: {
       makDesign: MakDesignsResolver,
-    }
+      makVersion: MakVersionsResolver
+    },
+    canActivate:[AuthGuard, DesignerGuard]
   },
   { path : 'creator-studio', component:CreatorStudioComponent,
     resolve: {
       makDesign: MakDesignsResolver,
-    }
+    },
+    canActivate:[AuthGuard, DesignerGuard]
   },
 
   { path : 'invoice/design/:designId',
@@ -111,7 +118,8 @@ const routes: Routes = [
 			makDesign: MakDesignsResolver,
 			signoffReq: SignoffReqsResolver,
 			makProject: MakProjectsResolver,
-    }
+    },
+    canActivate:[AuthGuard]
   },
   {
     path     : 'designStudio/design/:designId',
