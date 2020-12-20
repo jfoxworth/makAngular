@@ -1,9 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { Routes, RouterModule } from '@angular/router';
 
 // Material Items
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -20,6 +19,13 @@ import { ProfileHeaderComponent } from './profile-header/profile-header.componen
 import { ProfileUserComponent } from './profile-user/profile-user.component';
 import { ProfileEditComponent } from './profile-edit/profile-edit.component';
 
+const routes : Routes = [
+  {
+    path:'profile',
+    component:ProfileComponent
+  }
+];
+
 @NgModule({
   declarations: [
     ProfileComponent,
@@ -29,7 +35,7 @@ import { ProfileEditComponent } from './profile-edit/profile-edit.component';
     ProfileEditComponent
   ],
   imports: [
-    BrowserAnimationsModule,
+    RouterModule.forChild(routes),
     CommonModule,
     NavbarModule,
     MatIconModule,
@@ -39,6 +45,8 @@ import { ProfileEditComponent } from './profile-edit/profile-edit.component';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule
-  ]
+  ],
+  exports:[RouterModule]
 })
 export class ProfileModule { }
+

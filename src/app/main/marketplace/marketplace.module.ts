@@ -2,7 +2,6 @@
 // Core Angular Items
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
@@ -95,7 +94,6 @@ const entityMetadata: EntityMetadataMap = {
   imports: [
 		StoreModule.forFeature('designs', designImagesReducer),
 
-    BrowserAnimationsModule,
     CommonModule,
     RouterModule,
     NavbarModule,

@@ -55,6 +55,8 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit() {
 
+    console.log('fwoifhwfhlnf');
+
     this.UserService.userObject
     .pipe(takeUntil(this._unsubscribeAll))
     .subscribe((user)=>{

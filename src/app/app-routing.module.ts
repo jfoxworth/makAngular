@@ -62,7 +62,12 @@ const routes: Routes = [
 
 
   { path : 'login', component:LoginComponent },
-  { path : 'profile', component:ProfileComponent },
+
+//  { path : 'profile', component:ProfileComponent },
+    { path : 'profile', 
+      loadChildren:() =>import('./main/profile/profile.module').then(m=>m.ProfileModule) 
+    },
+
   { path : 'knowledgebase', component:KnowledgeBaseComponent },
   { path : 'knowledge-base', component:KnowledgeBaseComponent },
   { path : 'messages', component: ChatComponent },

@@ -2,7 +2,6 @@
 // Common Angular items
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 
@@ -28,7 +27,6 @@ import { TitleBannerModule } from '../Shared/title-banner/title-banner.module';
   ],
   imports: [
     CommonModule,
-    BrowserAnimationsModule,
     FlexLayoutModule,
     RouterModule,
 

@@ -3,7 +3,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -51,7 +50,6 @@ import { ChatContactSidenavComponent } from './sidenavs/right/contact/contact.co
 
         CommonModule,
         TitleBannerModule,
-        BrowserAnimationsModule,
         FlexLayoutModule,
         RouterModule,
         FormsModule,

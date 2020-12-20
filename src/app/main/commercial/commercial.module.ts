@@ -1,11 +1,11 @@
+
+
 // Common Angular Modules
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // Angular Material
 import { MatIconModule } from '@angular/material/icon';
@@ -124,12 +124,10 @@ import { FollowupComponent } from './jacobwhite/followup/followup.component';
 
   ],
   imports: [
-    BrowserModule,
     CommonModule,
     FlexLayoutModule,
     HttpClientModule,
     RouterModule,
-    BrowserAnimationsModule,
     MatIconModule,
     MatCarouselModule,
     MatButtonModule,
