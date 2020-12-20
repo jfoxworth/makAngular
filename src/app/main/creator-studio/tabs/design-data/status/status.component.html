@@ -1,13 +1,18 @@
 <!-- THE STATUS OF THE ITEM IN THE MARKETPLACE -->
-<mat-form-field class="mb-40 form-group w-100-p">
-<mat-label>Status of Item</mat-label>
-<mat-select [value]="currentDesign.status+''"
-            (onChange)="saveStatusChange($event)">
-        <mat-option [value]="0">
-        Disabled
-    </mat-option>
-        <mat-option [value]="1">
-        Active
-    </mat-option>
-</mat-select>
-</mat-form-field>
+<form>
+
+    <mat-form-field class="mb-40 form-group w-100-p">
+        <mat-label>Status of Item</mat-label>
+        <mat-select [value]="currentDesign.status+''"
+                    (onChange)="saveStatusChange($event)">
+                <mat-option [value]="0">
+                Disabled
+            </mat-option>
+                <mat-option [value]="1">
+                Active
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+
+</form>

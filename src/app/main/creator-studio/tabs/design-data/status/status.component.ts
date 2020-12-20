@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+
+
+// Models
 import { makDesign } from 'src/app/main/models/makDesign';
-import { DesignsService } from '../../../../services/designs.service';
 
 
 @Component({
@@ -12,12 +14,15 @@ export class StatusComponent implements OnInit {
 
 
   @Input('currentDesign') currentDesign:makDesign;
-	@Output() updateDesign = new EventEmitter();
+  @Output() updateDesign = new EventEmitter();
+  
 
 
-  constructor( private DesignsService:DesignsService) { }
+  constructor( ) { }
 
   ngOnInit(): void {
+
+
   }
 
   // Update

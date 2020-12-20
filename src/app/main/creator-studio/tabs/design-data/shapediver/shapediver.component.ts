@@ -1,6 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+
+// Form Items
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { NameCheckValidators } from 'src/app/main/Common/Validators/namecheck.validators';
+
+// Models
 import { makDesign } from 'src/app/main/models/makDesign';
-import { DesignsService } from '../../../../services/designs.service';
+
 
 @Component({
   selector: 'mak-design-sd',
@@ -10,18 +16,31 @@ import { DesignsService } from '../../../../services/designs.service';
 export class ShapediverComponent implements OnInit {
 
   @Input('currentDesign') currentDesign:makDesign;
-	@Output() updateDesign = new EventEmitter();
+  @Output() updateDesign = new EventEmitter();
+  
+  shapeform : FormGroup;
+
+  get shape(){
+    return this.shapeform.get('shape');
+  }
 
 
-  constructor( private DesignsService:DesignsService) { }
+  constructor( ) { }
 
   ngOnInit(): void {
+
+    this.shapeform = new FormGroup({
+      'shape' : new FormControl(this.currentDesign.shapediverTicket, [Validators.minLength(200),
+                                                                      NameCheckValidators.cannotContainSpecialChars ]),
+    });
+  
   }
 
   // Update
-	saveShapeChange( event )
+	saveShapeChange( event:FocusEvent )
 	{
-		this.updateDesign.emit( { ...this.currentDesign, 'shapediverTicket' : event.target.value } );
+    this.shapeform.controls.shape.status=="VALID" ? 
+		this.updateDesign.emit( { ...this.currentDesign, 'shapediverTicket' : (<HTMLInputElement>event.target).value } ):'';
 	}
 
 
