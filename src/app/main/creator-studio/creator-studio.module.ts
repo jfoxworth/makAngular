@@ -92,6 +92,9 @@ import { ToggleComponent } from './tabs/design-parameters/toggle/toggle.componen
 import { BlocComponent } from './tabs/design-parameters/bloc/bloc.component';
 import { UploadComponent } from './tabs/design-parameters/upload/upload.component';
 
+// Guards
+import { AuthGuard } from '../guards/auth.guard';
+import { DesignerGuard } from '../guards/designer.guard';
 
 
 
@@ -193,6 +196,8 @@ const entityMetadata: EntityMetadataMap = {
         signoffReqDataService,
         MakDesignsResolver,
         SignoffReqsResolver,
+        AuthGuard,
+        DesignerGuard,
     ]
 })
 export class CreatorStudioModule

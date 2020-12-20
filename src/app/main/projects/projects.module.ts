@@ -31,9 +31,6 @@ import { MatCarouselModule } from '@ngmodule/material-carousel';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 
-
-
-
 // Mak components
 import { NavbarModule } from '../Shared/navbar/navbar.module';
 import { TitleBannerModule } from '../Shared/title-banner/title-banner.module';
@@ -48,16 +45,11 @@ import { VersionListComponent } from './tabs/version-list/version-list.component
 import { VersionMeasurementsComponent } from './tabs/version-measurements/version-measurements.component';
 import { VersionSpecsComponent } from './tabs/version-specs/version-specs.component';
 
-
-
 // Services
 import { ProjectsService } from '../services/projects.service';
 
-
 // NgRx Items
 import { EntityDataService, EntityDefinitionService, EntityMetadataMap } from '@ngrx/data';
-
-
 
 // Entity Service
 import { makDesignEntityService } from '../services/entity/makDesign-entity.service';
@@ -71,15 +63,14 @@ import { makVersionDataService } from '../services/entity/makVersion-data.servic
 import { designImagesReducer } from '../store/reducers';
 import { StoreModule } from '@ngrx/store';
 
-
-
 // The resolvers
 import { MakDesignsResolver } from '../resolvers/makDesigns.resolver';
 import { SignoffReqsResolver } from '../resolvers/signoffReqs.resolver';
 import { MakProjectsResolver } from '../resolvers/makProjects.resolver';
 import { MakVersionsResolver } from '../resolvers/makVersions.resolver';
 
-
+// Guards
+import { AuthGuard } from '../guards/auth.guard';
 
 
 
@@ -171,6 +162,7 @@ const entityMetadata: EntityMetadataMap = {
 		MakProjectsResolver,
 		MakVersionsResolver,
 		SignoffReqsResolver,
+		AuthGuard,
 	]
 })
 export class ProjectsModule
@@ -190,5 +182,7 @@ export class ProjectsModule
       entityDataService.registerService('makProject', makProjectDataService);
 			entityDataService.registerService('makVersion', makVersionDataService);
 		}
+
+
 
 }

@@ -21,3 +21,10 @@ export const pullUserData = createSelector(
   selectAuthState,
   auth => auth.UserData
 );
+
+
+export const checkDesignerStatus = createSelector(
+    selectAuthState,
+    auth => auth.UserData.designer
+  );
+  
