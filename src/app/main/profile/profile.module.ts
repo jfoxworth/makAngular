@@ -19,12 +19,16 @@ import { ProfileHeaderComponent } from './profile-header/profile-header.componen
 import { ProfileUserComponent } from './profile-user/profile-user.component';
 import { ProfileEditComponent } from './profile-edit/profile-edit.component';
 
+
+
 const routes : Routes = [
   {
-    path:'profile',
+    path:'',
     component:ProfileComponent
   }
 ];
+
+
 
 @NgModule({
   declarations: [

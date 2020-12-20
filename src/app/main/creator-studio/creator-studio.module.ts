@@ -113,6 +113,17 @@ const entityMetadata: EntityMetadataMap = {
 
 
 
+// Needed for lazy load
+const routes : Routes = [
+    {
+      path:'',
+      component:CreatorStudioComponent
+    }
+  ];
+
+  
+
+
 
 @NgModule({
     declarations: [
@@ -141,7 +152,8 @@ const entityMetadata: EntityMetadataMap = {
         UploadComponent
     ],
     imports : [
-      StoreModule.forFeature('designs', designImagesReducer),
+        RouterModule.forChild(routes),
+        StoreModule.forFeature('designs', designImagesReducer),
 
         CommonModule,
         FlexLayoutModule,

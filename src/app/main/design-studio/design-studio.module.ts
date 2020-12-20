@@ -105,6 +105,18 @@ const entityMetadata: EntityMetadataMap = {
 
 
 
+// Needed for lazy load
+const routes : Routes = [
+    {
+      path:'',
+      component:DesignStudioComponent
+    }
+  ];
+
+  
+
+
+
 @NgModule({
     declarations: [
         DesignStudioComponent,
@@ -127,6 +139,7 @@ const entityMetadata: EntityMetadataMap = {
       ],
     imports     : [
         StoreModule.forFeature('designs', designImagesReducer),
+        RouterModule.forChild(routes),
         MatExpansionModule,
         CommonModule,
         NavbarModule,

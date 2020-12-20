@@ -103,6 +103,17 @@ const entityMetadata: EntityMetadataMap = {
 
 
 
+
+const routes : Routes = [
+  {
+    path:'',
+    component:ProjectsComponent
+  }
+];
+
+
+
+
 @NgModule({
 	declarations: [
 		ProjectsComponent,
@@ -118,6 +129,7 @@ const entityMetadata: EntityMetadataMap = {
 	],
 	imports	 : [
 		StoreModule.forFeature('designs', designImagesReducer),
+    RouterModule.forChild(routes),
 
     CommonModule,
     FlexLayoutModule,

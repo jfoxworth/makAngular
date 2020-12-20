@@ -80,6 +80,16 @@ const entityMetadata: EntityMetadataMap = {
 
 
 
+const routes : Routes = [
+  {
+    path:'',
+    component:MarketplaceComponent
+  }
+];
+
+
+
+
 @NgModule({
   declarations: [
     MarketplaceComponent,
@@ -93,6 +103,7 @@ const entityMetadata: EntityMetadataMap = {
   ],
   imports: [
 		StoreModule.forFeature('designs', designImagesReducer),
+    RouterModule.forChild(routes),
 
     CommonModule,
     RouterModule,

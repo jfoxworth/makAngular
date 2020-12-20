@@ -3,7 +3,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { RouterModule } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 
 // Material Items
 import { MatButtonModule } from '@angular/material/button';
@@ -21,11 +21,24 @@ import { NavbarModule } from '../Shared/navbar/navbar.module';
 import { TitleBannerModule } from '../Shared/title-banner/title-banner.module';
 
 
+
+
+// Needed for lazy load
+const routes : Routes = [
+  {
+    path:'',
+    component:KnowledgeBaseComponent
+  }
+];
+
+
+
 @NgModule({
   declarations: [
     KnowledgeBaseComponent
   ],
   imports: [
+    RouterModule.forChild(routes),
     CommonModule,
     FlexLayoutModule,
     RouterModule,

@@ -55,7 +55,7 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit() {
 
-    console.log('fwoifhwfhlnf');
+    console.log('Profile loaded');
 
     this.UserService.userObject
     .pipe(takeUntil(this._unsubscribeAll))

@@ -1,7 +1,7 @@
 
 // Standard Angular Items
 import { NgModule } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -74,6 +74,15 @@ const entityMetadata: EntityMetadataMap = {
 
 
 
+const routes : Routes = [
+    {
+      path:'',
+      component:InvoiceModernComponent
+    }
+  ];
+  
+
+
 
 @NgModule({
     declarations: [
@@ -86,6 +95,7 @@ const entityMetadata: EntityMetadataMap = {
     ],
     imports : [
       StoreModule.forFeature('designs', designImagesReducer),
+      RouterModule.forChild(routes),
       CommonModule,
       FlexLayoutModule,
       NavbarModule,
