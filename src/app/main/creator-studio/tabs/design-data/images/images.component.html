@@ -1,58 +1,55 @@
 
-        <div fxLayout="row">
+<div>
 
-          <div>Use the button to add images to be displayed in the marketplace or in the carousel. Select the image to be used as the marketplace image.</div>
+	<div>Use the button to add images to be displayed in the marketplace or in the carousel. Select the image to be used as the marketplace image.</div>
 
-          <div>
+	<div>
+		<input class="mainBg mt-40 mb-20"
+						id="input-file-id"
+						multiple type="file"
+						accept=".png,.jpg,.jpeg,.gif"
+						[hidden]="true"
+						(change)="onBGUpload({event:$event, type:'mainBg'})" />
 
-              <input class="mainBg"
-                          id="input-file-id"
-                      multiple type="file"
-                      accept=".png,.jpg,.jpeg,.gif"
-                      [hidden]="true"
-                      (change)="onBGUpload({event:$event, type:'mainBg'})" />
+		<label for="input-file-id"
+						style="background-color:#456382; cursor:pointer; border-radius:8px; padding:10px; margin:10px 0px 40px 0px; color: white;"
+						color="primary"
+						class="md-button md-raised md-primary mt-20 mb-20">
+				Add Image
+		</label>
+	</div>
 
-              <label for="input-file-id"
-                      style="background-color:#456382; cursor:pointer; border-radius:8px; padding:10px; margin:10px 0px 40px 0px; color: white;"
-                      color="primary"
-                      class="md-button md-raised md-primary">
-                  Add Image
-              </label>
-
-          </div>
-
-      </div>
+</div>
 
 
 
 
-      <div fxFlex="100%"
-              fxLayout="row"
-              class="mt-20">
+<div fxLayout="row"
+     class="mt-20">
 
-          <div *ngFor="let thisImage of carouselUrls; index as i">
+	<div *ngFor="let thisImage of this.carouselUrls; index as i">
 
-              <div fxLayout="column">
+		<div *ngIf="thisImage.itemId == this.currentDesign.id">
 
-                  <div fxLayout="row">
+<!--
+				<div>
+						<mat-icon style="cursor:pointer"
+												(click)="currentDesign.marketplace.images.splice(i, 1); carouselUrls.splice(i,1); changesExist=true">
+								cancel
+						</mat-icon>
 
-                      <mat-icon style="cursor:pointer"
-                                  (click)="currentDesign.marketplace.images.splice(i, 1); carouselUrls.splice(i,1); changesExist=true">
-                          cancel
-                      </mat-icon>
+						<mat-icon style="cursor:pointer"
+												*ngIf="currentDesign.marketplace.images[i]['mainImage']==false"
+												(click)="setMainImage({image:i});">
+								keyboard_arrow_up
+						</mat-icon>
 
-                      <mat-icon style="cursor:pointer"
-                                  *ngIf="currentDesign.marketplace.images[i]['mainImage']==false"
-                                  (click)="setMainImage({image:i});">
-                          keyboard_arrow_up
-                      </mat-icon>
+				</div>
+-->
+						<img [src]="thisImage.imageURL" width="150" height="150">
 
-                  </div>
+				</div>
 
-                      <img [src]="thisImage | async" width="150" height="150">
+    </div>
 
-                  </div>
-
-          </div>
-
-      </div>
+</div>

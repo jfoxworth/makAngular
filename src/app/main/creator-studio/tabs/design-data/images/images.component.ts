@@ -13,6 +13,11 @@ import { AngularFireStorage } from '@angular/fire/storage';
 // RXJS
 import { finalize } from 'rxjs/operators';
 
+// NGRX Items
+import { Store } from "@ngrx/store";
+import { DesignState } from '../../../../store/reducers';
+
+
 @Component({
   selector: 'mak-design-images',
   templateUrl: './images.component.html',
@@ -24,15 +29,37 @@ export class ImagesComponent implements OnInit {
 	@Output() updateDesign = new EventEmitter();
 
   carouselUrls : Array<any> = [];
+  currentImages : Array<any> = [];
 
 
-  constructor( private DesignsService       : DesignsService,
+	constructor( private DesignsService       : DesignsService,
+							 private designStore 					: Store<DesignState>,
                private afStorage 				    : AngularFireStorage, )
   {
   }
 
   ngOnInit(): void {
-  }
+
+    // Listen to the images observable
+		this.designStore.subscribe(state => {
+
+			console.log(state);
+			if (state.designs.designs.type)
+			{
+				let temp = JSON.parse(JSON.stringify(state.designs.designs));
+				delete temp.type
+				this.carouselUrls = Object.values(temp);
+			}else
+			{
+				this.carouselUrls = Object.values(state.designs.designs);
+			}
+
+			this.currentImages = this.carouselUrls.filter(image=>image.itemId==this.currentDesign.id);
+			console.log(this.carouselUrls);
+			console.log(this.currentImages);
+    });
+
+	}
 
 
 
