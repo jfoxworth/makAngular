@@ -1,11 +1,9 @@
 
 
 // Standard Angular Items
-import { BrowserModule } from '@angular/platform-browser';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -107,6 +105,18 @@ const entityMetadata: EntityMetadataMap = {
 
 
 
+// Needed for lazy load
+const routes : Routes = [
+    {
+      path:'',
+      component:DesignStudioComponent
+    }
+  ];
+
+  
+
+
+
 @NgModule({
     declarations: [
         DesignStudioComponent,
@@ -129,8 +139,8 @@ const entityMetadata: EntityMetadataMap = {
       ],
     imports     : [
         StoreModule.forFeature('designs', designImagesReducer),
+        RouterModule.forChild(routes),
         MatExpansionModule,
-        BrowserAnimationsModule,
         CommonModule,
         NavbarModule,
         TitleBannerModule,

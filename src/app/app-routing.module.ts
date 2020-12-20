@@ -62,22 +62,28 @@ const routes: Routes = [
 
 
   { path : 'login', component:LoginComponent },
-  { path : 'profile', component:ProfileComponent },
-  { path : 'knowledgebase', component:KnowledgeBaseComponent },
-  { path : 'knowledge-base', component:KnowledgeBaseComponent },
+
+
+  { path : 'profile', loadChildren:'./main/profile/profile.module#ProfileModule' },
+
+  { path : 'knowledgebase', component:KnowledgeBaseComponent, loadChildren:'./main/knowledge-base/knowledge-base.module#KnowledgeBaseModule' },
+  { path : 'knowledge-base', component:KnowledgeBaseComponent, loadChildren:'./main/knowledge-base/knowledge-base.module#KnowledgeBaseModule' },
   { path : 'messages', component: ChatComponent },
+
   { path : 'creatorStudio', component:CreatorStudioComponent,
     resolve: {
       makDesign: MakDesignsResolver,
       makVersion: MakVersionsResolver
     },
-    canActivate:[AuthGuard, DesignerGuard]
+    canActivate:[AuthGuard, DesignerGuard],
+    loadChildren:'./main/creator-studio/creator-studio.module#CreatorStudioModule'
   },
   { path : 'creator-studio', component:CreatorStudioComponent,
     resolve: {
       makDesign: MakDesignsResolver,
     },
-    canActivate:[AuthGuard, DesignerGuard]
+    canActivate:[AuthGuard, DesignerGuard],
+    loadChildren:'./main/creator-studio/creator-studio.module#CreatorStudioModule'
   },
 
   { path : 'invoice/design/:designId',
@@ -85,7 +91,8 @@ const routes: Routes = [
     resolve: {
       makDesign: MakDesignsResolver,
       makVersion: MakVersionsResolver
-    }
+    },
+    loadChildren:'./main/invoices/modern/modern.module#InvoiceModernModule'
   },
   {
     path     : 'invoice/:versionId',
@@ -100,7 +107,8 @@ const routes: Routes = [
       makDesign: MakDesignsResolver,
       signoffReq: SignoffReqsResolver,
       makProject: MakProjectsResolver
-    }
+    },
+    loadChildren:'./main/marketplace/marketplace.module#MarketplaceModule' 
   },
   {
     path	 : 'marketplace/:itemId/:itemSlug',
@@ -111,6 +119,7 @@ const routes: Routes = [
       makProject: MakProjectsResolver
     }
   },
+
   { path : 'projects',
     component:ProjectsComponent,
     resolve: {
@@ -119,7 +128,8 @@ const routes: Routes = [
 			signoffReq: SignoffReqsResolver,
 			makProject: MakProjectsResolver,
     },
-    canActivate:[AuthGuard]
+    canActivate:[AuthGuard],
+    loadChildren:'./main/projects/projects.module#ProjectsModule' 
   },
   {
     path     : 'designStudio/design/:designId',
@@ -127,7 +137,8 @@ const routes: Routes = [
     resolve: {
         makDesign: MakDesignsResolver,
         makProject: MakProjectsResolver
-    }
+    },
+    loadChildren:'./main/design-studio/design-studio.module#DesignStudioModule'
   },
   {
     path     : 'designStudio/project/:projectId',
@@ -136,7 +147,8 @@ const routes: Routes = [
         makDesign: MakDesignsResolver,
         makProject: MakProjectsResolver,
         makVersion: MakVersionsResolver
-    }
+    },
+    loadChildren:'./main/design-studio/design-studio.module#DesignStudioModule'
   },
   {
     path     : 'designStudio/:designId',
@@ -144,14 +156,16 @@ const routes: Routes = [
     resolve: {
         makDesign: MakDesignsResolver,
         makProject: MakProjectsResolver
-    }
+    },
+    loadChildren:'./main/design-studio/design-studio.module#DesignStudioModule'
   },
   {
     path     : 'designStudio',
     component: DesignStudioComponent,
     resolve: {
         makDesign: MakDesignsResolver
-    }
+    },
+    loadChildren:'./main/design-studio/design-studio.module#DesignStudioModule'
   }
 ];
 

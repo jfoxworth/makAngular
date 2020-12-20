@@ -1,11 +1,9 @@
 
 // Standard Angular Items
 import { NgModule } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // Angular Material Items
 import { MatButtonModule } from '@angular/material/button';
@@ -76,6 +74,15 @@ const entityMetadata: EntityMetadataMap = {
 
 
 
+const routes : Routes = [
+    {
+      path:'',
+      component:InvoiceModernComponent
+    }
+  ];
+  
+
+
 
 @NgModule({
     declarations: [
@@ -88,13 +95,12 @@ const entityMetadata: EntityMetadataMap = {
     ],
     imports : [
       StoreModule.forFeature('designs', designImagesReducer),
+      RouterModule.forChild(routes),
       CommonModule,
-      BrowserModule,
       FlexLayoutModule,
       NavbarModule,
       TitleBannerModule,
       RouterModule,
-      BrowserAnimationsModule,
 
       MatButtonModule
     ],

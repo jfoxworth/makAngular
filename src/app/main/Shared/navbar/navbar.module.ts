@@ -2,8 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BrowserModule } from '@angular/platform-browser';
 
 
 // Components
@@ -33,8 +31,6 @@ import { CommLinksComponent } from './comm-links/comm-links.component';
   ],
   imports: [
     StoreModule.forFeature('auth', authReducer),
-    BrowserAnimationsModule,
-    BrowserModule,
     CommonModule,
     RouterModule,
     FlexLayoutModule,
