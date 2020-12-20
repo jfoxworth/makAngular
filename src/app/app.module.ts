@@ -42,6 +42,7 @@ import { metaReducers, reducers } from '../app/main/store/reducers';
 import { EntityDataModule } from '@ngrx/data';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { RouterState, StoreRouterConnectingModule } from '@ngrx/router-store';
+import { designImagesReducer } from '../app/main/store/reducers';
 
 
 @NgModule({
@@ -97,7 +98,8 @@ import { RouterState, StoreRouterConnectingModule } from '@ngrx/router-store';
 			stateKey: 'router',
 			routerState: RouterState.Minimal
 		}),
-		StoreModule.forRoot({}, {}),
+		//StoreModule.forRoot({}, {}),
+		StoreModule.forRoot({images:designImagesReducer }, {}),
 		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
 
 

@@ -168,7 +168,6 @@ export class ProjectsService
 	// Update
 	updateProject ( projectObj:makProject )
 	{
-    console.log(projectObj)
 		this.makProjectDataService.updateProject( projectObj )
 	}
 

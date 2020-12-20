@@ -106,13 +106,13 @@ export class makProjectDataService extends DefaultDataService<makProject> {
 	}
 
 	// Update
-	updateProject ( projectObj )
+	updateProject ( projectObj:makProject )
 	{
 		this.afs.collection('projects').doc( projectObj.id ).update( projectObj );
 	}
 
 	// Delete
-	deleteProject ( projectId )
+	deleteProject ( projectId:string )
 	{
 		this.afs.collection('projects').doc( projectId ).update( { 'deleted' : true } );
 	}
