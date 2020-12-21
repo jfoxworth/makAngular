@@ -85,7 +85,22 @@ export class DesignStudioComponent  {
 
   shapediverReturn$ : Observable<any>;
   shapedataReturn$ : Observable<any>;
-  private _unsubscribeAll: Subject<any>;
+	private _unsubscribeAll: Subject<any>;
+	
+	// This is because shapediver doesn't have a promise or observable
+	public shapeListen : Subject<any> = new Subject();
+	shapeListen$ = this.shapeListen.asObservable();
+	public shapeDataSub = this.shapeListen$.subscribe(data=>{
+		console.log('Got shape data, calling function');
+		this.formatShapeData(data)});
+
+
+	public modelListen : Subject<any> = new Subject();
+	modelListen$ = this.modelListen.asObservable();
+	public modelSub = this.modelListen$.subscribe(data=>{
+		console.log('Got model data, getting shape data');
+		this.shapeListen.next(this.shapediverApi.parameters.get());
+	});
 
 
 
@@ -110,6 +125,7 @@ export class DesignStudioComponent  {
 
 
 	ngOnInit() {
+
 
     this.subscribeToObservables();
 
@@ -393,26 +409,36 @@ export class DesignStudioComponent  {
 		//this.window = window;
 		//this.window.api = new SDVApp.ParametricViewer({
 		// @ts-ignore
-		this.shapediverApi = new SDVApp.ParametricViewer({
-		ticket: this.designData.shapediverTicket,
-		container : document.getElementById('modelDiv'),
-		modelViewUrl: 'eu-central-1', // or 'us-east-1' or address of your own ShapeDiver model view server
-		});
+		this.modelListen.next(
+			this.shapediverApi = new SDVApp.ParametricViewer({
+			ticket: this.designData.shapediverTicket,
+			container : document.getElementById('modelDiv'),
+			modelViewUrl: 'eu-central-1', // or 'us-east-1' or address of your own ShapeDiver model view server
+			})
+		)
 
-		console.log('Initialize Model called');
+	}
+
+
+	formatShapeData(thisData)
+	{
+		this.shapeData = thisData
+		console.log('Formate Shape data called');
 
 		console.log('The version data is ');
 		console.log(this.versionData);
 
 
 		// Wait a few seconds and then place the data from the call into the model
-		setTimeout( () => {
 
 			let paramChanges = [];
 			let isChanged = false;
 
 			// Pull the values from the shape diver ticket
-			this.shapeData = this.shapediverApi.parameters.get();
+//			this.shapeData = this.shapediverApi.parameters.get();
+//			this.shapeListen.next('test2');
+//			this.shapeListen.next(this.shapediverApi.parameters.get());
+			
 
 			// Set the version data
 			this.setVersionData( this.versionList[this.versionList.length-1] );
@@ -522,9 +548,6 @@ export class DesignStudioComponent  {
 				localStorage.setItem('makProject', JSON.stringify(this.projectData));
 				localStorage.setItem('makVersion', JSON.stringify(this.versionData));
 			}
-
-
-		 }, 4000);
 
 	}
 
