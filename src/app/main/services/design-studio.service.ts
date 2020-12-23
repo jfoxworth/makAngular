@@ -145,7 +145,8 @@ export class DesignStudioService
     switch ( studioType )
     {
       case 'studio':
-        return <makVersion>JSON.parse(JSON.stringify(this.VersionsService.blankVersion()))
+				return localVersion ? localVersion :
+        			 <makVersion>JSON.parse(JSON.stringify(this.VersionsService.blankVersion()))
 
 
       case "design":

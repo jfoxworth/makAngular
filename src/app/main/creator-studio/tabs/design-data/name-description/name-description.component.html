@@ -11,6 +11,7 @@
 			<input type="text"
 							class="form-control"
 							matInput
+							[value]="currentDesign.title"
 							formControlName="designTitle"
 							(blur)="saveNameChange($event)">
 	</mat-form-field>
@@ -39,6 +40,7 @@
 								matInput
 								class="form-control"
 								formControlName="designDesc"
+								[value]="currentDesign.description"
 								(blur)="saveDescChange($event)">
 		</textarea>
 	</mat-form-field>

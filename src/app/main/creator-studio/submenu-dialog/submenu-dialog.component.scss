@@ -3,7 +3,22 @@
 
 .submenu-dialog {
   width:600px;
-    .mat-dialog-container {
+
+
+  .mat-dialog-content {
+    padding:40px 0px 0px 0px;
+    width:80%;
+    margin:auto;    
+    }
+
+    .mat-dialog-actions {
+        padding:20px 20px 20px 20px;
+        width:100%;
+        margin:auto;
+        border-top:1px solid #ccc;
+    }
+
+  .mat-dialog-container {
         padding: 0;
 
         .compose-form {

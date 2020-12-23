@@ -3,6 +3,20 @@
 .parameter-dialog {
   width:600px;
 
+
+    .mat-dialog-content {
+        padding:40px;
+        width:100%;
+        margin:auto;
+    }
+
+    .mat-dialog-actions {
+        padding:20px 20px 20px 20px;
+        width:100%;
+        margin:auto;
+        border-top:1px solid #ccc;
+    }
+
     .mat-dialog-container {
         padding: 0;
         width:80%;
