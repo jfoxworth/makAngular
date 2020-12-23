@@ -6,7 +6,7 @@ import { UserService } from '../../../services/user.service';
 @Component({
   selector: 'mak-navbar-links',
   templateUrl: './navbar-links.component.html',
-  styleUrls: ['./navbar-links.component.scss']
+  styleUrls: ['./navbar-links.component.scss', '../../../commercial/comm-styles.scss']
 })
 export class NavbarLinksComponent implements OnInit {
 
@@ -14,6 +14,7 @@ export class NavbarLinksComponent implements OnInit {
 
   @Input() userData:UserData;
   @Input() isLoggedIn:boolean
+  @Input('route') route:string;
 
   constructor( private UserService : UserService) { }
 
@@ -23,6 +24,7 @@ export class NavbarLinksComponent implements OnInit {
     {
 
       this.navbarLinks = [
+/*
         {
           title: 'My Profile',
           icon : 'person',
@@ -33,6 +35,7 @@ export class NavbarLinksComponent implements OnInit {
           icon : 'email',
           url  : '/messages'
         },
+  */
         {
           title: 'Knowledge Base',
           icon : 'help_outline',
@@ -65,6 +68,7 @@ export class NavbarLinksComponent implements OnInit {
     }else if (this.isLoggedIn) {
 
       this.navbarLinks = [
+/*
         {
           title: 'My Profile',
           icon : 'person',
@@ -75,6 +79,7 @@ export class NavbarLinksComponent implements OnInit {
           icon : 'email',
           url  : '/messages'
         },
+*/
         {
           title: 'Knowledge Base',
           icon : 'help_outline',

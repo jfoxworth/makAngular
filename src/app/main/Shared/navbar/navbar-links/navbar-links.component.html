@@ -1,20 +1,18 @@
-<div fxLayout="row" fxLayoutAlign="start center">
+<div fxLayout="row" fxLayoutAlign="center center">
 
-  <div class="w-40 h-40 p-4"  fxLayoutAlign="center center"
-       *ngFor="let navLink of navbarLinks">
+  <div class="link-list"
+       fxLayoutAlign="center center">
 
-    <a mat-icon-button
-        matTooltip="{{navLink.title}}"
-        [routerLink]="navLink.url"
-        class="navLink">
 
-        <mat-icon class="secondary-text"
-                  *ngIf="navLink.icon">
-            {{navLink.icon}}
-        </mat-icon>
+    <div *ngFor="let navLink of navbarLinks" class="link-item"
+          [ngClass]="{'currentNav': route.match(navLink['url']), 'submenu': !route.match(navLink['url']) }">
+          <a [routerLink]="navLink['url']">{{navLink['title']}}</a>
 
-    </a>
+    </div>
 
   </div>
 
 </div>
+
+
+

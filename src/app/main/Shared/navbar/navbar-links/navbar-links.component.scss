@@ -2,3 +2,29 @@
   margin-left:10px;
   color:#333;
 }
+
+
+.link-list {
+  color : #000;
+  font-family:'Roboto';
+  font-weight:400;
+  font-size:0.8em;
+  letter-spacing: 1px;
+  margin-left:300px;
+  position:relative;
+}
+
+.link-list >a {
+  color:#000;
+}
+
+.link-item {
+  position:relative;
+  margin:0px 20px;
+  text-transform: uppercase;
+}
+
+.link-item >a {
+  color:#000;
+  text-decoration:none;
+}
