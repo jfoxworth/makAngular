@@ -12,10 +12,13 @@
 			<div class="">
 				<a [routerLink]="'/'" ><img class="logo-icon" src="assets/images/makTextBlackSmall.png"></a>
 			</div>
-		</div>
+    </div>
+    
+
+
 
     <!-- The navbar links for the design app -->
-    <div fxFlex="1 0 auto"
+    <div fxFlex="0 1 auto"
          fxLayout="row"
          fxLayoutAlign="start center"
          *ngIf="routeType=='design'">
@@ -28,23 +31,12 @@
 
 			<div class="px-8 px-md-16">
         <mak-navbar-links [userData]="userData"
+                          [route]="route"
                           [isLoggedIn]="(isLoggedIn$ | async)">
         </mak-navbar-links>
 			</div>
 
 		</div>
-
-    <!-- The dropdown on the right for the design app -->
-    <div class=""
-         fxFlex="0 1 auto"
-         fxLayout="row"
-         fxLayoutAlign="start center"
-         *ngIf="routeType=='design'">
-      <mak-navbar-dropdown [userData]="userData"
-                           [profileImage]="(profileImage$ | async)">
-      </mak-navbar-dropdown>
-		</div>
-
 
 
 
@@ -75,6 +67,21 @@
       </div>
     </div>
 
+
+
+
+    <!-- The dropdown on the right for the design app -->
+    <div class="w-200"
+         fxFlex="0 1 auto"
+         fxLayout="row"
+         fxLayoutAlign="start center"
+         *ngIf="routeType=='design'">
+      <mak-navbar-dropdown [userData]="userData"
+                           [profileImage]="(profileImage$ | async)">
+      </mak-navbar-dropdown>
+		</div>
+
+    <div *ngIf="routeType!='design'" class="w-200"></div>
 
   </div>
 
