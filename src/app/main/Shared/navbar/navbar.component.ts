@@ -41,15 +41,26 @@ import { NONE_TYPE } from '@angular/compiler';
         animate('0.5s')
       ])
     ]),
-    trigger('comm-design-links', [
+    trigger('comm-links', [
       state('comm', style({
-        display:'none',
+        margin:"30px 0px 0px 0px"
       })),
       state('design', style({
-        display:'flex',
+        margin:"10px 0px 0px 0px"
       })),
-      transition('comm => design', [
-        animate('0.5s')
+      transition('comm <=> design', [
+        animate('1s')
+      ])
+    ]),
+    trigger('comm-design-links', [
+      state('comm', style({
+        opacity:0,
+      })),
+      state('design', style({
+        opacity:1,
+      })),
+      transition('comm <=> design', [
+        animate('1s')
       ])
     ]),
     trigger('comm-design-drop', [
