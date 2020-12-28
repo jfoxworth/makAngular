@@ -20,6 +20,7 @@ import { isLoggedIn } from '../../store/selectors/auth.selectors';
 
 // animations
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { NONE_TYPE } from '@angular/compiler';
 
 
 
@@ -29,6 +30,17 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
   styleUrls: ['./navbar.component.scss'],
   animations:[
 
+    trigger('comm-design-bar', [
+      state('comm', style({
+        height:'80px',
+      })),
+      state('design', style({
+        height:'120px',
+      })),
+      transition('comm <=> design', [
+        animate('0.5s')
+      ])
+    ]),
     trigger('comm-design-links', [
       state('comm', style({
         display:'none',
@@ -38,8 +50,16 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
       })),
       transition('comm => design', [
         animate('0.5s')
-      ]),
-      transition('design => comm', [
+      ])
+    ]),
+    trigger('comm-design-drop', [
+      state('comm', style({
+        display:'none',
+      })),
+      state('design', style({
+        display:'flex',
+      })),
+      transition('comm => design', [
         animate('0.5s')
       ])
     ])
@@ -55,6 +75,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   userData      : UserData;
   private _unsubscribeAll: Subject<any>;
   routeType     : string;
+  displayAppNav : boolean = false;
 
   @Input('route') route:string;
 
@@ -71,6 +92,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
     // Get the nabar type
     this.routeType = this.NavbarService.setNavbarType(this.route);
+    this.displayAppNav = this.routeType == 'design' ? true : false;
 
     this.UserService.userObject
     .pipe(takeUntil(this._unsubscribeAll))
@@ -101,6 +123,28 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this._unsubscribeAll.next();
       this._unsubscribeAll.complete();
   }
+
+
+
+
+  navbarAnimationDone( event : AnimationEvent)
+  {
+    console.log('In the animation done');
+    console.log(event);
+    console.log((<AnimationEvent>event)['toState'] == 'design');
+    this.displayAppNav = (<AnimationEvent>event)['toState'] == 'design' ? true : false;
+  }
+
+
+
+  navbarAnimationStart( event : AnimationEvent)
+  {
+    console.log('In the animation start');
+    console.log(event);
+    console.log((<AnimationEvent>event)['toState'] == 'comm');
+    this.displayAppNav = (<AnimationEvent>event)['toState'] == 'comm' ? false : true;
+  }
+
 
 }
 

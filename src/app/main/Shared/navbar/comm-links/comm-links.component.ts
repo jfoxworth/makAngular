@@ -13,6 +13,7 @@ export class CommLinksComponent implements OnInit {
 
   ourWorkArray  : string[];
   productsArray : string[];
+  designArray   : string[];
 
   constructor() { }
 
@@ -20,6 +21,8 @@ export class CommLinksComponent implements OnInit {
 
     this.ourWorkArray  = [ '/ourWork', '/jacobwhite', '/arm', '/ramada', '/daikin', '/houstonsfirst' ];
     this.productsArray = [ '/products', '/walls', '/seating', '/desks', '/islands' ];
+    this.designArray   = [ '/marketplace', '/profile', '/designStudio', '/design-studio', '/creatorStudio', '/creator-studio', '/projects' ];
+
   }
 
 

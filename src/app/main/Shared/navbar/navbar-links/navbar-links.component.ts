@@ -35,12 +35,13 @@ export class NavbarLinksComponent implements OnInit {
           icon : 'email',
           url  : '/messages'
         },
-  */
+
         {
           title: 'Knowledge Base',
           icon : 'help_outline',
           url  : '/knowledge-base'
         },
+*/
         {
           title: 'My Projects',
           icon : 'today',
@@ -79,12 +80,13 @@ export class NavbarLinksComponent implements OnInit {
           icon : 'email',
           url  : '/messages'
         },
-*/
+
         {
           title: 'Knowledge Base',
           icon : 'help_outline',
           url  : '/knowledge-base'
         },
+*/
         {
           title: 'My Projects',
           icon : 'today',
@@ -107,11 +109,13 @@ export class NavbarLinksComponent implements OnInit {
     }else {
 
       this.navbarLinks = [
+/*
         {
           title: 'Knowledge Base',
           icon : 'help_outline',
           url  : '/knowledge-base'
         },
+*/
         {
           title: 'Design Studio',
           icon : 'color_lens',

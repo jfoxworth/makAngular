@@ -38,6 +38,12 @@
     <span>Inbox</span>
   </button>
 
+  <button mat-menu-item [routerLink]="'/knowledge-base'"
+          *ngIf="userData">
+    <mat-icon>help_outline</mat-icon>
+    <span>Knowledge Base</span>
+  </button>
+
   <button mat-menu-item class="" (click)="signOutUser()"
           *ngIf="userData">
     <mat-icon>exit_to_app</mat-icon>

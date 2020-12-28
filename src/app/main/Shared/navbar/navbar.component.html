@@ -1,7 +1,10 @@
 <mat-toolbar class="p-0 mat-elevation-z1 design-toolbar"
-             fxLayout="column">
+             fxLayout="column"
+             [@comm-design-bar]="routeType=='design' ? 'design' : 'comm'"
+             (@comm-design-bar.done)="navbarAnimationDone($event)"
+             (@comm-design-bar.start)="navbarAnimationStart($event)">
 
-	<div fxFlex fxFill fxLayout="row" fxLayoutAlign="space-around center" class="pl-20 pr-20">
+	<div fxFlex fxFill fxLayout="row" fxLayoutAlign="space-between center" class="pl-20 pr-20">
 
 
     <!-- The logo -->
@@ -13,60 +16,47 @@
 				<a [routerLink]="'/'" ><img class="logo-icon" src="assets/images/makTextBlackSmall.png"></a>
 			</div>
     </div>
-    
 
 
 
-    <!-- The navbar links for the design app -->
-    <div fxFlex="0 1 auto"
-         fxLayout="row"
-         fxLayoutAlign="start center"
-         *ngIf="routeType=='design'">
 
-			<button mat-icon-button class="navbar-toggle-button" fxHide.gt-md>
-				<mat-icon class="secondary-text">menu</mat-icon>
-			</button>
+    <div fxLayoutAlign="start center"
+         fxLayout="column">
 
-			<div class="toolbar-separator" fxHide.gt-md></div>
-
-			<div class="px-8 px-md-16">
-        <mak-navbar-links [userData]="userData"
-                          [route]="route"
-                          [isLoggedIn]="(isLoggedIn$ | async)">
-        </mak-navbar-links>
-			</div>
-
-		</div>
-
-
-
-    <!-- The nav links for the commercial app -->
-    <div class=""
-         fxFlex="0 1 auto"
-         fxLayout="row"
-         fxLayoutAlign="start center"
-         *ngIf="routeType=='comm'">
-      <mak-comm-links [route]="route"></mak-comm-links>
-
-      <div fxFlex="0 1 auto"
+        <!-- The nav links for the commercial app -->
+      <div class=""
+          fxFlex="0 1 auto"
           fxLayout="row"
-          fxLayoutAlign="start end"
-          *ngIf="routeType=='comm'"
-          class="navLink">
-
-        <a mat-icon-button
-          matTooltip="Go to the design app"
-          [routerLink]="'/marketplace'">
-
-          <mat-icon class="secondary-text">
-              palette
-          </mat-icon>
-
-        </a>
+          fxLayoutAlign="start center">
+        <mak-comm-links [route]="route"></mak-comm-links>
 
       </div>
-    </div>
 
+
+
+
+      <!-- The navbar links for the design app -->
+      <div fxFlex="0 1 auto"
+          fxLayout="row"
+          fxLayoutAlign="start center"
+          [@comm-design-links]="displayAppNav ? 'design' : 'comm'">
+
+        <button mat-icon-button class="navbar-toggle-button" fxHide.gt-md>
+          <mat-icon class="secondary-text">menu</mat-icon>
+        </button>
+
+        <div class="toolbar-separator" fxHide.gt-md></div>
+
+        <div class="px-8 px-md-16">
+          <mak-navbar-links [userData]="userData"
+                            [route]="route"
+                            [isLoggedIn]="(isLoggedIn$ | async)">
+          </mak-navbar-links>
+        </div>
+
+      </div>
+
+    </div>
 
 
 
@@ -75,8 +65,8 @@
          fxFlex="0 1 auto"
          fxLayout="row"
          fxLayoutAlign="start center"
-         *ngIf="routeType=='design'">
-      <mak-navbar-dropdown [userData]="userData"
+         [@comm-design-drop]="routeType=='design' ? 'design' : 'comm'">
+         <mak-navbar-dropdown [userData]="userData"
                            [profileImage]="(profileImage$ | async)">
       </mak-navbar-dropdown>
 		</div>
