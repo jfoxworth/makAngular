@@ -10,6 +10,7 @@
 import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogData } from '../../creator-studio/creator-studio.component';
+import { makDesign } from '../../models/makDesign';
 
 
 
@@ -21,6 +22,8 @@ import { DialogData } from '../../creator-studio/creator-studio.component';
 })
 export class SubmenuDialog implements OnInit {
 
+	copyDesign  : makDesign;
+
   constructor(
 	public dialogRef: MatDialogRef<SubmenuDialog>,
 	@Inject(MAT_DIALOG_DATA) public data: DialogData) {}
@@ -30,6 +33,9 @@ export class SubmenuDialog implements OnInit {
 	}
 
 	ngOnInit(): void {
+
+		this.copyDesign = JSON.parse(JSON.stringify(this.data.currentDesign));	
+
 	}
 
 }

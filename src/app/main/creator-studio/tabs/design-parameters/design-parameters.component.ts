@@ -35,7 +35,7 @@ export interface DialogData {
 @Component({
   selector: 'mak-design-parameters',
   templateUrl: './design-parameters.component.html',
-  styleUrls: ['./design-parameters.component.scss']
+  styleUrls: ['./design-parameters.component.scss', '../../parameter-dialog/parameter-dialog.component.scss']
 })
 export class DesignParametersComponent implements OnInit {
 
@@ -140,7 +140,8 @@ export class DesignParametersComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(result => {
 		  console.log('The dialog was closed');
-		  console.log(result);
+			console.log(result);
+			this.DesignsService.updateDesign( result );
 		});
 
 	}

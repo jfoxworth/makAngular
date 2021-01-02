@@ -7,8 +7,13 @@
 
 -->
 
-<div class="dialog-content-wrapper">
-  <mat-toolbar class="mat-accent m-0">
+
+
+
+<div class="dialog-content-wrapper" fxLayout="column" >
+
+  <!-- The tool bar at the top -->
+  <mat-toolbar class="mat-accent m-0 mb-20">
       <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
           <span class="title dialog-title">Edit Parameter</span>
           <button mat-icon-button (click)="dialogRef.close()" aria-label="Close dialog">
@@ -17,121 +22,121 @@
       </mat-toolbar-row>
   </mat-toolbar>
 
-  <div mat-dialog-content class="p-40 m-0"
+  <!-- The center column of the popup -->
+  <div mat-dialog-content
+     fusePerfectScrollbar
      fxLayout="column"
      fxFlex="100%">
 
 
+  
+    <!-- Items general to all parameters -->
+
+
     <!-- The label for the parameter -->
-  <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
-    <mat-label>Parameter Label</mat-label>
-    <input matInput placeholder="Parameter Label"
-         name="parameterLabel"
-         [(ngModel)]="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['label']"
-         required>
-  </mat-form-field>
+    <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+      <mat-label>Parameter Label</mat-label>
+      <input matInput 
+             placeholder="Parameter Label"
+             name="parameterLabel"
+             [(ngModel)]="copyDesign.parameterMenus[data.i]['parameters'][data.j]['label']">
+    </mat-form-field>
 
 
 
 
     <!-- The Shapediver name -->
-  <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
-    <mat-label>Shapediver Name</mat-label>
-    <input matInput placeholder="Shapediver Name"
-         name="shapediverLabel"
-         [(ngModel)]="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['shapediver']"
-         required>
-  </mat-form-field>
+    <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+      <mat-label>Shapediver Name</mat-label>
+      <input matInput placeholder="Shapediver Name"
+          name="shapediverLabel"
+          [(ngModel)]="copyDesign.parameterMenus[data.i]['parameters'][data.j]['shapediver']"
+          required>
+    </mat-form-field>
 
 
 
     <!-- The Shapediver id -->
-  <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
-    <mat-label>Shapediver ID</mat-label>
-    <input matInput placeholder="Shapediver ID"
-         name="shapediverId"
-         [(ngModel)]="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['shapediverId']"
-         required>
-  </mat-form-field>
+    <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+      <mat-label>Shapediver ID</mat-label>
+      <input matInput placeholder="Shapediver ID"
+          name="shapediverId"
+          [(ngModel)]="copyDesign.parameterMenus[data.i]['parameters'][data.j]['shapediverId']"
+          required>
+    </mat-form-field>
 
 
 
 
     <!-- The type of the parameter -->
-  <mat-form-field appearance="outline"
-          floatLabel="always"
-          class="w-100-p">
-    <mat-label>Parameter Type</mat-label>
-    <mat-select  [(ngModel)]="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['type']">
-    <mat-option *ngFor="let type of data.parameterTypes; index as x" [value]="type">
-      {{type}}
-    </mat-option>
-    </mat-select>
-  </mat-form-field>
+    <mat-form-field appearance="outline"
+            floatLabel="always"
+            class="w-100-p">
+      <mat-label>Parameter Type</mat-label>
+      <mat-select  [(ngModel)]="copyDesign.parameterMenus[data.i]['parameters'][data.j]['type']">
+      <mat-option *ngFor="let type of data.parameterTypes; index as x" [value]="type">
+        {{type}}
+      </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- / Entries for all items -->
 
 
 
+    <!-- Slider specific items -->
 
-    <!-- The Limits for the slider -->
-    <div *ngIf="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['type']=='slider'"
+    <!-- The Limits and step for the slider -->
+    <div *ngIf="copyDesign.parameterMenus[data.i]['parameters'][data.j]['type']=='slider'"
        fxFlex="100%" fxLayout="row">
 
       <div fxFlex="30%" style="margin:0px 0% 0px 0%">
-      <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
-        <mat-label>Lower Limit</mat-label>
-        <input matInput placeholder="Lower Limit"
-             name="sliderLow"
-             [(ngModel)]="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['min']"
-             required>
-      </mat-form-field>
-    </div>
+        <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+          <mat-label>Lower Limit</mat-label>
+          <input matInput placeholder="Lower Limit"
+              name="sliderLow"
+              [(ngModel)]="copyDesign.parameterMenus[data.i]['parameters'][data.j]['min']"
+              required>
+        </mat-form-field>
+      </div>
 
       <div fxFlex="30%" style="margin:0px 4% 0px 4%">
-      <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
-        <mat-label>Upper Limit</mat-label>
-        <input matInput placeholder="Lower Limit"
-             name="sliderLow"
-             [(ngModel)]="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['max']"
-             required>
-      </mat-form-field>
-    </div>
+        <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+          <mat-label>Upper Limit</mat-label>
+          <input matInput placeholder="Lower Limit"
+              name="sliderHigh"
+              [(ngModel)]="copyDesign.parameterMenus[data.i]['parameters'][data.j]['max']"
+              required>
+        </mat-form-field>
+      </div>
 
       <div fxFlex="30%" style="margin:0px 0% 0px 0%">
-      <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
-        <mat-label>Slider Step</mat-label>
-        <input matInput placeholder="Slider Step"
-             name="sliderStep"
-             [(ngModel)]="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['step']"
-             required>
-      </mat-form-field>
+        <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+          <mat-label>Slider Step</mat-label>
+          <input matInput placeholder="Slider Step"
+              name="sliderStep"
+              [(ngModel)]="copyDesign.parameterMenus[data.i]['parameters'][data.j]['step']"
+              required>
+        </mat-form-field>
+      </div>
     </div>
 
-  </div>
-
-    <div *ngIf="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['type']=='slider'"
-       fxFlex="100%" fxLayout="row"
-       class="mt-20 mb-40">
-
-      <div fxFlex="40%" style="margin:0px 5% 0px 15%">
-        <mat-slide-toggle class="md-primary"
+    <!-- The tick marks for the slider -->
+    <mat-slide-toggle class="md-primary"
                aria-label="Switch No Ink"
-               [checked]="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['showTicks'] === 'true' ? true : false"
-               (change)="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['showTicks']=!data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['showTicks']">
+               [checked]="copyDesign.parameterMenus[data.i]['parameters'][data.j]['showTicks'] === 'true' ? true : false"
+               (change)="copyDesign.parameterMenus[data.i]['parameters'][data.j]['showTicks']=!copyDesign.parameterMenus[data.i]['parameters'][data.j]['showTicks']">
           Show Tick Marks
-      </mat-slide-toggle>
-    </div>
+    </mat-slide-toggle>
 
-      <div fxFlex="40%" style="margin:0px 0% 0px 0%">
-        <mat-slide-toggle class="md-primary"
-               aria-label="Switch No Ink"
-               [checked]="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['showTicksValues'] === 'true' ? true : false"
-               (change)="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['showTicksValues']=!data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['showTicksValues']">
+    <mat-slide-toggle class="md-primary"
+            aria-label="Switch No Ink"
+            [checked]="copyDesign.parameterMenus[data.i]['parameters'][data.j]['showTicksValues'] === 'true' ? true : false"
+            (change)="copyDesign.parameterMenus[data.i]['parameters'][data.j]['showTicksValues']=!copyDesign.parameterMenus[data.i]['parameters'][data.j]['showTicksValues']">
           Show Tick Mark Values
-      </mat-slide-toggle>
-    </div>
+    </mat-slide-toggle>
 
-  </div>
-
+    <!-- / Slider specific items -->
 
 
 
@@ -146,140 +151,136 @@
 
 
 
+
+    <!-- Dropdown specific items -->
 
 
     <!-- The select options -->
-    <div *ngIf="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['type']=='dropdown'"
+    <div *ngIf="copyDesign.parameterMenus[data.i]['parameters'][data.j]['type']=='dropdown'"
        fxFlex="100%" fxLayout="column">
 
       <div class="text-center mb-40" fxFlex="100">
         <button mat-raised-button
             color="primary"
-            (click)="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['options'].push({'label':'New Option', 'value':'newOption'})">
+            (click)="copyDesign.parameterMenus[data.i]['parameters'][data.j]['options'].push({'label':'New Option', 'value':'newOption'})">
           Add Select Options
         </button>
       </div>
 
       <div fxFlex="100%"
-         *ngFor="let thisOption of data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['options']; index as x">
+         *ngFor="let thisOption of copyDesign.parameterMenus[data.i]['parameters'][data.j]['options']; index as x">
 
 
-      <mat-form-field appearance="outline"
-              floatLabel="always"
-              class="w-100-p"
-              fxFlex="45%"
-              fxLayout="row"
-              style="margin:0px 3% 0px 2%">
-        <mat-label>Label</mat-label>
-        <input matInput placeholder="Label"
-             [(ngModel)]="thisOption['label']"
-             required>
-        <span matSuffix><mat-icon (click)="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['options'].splice(x,1)">cancel</mat-icon></span>
-      </mat-form-field>
+        <mat-form-field appearance="outline"
+                floatLabel="always"
+                class="w-100-p"
+                fxFlex="45%"
+                fxLayout="row"
+                style="margin:0px 3% 0px 2%">
+          <mat-label>Label</mat-label>
+          <input matInput placeholder="Label"
+              [(ngModel)]="thisOption['label']"
+              required>
+          <span matSuffix><mat-icon (click)="copyDesign.parameterMenus[data.i]['parameters'][data.j]['options'].splice(x,1)">cancel</mat-icon></span>
+        </mat-form-field>
 
 
-      <mat-form-field appearance="outline"
-              floatLabel="always"
-              class="w-100-p"
-              fxFlex="45%"
-              fxLayout="row"
-              style="margin:0px 2% 0px 3%">
-        <mat-label>Value</mat-label>
-        <input matInput placeholder="Value"
-             [(ngModel)]="thisOption['value']"
-             required>
-        <span matSuffix><mat-icon (click)="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['options'].splice(x,1)">cancel</mat-icon></span>
-      </mat-form-field>
+        <mat-form-field appearance="outline"
+                floatLabel="always"
+                class="w-100-p"
+                fxFlex="45%"
+                fxLayout="row"
+                style="margin:0px 2% 0px 3%">
+          <mat-label>Value</mat-label>
+          <input matInput placeholder="Value"
+              [(ngModel)]="thisOption['value']"
+              required>
+          <span matSuffix><mat-icon (click)="copyDesign.parameterMenus[data.i]['parameters'][data.j]['options'].splice(x,1)">cancel</mat-icon></span>
+        </mat-form-field>
 
+      </div>
 
     </div>
 
-  </div>
 
 
 
+    <!-- Image select specific items -->
+    <div *ngIf="copyDesign.parameterMenus[data.i]['parameters'][data.j]['type']=='image select'"
+         fxFlex="100%" fxLayout="column">
+
+      <input class="ng-hide"
+          style="display:none"
+              id="uploadItem"
+          type="file"
+          accept=".png,.jpg,.jpeg,.gif"
+          (change)="uploadFile($event, copyDesign.parameterMenus[data.i]['parameters'][data.j]['id']);" >
+
+      <label for="uploadItem"
+          style="background-color:#456382; cursor:pointer;
+                border-radius:8px;
+                padding:10px; margin:10px 25% 0px 25%;
+                color: white;
+                width:50%"
+          color="primary"
+          class="md-button md-raised md-primary mb-28">
+        Upload Image
+      </label>
 
 
-    <!-- The image select options -->
-    <div *ngIf="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['type']=='image select'"
-       fxFlex="100%" fxLayout="column">
+      <div layout="row" fxFlex="100" fxLayoutAlign="center center">
+        <div fxFlex="30"></div>
+        <div fxFlex="30">Label</div>
+        <div fxFlex="30">Value</div>
+      </div>
 
-    <input class="ng-hide"
-         style="display:none"
-            id="uploadItem"
-         type="file"
-         accept=".png,.jpg,.jpeg,.gif"
-         (change)="uploadFile($event, data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['id']);" >
+      <div *ngFor="let thisImage of copyDesign.parameterMenus[data.i]['parameters'][data.j]['images']; index as p "
+        fxLayoutAlign="center center"
+        fxLayout="row"
+        class="mt-12 mb-20">
 
-    <label for="uploadItem"
-         style="background-color:#456382; cursor:pointer;
-               border-radius:8px;
-               padding:10px; margin:10px 25% 0px 25%;
-               color: white;
-               width:50%"
-         color="primary"
-         class="md-button md-raised md-primary mb-28">
-      Upload Image
-    </label>
-
-
-    <div layout="row" fxFlex="100" fxLayoutAlign="center center">
-      <div fxFlex="30"></div>
-      <div fxFlex="30">Label</div>
-      <div fxFlex="30">Value</div>
-    </div>
-
-    <div *ngFor="let thisImage of data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['images']; index as p "
-       fxLayoutAlign="center center"
-       fxLayout="row"
-       class="mt-12 mb-20">
-
-      <div fxFlex="35"
-         fxLayout="center">
-        <div style="height:50px; width:50px">
-          <img width="50" [src]="(data.parameterUrls[data.i]['parameters'][data.j]['images'][p]['imageUrl'] | async)">
+        <div fxFlex="35"
+          fxLayout="center">
+          <div style="height:50px; width:50px">
+            <img width="50" [src]="(data.parameterUrls[data.i]['parameters'][data.j]['images'][p]['imageUrl'] | async)">
+          </div>
         </div>
-      </div>
 
 
-      <div fxFlex="30">
-        <input matInput placeholder=""
-             type="text"
-             name=""
-             [(ngModel)]="thisImage.label">
-      </div>
+        <div fxFlex="30">
+          <input matInput placeholder=""
+              type="text"
+              name=""
+              [(ngModel)]="thisImage.label">
+        </div>
 
-      <div fxFlex="30">
-        <input matInput placeholder=""
-             type="text"
-             name=""
-             [(ngModel)]="thisImage.value">
-      </div>
+        <div fxFlex="30">
+          <input matInput placeholder=""
+              type="text"
+              name=""
+              [(ngModel)]="thisImage.value">
+        </div>
 
-      <div fxFlex="5">
-        <mat-icon class="text-center"
-              (click)="data.currentDesign.parameterMenus[data.i]['parameters'][data.j]['images'].splice(p,1)">
-          cancel
-        </mat-icon>
+        <div fxFlex="5">
+          <mat-icon class="text-center"
+                (click)="copyDesign.parameterMenus[data.i]['parameters'][data.j]['images'].splice(p,1)">
+            cancel
+          </mat-icon>
+        </div>
+
       </div>
 
     </div>
 
-  </div>
-
-
-
 
   </div>
 
 
-
-
-  <div mat-dialog-actions class="m-0 p-20" fxLayout="row" fxLayoutAlign="space-between center">
+  <div mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="space-between center">
       <div>
           <button mat-raised-button
                   color="accent"
-                  (click)="dialogRef.close(data.currentDesign)"
+                  (click)="dialogRef.close(copyDesign)"
                   class="save-button"
                   aria-label="Save Changes">
               SAVE CHANGES
@@ -293,4 +294,5 @@
           <mat-icon>delete</mat-icon>
       </button>
   </div>
+
 </div>
