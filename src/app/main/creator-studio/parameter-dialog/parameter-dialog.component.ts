@@ -6,8 +6,11 @@
 *	This is the controller for the parameter dialog. The data for the view
 *	comes from the main controller for the creator studio. The design is
 *	altered from here, but no call is made to the server to update the
-* 	data. The user must press the button for that.
-*
+* data. The user must press the button for that.
+*	Because of this, instead of reactive form validation and calls to the
+* update design function, I used template validation and work on a copy 
+* of the design object. If the user chooses to save the changes, that 
+* copy is sent back to the main function to be saved as the new one.
 *
 */
 
@@ -22,9 +25,18 @@ import { finalize } from 'rxjs/operators';
 
 // Services
 import { CreatorStudioService } from '../../services/creator-studio.service';
+import { DesignsService } from '../../services/designs.service';
 
 // Firebase items
 import { AngularFireStorage } from '@angular/fire/storage';
+
+
+// Models
+import { makDesign } from '../../models/makDesign';
+
+// Form Items
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { NameCheckValidators } from 'src/app/main/Common/Validators/namecheck.validators';
 
 
 
@@ -36,11 +48,14 @@ import { AngularFireStorage } from '@angular/fire/storage';
 })
 export class editParameterDialog implements OnInit {
 
+	copyDesign  : makDesign;
+
 	constructor(
 		private CreatorStudioService 	: CreatorStudioService,
 		private afStorage 				    : AngularFireStorage,
 		public dialogRef 				      : MatDialogRef<editParameterDialog>,
-		@Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+		@Inject(MAT_DIALOG_DATA) public data: DialogData) {
+		}
 
 
 	onNoClick(): void {
@@ -48,6 +63,8 @@ export class editParameterDialog implements OnInit {
 	}
 
 	ngOnInit(): void {
+
+		this.copyDesign = JSON.parse(JSON.stringify(this.data.currentDesign));	
 	}
 
 
@@ -102,9 +119,6 @@ export class editParameterDialog implements OnInit {
     	.subscribe()
 
 	}
-
-
-
 
 
 

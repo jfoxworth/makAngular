@@ -22,7 +22,7 @@ export class ProjectDataComponent implements OnInit {
 
 
   dataform : FormGroup;
-  
+
  
   get name(){
     return this.dataform.get('projectName');

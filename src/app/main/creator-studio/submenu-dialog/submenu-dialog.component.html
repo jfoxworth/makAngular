@@ -6,45 +6,47 @@
 
 -->
 
-<div class="dialog-content-wrapper">
-
-	<div class="dialog-content">
-
-	    <mat-toolbar class="mat-accent m-0">
-	        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
-	            <span class="title dialog-title">Edit Submenu</span>
-	            <button mat-icon-button (click)="dialogRef.close()" aria-label="Close dialog">
-	                <mat-icon>close</mat-icon>
-	            </button>
-	        </mat-toolbar-row>
-	    </mat-toolbar>
+<div class="dialog-content-wrapper" fxLayout="column" >
 
 
+	<!-- The tool bar at the top -->
+	<mat-toolbar class="mat-accent m-0">
+			<mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+					<span class="title dialog-title">Edit Submenu</span>
+					<button mat-icon-button (click)="dialogRef.close()" aria-label="Close dialog">
+							<mat-icon>close</mat-icon>
+					</button>
+			</mat-toolbar-row>
+	</mat-toolbar>
 
 
-	    <!-- The shape diver label -->
-	    <div mat-dialog-content class="p-25 m-0">
-			<mat-form-field appearance="outline" floatLabel="always" class="w-80-p">
+  <!-- The center column of the popup -->
+  <div mat-dialog-content
+    	 fusePerfectScrollbar
+       fxLayout="column"
+       fxFlex="100%">
+
+
+
+		<!-- The label for this submenu -->
+			<mat-form-field appearance="outline" >
 				<mat-label>Submenu Label</mat-label>
 				<input matInput placeholder="Submenu Label"
-					   name="submenuLabel"
-					   [(ngModel)]="data.currentDesign.parameterMenus[data.i]['label']"
-					   required>
+						name="submenuLabel"
+						[(ngModel)]="copyDesign.parameterMenus[data.i]['label']"
+						required>
 			</mat-form-field>
-	    </div>
-
-
 
 
 		<!-- The Icon for the submenu -->
-		<div style="max-height=200px">
+		<div>
 			<h3 class="text-center">Icon for submenu</h3>
 		    <mat-grid-list cols="6" rowHeight="45px">
 		    	<mat-grid-tile
 		        	*ngFor="let icon of data.iconOptions; index as x"
 		        	[colspan]="1"
 		        	[rowspan]="1"
-		        	(click)="data.currentDesign.parameterMenus[data.i]['icon']=icon" >
+		        	(click)="copyDesign.parameterMenus[data.i]['icon']=icon" >
 		        	<mat-icon>{{icon}}</mat-icon>
 		    	</mat-grid-tile>
 		    </mat-grid-list>
@@ -52,23 +54,24 @@
 
 	</div>
 
-    <div mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="space-between center">
-        <div>
-            <button mat-raised-button
-                    color="accent"
-                    (click)="dialogRef.close(data.currentDesign)"
-                    class="save-button"
-                    aria-label="Save Changes">
-                SAVE CHANGES
-            </button>
+	<div mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="space-between center">
 
-        </div>
+		<div>
+			<button mat-raised-button
+							color="accent"
+							(click)="dialogRef.close(copyDesign)"
+							class="save-button"
+							aria-label="Save Changes">
+					SAVE CHANGES
+			</button>
+		</div>
 
-        <button mat-icon-button (click)="dialogRef.close()"
-                aria-label="Cancel"
-                matTooltip="Cancel">
-            <mat-icon>delete</mat-icon>
-        </button>
-    </div>
+		<button mat-icon-button (click)="dialogRef.close()"
+						aria-label="Cancel"
+						matTooltip="Cancel">
+				<mat-icon>delete</mat-icon>
+		</button>
+
+	</div>
 
 </div>
