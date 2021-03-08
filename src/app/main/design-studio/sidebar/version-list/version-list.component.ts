@@ -24,10 +24,10 @@ export class VersionListComponent implements OnInit {
   @Input('versionList') versionList:makVersion[];
   @Input('projectData') projectData:makProject;
   @Input('designData') designData:makDesign;
+  @Input('versionData') versionData:makVersion;
 	@Output() setVersionData = new EventEmitter();
 
 
-  versionData:makVersion;
   editableVersion:boolean=false;
 
   constructor( private VersionsService 			: VersionsService ) { }

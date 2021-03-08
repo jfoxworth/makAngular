@@ -31,7 +31,8 @@ export class CategoryComponent implements OnInit {
 	// Update
 	saveCatChange( event )
 	{
-		this.updateDesign.emit( {...this.currentDesign, 'category':event.target.value} );
+    console.log( event.value );
+		this.updateDesign.emit( {...this.currentDesign, 'category':event.value} );
   }
 
 

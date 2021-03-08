@@ -66,6 +66,7 @@ export class MakDesignsResolver implements Resolve<boolean> {
 							let mainImage = [];
 							for (var a=0; a<makDesigns.length; a++)
 							{
+								//console.log('Design - '+makDesigns[a]['id']);
 								for (var b=0; b<makDesigns[a].marketplace.images.length; b++)
 								{
 									const myRef = this.afStorage.ref(makDesigns[a].marketplace.images[b]['path']);
@@ -79,6 +80,7 @@ export class MakDesignsResolver implements Resolve<boolean> {
 										mainImage.push(false);
 									}
 								}
+								//console.log(makDesigns[a].marketplace.images);
 							}
 
 							forkJoin(images$).subscribe(results => {

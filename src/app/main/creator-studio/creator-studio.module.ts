@@ -33,6 +33,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCarouselModule } from '@ngmodule/material-carousel';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+
 
 // NgRx Items
 import { EntityDataService, EntityDefinitionService, EntityMetadataMap } from '@ngrx/data';
@@ -43,6 +45,7 @@ import { StoreModule } from '@ngrx/store';
 import { NavbarModule } from '../Shared/navbar/navbar.module';
 import { TitleBannerModule } from '../Shared/title-banner/title-banner.module';
 import { MarketplaceModule } from '../marketplace/marketplace.module';
+import { DesignStudioModule } from '../design-studio/design-studio.module';
 
 // New ng5 slider
 import { Ng5SliderModule } from 'ng5-slider';
@@ -90,10 +93,14 @@ import { ImageComponent } from './tabs/design-parameters/image/image.component';
 import { ToggleComponent } from './tabs/design-parameters/toggle/toggle.component';
 import { BlocComponent } from './tabs/design-parameters/bloc/bloc.component';
 import { UploadComponent } from './tabs/design-parameters/upload/upload.component';
+import { ExplodeParametersComponent } from './tabs/explode-parameters/explode-parameters.component';
+
 
 // Guards
 import { AuthGuard } from '../guards/auth.guard';
 import { DesignerGuard } from '../guards/designer.guard';
+import { ParameterComponent } from './tabs/explode-parameters/parameter/parameter.component';
+import { ImageSelectComponent } from './tabs/explode-parameters/image-select/image-select.component';
 
 
 
@@ -149,7 +156,11 @@ const routes : Routes = [
         ImageComponent,
         ToggleComponent,
         BlocComponent,
-        UploadComponent
+        UploadComponent,
+        ExplodeParametersComponent,
+        ParameterComponent,
+        ImageSelectComponent,
+
     ],
     imports : [
         RouterModule.forChild(routes),
@@ -163,8 +174,10 @@ const routes : Routes = [
         NavbarModule,
         TitleBannerModule,
         MarketplaceModule,
+        DesignStudioModule,
 
         MatButtonModule,
+        MatButtonToggleModule,
         MatChipsModule,
         MatExpansionModule,
         MatFormFieldModule,
@@ -194,6 +207,7 @@ const routes : Routes = [
 
         Ng5SliderModule,
 
+
         //ColorPickerModule,
 
 
@@ -208,6 +222,9 @@ const routes : Routes = [
         SignoffReqsResolver,
         AuthGuard,
         DesignerGuard,
+    ],
+    exports : [
+        
     ]
 })
 export class CreatorStudioModule

@@ -42,7 +42,10 @@ export class NameDescriptionComponent implements OnInit {
   
       'designDesc' : new FormControl(this.currentDesign.description, [Validators.required, 
                                                                       Validators.minLength(25),
-                                                                      NameCheckValidators.cannotContainSomeSpecialChars])
+                                                                      NameCheckValidators.cannotContainSomeSpecialChars]),
+
+      'defaultDisplay' : new FormControl(this.currentDesign.menuDisplayType, [Validators.required ])
+  
     });
 
   }
@@ -50,14 +53,20 @@ export class NameDescriptionComponent implements OnInit {
 
 	saveNameChange( event:FocusEvent )
 	{
-    this.dataform.controls.projectName.status=="VALID" ? 
+    this.dataform.controls.designTitle.status=="VALID" ? 
       this.updateDesign.emit( {...this.currentDesign, 'title':(<HTMLInputElement>event.target).value} ) : '';
   }
 
 	saveDescChange( event:FocusEvent )
 	{
-    this.dataform.controls.projectName.status=="VALID" ? 
+    this.dataform.controls.designDesc.status=="VALID" ? 
       this.updateDesign.emit( {...this.currentDesign, 'description':(<HTMLInputElement>event.target).value} ) : '';
+  }
+
+
+  saveDefaultDisplayChange( event )
+	{
+    this.updateDesign.emit( {...this.currentDesign, 'menuDisplayType':event.value} );
   }
 
 }

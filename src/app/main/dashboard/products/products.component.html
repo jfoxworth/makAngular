@@ -1,0 +1,49 @@
+
+<div class="des-header">Featured Products</div>
+
+<div class="des-row">
+
+  <ng-container *ngFor="let des of makDesigns">
+
+    <div *ngIf="des.featured" class="des-item-wrapper">
+
+    <div *ngIf="des.featured"
+        class="des-item"
+        [style.backgroundImage]="'url('+ theseImages[des.id] +')'"
+        [style.background-size]="'cover'" >
+    </div>
+
+
+    <div fxLayout="row" 
+         *ngIf="des.featured"
+         class="des-row">
+
+      <div class="des-icon-section">
+
+        <mat-icon class="des-icon">
+          favorite_bordered
+        </mat-icon>
+
+        <div class="des-icon-text">Save for Later</div>
+
+      </div>  
+
+      <div class="des-icon-section">
+
+        <mat-icon class="des-icon">
+          add_circle_outline
+        </mat-icon>
+
+        <div class="des-icon-text">Create Project</div>
+
+      </div>  
+
+    </div>
+  </div>
+
+  </ng-container>
+
+
+</div>
+
+

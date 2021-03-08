@@ -26,7 +26,6 @@ export class DesignerGuard implements CanActivate {
                   .pipe(
                     select(checkDesignerStatus),
                     tap(isDesigner => {
-                      console.log(isDesigner);
                     })
                   )
 

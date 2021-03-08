@@ -17,7 +17,7 @@ export class NavbarService {
 
 	// -----------------------------------------------------------------------------------------------------
 	//
-	// @ FUNCTIONS FOR THE NAVBAE
+	// @ FUNCTIONS FOR THE NAVBAR
 	//
 	// -----------------------------------------------------------------------------------------------------
 
@@ -33,10 +33,9 @@ export class NavbarService {
   setNavbarType( url:string ):string
   {
     url = url.split('/')[1];
-    console.log(url);
     if ( url===undefined ){ return 'comm'; }
-    let navUrl =  [ '', 'ourWork', 'products', 'services', 'aboutUs', 'contact', 'profile', 'messages', 'knowledge-base', 'projects', 'designStudio', 'marketplace', 'creatorStudio', 'invoice', 'walls', 'seating', 'desks', 'islands', 'arm', 'daikin', 'ramada', 'houstonsfirst', 'jacobwhite' ];
-    let navType = ['comm', 'comm', 'comm', 'comm', 'comm', 'comm', 'design', 'design', 'design', 'design', 'design', 'design', 'design', 'design', 'comm', 'comm', 'comm', 'comm', 'comm', 'comm', 'comm', 'comm', 'comm' ];
+    let navUrl =  [ '', 'ourWork', 'products', 'services', 'aboutUs', 'contact', 'profile', 'messages', 'knowledge-base', 'projects', 'designStudio', 'marketplace', 'creatorStudio', 'invoice', 'walls', 'seating', 'desks', 'islands', 'arm', 'daikin', 'ramada', 'houstonsfirst', 'jacobwhite', 'dashboard' ];
+    let navType = ['comm', 'comm', 'comm', 'comm', 'comm', 'comm', 'design', 'design', 'design', 'design', 'design', 'design', 'design', 'design', 'comm', 'comm', 'comm', 'comm', 'comm', 'comm', 'comm', 'comm', 'comm', 'design' ];
     return navType[navUrl.indexOf(url)]
 
   }
@@ -46,8 +45,8 @@ export class NavbarService {
   {
     url = url.split('/')[1];
     if ( url===undefined ){ return false; }
-    let navUrl =  [ '', 'ourWork', 'products', 'services', 'aboutUs', 'contact', 'projects', 'knowledge-base', 'messages', 'profile', 'marketplace', 'designStudio', 'creatorStudio', 'invoice' ];
-    let navType = [ false, false, false, false, false, false, true, true, true, false, true, true, true, true ];
+    let navUrl =  [ '', 'ourWork', 'products', 'services', 'aboutUs', 'contact', 'projects', 'knowledge-base', 'messages', 'profile', 'marketplace', 'designStudio', 'creatorStudio', 'invoice', 'dashboard' ];
+    let navType = [ false, false, false, false, false, false, true, true, true, false, true, true, true, true, true ];
     return navType[navUrl.indexOf(url)]
   }
 
@@ -57,8 +56,8 @@ export class NavbarService {
   {
     url = url.split('/')[1];
     if ( url===undefined ){ return '' }
-    let navUrl =  [ '', 'ourWork', 'products', 'services', 'aboutUs', 'contact', 'projects', 'knowledge-base', 'messages', 'profile', 'marketplace', 'designStudio', 'creatorStudio', 'invoice' ];
-    let navType = [ '', '', '', '', '', '', 'My Projects', 'Knowledge Base', 'Messages', '', 'The Marketplace', 'Design Studio', 'Creator Studio', 'Invoice' ];
+    let navUrl =  [ '', 'ourWork', 'products', 'services', 'aboutUs', 'contact', 'projects', 'knowledge-base', 'messages', 'profile', 'marketplace', 'designStudio', 'creatorStudio', 'invoice', 'dashboard' ];
+    let navType = [ '', '', '', '', '', '', 'My Projects', 'Knowledge Base', 'Messages', '', 'The Marketplace', 'Design Studio', 'Creator Studio', 'Invoice', 'Dashboard' ];
     return navType[navUrl.indexOf(url)]
   }
 

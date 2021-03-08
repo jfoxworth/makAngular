@@ -28,7 +28,8 @@ export class StatusComponent implements OnInit {
   // Update
 	saveStatusChange( event )
 	{
-		this.updateDesign.emit( {...this.currentDesign, 'status':event.target.value } );
+    console.log(event);
+		this.updateDesign.emit( {...this.currentDesign, 'status':event.value } );
 	}
 
 

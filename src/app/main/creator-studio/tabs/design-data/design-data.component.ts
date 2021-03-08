@@ -17,6 +17,7 @@ export class DesignDataComponent implements OnInit {
   constructor( private DesignsService : DesignsService ) { }
 
   ngOnInit(): void {
+    console.log(this.currentDesign);
   }
 
 

@@ -1,25 +1,23 @@
-<div class="w-140">
+<div class="">
   <div style="padding:5px 0px;"
-     class="text-center primary-900 w-120 mb-20 mt-12">
-    {{versionData['price']}}
+     class="text-center primary-900 mb-20 mt-12">
+    Cost - ${{designData['initialPrice']}}
   </div>
 </div>
 
-<div class="w-140 mb-40"
+<div class=""
   *ngIf="userData === undefined">
-  <div style="margin-top:10px; padding:5px 0px; color:#CCC"
-     class="text-center primary-A100 w-120 mt-20 mb-20 heading-2"
+  <div class="project-button"
      [routerLink]="'/login'">
     Log In to Create Project
   </div>
 </div>
 
 
-<div class="w-140 mb-40"
+<div class="mb-40"
    *ngIf="userData !== undefined">
-  <div style="margin-top:10px; padding:5px 0px; color:#CCC; cursor:pointer"
-     class="text-center primary-A100 w-120 mt-20 mb-20 heading-2"
-     (click)=addMyProject()>
+  <div class="project-button"
+       (click)=addMyProject()>
     Create Project with this Design
   </div>
 </div>

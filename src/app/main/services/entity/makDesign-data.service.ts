@@ -59,7 +59,7 @@ export class makDesignDataService extends DefaultDataService<makDesign> {
 
         var userData = JSON.parse(localStorage.getItem('UserData'));
 
-		let designObj = {
+		let designObj : makDesign={
 			'id'				 : '',
 			'title'			 : 'Design Title',
 			'dateCreated'		: Date.now(),
@@ -81,12 +81,21 @@ export class makDesignDataService extends DefaultDataService<makDesign> {
 			'priceStatus'		: false,
 			'priceValid'		: false,
 			'shapediverTicket'	: '',
-			'status'			: 0,
+			'status'			: '0',
 			'parameterMenus'	: [],
+			'explodeMenus'			: [],
+			'menuDisplayType' 	: 'hex',
+			'designType' 				: 'shapediver',
 			'signoffRequired'	: false,
-			'deleted'			: false
-		}
+			'deleted'			: false,
 
+			'imageOptions' : [],
+			'imageSelection' : [],
+			'defaultImage' : {'path':'', 'download':'' },
+
+			'featured' : false
+		};
+	
 		var docRef = this.afs.collection('designs').add( designObj )
 		.then((docRef) => {
 
@@ -95,7 +104,6 @@ export class makDesignDataService extends DefaultDataService<makDesign> {
 
 
 	}
-
 
 
 

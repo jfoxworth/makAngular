@@ -30,12 +30,14 @@ import { DesignStudioComponent } from './main/design-studio/design-studio.compon
 import { ChatComponent } from './main/chat/chat.component';
 import { InvoiceModernComponent } from './main/invoices/modern/modern.component';
 import { CreatorStudioComponent } from './main/creator-studio/creator-studio.component';
+import { DashboardComponent } from './main/dashboard/dashboard.component';
 
 // The resolvers
 import { MakDesignsResolver } from './main/resolvers/makDesigns.resolver';
 import { SignoffReqsResolver } from './main/resolvers/signoffReqs.resolver';
 import { MakProjectsResolver } from './main/resolvers/makProjects.resolver';
 import { MakVersionsResolver } from './main/resolvers/makVersions.resolver';
+import { MakAnnouncementsResolver } from './main/resolvers/makAnnouncements.resolver';
 
 // Guards
 import { AuthGuard } from './main/guards/auth.guard';
@@ -59,6 +61,7 @@ const routes: Routes = [
   { path : 'ramada', component:RamadaComponent },
   { path : 'houstonsfirst', component:HoustonsFirstComponent },
   { path : 'jacobwhite', component:JacobwhiteComponent },
+
 
 
   { path : 'login', component:LoginComponent },
@@ -166,6 +169,16 @@ const routes: Routes = [
         makDesign: MakDesignsResolver
     },
     loadChildren:'./main/design-studio/design-studio.module#DesignStudioModule'
+  },
+  {
+    path     : 'dashboard',
+    component: DashboardComponent,
+    resolve: {
+      makAnnouncement: MakAnnouncementsResolver,
+      makDesign: MakDesignsResolver,
+      makProject: MakProjectsResolver
+},
+  loadChildren:'./main/dashboard/dashboard.module#DashboardModule'
   }
 ];
 

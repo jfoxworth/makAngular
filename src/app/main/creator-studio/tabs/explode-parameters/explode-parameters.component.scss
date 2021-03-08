@@ -1,0 +1,28 @@
+.optionArea {
+
+  max-width:1000px;
+  width:1000px;
+  margin:auto;
+
+  .optionList{
+
+    width:500px;
+    margin:auto;
+    border-top:1px solid #ccc;
+    border-right:1px solid #ccc;
+
+    .optionItem {
+      border-bottom:1px solid #ccc;
+      padding:20px 10px;
+
+      .optionField {
+        width:175px;
+        margin-left:10px;
+        margin-right:10px;
+
+      }
+
+    }
+
+  }
+}

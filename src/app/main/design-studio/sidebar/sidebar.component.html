@@ -57,11 +57,13 @@
 			<div *ngIf="valItem['type']=='makProjectVersions'"
 					 fxLayoutAlign="center center"
 				 	 fxLayout="column"
-						fxFlex="100">
+					 fxFlex="100">
 				<mak-version-list [versionList]="versionList"
 													[projectData]="projectData"
 													[designData]="designData"
-													(setVersionData)="setVersionData.emit($event)">
+													[versionData]="versionData"
+													(setVersionData)="setVersionData.emit($event)"
+													style="width:100%">
 				</mak-version-list>
 			</div>
 

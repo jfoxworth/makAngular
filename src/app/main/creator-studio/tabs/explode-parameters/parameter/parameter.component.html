@@ -1,0 +1,202 @@
+
+
+<div fxLayout="column">
+
+  <form [formGroup]="paramform"
+        (keydown.enter)="$event.preventDefault()" >
+
+    <div fxLayout="row"
+        fxLayoutAlign="space-around center">
+
+      <div>
+        <button mat-icon-button (click)="deleteSelection(pindex)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+
+
+      <!-- THE PARAMETER TITLE -->
+      <mat-form-field appearance="outline"
+                      floatLabel="always"
+                      class="optionField">
+          <mat-label>Title</mat-label>
+          <input type="text"
+                  class="form-control"
+                  matInput
+                  [value]="parameter.label"
+                  formControlName="title"
+                  (blur)="saveTitleChange($event)"
+                  (keypress.enter)="saveTitleChange($event)" >
+      </mat-form-field>
+
+      <!-- THE PARAMETER SUBTITLE -->
+      <mat-form-field appearance="outline"
+                      floatLabel="always"
+                      class="optionField">
+          <mat-label>Subtitle</mat-label>
+          <input type="text"
+                  class="form-control"
+                  matInput
+                  [value]="parameter.value"
+                  formControlName="subtitle"
+                  (blur)="saveSubtitleChange($event)"
+                  (keypress.enter)="saveSubtitleChange($event)"  >
+      </mat-form-field>
+
+    </div>
+
+
+    <div fxLayout="row"
+      fxLayoutAlign="space-around center">
+
+      <!-- The option type -->
+      <mat-button-toggle-group [value]="parameter['type']" 
+                              class="ml-10"
+                              formControlName="type"
+                              (change)="saveTypeChange($event, pindex)">
+        <mat-button-toggle value="button">Button</mat-button-toggle>
+        <mat-button-toggle value="image">Image</mat-button-toggle>
+      </mat-button-toggle-group>
+
+      <!-- Whether or not this item affects the image displayed -->
+      <mat-button-toggle-group [value]="parameter['affIm']" 
+                              class="ml-10"
+                              formControlName="affIm"
+                              (change)="saveAffImChange($event, pindex)">
+        <mat-button-toggle value="true">Affects Images</mat-button-toggle>
+        <mat-button-toggle value="false">Does Not</mat-button-toggle>
+      </mat-button-toggle-group>
+
+      <div *ngIf="parameter['type']=='button'"
+        class="ml-20">
+        <button mat-icon-button (click)="addButtonOption(pindex)">
+          <mat-icon>add_circle</mat-icon>
+        </button>
+      </div>
+
+      <div *ngIf="parameter['type']=='image'"
+          class="ml-20">
+        <button mat-icon-button (click)="addImageOption(pindex)">
+          <mat-icon>add_circle</mat-icon>
+        </button>
+      </div>
+      
+    </div>
+
+
+    <!-- The name and value options for the button selections -->
+    <div fxLayout="column"
+        *ngIf="parameter['type']=='button'">
+
+      <div class="mt-20 mb-20">Buttons</div>
+
+      <div *ngFor="let option of parameter['options'] index as j">
+
+        <div fxLayout="row"
+             fxLayoutAlign="space-around center"
+             class="ml-40">
+
+          <div>
+            <button mat-icon-button (click)="deleteOption(pindex, j)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+      
+          <!-- THE PARAMETER LABEL -->
+          <mat-form-field appearance="outline"
+                          floatLabel="always"
+                          class="optionField">
+              <mat-label>Label</mat-label>
+              <input type="text"
+                      class="form-control"
+                      matInput
+                      [value]="option.label"
+                      (blur)="saveOptionLabelChange($event, j, option.type)"
+                      (keypress.enter)="saveOptionLabelChange($event, j, option.type)"  >
+          </mat-form-field>
+
+          <!-- THE PARAMETER VALUE -->
+          <mat-form-field appearance="outline"
+                          floatLabel="always"
+                          class="optionField">
+              <mat-label>Value</mat-label>
+              <input type="text"
+                      class="form-control"
+                      matInput
+                      [value]="option.value"
+                      (blur)="saveOptionValueChange($event, j, option.type)"
+                      (keypress.enter)="saveOptionValueChange($event, j, option.type)"  >
+          </mat-form-field>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- The name and value options for the image selections -->
+    <div fxLayout="column"
+        *ngIf="parameter['type']=='image'">
+
+      <div class="mt-20 mb-20">Images</div>
+
+      <div *ngFor="let option of parameter['imageOptions'] index as j">
+
+        <div fxLayout="row"
+             fxLayoutAlign="space-around center"
+             class="ml-40">
+
+          <div>
+            <button mat-icon-button (click)="deleteImageOption(pindex, j)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+  
+          <!-- THE IMAGE LABEL -->
+          <div [style.width]="'30%'">
+            <mat-form-field appearance="outline"
+                            floatLabel="always"
+                            class="optionFieldShort">
+                <mat-label>Label</mat-label>
+                <input type="text"
+                        class="form-control"
+                        matInput
+                        [value]="option.label"
+                        (blur)="saveOptionLabelChange($event, j, option.type)"
+                        (keypress.enter)="saveOptionLabelChange($event, j, option.type)"  >
+            </mat-form-field>
+          </div>
+
+          <!-- THE IMAGE UPLOAD BUTTON -->
+          <div [style.width]="'30%'">
+            <input class="mainBg mt-40 mb-20"
+                    [id]="'input-file-id'+pindex+'-'+j"
+                    multiple type="file"
+                    accept=".png,.jpg,.jpeg,.gif"
+                    [hidden]="true"
+                    (change)="onButtonImageUpload({event:$event, index:j, newindex:pindex})" />
+        
+            <label [for]="'input-file-id'+pindex+'-'+j"
+                    style="background-color:#456382; cursor:pointer; border-radius:8px; padding:10px; margin:10px 0px 40px 0px; color: white;"
+                    color="primary"
+                    class="md-button md-raised md-primary mt-20 mb-20 imageLine">
+                Upload
+            </label>
+          </div>
+        
+
+          <!-- THE IMAGE -->
+          <div [style.width]="'30%'"><img [src]="imageArray[currentDesign.explodeMenus[pindex]['imageOptions'][j]['value']]" /></div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+  </form>
+  
+</div>

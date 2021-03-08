@@ -59,4 +59,20 @@
 	</div>
 
 
+
+
+
+	<!-- THE DEFAULT DISPLAY -->
+	<mat-form-field class="mb-40 form-group w-100-p">
+		<mat-label>Default Display - Hex or Explode</mat-label>
+		<mat-select [value]="currentDesign.menuDisplayType"
+								formControlName="defaultDisplay"
+								(selectionChange)="saveDefaultDisplayChange($event)">
+						<mat-option [value]="'hex'">Hexagons</mat-option>
+						<mat-option [value]="'explode'">Exploded</mat-option>
+		</mat-select>
+	</mat-form-field>
+
+
+
 </form>

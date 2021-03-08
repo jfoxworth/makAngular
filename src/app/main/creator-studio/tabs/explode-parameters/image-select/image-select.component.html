@@ -1,0 +1,146 @@
+<!--
+
+    This page displays the exploded views for the designs. It is house in the design studio,
+    but also called form the creator studio to assist in setting the desired image and
+    allowing the user to see the product being created.
+
+    The code loops through the exploded parameters and if 
+
+-->
+
+  <!-- Row with upload button and current default-->
+<div fxLayout="column">
+
+  <div fxLayout="row">
+
+    <!-- THE IMAGE UPLOAD BUTTON -->
+    <div class="imagebutton">
+      <input class="mainBg mt-40 mb-20"
+              [id]="'input-file-id'"
+              multiple type="file"
+              accept=".png,.jpg,.jpeg,.gif"
+              [hidden]="true"
+              (change)="onMainImageUpload({event:$event})" />
+
+      <label [for]="'input-file-id'"
+              style="background-color:#456382; cursor:pointer; border-radius:8px; padding:10px; margin:10px 0px 40px 0px; color: white;"
+              color="primary"
+              class="md-button md-raised md-primary mt-20 mb-20 imageLine">
+          Upload a new image
+      </label>
+    </div>
+
+    <div>Default Image</div>
+    <div class="imageItem">
+      <img class="image" [src]="imageMainArray[currentDesign.defaultImage.path]"  />
+    </div>
+
+  </div>
+
+
+  <div class="exploded-window" >
+
+    <div >
+      <img *ngIf="imageSelectionArray[currentBGI]" [src]="imageSelectionArray[currentBGI]" />
+      <img *ngIf="!imageSelectionArray[currentBGI]" [src]="imageMainArray[currentDesign.defaultImage.path]" />
+    </div>
+
+    <div class="left-menu">
+
+      <ng-container *ngFor="let explodeItem of currentDesign['explodeMenus']; index as i">
+
+        <div class="menublock" *ngIf="explodeItem.side=='left'">
+
+          <div *ngIf="explodeItem.title !=''"
+              class="side-title">{{explodeItem.title}}
+          </div>
+
+          <div *ngIf="explodeItem.subtitle !=''"
+              class="side-subtitle">{{explodeItem.subtitle}}
+          </div>
+
+          <div *ngIf="explodeItem.type =='button'"
+              class="side-buttonlist">
+            
+            <div *ngFor="let button of explodeItem.options; index as j"
+                [ngClass]="(explodeItem.active==button.value) ? 'side-button-active' : 'side-button'"
+                (click)="setButtonValue(i, j, button.value)">
+              {{button.label}}
+            </div>
+
+          </div>
+
+        </div>
+      
+      </ng-container>
+
+    </div>
+
+    <div class="right-menu">
+
+      <ng-container *ngFor="let explodeItem of currentDesign['explodeMenus']; index as i">
+    
+        <div class="menublock" *ngIf="explodeItem.side=='right'">
+
+          <div *ngIf="explodeItem.title !=''"
+              class="side-title">{{explodeItem.title}}
+          </div>
+
+          <div *ngIf="explodeItem.subtitle !=''"
+              class="side-subtitle">{{explodeItem.subtitle}}
+          </div>
+
+          <div *ngIf="explodeItem.type =='button'"
+              class="side-buttonlist">
+            
+            <div *ngFor="let button of explodeItem.options; index as j"
+                [ngClass]="(explodeItem.active==button.value) ? 'side-button-active' : 'side-button'"
+                (click)="setButtonValue(i, j, button.value)">
+              {{button.label}}
+            </div>
+
+          </div>
+
+          <div *ngIf="explodeItem.type =='image'"
+              class="side-buttonlist">
+            
+            <div *ngFor="let button of explodeItem.imageOptions; index as j"
+                [ngClass]="(explodeItem.active==button.value) ? 'side-ibutton-active' : 'side-ibutton'"
+                (click)="setButtonValue(i, j, button.value)">
+              <div class="side-ibutton-image">
+                <img [ngStyle]="{'width': '6em', 'border-radius':'5px'}" 
+                    [src]="imageArray[currentDesign.explodeMenus[i]['imageOptions'][j]['value']]" />
+              </div>
+              <div class="side-ibutton-label">{{button.label}}</div>
+            </div>
+
+          </div>
+
+
+        </div>
+
+      </ng-container>
+      
+    </div>
+
+
+    <!-- The images for the user to choose from -->
+
+
+
+    <!-- The array of available images -->
+    <div class="imageRow" >
+
+      <div *ngFor="let thisImage of currentDesign.imageOptions; index as i"
+          class="imageItem">
+        <img class="image" [src]="imageMainArray[thisImage]" (click)="setImage(thisImage, imageMainArray[thisImage])" />
+        <div class="makedefault" (click)="setAsDefault(thisImage, imageMainArray[thisImage])">Make default</div>
+      </div>
+
+    </div> 
+      
+
+  </div>
+
+</div>
+

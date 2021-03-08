@@ -1,0 +1,21 @@
+
+<div class="ann-header">Announcements</div>
+
+<div *ngFor="let ann of makAnnouncements"
+     class="ann-row"
+     fxLayout="row">
+
+  <div class="ann-left"> 
+    <img [src]="images[ann.id]" class="ann-image" />
+  </div>
+
+  <div class="ann-right">
+    
+    <div class="ann-title">{{ann.title}}</div>
+    <div class="ann-text">{{ann.text}}</div>
+    <div class="ann-read-more">Read More</div>
+
+  </div>
+  
+
+</div>

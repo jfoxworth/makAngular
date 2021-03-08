@@ -49,7 +49,7 @@ export class makProjectDataService extends DefaultDataService<makProject> {
 			'creatorName'	: userData.displayName,
 			'dateCreated'	: Date.now(),
 			'description'	: "This is the description of this project",
-			'designId'		: designObj.uid,
+			'designId'		: designObj.id,
 			'designType'	: designObj.category,
 			'initialOpen'	: false,
 			'name'			: 'My Project',
@@ -65,6 +65,7 @@ export class makProjectDataService extends DefaultDataService<makProject> {
 			let tempArray = [];
 			tempArray.push(versionObj);
 			this.afs.collection('projects').doc(docRef.id).update({'id':docRef.id });
+			console.log('I have created a project for the design - '+designObj.title+' with an id of '+docRef.id);
 			this.VersionsService.createVersion( versionObj, project, tempArray, designObj );
 		});
 

@@ -28,7 +28,6 @@ export class CommLinksComponent implements OnInit {
 
   ngOnChanges(changes:SimpleChanges) {
     this.route=changes.route.currentValue;
-    console.log(this.route);
   }
 
 

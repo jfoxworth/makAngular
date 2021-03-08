@@ -1,0 +1,59 @@
+
+.exploded-window {
+  width:100%;
+  height:100%;
+}
+
+.left-menu {
+  width:25em;
+}
+
+.side-title {
+  font-size:1.5em;
+  text-transform: uppercase;
+
+}
+
+.side-subtitle {
+  font-size:1.2em;
+  text-transform: uppercase;
+  margin:10px 0px;
+}
+
+.side-buttonlist {
+  margin:1em;
+}
+        
+.side-button {
+  font-size:0.8em;
+  width:4em;
+  margin:0.5em 0.5em;
+  text-align:center;
+  text-transform: uppercase;
+  border:2px solid #888;
+  border-radius:5px;
+  padding:8px 20px;
+  color:#888;
+  float:left;
+  cursor:pointer;
+}  
+
+
+.side-button-active {
+  font-size:0.8em;
+  width:4em;
+  margin:0.5em 0.5em;
+  text-align:center;
+  text-transform: uppercase;
+  border:2px solid #888;
+  border-radius:5px;
+  padding:8px 20px;
+  color:#888;
+  float:left;
+  background-color:rgb(23, 146, 225);
+  color:#FFF;
+}  
+
+.action-button {
+
+}

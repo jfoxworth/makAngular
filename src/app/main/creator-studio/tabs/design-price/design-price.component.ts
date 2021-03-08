@@ -28,7 +28,7 @@ export class DesignPriceComponent implements OnInit {
 
   saveInitialPriceChange( event )
 	{
-		this.updateDesign.emit( { ...this.currentDesign, 'initialprice' : event.target.value } );
+		this.updateDesign.emit( { ...this.currentDesign, 'initialPrice' : event.target.value } );
   }
 
   savePriceStringChange( priceString )

@@ -3,7 +3,7 @@
       name="companyId">
   <mat-label>Company selling design</mat-label>
   <mat-select (selectionChange)="setCompany()"
-          (change)="saveCompChange( $event )"
+          (selectionChange)="saveCompChange( $event )"
           [value]="currentDesign.company"
           required
           name="company">

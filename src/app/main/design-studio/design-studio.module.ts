@@ -48,6 +48,7 @@ import { FileuploadComponent } from './sidebar/fileupload/fileupload.component';
 import { ColorselectComponent } from './sidebar/colorselect/colorselect.component';
 import { ImageselectComponent } from './sidebar/imageselect/imageselect.component';
 import { BlobitemsComponent } from './sidebar/blobitems/blobitems.component';
+import { ExplodedComponent } from './exploded/exploded.component';
 
 // Services
 import { DesignStudioService } from '../services/design-studio.service';
@@ -134,7 +135,8 @@ const routes : Routes = [
         FileuploadComponent,
         ColorselectComponent,
         ImageselectComponent,
-        BlobitemsComponent
+        BlobitemsComponent,
+        ExplodedComponent
 
       ],
     imports     : [
@@ -181,6 +183,9 @@ const routes : Routes = [
 		makVersionEntityService,
 		makVersionDataService,
 		MakVersionsResolver,
+    ],
+    exports : [
+        ExplodedComponent
     ]
 })
 export class DesignStudioModule

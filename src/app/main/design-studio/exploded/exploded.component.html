@@ -1,0 +1,45 @@
+<!--
+
+    This page displays the exploded views for the designs. It is house in the design studio,
+    but also called form the creator studio to assist in setting the desired image and
+    allowing the user to see the product being created.
+
+    The code loops through the exploded parameters and if 
+
+-->
+
+
+<div class="exploded-window">
+
+  <div class="left-menu">
+
+    <ng-container *ngFor="let explodeItem of currentDesign['explodeMenus']; index as i">
+
+      <div *ngIf="explodeItem.side=='left'">
+
+        <div *ngIf="explodeItem.title !=''"
+             class="side-title">{{explodeItem.title}}
+        </div>
+
+        <div *ngIf="explodeItem.subtitle !=''"
+             class="side-subtitle">{{explodeItem.subtitle}}
+        </div>
+
+        <div *ngIf="explodeItem.type =='button'"
+             class="side-buttonlist">
+          
+          <div *ngFor="let button of explodeItem.options; index as j"
+               [ngClass]="(button.active==button.value) ? 'side-button-active' : 'side-button'"
+               (click)="setButtonValue(i, j, button.value)">
+            {{button.label}}
+          </div>
+
+        </div>
+
+      </div>
+
+    </ng-container>
+    
+  </div>
+
+</div>

@@ -140,9 +140,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   navbarAnimationDone( event : AnimationEvent)
   {
-    console.log('In the animation done');
-    console.log(event);
-    console.log((<AnimationEvent>event)['toState'] == 'design');
     this.displayAppNav = (<AnimationEvent>event)['toState'] == 'design' ? true : false;
   }
 
@@ -150,9 +147,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   navbarAnimationStart( event : AnimationEvent)
   {
-    console.log('In the animation start');
-    console.log(event);
-    console.log((<AnimationEvent>event)['toState'] == 'comm');
     this.displayAppNav = (<AnimationEvent>event)['toState'] == 'comm' ? false : true;
   }
 

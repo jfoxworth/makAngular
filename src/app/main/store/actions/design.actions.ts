@@ -10,4 +10,9 @@ export const designImagesSave = createAction(
 //    props<{ images : imageObj[] }>()
 );
 
+export const announcementImagesSave = createAction(
+    "[Announcements] Images Saved",
+    props<{announcements:imageObj[]}>()
+//    props<{ images : imageObj[] }>()
+);
 
