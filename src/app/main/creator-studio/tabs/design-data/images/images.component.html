@@ -14,7 +14,7 @@
 		<label for="input-file-id"
 						style="background-color:#456382; cursor:pointer; border-radius:8px; padding:10px; margin:10px 0px 40px 0px; color: white;"
 						color="primary"
-						class="md-button md-raised md-primary mt-20 mb-20">
+						class="md-button md-raised md-primary mt-20 mb-20 imageLine">
 				Add Image
 		</label>
 	</div>
@@ -22,14 +22,12 @@
 </div>
 
 
-
-
 <div fxLayout="row"
-     class="mt-20">
+		 class="mt-20">
+		 <div>The id is {{currentDesign.id}}</div>
 
-	<div *ngFor="let thisImage of this.carouselUrls; index as i">
-
-		<div *ngIf="thisImage.itemId == this.currentDesign.id">
+	<div *ngFor="let thisImage of carouselUrls; index as i">
+		<div *ngIf="thisImage.itemId == currentDesign.id">
 
 <!--
 				<div>

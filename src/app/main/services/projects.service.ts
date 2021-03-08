@@ -108,6 +108,9 @@ export class ProjectsService
 	// Create
 	createProject( designObj, versionObj )
 	{
+		console.log('Creating a project with design and version info ...');
+		console.log(designObj);
+		console.log(versionObj);
 		this.makProjectDataService.createProject( designObj, versionObj )
 	}
 

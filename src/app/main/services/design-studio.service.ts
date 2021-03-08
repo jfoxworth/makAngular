@@ -75,13 +75,13 @@ export class DesignStudioService
         return localDesign ? <makDesign>localDesign : this.setDesign('jBRzSildNc16fQjAmLkh', designList)
 
       case "design":
-        return this.setDesign('jBRzSildNc16fQjAmLkh', designList);
+        return this.setDesign(designString, designList);
 
       case "project":
         return this.setDesignFromProject(routeString, designList, projectList);
 
       default:
-        return localDesign ? <makDesign>localDesign : this.setDesign('jBRzSildNc16fQjAmLkh', designList)
+        return localDesign ? <makDesign>localDesign : this.setDesign(designString, designList)
     }
   }
 
@@ -142,6 +142,8 @@ export class DesignStudioService
 	*/
   setVersionData( studioType:string, versionList:makVersion[], localVersion, projectString:string ):makVersion
   {
+		console.log('In set version data');
+		console.log();
     switch ( studioType )
     {
       case 'studio':
@@ -163,7 +165,10 @@ export class DesignStudioService
 
   setVersionFromProject( projectId:string, versionList:makVersion[] )
 	{
-    return versionList.filter(ver=>{ ver.projectId == projectId ? true : false; })
+		console.log('The project string and version list is '+projectId);
+		console.log(versionList);
+		console.log(versionList.filter(ver=>{ return ver.projectId == projectId ? true : false; }))
+    return versionList.filter(ver=>{ return ver.projectId == projectId ? true : false; })
           .slice(0)
           .sort((a,b)=>{return a.version-b.version})[0]
 	}
@@ -330,7 +335,7 @@ export class DesignStudioService
 					{
 						'location' : 0,
 						'type' : 'makText',
-						'text' : 'When this design is active, the user will see a list of all versions that they have created. They will be able to select the desired version and see it here in the studion.'
+						'text' : 'Once a project has been created with this design, a list of all versions that they have created will be available here.'
 					}
 				]
 			}
@@ -446,6 +451,10 @@ export class DesignStudioService
 	setPrice(currentDesign:makDesign, currentVersion:makVersion) {
 
 
+		if ( ( !currentDesign.priceValid ) || ( currentDesign.priceString=='' ))
+		{
+			return currentDesign.initialPrice;
+		}
 		let priceString = '';
 		for (let i = 0; i < currentDesign.priceArray.length; i++) {
 

@@ -30,7 +30,7 @@ export class CompanyComponent implements OnInit {
 	// Update
 	saveCompChange( event )
 	{
-		this.updateDesign.emit( {...this.currentDesign, 'company':event.target.value} );
+		this.updateDesign.emit( {...this.currentDesign, 'company':event.value} );
   }
 
 

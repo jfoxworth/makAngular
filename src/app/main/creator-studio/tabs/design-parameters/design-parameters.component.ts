@@ -75,8 +75,9 @@ export class DesignParametersComponent implements OnInit {
 	// -----------------------------------------------------------------------------------------------------
 
 	addSubmenu() {
-    let temp=JSON.parse(JSON.stringify(this.currentDesign['parameterMenus']))
-    this.updateParameters(temp.push(this.CreatorStudioService.getNewSubmenu()));
+    let temp=JSON.parse(JSON.stringify(this.currentDesign['parameterMenus']));
+		temp.push(this.CreatorStudioService.getNewSubmenu());
+    this.updateParameters(temp);
 	}
 
 	addMenuItem(menuIndex) {

@@ -1,0 +1,39 @@
+
+
+<div class="pro-header">My Projects</div>
+
+<div class="pro-row">
+
+  <div *ngFor="let pro of makProjects"
+      class="pro-item"
+      [style.backgroundImage]="'url('+ theseImages[pro.designId] +')'"
+      [style.background-size]="'cover'" >
+
+    <div class="pro-set">
+
+
+      <div class="pro-name">NAME : {{pro.name}}</div>
+      <div class="pro-dateCreated">DATE : {{pro.dateCreated | date}}</div>
+
+      <div fxLayout="row" class="pro-icons">
+
+        <mat-icon style="cursor:pointer"
+                  matTooltip="Delete this project"
+                  (click)="deleteProject(pro)">
+                    delete
+        </mat-icon>
+
+        <mat-icon style="cursor:pointer"
+                  class="mr-10 ml-10"
+                  matTooltip="Open in design studio"
+                  [routerLink]="['/designStudio/project/'+pro.id]">
+          mode_edit
+        </mat-icon>
+
+      </div>
+
+    </div>
+
+  </div>  
+
+</div>

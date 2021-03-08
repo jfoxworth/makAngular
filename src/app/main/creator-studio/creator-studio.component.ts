@@ -172,7 +172,9 @@ export class CreatorStudioComponent implements OnInit {
     this.designStore.subscribe(state => {
       this.images = this.MarketplaceService.getProductImages(design.id, state.designs.designs);
     });
-    this.currentId=design.id;
+		this.currentId=design.id;
+		console.log();
+
   }
 
   getCurrentDesign(id:string, designs:makDesign[]):makDesign

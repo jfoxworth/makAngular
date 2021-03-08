@@ -32,16 +32,27 @@ export class ShapediverComponent implements OnInit {
     this.shapeform = new FormGroup({
       'shape' : new FormControl(this.currentDesign.shapediverTicket, [Validators.minLength(200),
                                                                       NameCheckValidators.cannotContainSpecialChars ]),
+
+      'designType' : new FormControl(this.currentDesign.designType, [Validators.required ]),
+        
     });
   
+
+
   }
 
   // Update
+	saveDesignTypeChange( event )
+	{
+    console.log('The event is');
+    console.log(event);
+		this.updateDesign.emit( { ...this.currentDesign, 'designType' : event.value } );
+	}
+
 	saveShapeChange( event:FocusEvent )
 	{
     this.shapeform.controls.shape.status=="VALID" ? 
 		this.updateDesign.emit( { ...this.currentDesign, 'shapediverTicket' : (<HTMLInputElement>event.target).value } ):'';
 	}
-
 
 }

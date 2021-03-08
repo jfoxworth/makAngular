@@ -1,27 +1,46 @@
 
-<!-- THE SHAPEDIVER TICKET NUMBER -->
 <form [formGroup]="shapeform">
-        
-	<mat-form-field appearance="outline"
-  	              floatLabel="always"
-    	            class="w-100-p form-group">
-  	<mat-label>Shapediver Ticket Number</mat-label>
-    <input matInput
-            placeholder="Shapediver ticket"
-            [value]="currentDesign['shapediverTicket']+''"
-            (blur)="saveShapeChange($event)"
-            required>
+
+
+
+	<!-- THE TYPE - IMAGE VERSUS SHAPEDIVER -->
+	<mat-form-field class="mb-40 form-group w-100-p">
+		<mat-label>Image Display or 3D Display</mat-label>
+		<mat-select [value]="currentDesign.designType"
+								formControlName="designType"
+								(selectionChange)="saveDesignTypeChange($event)">
+						<mat-option [value]="'shapediver'">Shapediver</mat-option>
+						<mat-option [value]="'image'">Image</mat-option>
+		</mat-select>
 	</mat-form-field>
 
-	<div *ngIf="shape.touched && shape.invalid && !shape.pristine">
 
-		<div *ngIf="shape.errors.minlength"
-				 class="alert alert-danger mb-20">
-					Shapediver ticket must be at least 200 characters
-		</div>
-		<div *ngIf="shape.errors.cannotContainSpecialChars"
-				 class="alert alert-danger mb-20">
-					The shapediver key cannot contain special characters
+
+	<!-- THE SHAPEDIVER TICKET NUMBER -->
+	<div *ngIf="currentDesign.designType=='shapediver'">
+
+		<mat-form-field appearance="outline"
+										floatLabel="always"
+										class="w-100-p form-group">
+			<mat-label>Shapediver Ticket Number</mat-label>
+			<input matInput
+							placeholder="Shapediver ticket"
+							[value]="currentDesign['shapediverTicket']+''"
+							(blur)="saveShapeChange($event)"
+							required>
+		</mat-form-field>
+
+		<div *ngIf="shape.touched && shape.invalid && !shape.pristine">
+
+			<div *ngIf="shape.errors.minlength"
+					class="alert alert-danger mb-20">
+						Shapediver ticket must be at least 200 characters
+			</div>
+			<div *ngIf="shape.errors.cannotContainSpecialChars"
+					class="alert alert-danger mb-20">
+						The shapediver key cannot contain special characters
+			</div>
+
 		</div>
 
 	</div>

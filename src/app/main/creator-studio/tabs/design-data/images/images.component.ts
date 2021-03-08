@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 
 // Models
 import { makDesign } from 'src/app/main/models/makDesign';
@@ -43,7 +43,6 @@ export class ImagesComponent implements OnInit {
     // Listen to the images observable
 		this.designStore.subscribe(state => {
 
-			console.log(state);
 			if (state.designs.designs.type)
 			{
 				let temp = JSON.parse(JSON.stringify(state.designs.designs));
@@ -55,11 +54,20 @@ export class ImagesComponent implements OnInit {
 			}
 
 			this.currentImages = this.carouselUrls.filter(image=>image.itemId==this.currentDesign.id);
-			console.log(this.carouselUrls);
-			console.log(this.currentImages);
-    });
+
+		});
 
 	}
+
+
+	ngOnChanges(changes:SimpleChanges){
+		this.currentImages = this.carouselUrls.filter(image=>image.itemId==this.currentDesign.id);
+		
+	}
+	
+
+
+
 
 
 
@@ -99,13 +107,11 @@ export class ImagesComponent implements OnInit {
 	* When the background image is uploaded
 	*
 	*/
-	onBGUpload(event) {
+	onBGUpload({event, type}) {
 
-    let newImages=[];
+    let newImages=JSON.parse(JSON.stringify(this.currentDesign.marketplace.images));
 		// Grab the background image
 		const file = event.target.files[0];
-		console.log('The target is ...');
-		console.log(event.target.files);
 
 		var imageType = file.type.replace('image/','');
 
@@ -131,11 +137,9 @@ export class ImagesComponent implements OnInit {
 
 
 		newImages.push({ 'path': path, 'mainImage':false });
-    this.updateImages( {...this.currentDesign,
-                        marketplace:{ ...this.currentDesign.marketplace, images: newImages } } );
+    this.updateImages( newImages );
 
   	}
-
 
 
 

@@ -178,7 +178,7 @@ export class DesignStudioService
 					{
 						'location' : 0,
 						'type' : 'makText',
-						'text' : 'When this design is active, the user will see a list of all versions that they have created. They will be able to select the desired version and see it here in the studion.'
+						'text' : 'Once a project has been created with this design, a list of all versions that they have created will be available here.'
 					}
 				]
 			}

@@ -79,7 +79,18 @@
 						</mat-tab>
 
 
-            <mat-tab label="Pricing Data">
+						<mat-tab label="Explode Parameters">
+
+              <mak-explode-parameters *ngIf="currentId"
+                                    [currentDesign]="getCurrentDesign(currentId, (makDesigns$ | async))"
+                                    (updateDesign)="updateDesign($event)">
+              </mak-explode-parameters>
+
+						</mat-tab>
+
+
+
+						<mat-tab label="Pricing Data">
 
               <mak-design-price *ngIf="currentId"
                                 [currentDesign]="getCurrentDesign(currentId, (makDesigns$ | async))"

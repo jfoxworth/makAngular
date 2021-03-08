@@ -1,0 +1,142 @@
+
+<!--
+
+    This page holds the menus that are moved around to create the exploded menus for the design.
+    The user can generate as many separate items as desired and drag them into the desired order.
+
+    There is a column for the items displayed on the left, a column for items displayed on the right, 
+    and a final section where the user selects the proper image for each set of options.
+
+
+-->
+
+
+
+<div fxLayout="column"
+     fxFlex="100%"
+     style="width:100%"
+     *ngIf="currentDesign!==undefined">
+
+
+  <h2 class="mt-32 mb-20">Design Parameters</h2>
+
+
+  <div fxFlex="100%" class="mr-52">
+    <div class="mt-20 mat-subheading-2" style="color:#898989">The list below holds the items that will be displayed in
+      the exploded view for the design. Once an item is added, you can set parameters or images for the user to select. 
+      If the design is based on images instead of the 3D model and the selection will affect the image displayed, the user
+      can select the appropriate image for each option at the bottom.</div>
+
+  </div>
+
+
+  <div fxFlex="100%">
+
+    <button mat-raised-button
+            color="primary"
+            class=""
+            aria-label="Add new option"
+            style="width:40%; margin:40px 30%"
+            (click)="addOption();" >
+          Add Option
+    </button>
+
+  </div>
+
+
+
+
+
+  <div fxFlex="100%"
+       fxLayout="row">
+
+    <div class="optionArea"
+         fxLayout="row">
+
+      <!-- THE LEFT GROUP -->
+      <div cdkDropListGroup class="dropPlatform optionList" >
+
+        <div fxLayout="column">
+
+          <h2 class="ml-20">Left Side Menu</h2>
+
+          <div cdkDropList
+                #paramList[i]="cdkDropList"
+                class="leftlist"
+                [cdkDropListData]="currentDesign['explodeMenus']"
+                (cdkDropListDropped)="drop($event, 'left')">
+
+            <div *ngFor="let explodeItem of currentDesign['explodeMenus']; index as i" cdkDrag [id]="i">
+
+              <div fxLayout="column"
+                  class="optionItem"
+                  *ngIf="explodeItem['side']=='left'">
+
+                <mak-explode-parameter [parameter]="explodeItem"
+                                       [pindex]="i"
+                                       [currentDesign]="currentDesign"
+                                       (updateDesign)="updateDesign.emit($event)">
+                </mak-explode-parameter>            
+              
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- THE RIGHT GROUP -->
+      <div cdkDropListGroup class="dropPlatform optionList" >
+
+        <div fxLayout="column">
+
+          <h2 class="ml-20">Right Side Menu</h2>
+
+          <div cdkDropList
+               class="rightlist"
+              #paramList[i]="cdkDropList"
+              [cdkDropListData]="currentDesign['explodeMenus']"
+              (cdkDropListDropped)="drop($event, 'right')">
+  
+            <div *ngFor="let explodeItem of currentDesign['explodeMenus']; index as i" cdkDrag>
+
+              <div fxLayout="column"
+                  class="optionItem"
+                  *ngIf="explodeItem['side']=='right'">
+
+                <mak-explode-parameter [parameter]="explodeItem"
+                                       [pindex]="i"
+                                       [currentDesign]="currentDesign"
+                                       (updateDesign)="updateDesign.emit($event)">
+                </mak-explode-parameter>            
+              
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div fxFlex="100%" class="mr-52">
+    <div class="mt-20 mat-subheading-2" style="color:#898989">In the area below, you can set the options in 
+      the menus and then select the image to be displayed when those parameters are selected. Upload as many 
+      images as desired, set one of them as the default image, the set the desired parameters and select the 
+    image to be displayed.</div>
+  </div>
+
+  <mak-design-image-select [currentDesign]="currentDesign"
+                           (updateDesign)="updateDesign.emit($event)">
+  </mak-design-image-select>
+
+</div>

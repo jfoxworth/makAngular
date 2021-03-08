@@ -1,0 +1,36 @@
+
+<div fxLayout="row" class="dash-main">
+  <div class="dash-menu">
+    <mak-dashboard-menu></mak-dashboard-menu>
+  </div>
+  <div div class="dash-content">
+
+    <div class="dash-item"
+         *ngIf="(makAnnouncements$ | async) && images.length>0">
+      <mak-dashboard-announcements [makAnnouncements]="(makAnnouncements$ | async)"
+                                   [annImages]="images" >
+      </mak-dashboard-announcements>
+    </div>
+    
+    
+    <div class="dash-item"
+         *ngIf="(makProjects$ | async) && designImages.length>0">
+      <mak-dashboard-projects [makProjects]="(makProjects$ | async)"
+                              [designImages]="designImages" >
+      </mak-dashboard-projects>
+    </div>
+
+
+    <div class="dash-item"
+         *ngIf="(makProjects$ | async) && designImages.length>0">
+      <mak-dashboard-products [makDesigns]="(makDesigns$ | async)"
+                              [designImages]="designImages">
+
+      </mak-dashboard-products>
+    </div>
+
+
+    <div class="dash-item"><mak-dashboard-lunchandlearns class="dash-item"></mak-dashboard-lunchandlearns></div>
+    <div class="dash-item"><mak-dashboard-workshops class="dash-item"></mak-dashboard-workshops></div>
+  </div>
+</div>

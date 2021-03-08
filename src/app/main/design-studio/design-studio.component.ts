@@ -114,13 +114,14 @@ export class DesignStudioComponent  {
     .pipe(takeUntil(this._unsubscribeAll))
     .subscribe((user)=>{ this.userData = <UserData>user; });
 
-    this.studioType = this.DesignStudioService.setStudioType( this.route.snapshot.url[1] ? this.route.snapshot.url[1].toString() : '' );
+		this.studioType = this.DesignStudioService.setStudioType( this.route.snapshot.url[1] ? this.route.snapshot.url[1].toString() : '' );
+		
 
     this.designData = this.DesignStudioService.setDesignData( this.studioType,
                                                               this.designList,
                                                               this.projectList,
                                                               JSON.parse(localStorage.getItem('makDesign')),
-                                                              this.route.snapshot.url[1] ? this.route.snapshot.url[1].toString() : '',
+                                                              this.route.snapshot.url[2] ? this.route.snapshot.url[2].toString() : '',
                                                               this.route.snapshot.paramMap.get('designId') ? this.route.snapshot.paramMap.get('designId') : '')
 
 
@@ -135,8 +136,10 @@ export class DesignStudioComponent  {
     this.versionData = this.DesignStudioService.setVersionData( this.studioType,
                                                                 this.versionList,
                                                                 localStorage.getItem('makVersion') != 'undefined' ? JSON.parse(localStorage.getItem('makVersion')) : '',
-                                                                this.route.snapshot.paramMap.get('versionId') ? this.route.snapshot.paramMap.get('versionId') : '')
+                                                                this.route.snapshot.paramMap.get('projectId') ? this.route.snapshot.paramMap.get('projectId') : '')
     this.versionList.push(this.versionData);
+
+		console.log(this.versionData);
 
     this.initializeAll();
 
@@ -412,7 +415,7 @@ export class DesignStudioComponent  {
 			this.shapeData = this.shapediverApi.parameters.get();
 
 			// Set the version data
-			this.setVersionData( this.versionList[this.versionList.length-1] );
+			//this.setVersionData( this.versionList[this.versionList.length-1] );
 
 
 			// Loop through the data and set the parameters to the
@@ -434,7 +437,7 @@ export class DesignStudioComponent  {
 						{
 							//console.log('Worked for type '+this.designData.parameterMenus[a]['parameters'][b]['type']+' with value of '+element.value);
 
-
+							
 							// if there is a parameter for which there is no value in this version set one
 							if ( this.versionData['values'][this.designData.parameterMenus[a]['parameters'][b]['shapediver']] === undefined  )
 							{
@@ -498,7 +501,6 @@ export class DesignStudioComponent  {
 
 			if ( this.studioType == "project" )
 			{
-				this.saveVersion( this.versionData );
 				if ( isChanged )
 				{
 					console.log('Updating parameters from initialize data ...');
@@ -554,12 +556,13 @@ export class DesignStudioComponent  {
 		this.calcPrice()
 
 
-		// Set the data in the version
-		this.versionData.values[parameters.name] = parameters.value;
-
-
 		// Update the version data
-		if ( this.studioType == 'project' ){ this.saveVersion( this.versionData ); }
+		if ( this.studioType == 'project' )
+		{ 
+			let temp=JSON.parse(JSON.stringify(this.versionData.values))
+			temp[parameters.name] = parameters.value;
+			this.saveVersion( {...this.versionData, values:temp} ); 
+		}
 
 
 
@@ -715,13 +718,7 @@ export class DesignStudioComponent  {
 		// If this is a latest version, it can be changed
 		// If not, it cannot be changed
 		console.log(this.versionList);
-		if ( thisVersion.version == this.versionList.length )
-		{
-			this.editableVersion = true;
-		}else
-		{
-			this.editableVersion = false;
-		}
+		this.editableVersion = this.isVersionEditable(thisVersion, this.versionList);
 
 	}
 
@@ -734,14 +731,32 @@ export class DesignStudioComponent  {
 	*/
 	calcPrice( )
 	{
-		this.versionData.price = this.DesignStudioService.setPrice(this.designData, this.versionData);
-		this.designData.price = this.DesignStudioService.setPrice(this.designData, this.versionData);
+			this.saveVersion({...this.versionData, price:this.DesignStudioService.setPrice(this.designData, this.versionData)});
+		//this.versionData.price = this.DesignStudioService.setPrice(this.designData, this.versionData);
+//		this.designData.price = this.DesignStudioService.setPrice(this.designData, this.versionData);
 	}
 
 
 
 
 
+	/*
+	*
+	*	Determine if the version in question is the latest - and hence editable
+	*
+	*/
+	isVersionEditable(thisVersion, vL)
+	{
+		let editable = true;
+		vL.forEach(tV=>{
+			if ( ( tV.designId == thisVersion.designId) &&
+					 ( tV.dateCreated > thisVersion.dateCreated ) )
+					 {
+						 editable = false;
+					 }
+		});
+		return editable
+	}
 
 
 

@@ -129,6 +129,9 @@ export class DesignsService
 	// Update a design
 	updateDesign( tD:makDesign )
 	{
+		console.log('I am in the update design with ... ');
+		console.log(tD);
+/*
 		for (var a=1; a<tD['parameterMenus'].length; a++)
 		{
 			for (var b=0; b<tD['parameterMenus'][a]['parameters'].length; b++)
@@ -139,6 +142,7 @@ export class DesignsService
 				}
 			}
 		}
+		*/
 
 		this.makDesignDataService.updateDesign( tD ).then(mine=>console.log(mine))
 	}

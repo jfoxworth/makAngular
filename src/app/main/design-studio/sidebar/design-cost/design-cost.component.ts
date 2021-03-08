@@ -31,7 +31,7 @@ export class DesignCostComponent implements OnInit {
   // When a user wants to add a new project based upon a design
   addMyProject( ) {
     this.ProjectsService.createProject( this.designData, this.versionData  );
-    this.router.navigateByUrl('/products');
+    this.router.navigateByUrl('/projects');
     }
 
 

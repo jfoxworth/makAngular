@@ -7,6 +7,7 @@ import { DesignActions } from '../actions/designAction-types';
 import { AuthActions } from '../actions/authAction-types';
 import { UserData } from '../../models/userData';
 import { imageObj } from '../../models/imageObj';
+import { Actions } from '@ngrx/effects';
 
 
 
@@ -54,12 +55,14 @@ export const metaReducers: MetaReducer<AppState>[] =
 -----------------------------------------------------------------*/
 
 export interface DesignState {
-	designs : any
+	designs : any;
+	announcements:any;
 }
 
 
 export const initialDesignState:DesignState = {
 	designs : <imageObj[]>[],
+	announcements : <imageObj[]>[],
 };
 
 
@@ -69,11 +72,19 @@ export const designImagesReducer = createReducer(
 
 	on(DesignActions.designImagesSave, (state, action) => {
 		return {
-			designs: action.designs
+			designs: action.designs,
+			announcements:state.announcements
+		}
+	}),
+
+	on(DesignActions.announcementImagesSave, (state, action) => {
+		return {
+			designs: state.designs,
+			announcements:action.announcements
 		}
 	})
 
-);
+	);
 
 
 

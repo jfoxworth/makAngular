@@ -1,0 +1,41 @@
+
+
+.pro-header {
+  font-size:2.5em;
+  text-transform: uppercase;
+  margin:0.75em 0em 0.25em 0em;
+}
+
+.pro-row {
+  margin:1em 0 1em 0;
+}
+
+.pro-item {
+  border:2px solid #000;
+  border-radius:2em;
+  width:18em;
+  height:18em;
+  margin:0 2em 1em 3em;
+  float:left;
+}
+
+.pro-set {
+  padding:9em 0 0 0.5em;
+  background-color:#000;
+  border-radius:2em;
+  opacity:0.4;
+  color:#FFF;
+  height:9em;
+}
+
+.pro-name {
+  padding:0 0 0 0;
+}
+
+.pro-dateCreated {
+  padding:0.25em 0 0 0;
+}
+
+.pro-icons {
+  padding:0.5em 0 0 0.5em;
+}

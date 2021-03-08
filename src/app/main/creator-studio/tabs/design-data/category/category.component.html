@@ -7,12 +7,13 @@
     <mat-select name="category"
                 #category
                 [value]="currentDesign.category"
-                (change)="saveCatChange($event)"
+                (selectionChange)="saveCatChange($event)"
                 required>
             <mat-option *ngFor="let thisType of designType" [value]="thisType">
             {{thisType}}
         </mat-option>
     </mat-select>
 </mat-form-field>
+
 
 

@@ -70,6 +70,12 @@ service cloud.firestore {
       allow read: if true;
     }								
 
+
+		match /announcements/{announcement} {
+      allow create, update:  if request.auth.uid != null;
+      allow read: if true;
+    }								
+
     }
 
 }

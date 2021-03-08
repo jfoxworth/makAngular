@@ -1,0 +1,27 @@
+.dash-main {
+  height:100%;
+  margin:0em 2em;
+}
+
+
+.dash-menu {
+  background-color:#000;
+  color:#FFF;
+  width:12em;
+  height:100%;
+  padding:3em 0em 0em 0.5em;
+  margin:2em 0em;
+  position:fixed;
+}
+
+.dash-content {
+  margin:0em 0em 0em 14em;
+  width:80em;
+}
+
+.dash-item {
+  border-bottom:1px solid #000;
+  float:left;
+  width:90%;
+  margin:0 5%;
+}

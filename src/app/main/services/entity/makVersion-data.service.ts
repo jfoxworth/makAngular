@@ -102,7 +102,7 @@ export class makVersionDataService extends DefaultDataService<makVersion> {
 	// Update
 	updateVersion ( versionObj )
 	{
-		this.afs.collection('versions').doc( versionObj.uid ).update( versionObj );
+		this.afs.collection('versions').doc( versionObj.id ).update( versionObj );
 	}
 
 

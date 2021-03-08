@@ -26,6 +26,7 @@ import { ChatModule } from './main/chat/chat.module';
 import { TitleBannerModule } from './main/Shared/title-banner/title-banner.module';
 import { InvoiceModernModule } from './main/invoices/modern/modern.module';
 import { CommercialModule } from './main/commercial/commercial.module';
+import { DashboardModule } from './main/dashboard/dashboard.module';
 
 // Google Firebase
 import { AngularFireModule } from '@angular/fire';
@@ -73,6 +74,7 @@ import { designImagesReducer } from '../app/main/store/reducers';
     ChatModule,
     TitleBannerModule,
     InvoiceModernModule,
+    DashboardModule,
 
     // Firestore Auth Modules
 		AngularFireModule.initializeApp(environment.firebase),

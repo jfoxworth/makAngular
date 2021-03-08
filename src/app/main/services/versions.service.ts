@@ -109,6 +109,7 @@ export class VersionsService
 	// Update
 	updateVersion ( versionObj )
 	{
+		console.log(versionObj);
 		this.makVersionDataService.updateVersion( versionObj );
 	}
 
