@@ -4,7 +4,7 @@
 
   <div fxLayout="row" fxLayoutAlign="center center">
 
-    <img class="avatar mr-0 mr-sm-16"
+    <img class="avatar "
         [src]="profileImage">
 
     <span class="username mr-12"
@@ -30,6 +30,12 @@
           *ngIf="userData">
     <mat-icon>account_circle</mat-icon>
     <span>My Profile</span>
+  </button>
+
+  <button mat-menu-item [routerLink]="'/dashboard'"
+          *ngIf="userData">
+    <mat-icon>view_compact</mat-icon>
+    <span>Dashboard</span>
   </button>
 
   <button mat-menu-item [routerLink]="'/messages'"
