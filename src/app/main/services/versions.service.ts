@@ -19,6 +19,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 // Models
 import { makVersion } from '../models/makVersion';
+import { makDesign } from '../models/makDesign';
+import { makProject } from '../models/makProject';
 
 
 // Services
@@ -61,7 +63,7 @@ export class VersionsService
 
 
 	// Create
-	createVersion( type, project, versions, design )
+	createVersion( type, project:makProject, versions:makVersion[], design:makDesign )
 	{
 		this.makVersionDataService.createVersion( type, project, versions, design );
 	}

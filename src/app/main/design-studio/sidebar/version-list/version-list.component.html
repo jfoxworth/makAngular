@@ -19,9 +19,9 @@
         fxLayoutAlign="center center"
         class="mb-12 mt-12"
         style="cursor:pointer; font-size:1.1em; width:90%; margin:0px 5%; padding:10px 0px"
-        [ngClass]="{'current' : version.version == versionData.version}">
+        [ngClass]="{'current' : version.dateCreated == versionData.dateCreated}">
 
-      <div fxFlex="40" style="text-align:center">Version {{version.version}}</div>
+      <div fxFlex="40" style="text-align:center">{{version.dateCreated | date}}</div>
       <div fxFlex="60" style="text-align:center">{{version.name}}</div>
     </div>
   </ng-container>

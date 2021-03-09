@@ -170,7 +170,7 @@ export class DesignStudioComponent  {
 
 		this.makVersions$ = this.VersionEntityService.entities$
 		this.makVersions$.subscribe( (makVersions) =>{
-			this.versionList = makVersions;
+			this.versionList = makVersions.sort((a,b)=>{return a.dateCreated-b.dateCreated});
 		});
 
 		this.makSignoffReqs$ = this.SignoffReqEntityService.entities$

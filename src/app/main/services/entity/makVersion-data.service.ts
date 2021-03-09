@@ -40,6 +40,9 @@ export class makVersionDataService extends DefaultDataService<makVersion> {
 
 		var userData = JSON.parse(localStorage.getItem('UserData'));
 
+		let verNum = versions.filter(ver=>{ return ver.projectId == project.id ? true : false; }).length;
+
+
 		let versionObj = {
 			'id'			: '',
 			'dateCreated'	: Date.now(),
@@ -52,7 +55,7 @@ export class makVersionDataService extends DefaultDataService<makVersion> {
 			'price'			: 0,
 			'projectId'		: project.id,
 			'values'		: {},
-			'version'		: versions.length+1,
+			'version'		: verNum+1,
 			'deleted' 		: false,
 			'measurements' 	: '',
 			'tax'			: 0,
@@ -62,7 +65,14 @@ export class makVersionDataService extends DefaultDataService<makVersion> {
 
 		if ( type != 'default' )
 		{
-			versionObj['values'] = versions[versions.length-1]['values'];
+//			versionObj['values'] = versions[versions.length-1]['values'];
+
+			let tempObjs =  versions.filter(ver=>{ return ver.projectId == project.id ? true : false; })
+			.slice(0)
+			.sort((a,b)=>{return a.dateCreated-b.dateCreated});
+
+			versionObj['values'] = tempObjs[tempObjs.length-1]['values'];
+
 		}
 
 		var docRef = this.afs.collection('versions').add( versionObj )

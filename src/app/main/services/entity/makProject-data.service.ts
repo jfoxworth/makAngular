@@ -42,9 +42,8 @@ export class makProjectDataService extends DefaultDataService<makProject> {
 
 		var userData = JSON.parse(localStorage.getItem('UserData'));
 
-
-		let project = {
-			'id'			: '',
+		let project:makProject = {
+			'id'					: '',
 			'creatorId'	 	: userData.uid,
 			'creatorName'	: userData.displayName,
 			'dateCreated'	: Date.now(),
@@ -52,10 +51,10 @@ export class makProjectDataService extends DefaultDataService<makProject> {
 			'designId'		: designObj.id,
 			'designType'	: designObj.category,
 			'initialOpen'	: false,
-			'name'			: 'My Project',
-			'status'		: '0',
+			'name'			  : 'My Project',
+			'status'		  : 0,
 			'versions'		: '1',
-			'deleted'		: false,
+			'deleted'		  : false,
 		}
 
 		var docRef = this.afs.collection('projects').add( project )

@@ -46,7 +46,11 @@ export class VersionListComponent implements OnInit {
 	createNewVersion( )
 	{
 		console.log('Creating new version ');
-		this.VersionsService.createVersion( '', this.projectData, this.versionData, this.designData )
+		this.VersionsService.createVersion( '', this.projectData, this.versionList, this.designData );
+
+    let tempObjs =  this.versionList.sort((a,b)=>{return a.dateCreated-b.dateCreated});
+    this.versionList=tempObjs;
+
 	}
 
 
