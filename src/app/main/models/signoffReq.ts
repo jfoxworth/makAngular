@@ -13,12 +13,14 @@
 
 
 export interface signoffReq {
-	id 			: string;			// The id of the signoff
+	id 					: string;			// The id of the signoff
 	dateCreated : number;			// The date that this entry was created
-	creatorId	: string;			// ID of the user that created this req
+	creatorId		: string;			// ID of the user that created this req
 	creatorName : string;			// User name of the user that created req
-	designId 	: string;			// The id of the design
-	userId 		: string;			// ID of the user
+	designId 		: string;			// The id of the design - deprecated
+	itemId			: string;			// The id of the design, project, or whatever is being signed off on
+	signoffType : string;			// 'design' or 'project'
+	userId 			: string;			// ID of the user
 	userEmail 	: string;			// email of the user
-	deleted 	: boolean;			//
+	deleted 		: boolean;		//
 }
