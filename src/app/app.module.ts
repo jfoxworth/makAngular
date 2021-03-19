@@ -15,6 +15,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 
 // Mak Studio Modules
 import { LoginModule } from './main/Common/login/login.module';
+import { RegisterModule } from './main/Common/register/register.module';
 import { ProfileModule } from './main/profile/profile.module';
 import { NavbarModule } from './main/Shared/navbar/navbar.module';
 import { MarketplaceModule } from './main/marketplace/marketplace.module';
@@ -64,6 +65,7 @@ import { designImagesReducer } from '../app/main/store/reducers';
 
     // Mak modules
     LoginModule,
+    RegisterModule,
     NavbarModule,
     ProfileModule,
     MarketplaceModule,

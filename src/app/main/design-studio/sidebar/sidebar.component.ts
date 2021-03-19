@@ -18,6 +18,7 @@ import { makProject } from '../../models/makProject';
 import { makVersion } from '../../models/makVersion';
 import { designSignoff } from '../../models/designSignoffs';
 import { UserData } from '../../models/userData';
+import { signoffReq } from '../../models/signoffReq';
 
 
 @Component({
@@ -44,7 +45,8 @@ export class SidebarComponent implements OnInit {
 	@Input('projectData') projectData:makProject;
 	@Input('versionData') versionData:makVersion;
 	@Input('versionList') versionList:makVersion[];
-	@Input('signoffData') signoffData:designSignoff[];
+	@Input('signoffList') signoffList:designSignoff[];
+	@Input('signoffReqList') signoffReqList:signoffReq[];
 	@Input('userData') userData:UserData;
 	@Input('flowersJSON') flowersJSON:any;
 	@Input('flowerFlag') flowerFlag:any;

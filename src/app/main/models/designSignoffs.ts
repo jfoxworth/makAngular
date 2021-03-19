@@ -15,12 +15,16 @@ import { makVersion } from './makVersion';
 
 
 export interface designSignoff {
-	id 				: string;			// The id of the signoff
-	designId 		: string;			// The id of the design
-	comments 		: string; 			// Comments entered by the user
+	id 						: string;			// The id of the signoff
+	designId 			: string;			// The id of the design - deprecated
+	itemId				: string;			// ID of the design or project
+	signoffType		: string;			// 'design' or 'project'
+	comments 			: string; 		// Comments entered by the user
 	creatorId 		: string;			// ID of the user
 	creatorEmail 	: string;			// Name of the user
-	approve 		: number;			// 0 for Not Approved. 1 for Approved. 2 for Approved with comments
+	approve 			: number;			// 0 for Not Approved. 1 for Approved. 2 for Approved with comments
 	dateCreated 	: number;
-	deleted 		: boolean;
+	deleted 			: boolean;
+	versionId 		: string;			// If this comment or sign off is about a project, this holds the version ID
+	pdfPath				: string;			// Path to the PDF(s) uploaded for the signoff
 }

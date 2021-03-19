@@ -74,7 +74,7 @@ export class AuthService {
 				console.log('Setting user data to ')
 				console.log(response.data());
 				this.store.dispatch(login({UserData : userData}));
-						this.router.navigate(['profile']);
+						this.router.navigate(['dashboard']);
 			});
 				});
 				//this.SetUserData(result.user);
@@ -84,13 +84,22 @@ export class AuthService {
 	}
 
 	// Sign up with email/password
-	SignUp(email, password) {
+	SignUp(email, password, name:string) {
 		return this.afAuth.createUserWithEmailAndPassword(email, password)
 			.then((result) => {
 				/* Call the SendVerificaitonMail() function when new user sign
 				up and returns promise */
 				this.SendVerificationMail();
 				this.SetUserData(result.user);
+				this.afs.collection('users').doc( result.user.uid ).update(
+					{
+						id : result.user.uid,
+						email : result.user.email,
+						displayName : name,
+						dateCreated:new Date()
+					}
+				 );
+				this.SignIn(email, password);
 			}).catch((error) => {
 				window.alert(error.message)
 			})
@@ -100,7 +109,7 @@ export class AuthService {
 	SendVerificationMail() {
 		return this.afAuth.currentUser.then(u => u.sendEmailVerification())
 		.then(() => {
-			this.router.navigate(['/confirmEmail']);
+			this.router.navigate(['/dashboard']);
 		})
 	}
 

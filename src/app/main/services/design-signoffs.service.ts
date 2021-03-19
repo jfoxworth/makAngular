@@ -63,9 +63,9 @@ export class DesignSignoffsService
 
 
 	// Create
-	createDesignSignoff( userObj, designId, status, comments )
+	createDesignSignoff( userObj, designId, status, comments, pdfPath )
 	{
-		this.designSignoffDataService.createDesignSignoff( userObj, designId, status, comments );
+		this.designSignoffDataService.createDesignSignoff( userObj, designId, status, comments, pdfPath );
 	}
 
 

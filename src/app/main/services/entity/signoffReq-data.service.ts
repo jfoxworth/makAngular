@@ -14,9 +14,8 @@ import { UserData } from '../../models/userData';
 
 
 // RXJS Items
-import { Observable } from 'rxjs';
+import { Observable, pipe, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { pipe } from 'rxjs';
 
 
 // NGRX Items and NgRX Data
@@ -32,6 +31,7 @@ import { VersionsService } from '../../services/versions.service';
 
 
 import { environment } from '../../../../environments/environment';
+import { isNgTemplate } from '@angular/compiler';
 
 
 
@@ -50,20 +50,22 @@ export class signoffReqDataService extends DefaultDataService<signoffReq> {
 
 
 	// Create
-	createSignoffReq( userObj, design )
+	createSignoffReq( userObj, item, type:string )
 	{
 
 		var userData = JSON.parse(localStorage.getItem('UserData'));
 
 		let signoffReqObj = {
-			'id'				: '',
+			'id'						: '',
 			'dateCreated'		: Date.now(),
-			'creatorId'			: userData.id,
-			'creatorEmail'		: userData.email,
-			'designId'		 	: design.id,
-			'userId'		 	: userObj.id,
+			'creatorId'			: userData.uid,
+			'creatorEmail'	: userData.email,
+			'designId'		 	: item.id,				// deprecated
+			'itemId'				: item.id,
+			'signoffType'		: type,
+			'userId'		 		: userObj.uid,
 			'userEmail'			: userObj.email,
-			'deleted'		 	: false
+			'deleted'		 		: false
 		}
 
 		var docRef = this.afs.collection('signoffReqs').add( signoffReqObj )
@@ -82,10 +84,25 @@ export class signoffReqDataService extends DefaultDataService<signoffReq> {
 		var userData = JSON.parse(localStorage.getItem('UserData'));
 		if ( userData )
 		{
+			let queryOne = this.afs.collection('signoffReqs', ref => ref
+			.where('creatorId', '==', userData.uid )
+			.where('deleted', '==', false))
+			.valueChanges();
+			
+			let queryTwo = this.afs.collection('signoffReqs', ref => ref
+			.where('userId', '==', userData.uid )
+			.where('deleted', '==', false))
+			.valueChanges();
+
+			return <Observable<signoffReq[]>> combineLatest(queryOne,queryTwo).pipe(
+        map(([one, two]) => [...one, ...two])
+    	)
+			/*
 			return <Observable<signoffReq[]>> this.afs.collection('signoffReqs', ref => ref
 				.where('userId', '==', userData.uid )
 				.where('deleted', '==', false))
 				.valueChanges()
+				*/
 
 		}else
 		{
@@ -98,6 +115,16 @@ export class signoffReqDataService extends DefaultDataService<signoffReq> {
 	}
 
 
+	// Get signoffs for design or project
+	getSignoffsForItem( itemId:string  ): Observable<signoffReq[]> {
+
+		return <Observable<signoffReq[]>> this.afs.collection('signoffReqs', ref => ref
+			.where('itemId', '==', itemId )
+			.where('deleted', '==', false))
+			.valueChanges()
+
+	}
+	
 
 	// Update
 	updateSignoffReq ( signoffReqObj )

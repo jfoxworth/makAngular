@@ -72,7 +72,10 @@
 			<!-- The signoff panel -->
 			<div *ngIf="valItem['type']=='makDesignSignoffs'"
 				 	 style="height:500px !important">
-				<mak-design-signoffs [signoffData]="signoffData"
+				<mak-design-signoffs [signoffList]="signoffList"
+														 [signoffReqList]="signoffReqList"
+														 [UserData]="userData"
+														 [projectData]="projectData"
 														 [designData]="designData">
 				</mak-design-signoffs>
 			</div>

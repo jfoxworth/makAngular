@@ -65,11 +65,10 @@ export class SignoffReqsService
 
 
 	// Create
-	createSignoffReq( userObj, design )
+	createSignoffReq( userObj, design, type )
 	{
-		this.signoffReqDataService.createSignoffReq( userObj, design );
+		this.signoffReqDataService.createSignoffReq( userObj, design, type );
 	}
-
 
 
 

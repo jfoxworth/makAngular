@@ -44,6 +44,7 @@ import { VersionDataComponent } from './tabs/version-data/version-data.component
 import { VersionListComponent } from './tabs/version-list/version-list.component';
 import { VersionMeasurementsComponent } from './tabs/version-measurements/version-measurements.component';
 import { VersionSpecsComponent } from './tabs/version-specs/version-specs.component';
+import { SignoffsComponent } from './tabs/signoffs/signoffs.component';
 
 // Services
 import { ProjectsService } from '../services/projects.service';
@@ -60,12 +61,15 @@ import { makProjectEntityService } from '../services/entity/makProject-entity.se
 import { makProjectDataService } from '../services/entity/makProject-data.service';
 import { makVersionEntityService } from '../services/entity/makVersion-entity.service';
 import { makVersionDataService } from '../services/entity/makVersion-data.service';
+import { designSignoffEntityService } from '../services/entity/designSignoff-entity.service';
+import { designSignoffDataService } from '../services/entity/designSignoff-data.service';
 import { designImagesReducer } from '../store/reducers';
 import { StoreModule } from '@ngrx/store';
 
 // The resolvers
 import { MakDesignsResolver } from '../resolvers/makDesigns.resolver';
 import { SignoffReqsResolver } from '../resolvers/signoffReqs.resolver';
+import { MakDesignSignoffsResolver } from '../resolvers/designSignoffs.resolver';
 import { MakProjectsResolver } from '../resolvers/makProjects.resolver';
 import { MakVersionsResolver } from '../resolvers/makVersions.resolver';
 
@@ -99,6 +103,11 @@ const entityMetadata: EntityMetadataMap = {
             optimisticUpdate: true
         }
     },
+		designSignoff: {
+				entityDispatcherOptions: {
+						optimisticUpdate:true
+				}
+		}
 };
 
 
@@ -126,6 +135,7 @@ const routes : Routes = [
 		VersionListComponent,
 		VersionMeasurementsComponent,
 		VersionSpecsComponent,
+		SignoffsComponent,
 	],
 	imports	 : [
 		StoreModule.forFeature('designs', designImagesReducer),
@@ -170,10 +180,13 @@ const routes : Routes = [
 		makProjectDataService,
 		makVersionEntityService,
 		makVersionDataService,
+		designSignoffEntityService,
+		designSignoffDataService,
 		MakDesignsResolver,
 		MakProjectsResolver,
 		MakVersionsResolver,
 		SignoffReqsResolver,
+		MakDesignSignoffsResolver,
 		AuthGuard,
 	]
 })
@@ -186,11 +199,13 @@ export class ProjectsModule
 		private makDesignDataService: makDesignDataService,
 		private signoffReqDataService: signoffReqDataService,
 		private makProjectDataService: makProjectDataService,
-    private makVersionDataService: makVersionDataService
+    private makVersionDataService: makVersionDataService,
+		private designSignoffDataService:designSignoffDataService
     ){
 			eds.registerMetadataMap(entityMetadata);
 			entityDataService.registerService('makDesign', makDesignDataService);
 			entityDataService.registerService('signoffReq', signoffReqDataService);
+			entityDataService.registerService('designSignoff', designSignoffDataService);
       entityDataService.registerService('makProject', makProjectDataService);
 			entityDataService.registerService('makVersion', makVersionDataService);
 		}
