@@ -96,7 +96,8 @@ export class AuthService {
 						id : result.user.uid,
 						email : result.user.email,
 						displayName : name,
-						dateCreated:new Date()
+						dateCreated:new Date(),
+						admin:false
 					}
 				 );
 				this.SignIn(email, password);
@@ -159,7 +160,8 @@ export class AuthService {
 			website : user.website ? user.website : '',
 			imageType : user.imageType ? user.imageType : '',
 			designer : user.designer ? user.designer : '',
-			dateCreated : user.dateCreated ? user.dateCreated : ''
+			dateCreated : user.dateCreated ? user.dateCreated : '',
+			admin : user.admin ? user.admin : false
 		}
 		return userRef.set(userData, {
 			merge: true

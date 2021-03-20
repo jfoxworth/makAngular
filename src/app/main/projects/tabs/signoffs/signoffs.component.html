@@ -69,4 +69,41 @@
   </ng-container>
 
 
+
+  <h2 class="mt-32 mb-20">Currently Signoffs</h2>
+
+  <!-- The list of current signoff statements -->
+  <ng-container *ngFor="let signoff of signoffs; let i=index"
+    class="ml-20 mr-20">
+
+    <div *ngIf="signoff.itemId==currentProject.id"
+         class="mt-20">
+
+      <div class="signoffLine"
+        fxLayoutAlign="space-between center"
+        fxLayout="row">
+        <div *ngIf="signoff.approve">Approved</div>
+        <div *ngIf="!signoff.approve">Not Approved</div>
+        <div>{{signoff.dateCreated | date:'short'}}</div>
+        <div>{{signoff.creatorEmail}}</div>
+      </div>
+      <div class="signoffLine mt-40">{{signoff.comments}}</div>
+      <div class="signoffLine mt-40" *ngIf="signoff.pdfPath!=''">
+        <a [href]="pdfUrls[signoff.id]|async" target="_blank">
+          <mat-icon class="secondary-text s-48 mat-icon-no-color addCheck"
+            matTooltip="Download Attached PDF"
+            aria-hidden="true">
+            picture_as_pdf
+          </mat-icon>
+        </a>
+
+      </div>
+
+      <mat-divider class="mt-8 mb-8"></mat-divider>
+    
+    </div>
+
+  </ng-container>
+
+
 </div>

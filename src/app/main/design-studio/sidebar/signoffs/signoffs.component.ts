@@ -31,6 +31,7 @@ export class SignoffsComponent implements OnInit {
   signoffPermission : boolean = false;
   pdfFile : any;
   pdfPath : string = '';
+  pdfUrls : any[]=[];
 
   @Input('signoffList') signoffList:designSignoff[];
   @Input('signoffReqList') signoffReqList:signoffReq[];
@@ -45,7 +46,10 @@ export class SignoffsComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.signoffPermission = this.checkSignoffPermission()
+    this.signoffPermission = this.checkSignoffPermission();
+    this.getPdfUrls();
+    console.log(this.signoffList);
+    console.log(this.signoffReqList);
 
   }
 
@@ -65,6 +69,7 @@ export class SignoffsComponent implements OnInit {
                                                     this.signoffStatus,
                                                     this.signoffComments,
                                                     this.pdfPath );
+    this.getPdfUrls();
 
   }
 
@@ -77,16 +82,18 @@ export class SignoffsComponent implements OnInit {
 	// -----------------------------------------------------------------------------------------------------
   checkSignoffPermission()
   {
+    if ( ( this.projectData.creatorId == this.UserData.uid ) ||
+         ( this.UserData.admin ) )
+    {
+      return true
+    }
+
     this.signoffReqList.forEach(req=>{
       if ( ( req.itemId == this.projectData.id ) && ( req.userId == this.UserData.uid ) )
       {
         return true
       }
     });
-    if ( this.projectData.creatorId == this.UserData.uid )
-    {
-      return true
-    }
     return false
   }
 
@@ -110,5 +117,21 @@ export class SignoffsComponent implements OnInit {
 
   }
 
+
+
+
+	// -----------------------------------------------------------------------------------------------------
+	//
+	// @ GET THE PDF URLS
+	//
+	// -----------------------------------------------------------------------------------------------------
+  getPdfUrls()
+  {
+    this.signoffList.forEach((so,i)=>{
+      const myRef = this.afStorage.ref(so['pdfPath']);
+      this.pdfUrls[so.id]=myRef.getDownloadURL()
+    });
+    console.log(this.pdfUrls);
+  }
 
 }

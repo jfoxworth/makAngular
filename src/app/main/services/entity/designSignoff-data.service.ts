@@ -55,7 +55,8 @@ export class designSignoffDataService extends DefaultDataService<designSignoff> 
 			'id' 			: '',
 			'creatorId'		: userObj.uid,
 			'creatorEmail'	: userObj.email,
-			'designId' 		: designId,
+			'designId' 		: designId, //deprecated
+			'itemId' 			: designId, 
 			'comments' 		: comments,
 			'approve' 		: status,
 			'deleted' 		: false,

@@ -107,7 +107,7 @@ const routes: Routes = [
       makDesign: MakDesignsResolver,
     }
   },
-  { path : 'marketplace',
+  { path : 'catalog',
     component:MarketplaceComponent,
     resolve: {
       makDesign: MakDesignsResolver,
@@ -117,7 +117,7 @@ const routes: Routes = [
     loadChildren:'./main/marketplace/marketplace.module#MarketplaceModule' 
   },
   {
-    path	 : 'marketplace/:itemId/:itemSlug',
+    path	 : 'catalog/:itemId/:itemSlug',
     component: ProductComponent,
     resolve: {
       makDesign: MakDesignsResolver,
@@ -153,8 +153,10 @@ const routes: Routes = [
     resolve: {
         makDesign: MakDesignsResolver,
         makProject: MakProjectsResolver,
-        makVersion: MakVersionsResolver
-    },
+        makVersion: MakVersionsResolver,
+        signoffReq: SignoffReqsResolver,
+        designSignoff: MakDesignSignoffsResolver
+      },
     loadChildren:'./main/design-studio/design-studio.module#DesignStudioModule'
   },
   {
@@ -162,7 +164,9 @@ const routes: Routes = [
     component: DesignStudioComponent,
     resolve: {
         makDesign: MakDesignsResolver,
-        makProject: MakProjectsResolver
+        makProject: MakProjectsResolver,
+        signoffReq: SignoffReqsResolver,
+        designSignoff: MakDesignSignoffsResolver
     },
     loadChildren:'./main/design-studio/design-studio.module#DesignStudioModule'
   },

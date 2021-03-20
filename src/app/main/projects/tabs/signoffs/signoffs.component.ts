@@ -11,7 +11,6 @@ import { NameCheckValidators } from 'src/app/main/Common/Validators/namecheck.va
 import { UserService } from '../../../services/user.service';
 import { SignoffReqsService } from '../../../services/signoff-reqs.service';
 
-
 // Models
 import { makDesign } from '../../../models/makDesign';
 import { signoffReq } from '../../../models/signoffReq';
@@ -19,12 +18,13 @@ import { UserData } from 'src/app/main/models/userData';
 import { makVersion } from '../../../models/makVersion';
 import { makProject } from '../../../models/makProject';
 
-
-
 // RXJS Items
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/internal/operators';
 import { designSignoff } from 'src/app/main/models/designSignoffs';
+
+// Firestore Items
+import { AngularFireStorage } from '@angular/fire/storage';
 
 
 @Component({
@@ -34,6 +34,7 @@ import { designSignoff } from 'src/app/main/models/designSignoffs';
 })
 export class SignoffsComponent implements OnInit {
 
+  pdfUrls : any[]=[];
   @Input('currentProject') currentProject:makProject;
   @Input('makVersions') makVersions:makVersion[];
   @Input('signoffReqs') signoffReqs:signoffReq[];
@@ -49,10 +50,12 @@ export class SignoffsComponent implements OnInit {
   constructor(
     private UserService 			    : UserService,
     private SignoffReqsService 		: SignoffReqsService,
+    private afStorage 				    : AngularFireStorage
   ) { }
 
   ngOnInit(): void {
     this.getUserImages();
+    this.getPdfUrls();
   }
 
 
@@ -135,6 +138,20 @@ export class SignoffsComponent implements OnInit {
 
 
 
+
+	// -----------------------------------------------------------------------------------------------------
+	//
+	// @ GET THE PDF URLS
+	//
+	// -----------------------------------------------------------------------------------------------------
+  getPdfUrls()
+  {
+    this.signoffs.forEach((so,i)=>{
+      const myRef = this.afStorage.ref(so['pdfPath']);
+      this.pdfUrls[so.id]=myRef.getDownloadURL()
+    });
+    console.log(this.pdfUrls);
+  }
 
 
 
