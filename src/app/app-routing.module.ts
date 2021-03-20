@@ -21,6 +21,7 @@ import { RamadaComponent } from './main/commercial/ramada/ramada.component';
 import { JacobwhiteComponent } from './main/commercial/jacobwhite/jacobwhite.component';
 
 import { LoginComponent } from './main/Common/login/login.component';
+import { RegisterComponent } from './main/Common/register/register.component';
 import { ProfileComponent } from './main/profile/profile.component';
 import { MarketplaceComponent } from './main/marketplace/marketplace.component';
 import { ProductComponent } from './main/marketplace/product/product.component';
@@ -35,6 +36,7 @@ import { DashboardComponent } from './main/dashboard/dashboard.component';
 // The resolvers
 import { MakDesignsResolver } from './main/resolvers/makDesigns.resolver';
 import { SignoffReqsResolver } from './main/resolvers/signoffReqs.resolver';
+import { MakDesignSignoffsResolver } from './main/resolvers/designSignoffs.resolver';
 import { MakProjectsResolver } from './main/resolvers/makProjects.resolver';
 import { MakVersionsResolver } from './main/resolvers/makVersions.resolver';
 import { MakAnnouncementsResolver } from './main/resolvers/makAnnouncements.resolver';
@@ -65,6 +67,7 @@ const routes: Routes = [
 
 
   { path : 'login', component:LoginComponent },
+  { path : 'register', component:RegisterComponent },
 
 
   { path : 'profile', loadChildren:'./main/profile/profile.module#ProfileModule' },
@@ -104,7 +107,7 @@ const routes: Routes = [
       makDesign: MakDesignsResolver,
     }
   },
-  { path : 'marketplace',
+  { path : 'catalog',
     component:MarketplaceComponent,
     resolve: {
       makDesign: MakDesignsResolver,
@@ -114,7 +117,7 @@ const routes: Routes = [
     loadChildren:'./main/marketplace/marketplace.module#MarketplaceModule' 
   },
   {
-    path	 : 'marketplace/:itemId/:itemSlug',
+    path	 : 'catalog/:itemId/:itemSlug',
     component: ProductComponent,
     resolve: {
       makDesign: MakDesignsResolver,
@@ -130,6 +133,7 @@ const routes: Routes = [
 			makDesign: MakDesignsResolver,
 			signoffReq: SignoffReqsResolver,
 			makProject: MakProjectsResolver,
+      designSignoff: MakDesignSignoffsResolver
     },
     canActivate:[AuthGuard],
     loadChildren:'./main/projects/projects.module#ProjectsModule' 
@@ -149,8 +153,10 @@ const routes: Routes = [
     resolve: {
         makDesign: MakDesignsResolver,
         makProject: MakProjectsResolver,
-        makVersion: MakVersionsResolver
-    },
+        makVersion: MakVersionsResolver,
+        signoffReq: SignoffReqsResolver,
+        designSignoff: MakDesignSignoffsResolver
+      },
     loadChildren:'./main/design-studio/design-studio.module#DesignStudioModule'
   },
   {
@@ -158,7 +164,9 @@ const routes: Routes = [
     component: DesignStudioComponent,
     resolve: {
         makDesign: MakDesignsResolver,
-        makProject: MakProjectsResolver
+        makProject: MakProjectsResolver,
+        signoffReq: SignoffReqsResolver,
+        designSignoff: MakDesignSignoffsResolver
     },
     loadChildren:'./main/design-studio/design-studio.module#DesignStudioModule'
   },

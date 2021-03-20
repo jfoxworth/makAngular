@@ -28,6 +28,7 @@ import { makDesignEntityService } from '../services/entity/makDesign-entity.serv
 import { makVersionEntityService } from '../services/entity/makVersion-entity.service';
 import { makProjectEntityService } from '../services/entity/makProject-entity.service';
 import { signoffReqEntityService } from '../services/entity/signoffReq-entity.service';
+import { designSignoffEntityService } from '../services/entity/designSignoff-entity.service';
 
 // Firestore Items
 import { AngularFireStorage } from '@angular/fire/storage';
@@ -60,6 +61,7 @@ export class DesignStudioComponent  {
 	makSignoffReqs$ 	  : Observable<signoffReq[]>;
 	makDesignSignoffs$ 	: Observable<designSignoff[]>;
 
+
 	designList 			    : makDesign[];
 	projectList 		    : makProject[];
 	versionList 		    : makVersion[];
@@ -86,17 +88,18 @@ export class DesignStudioComponent  {
 
 
 
-	constructor(	private DesignStudioService 		: DesignStudioService,
-                private VersionsService 		  	: VersionsService,
-                private UserService             : UserService,
-                private afStorage 			    		: AngularFireStorage,
-                private route 						      : ActivatedRoute,
-                private DesignEntityService 		: makDesignEntityService,
-                private SignoffReqEntityService : signoffReqEntityService,
-                private ProjectEntityService 		: makProjectEntityService,
-                private VersionEntityService 		: makVersionEntityService,
-                private SnackBar                : MatSnackBar,
-                private store                   : Store<AuthState>,
+	constructor(	private DesignStudioService 				: DesignStudioService,
+                private VersionsService 		  			: VersionsService,
+                private UserService             		: UserService,
+                private afStorage 			    				: AngularFireStorage,
+                private route 						      		: ActivatedRoute,
+                private DesignEntityService 				: makDesignEntityService,
+                private SignoffReqEntityService 		: signoffReqEntityService,
+								private designSignoffEntityService 	: designSignoffEntityService,
+                private ProjectEntityService 				: makProjectEntityService,
+                private VersionEntityService 				: makVersionEntityService,
+                private SnackBar                		: MatSnackBar,
+                private store                   		: Store<AuthState>,
                 @Inject(DOCUMENT) private document 	: Document)
 	{
     this._unsubscribeAll = new Subject();
@@ -174,10 +177,16 @@ export class DesignStudioComponent  {
 		});
 
 		this.makSignoffReqs$ = this.SignoffReqEntityService.entities$
-		this.makSignoffReqs$ .subscribe( (makSignoffReqs) =>{
+		this.makSignoffReqs$.subscribe( (makSignoffReqs) =>{
 			this.signoffReqList = makSignoffReqs;
 		});
-  }
+
+		this.makDesignSignoffs$ = this.designSignoffEntityService.entities$
+		this.makDesignSignoffs$.subscribe( (signoffs) =>{
+			this.signoffList = signoffs;
+		});
+
+	}
 
 	// -----------------------------------------------------------------------------------------------------
 	//

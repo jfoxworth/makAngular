@@ -38,7 +38,6 @@ export class MakAnnouncementsResolver implements Resolve<boolean> {
 
 	resolve(route: ActivatedRouteSnapshot,
 			state: RouterStateSnapshot): Observable<boolean> {
-			  console.log('In the resolver');
 
 		return this.makAnnouncementEntityService.loaded$
 			.pipe(

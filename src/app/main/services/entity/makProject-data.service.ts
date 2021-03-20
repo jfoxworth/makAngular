@@ -17,16 +17,18 @@ import { DefaultDataService, HttpUrlGenerator } from '@ngrx/data';
 // Services
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { VersionsService } from '../../services/versions.service';
+import { SignoffReqsService } from '../../services/signoff-reqs.service';
 
 
 @Injectable()
 export class makProjectDataService extends DefaultDataService<makProject> {
 
 
-	constructor(  http							    : HttpClient,
-                httpUrlGenerator 			: HttpUrlGenerator,
-                public afs 						: AngularFirestore,
-                public VersionsService: VersionsService
+	constructor(  http							    		: HttpClient,
+                httpUrlGenerator 					: HttpUrlGenerator,
+                public afs 								: AngularFirestore,
+                public VersionsService 		: VersionsService,
+								public SignoffReqsService : SignoffReqsService
 	)
 	{
 
@@ -66,6 +68,7 @@ export class makProjectDataService extends DefaultDataService<makProject> {
 			this.afs.collection('projects').doc(docRef.id).update({'id':docRef.id });
 			console.log('I have created a project for the design - '+designObj.title+' with an id of '+docRef.id);
 			this.VersionsService.createVersion( versionObj, project, tempArray, designObj );
+			this.SignoffReqsService.createSignoffReq(userData, project, 'project');
 		});
 
 

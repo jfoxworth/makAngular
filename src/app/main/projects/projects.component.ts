@@ -29,12 +29,16 @@ import { VersionsService } from '../services/versions.service';
 import { makDesignEntityService } from '../services/entity/makDesign-entity.service';
 import { makVersionEntityService } from '../services/entity/makVersion-entity.service';
 import { makProjectEntityService } from '../services/entity/makProject-entity.service';
+import { signoffReqEntityService } from '../services/entity/signoffReq-entity.service';
+import { designSignoffEntityService } from '../services/entity/designSignoff-entity.service';
 
 // Models
 import { makDesign } from '../models/makDesign';
 import { makProject } from '../models/makProject';
 import { makVersion } from '../models/makVersion';
 import { UserData } from '../models/userData';
+import { signoffReq } from '../models/signoffReq';
+import { designSignoff } from '../models/designSignoffs';
 
 // Firestore Items
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -82,6 +86,8 @@ export class ProjectsComponent implements OnInit
 	makDesigns$ 		  : Observable<makDesign[]>;
 	makProjects$ 		  : Observable<makProject[]>;
 	makVersions$ 		  : Observable<makVersion[]>;
+	signoffReqs$			: Observable<signoffReq[]>;
+	signoffs$					: Observable<designSignoff[]>
 	images 				    : never[];
   private _unsubscribeAll: Subject<any>;
 
@@ -96,6 +102,8 @@ export class ProjectsComponent implements OnInit
 		private DesignEntityService 	: makDesignEntityService,
 		private ProjectEntityService 	: makProjectEntityService,
 		private VersionEntityService 	: makVersionEntityService,
+		private signoffReqEntityService : signoffReqEntityService,
+		private designSignoffEntityService : designSignoffEntityService
 	)
 	{
     this._unsubscribeAll = new Subject();
@@ -138,8 +146,13 @@ export class ProjectsComponent implements OnInit
 		// The observable for the projects for this design
 		this.makVersions$ = this.VersionEntityService.entities$
 
+		// The observable for the signoffReqs
+		this.signoffReqs$ = this.signoffReqEntityService.entities$
 
-  }
+		// The observable for the signoffs
+		this.signoffs$ = this.designSignoffEntityService.entities$
+
+	}
 
 
 

@@ -24,7 +24,6 @@
 
 <div fxLayout="row"
 		 class="mt-20">
-		 <div>The id is {{currentDesign.id}}</div>
 
 	<div *ngFor="let thisImage of carouselUrls; index as i">
 		<div *ngIf="thisImage.itemId == currentDesign.id">
@@ -45,6 +44,10 @@
 				</div>
 -->
 						<img [src]="thisImage.imageURL" width="150" height="150">
+						<mat-icon style="cursor:pointer"
+												(click)="setMainImage(thisImage.id);">
+								keyboard_arrow_up
+						</mat-icon>
 
 				</div>
 

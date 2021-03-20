@@ -5,7 +5,13 @@ style="width:100%"
 
     <h2 class="mt-32 mb-20">Users who can sign off</h2>
 
-    <div class="">To add a user to the list of those that can provide input to the design or sign off on it, enter the user name in the box below and press enter. If that user name is found, a button will appear giving you the option to add that user. Once the user is added, they will see the sign off option on this tab.</div>
+    <div class="">To add a user to the list of those that can provide input to the design or 
+        sign off on it, enter the user name in the box below and press enter. If that user 
+        name is found, a button will appear giving you the option to add that user. Beneath that 
+        is a list of users currently given the ability to sign off on this project.</div>
+
+    <div>What follows is a list of sign offs and comments that have been made to date on this
+        project. Those comments are made within the design studio.</div>
 
 
     <div class="text-center">
@@ -37,7 +43,7 @@ style="width:100%"
             style="margin:auto">
 
         <img class="profileAvatar avatar"
-                [src]="(userReq.userImage | async)">
+                [src]="(userReq['userImage'] | async)">
 
         <div class="mt-8 ml-20 w-220 text-center">{{userReq.userEmail}}</div>
 

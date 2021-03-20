@@ -67,12 +67,15 @@ import { makProjectEntityService } from '../services/entity/makProject-entity.se
 import { makProjectDataService } from '../services/entity/makProject-data.service';
 import { makVersionEntityService } from '../services/entity/makVersion-entity.service';
 import { makVersionDataService } from '../services/entity/makVersion-data.service';
+import { designSignoffEntityService } from '../services/entity/designSignoff-entity.service';
+import { designSignoffDataService } from '../services/entity/designSignoff-data.service';
 
 // The resolvers
 import { MakDesignsResolver } from '../resolvers/makDesigns.resolver';
 import { SignoffReqsResolver } from '../resolvers/signoffReqs.resolver';
 import { MakProjectsResolver } from '../resolvers/makProjects.resolver';
 import { MakVersionsResolver } from '../resolvers/makVersions.resolver';
+import { MakDesignSignoffsResolver } from '../resolvers/designSignoffs.resolver';
 
 
 
@@ -183,6 +186,7 @@ const routes : Routes = [
 		makVersionEntityService,
 		makVersionDataService,
 		MakVersionsResolver,
+		MakDesignSignoffsResolver,
     ],
     exports : [
         ExplodedComponent
@@ -200,13 +204,14 @@ export class DesignStudioModule
         private makDesignDataService: makDesignDataService,
         private signoffReqDataService: signoffReqDataService,
         private makProjectDataService: makProjectDataService,
+		private designSignoffDataService:designSignoffDataService,
 		private makVersionDataService: makVersionDataService ){
             eds.registerMetadataMap(entityMetadata);
             entityDataService.registerService('makDesign', makDesignDataService);
             entityDataService.registerService('signoffReq', signoffReqDataService);
             entityDataService.registerService('makProject', makProjectDataService);
-            entityDataService.registerService('makVersion', signoffReqDataService);
-      			entityDataService.registerService('makVersion', makVersionDataService);
+            entityDataService.registerService('designSignoff', designSignoffDataService);
+            entityDataService.registerService('makVersion', makVersionDataService);
         }
 
     static forRoot(): ModuleWithProviders<DesignStudioModule> {

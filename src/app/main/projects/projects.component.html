@@ -66,6 +66,19 @@
 
 					</mat-tab>
 
+					<mat-tab id="signoffTab" label="Project Signoffs">
+
+						<mak-project-signoffs *ngIf="currentProjectId"
+              [currentProject]="getCurrentProject(currentProjectId, makProjects$ | async)"
+							[makVersions]="makVersions$ | async"
+							[signoffReqs]="signoffReqs$ | async"
+							[signoffs]="signoffs$ | async"
+							(displayMessage)="displayMessage($event)"
+							(updateProject)="updateProject($event)">
+						</mak-project-signoffs>
+
+					</mat-tab>
+
 					<mat-tab id="designAndPurchaseTab" label="Design and Purchase Status">
 
 						<mak-status-data *ngIf="currentProjectId"

@@ -1,0 +1,109 @@
+
+<div class="signoff-container">
+
+  <h2 class="mt-32 mb-20">Signoff Feedback System</h2>
+
+  <div class="">This system functions as a collaboration tool within the customer's 
+    team as well as between Mak Studio and the customer. To add a user to the list 
+    of those that can provide input to the project design, enter the user 
+    name in the box below and press enter. If that user name is found, 
+    a button will appear giving you the option to add that user. Once 
+    the user is added, they will see the sign off option on this tab.</div>
+
+
+  <div>Following the list of users, there is a list of comments and mak-project-signoffs
+    made to this project to date.
+  </div>
+
+  <div class="text-center">
+
+    <div class="mt-40 mb-40 text-center">
+        <mat-form-field class="email-input">
+        <mat-label>User Email</mat-label>
+            <input matInput
+                    placeholder="User Name"
+                    [(ngModel)]="testUser"
+                    name="testUser"
+                    (keyup.enter)="checkUserEmail(testUser)">
+        </mat-form-field>
+    </div>
+
+    <div class="mb-20 text-center">
+        <button mat-button
+                class="primary email-input"
+                *ngIf="potentialUser.email"
+                (click)="createDesignReq( potentialUser )">
+            Add User to Signoff
+        </button>
+    </div>
+
+  </div>  
+
+
+  <h2 class="mt-32 mb-20">Currently Approved Users</h2>
+
+  <ng-container *ngFor="let userReq of signoffReqs">
+
+    <div *ngIf="userReq.itemId==currentProject.id"
+         fxLayout="row"
+         class="text-center pt-12 pb-12">
+
+        <img class="profileAvatar avatar" [src]="(reqList[userReq.userId] | async)">
+
+        <div class="userText">{{userReq.userEmail}}</div>
+
+        <div class="userText">{{userReq.dateCreated | date}}</div>
+
+        <div class="userText">
+          <mat-icon style="cursor:pointer"
+                    matTooltip="Delete this signoff"
+                    (click)="deleteSignoffReq(userReq)">
+            cancel
+          </mat-icon>
+        </div>
+
+      <mat-divider></mat-divider>
+
+    </div>
+ 
+  </ng-container>
+
+
+
+  <h2 class="mt-32 mb-20">Currently Signoffs</h2>
+
+  <!-- The list of current signoff statements -->
+  <ng-container *ngFor="let signoff of signoffs; let i=index"
+    class="ml-20 mr-20">
+
+    <div *ngIf="signoff.itemId==currentProject.id"
+         class="mt-20">
+
+      <div class="signoffLine"
+        fxLayoutAlign="space-between center"
+        fxLayout="row">
+        <div *ngIf="signoff.approve">Approved</div>
+        <div *ngIf="!signoff.approve">Not Approved</div>
+        <div>{{signoff.dateCreated | date:'short'}}</div>
+        <div>{{signoff.creatorEmail}}</div>
+      </div>
+      <div class="signoffLine mt-40">{{signoff.comments}}</div>
+      <div class="signoffLine mt-40" *ngIf="signoff.pdfPath!=''">
+        <a [href]="pdfUrls[signoff.id]|async" target="_blank">
+          <mat-icon class="secondary-text s-48 mat-icon-no-color addCheck"
+            matTooltip="Download Attached PDF"
+            aria-hidden="true">
+            picture_as_pdf
+          </mat-icon>
+        </a>
+
+      </div>
+
+      <mat-divider class="mt-8 mb-8"></mat-divider>
+    
+    </div>
+
+  </ng-container>
+
+
+</div>

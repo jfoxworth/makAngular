@@ -84,12 +84,12 @@ export class ImagesComponent implements OnInit {
   	*	This function simply sets the main image
   	*
   	*/
-	setMainImage(thisIndex){
+	setMainImage(thisId:string){
     let images=[]
 		for (var a=0; a<this.currentDesign.marketplace.images.length; a++)
 		{
       images.push(this.currentDesign.marketplace.images);
-      if ( a == thisIndex )
+      if ( thisId == this.currentDesign.marketplace.images.id )
 			{
 				images[a]['mainImage']=true;
 			}else

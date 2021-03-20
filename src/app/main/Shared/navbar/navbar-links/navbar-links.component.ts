@@ -41,27 +41,32 @@ export class NavbarLinksComponent implements OnInit {
           icon : 'help_outline',
           url  : '/knowledge-base'
         },
-*/
         {
           title: 'My Projects',
           icon : 'today',
           url  : '/projects'
         },
         {
+          title: 'Creator Studio',
+          icon : 'settings',
+          url  : '/creatorStudio'
+        }
+        */
+        {
           title: 'Design Studio',
           icon : 'color_lens',
           url  : '/designStudio'
         },
         {
-          title: 'The Marketplace',
+          title: 'Catalog',
           icon : 'store',
-          url  : '/marketplace'
+          url  : '/catalog'
         },
         {
-          title: 'Creator Studio',
-          icon : 'settings',
-          url  : '/creatorStudio'
-        }
+          title: 'Dashboard',
+          icon : 'dashboard',
+          url  : '/dashboard'
+        },
       ];
 
 

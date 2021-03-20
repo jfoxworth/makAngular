@@ -17,17 +17,18 @@ import { MatInputModule } from '@angular/material/input';
 
 // Mak Components
 import { RegisterComponent } from './register.component';
+import { NavbarModule } from '../../Shared/navbar/navbar.module';
 
 
 @NgModule({
     declarations: [
         RegisterComponent
     ],
-    imports     : [
-
+    imports: [
       CommonModule,
       FlexLayoutModule,
       RouterModule,
+      NavbarModule,
       FormsModule,
       ReactiveFormsModule,
       MatButtonModule,
@@ -38,6 +39,4 @@ import { RegisterComponent } from './register.component';
 
     ]
 })
-export class RegisterModule
-{
-}
+export class RegisterModule{}

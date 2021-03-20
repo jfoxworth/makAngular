@@ -94,7 +94,7 @@ export class DesignSignoffsComponent implements OnInit {
 	// Create
 	createDesignReq( userObj ): void
 	{
-		this.SignoffReqsService.createSignoffReq( userObj, this.currentDesign );
+		this.SignoffReqsService.createSignoffReq( userObj, this.currentDesign, 'design' );
 		this.potentialUser = {};
 	}
 

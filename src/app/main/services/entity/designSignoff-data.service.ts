@@ -46,7 +46,7 @@ export class designSignoffDataService extends DefaultDataService<designSignoff> 
 
 
 	// Create
-	createDesignSignoff( userObj, designId, status, comments )
+	createDesignSignoff( userObj, designId, status, comments, pdfPath )
 	{
 
 		var userData = JSON.parse(localStorage.getItem('user'));
@@ -55,10 +55,12 @@ export class designSignoffDataService extends DefaultDataService<designSignoff> 
 			'id' 			: '',
 			'creatorId'		: userObj.uid,
 			'creatorEmail'	: userObj.email,
-			'designId' 		: designId,
+			'designId' 		: designId, //deprecated
+			'itemId' 			: designId, 
 			'comments' 		: comments,
 			'approve' 		: status,
 			'deleted' 		: false,
+			'pdfPath'			: pdfPath,
 			'dateCreated'	: Date.now(),
 		}
 

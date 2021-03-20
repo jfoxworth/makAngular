@@ -1,58 +1,106 @@
 
-<div *ngFor="let signoff of signoffData; let i=index"
-   class="ml-20 mr-20">
+<ng-container *ngIf="!signoffPermission">
 
-  <div class="mb-12 mt-12"
-     fxLayoutAlign="space-between center"
-     fxLayout="row">
-    <div *ngIf="signoff.approve">Approved</div>
-    <div *ngIf="!signoff.approve">Not Approved</div>
-    <div>{{signoff.dateCreated | date:'short'}}</div>
+  <div class="mt-20 ml-20 mr-20">You are not an approved to provide feedback on this project</div>
+
+</ng-container>
+
+<ng-container *ngIf="signoffPermission">
+
+  <!-- The list of current signoff statements -->
+  <ng-container *ngFor="let signoff of signoffList; let i=index"
+    class="ml-20 mr-20">
+
+    <div *ngIf="signoff.itemId==projectData.id">
+
+      <div class="signoffLine"
+        fxLayoutAlign="space-between center"
+        fxLayout="row">
+        <div *ngIf="signoff.approve">Approved</div>
+        <div *ngIf="!signoff.approve">Not Approved</div>
+        <div>{{signoff.dateCreated | date:'short'}}</div>
+      </div>
+      <div class="signoffLine">{{signoff.creatorEmail}}</div>
+      <div class="signoffLine">{{signoff.comments}}</div>
+      <div class="signoffLine" *ngIf="signoff.pdfPath!=''">
+        <a [href]="pdfUrls[signoff.id]|async" target="_blank">
+          <mat-icon class="secondary-text s-48 mat-icon-no-color addCheck"
+            matTooltip="Download Attached PDF"
+            aria-hidden="true">
+            picture_as_pdf
+          </mat-icon>
+        </a>
+
+      </div>
+
+      <mat-divider class="mt-8 mb-8"></mat-divider>
+    
+    </div>
+
+  </ng-container>
+
+
+  <!-- The option for the current user to add signoff -->
+  <div class="text-center w-100-p mt-32">
+
+    <div class="w-80-p"
+         style="margin-left:10%">
+      <mat-form-field  class="w-100-p">
+        <mat-select name="signoffStatus"
+                [(ngModel)]="signoffStatus">
+          <mat-option [value]="1">Approved</mat-option>
+          <mat-option [value]="0">Approved with Changes Noted</mat-option>
+          <mat-option [value]="2">Revise and Resubmit</mat-option>
+          <mat-option [value]="3">Rejected</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="w-80-p"
+      style="margin-left:10%">
+      <mat-form-field class="w-100-p">
+        <mat-label>Comments</mat-label>
+        <textarea matInput
+            [(ngModel)]="signoffComments"
+            name="signoffComments">
+              
+        </textarea>
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="row">
+
+      <div class="ml-40">Attach a PDF if desired</div>
+
+      <input class="ng-hide mainBg"
+          style="display:none"
+              id="input-file-id"
+          multiple type="file"
+          accept=".pdf"
+          (change)="onUpload($event)" />
+
+
+      <label for="input-file-id" >
+        <mat-icon class="secondary-text s-48 mat-icon-no-color addCheck"
+                  matTooltip="Add PDF File"
+                  aria-hidden="true">
+                  picture_as_pdf
+        </mat-icon>
+      </label>
+
+    </div>
+
+    <div *ngIf="pdfPath!='' " class="fileuploaddetail">File Uploaded</div>
+
+    <div style="margin:20px auto">
+      <button mat-stroked-button 
+          class="primary" 
+          name="saveMe"
+          (click)="createNewSignoff()">
+        Save Comments
+      </button>
+    </div>
+
   </div>
-  <div class="mb-12 mt-12">{{signoff.creatorEmail}}</div>
-  <div class="mb-12 mt-12">{{signoff.comments}}</div>
 
-  <mat-divider class="mt-8 mb-8"></mat-divider>
-
-</div>
-
-
-
-<div class="text-center w-100-p mt-32">
-
-  <div class="">
-    <mat-form-field>
-      <mat-select name="signoffStatus"
-              [(ngModel)]="signoffStatus">
-        <mat-option [value]="1">Approved</mat-option>
-        <mat-option [value]="0">Approved with Changes Noted</mat-option>
-        <mat-option [value]="2">Revise and Resubmit</mat-option>
-        <mat-option [value]="3">Rejected</mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
-
-  <div class="w-80-p"
-     style="margin-left:10%">
-    <mat-form-field class="w-100-p">
-      <mat-label>Comments</mat-label>
-      <textarea matInput
-          [(ngModel)]="signoffComments"
-          name="signoffComments">
-            
-      </textarea>
-    </mat-form-field>
-  </div>
-
-
-  <div style="margin:20px auto">
-    <button mat-stroked-button 
-        class="primary" 
-        name="saveMe"
-        (click)="createNewSignoff()">
-      Save Signoff
-    </button>
-  </div>
-
-</div>
-
+  </ng-container> 
