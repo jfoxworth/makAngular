@@ -46,12 +46,13 @@ export class NavbarLinksComponent implements OnInit {
           icon : 'today',
           url  : '/projects'
         },
+        */
         {
           title: 'Creator Studio',
           icon : 'settings',
           url  : '/creatorStudio'
         }
-        */
+  
         {
           title: 'Design Studio',
           icon : 'color_lens',
@@ -91,22 +92,33 @@ export class NavbarLinksComponent implements OnInit {
           icon : 'help_outline',
           url  : '/knowledge-base'
         },
-*/
+        {
+          title: 'The Marketplace',
+          icon : 'store',
+          url  : '/marketplace'
+        }
+
         {
           title: 'My Projects',
           icon : 'today',
           url  : '/projects'
         },
+*/
         {
           title: 'Design Studio',
           icon : 'color_lens',
           url  : '/designStudio'
         },
         {
-          title: 'The Marketplace',
+          title: 'Catalog',
           icon : 'store',
-          url  : '/marketplace'
-        }
+          url  : '/catalog'
+        },
+        {
+          title: 'Dashboard',
+          icon : 'dashboard',
+          url  : '/dashboard'
+        },
       ];
 
 
@@ -127,9 +139,9 @@ export class NavbarLinksComponent implements OnInit {
           url  : '/designStudio'
         },
         {
-          title: 'The Marketplace',
+          title: 'Catalog',
           icon : 'store',
-          url  : '/marketplace'
+          url  : '/catalog'
         }
       ];
 
