@@ -15,3 +15,56 @@
    Get Quote
  </button>
 </div>
+
+
+
+<!-- Prompt for admin users to upload PDF -->
+<ng-container class="mb-40"
+   *ngIf="UserData !== undefined">
+  
+  <div *ngIf="UserData.admin">
+  
+    <div fxLayout="row">
+
+      <div class="ml-40">Upload Design PDF</div>
+
+      <input class="ng-hide mainBg"
+          style="display:none"
+              id="input-file-id"
+          multiple type="file"
+          accept=".pdf"
+          (change)="onUpload($event)" />
+
+
+      <label for="input-file-id" >
+        <mat-icon class="secondary-text s-48 mat-icon-no-color addCheck"
+                  matTooltip="Add PDF File"
+                  aria-hidden="true">
+                  picture_as_pdf
+        </mat-icon>
+      </label>
+
+    </div>
+
+  </div>
+
+</ng-container>
+
+
+<!-- Prompt to download the PDF Design -->
+<div class="pdfLine">
+  <a [href]="pdfUrl | async" 
+     target="_blank"
+     class="pdfLink"
+     fxLayout="row">
+    <div class="pdfLinkText">Download Design Doc</div>
+    <mat-icon class="secondary-text s-48 mat-icon-no-color addCheck"
+      matTooltip="Download Attached PDF"
+      aria-hidden="true">
+      picture_as_pdf
+    </mat-icon>
+  </a>
+</div>
+
+
+

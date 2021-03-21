@@ -358,8 +358,8 @@ export class DesignStudioService
 			return {
 				'location' : 0,
 				'name' : 'cost',
-				'label' : 'Quote',
-				'icon' : 'attach_money',
+				'label' : 'Quote / Design PDF',
+				'icon' : 'move_to_inbox',
 				'parameters' : [
 					{
 						'location' : 0,
@@ -376,8 +376,8 @@ export class DesignStudioService
 			return {
 				'location' : 0,
 				'name' : 'cost',
-				'label' : 'Quote',
-				'icon' : 'attach_money',
+				'label' : 'Quote / Design PDF',
+				'icon' : 'move_to_inbox',
 				'parameters' : [
 					{
 						'location' : 0,
@@ -395,8 +395,8 @@ export class DesignStudioService
 			return {
 				'location' : 0,
 				'name' : 'cost',
-				'label' : 'Quote',
-				'icon' : 'attach_money',
+				'label' : 'Quote / Design PDF',
+				'icon' : 'move_to_inbox',
 				'parameters' : [
 					{
 						'location' : 0,
