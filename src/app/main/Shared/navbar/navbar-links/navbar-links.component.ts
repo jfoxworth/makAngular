@@ -51,7 +51,7 @@ export class NavbarLinksComponent implements OnInit {
           title: 'Creator Studio',
           icon : 'settings',
           url  : '/creatorStudio'
-        }
+        },
   
         {
           title: 'Design Studio',
