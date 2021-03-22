@@ -26,7 +26,7 @@ export class ButtonsComponent implements OnInit {
 
 	//Create
 	addProject( ){
-		this.ProjectsService.createProject( this.makDesign, '' );
+		this.ProjectsService.createProject( this.makDesign, 'default' );
 	}
 
 }

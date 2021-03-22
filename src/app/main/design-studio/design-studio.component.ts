@@ -111,6 +111,7 @@ export class DesignStudioComponent  {
 
 	ngOnInit() {
 
+		this.scrubLocalData();
     this.subscribeToObservables();
 
     this.UserService.userObject
@@ -131,16 +132,17 @@ export class DesignStudioComponent  {
 
     this.projectData = this.DesignStudioService.setProjectData( this.studioType,
                                                                 this.projectList,
-                                                                localStorage.getItem('makProject') != 'undefined' ? JSON.parse(localStorage.getItem('makProject')) : '',
+                                                                localStorage.getItem('makProject') !== undefined ? JSON.parse(localStorage.getItem('makProject')) : '',
                                                                 this.route.snapshot.paramMap.get('projectId') ? this.route.snapshot.paramMap.get('projectId') : '')
 
 
 
     this.versionData = this.DesignStudioService.setVersionData( this.studioType,
                                                                 this.versionList,
-                                                                localStorage.getItem('makVersion') != 'undefined' ? JSON.parse(localStorage.getItem('makVersion')) : '',
+                                                                localStorage.getItem('makVersion') !== undefined ? JSON.parse(localStorage.getItem('makVersion')) : '',
                                                                 this.route.snapshot.paramMap.get('projectId') ? this.route.snapshot.paramMap.get('projectId') : '')
     this.versionList.push(this.versionData);
+		
 
 		console.log(this.versionData);
 
@@ -158,6 +160,31 @@ export class DesignStudioComponent  {
 	// @ Functions
 	// -----------------------------------------------------------------------------------------------------
 
+	// Make sure that any stored data matches the current project
+	scrubLocalData(){
+		if ( this.route.snapshot.paramMap.get('projectId') )
+		{
+			let thisId = this.route.snapshot.paramMap.get('projectId')
+			if ( localStorage.getItem('makProject') )
+			{
+				let tempProject = JSON.parse(localStorage.getItem('makProject'));
+				if ( tempProject.id != thisId )
+				{
+					localStorage.removeItem( 'makProject' );
+					localStorage.removeItem( 'makVersion' );
+				}
+			}
+			if ( localStorage.getItem('makVersion') )
+			{
+				let tempVersion = JSON.parse(localStorage.getItem('makVersion'));
+				if ( tempVersion.projectId != thisId )
+				{
+					localStorage.removeItem( 'makProject' );
+					localStorage.removeItem( 'makVersion' );
+				}
+			}
+		}
+	}
 
   subscribeToObservables(){
 

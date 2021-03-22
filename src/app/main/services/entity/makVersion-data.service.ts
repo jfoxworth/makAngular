@@ -51,16 +51,16 @@ export class makVersionDataService extends DefaultDataService<makVersion> {
 			'description'	: "This is the description of this version",
 			'designId' 		: design.id,
 			'initialOpen'	: false,
-			'name'			: 'New Version',
-			'price'			: 0,
+			'name'				: 'New Version',
+			'price'				: design.initialPrice,
 			'projectId'		: project.id,
-			'values'		: {},
-			'version'		: verNum+1,
+			'values'			: {},
+			'version'			: verNum+1,
 			'deleted' 		: false,
-			'measurements' 	: '',
-			'tax'			: 0,
+			'measurements': '',
+			'tax'					: 0,
 			'totalCost'		: 0,
-			'deposit'		: 0
+			'deposit'			: 0
 		}
 
 		if ( type != 'default' )
