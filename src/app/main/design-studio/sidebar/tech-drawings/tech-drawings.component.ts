@@ -43,7 +43,7 @@ export class TechDrawingsComponent implements OnInit {
 	// -----------------------------------------------------------------------------------------------------
   getPdfUrl()
   {
-    const myRef = this.afStorage.ref('/initialdesignpdfs/'+this.designData.id+'.pdf');
+    const myRef = this.afStorage.ref('/initialdesignpdfs/'+this.projectData.id+'.pdf');
     this.pdfUrl=myRef.getDownloadURL()
   }
 
@@ -57,7 +57,7 @@ export class TechDrawingsComponent implements OnInit {
 	// -----------------------------------------------------------------------------------------------------
   onUpload(event) {
 
-		let pdfPath = '/initialdesignpdfs/'+this.designData.id+'.pdf';
+		let pdfPath = '/initialdesignpdfs/'+this.projectData.id+'.pdf';
 		const task = this.afStorage.upload(pdfPath, event.target.files[0]);
     this.getPdfUrl();
 
