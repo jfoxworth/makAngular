@@ -31,33 +31,10 @@
           fxLayout="row"
           [@comm-links]="displayAppNav ? 'design' : 'comm'"
           fxLayoutAlign="start center">
-        <mak-comm-links [route]="route"></mak-comm-links>
+        <mak-comm-links [route]="route" [isLoggedIn]="(isLoggedIn$ | async)"></mak-comm-links>
 
       </div>
 
-
-
-
-      <!-- The navbar links for the design app -->
-      <div fxFlex="0 1 auto"
-          fxLayout="row"
-          fxLayoutAlign="start center"
-          [@comm-design-links]="displayAppNav ? 'design' : 'comm'">
-
-        <button mat-icon-button class="navbar-toggle-button" fxHide.gt-md>
-          <mat-icon class="secondary-text">menu</mat-icon>
-        </button>
-
-        <div class="toolbar-separator" fxHide.gt-md></div>
-
-        <div class="px-8 px-md-16">
-          <mak-navbar-links [userData]="userData"
-                            [route]="route"
-                            [isLoggedIn]="(isLoggedIn$ | async)">
-          </mak-navbar-links>
-        </div>
-
-      </div>
 
     </div>
 

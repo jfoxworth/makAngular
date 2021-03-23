@@ -76,6 +76,7 @@ import { SignoffReqsResolver } from '../resolvers/signoffReqs.resolver';
 import { MakProjectsResolver } from '../resolvers/makProjects.resolver';
 import { MakVersionsResolver } from '../resolvers/makVersions.resolver';
 import { MakDesignSignoffsResolver } from '../resolvers/designSignoffs.resolver';
+import { TechDrawingsComponent } from './sidebar/tech-drawings/tech-drawings.component';
 
 
 
@@ -139,7 +140,8 @@ const routes : Routes = [
         ColorselectComponent,
         ImageselectComponent,
         BlobitemsComponent,
-        ExplodedComponent
+        ExplodedComponent,
+        TechDrawingsComponent
 
       ],
     imports     : [

@@ -9,6 +9,7 @@ export class CommLinksComponent implements OnInit {
 
 
   @Input('route') route:string;
+  @Input('isLoggedIn') isLoggedIn:boolean;
 
 
   ourWorkArray  : string[];
@@ -18,6 +19,7 @@ export class CommLinksComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+
 
     this.ourWorkArray  = [ '/ourWork', '/jacobwhite', '/arm', '/ramada', '/daikin', '/houstonsfirst' ];
     this.productsArray = [ '/products', '/walls', '/seating', '/desks', '/islands' ];

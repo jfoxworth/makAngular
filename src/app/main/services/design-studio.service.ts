@@ -358,8 +358,8 @@ export class DesignStudioService
 			return {
 				'location' : 0,
 				'name' : 'cost',
-				'label' : 'Quote / Design PDF',
-				'icon' : 'move_to_inbox',
+				'label' : 'Quote',
+				'icon' : 'attach_money',
 				'parameters' : [
 					{
 						'location' : 0,
@@ -376,8 +376,8 @@ export class DesignStudioService
 			return {
 				'location' : 0,
 				'name' : 'cost',
-				'label' : 'Quote / Design PDF',
-				'icon' : 'move_to_inbox',
+				'label' : 'Quote',
+				'icon' : 'attach_money',
 				'parameters' : [
 					{
 						'location' : 0,
@@ -395,8 +395,8 @@ export class DesignStudioService
 			return {
 				'location' : 0,
 				'name' : 'cost',
-				'label' : 'Quote / Design PDF',
-				'icon' : 'move_to_inbox',
+				'label' : 'Quote',
+				'icon' : 'attach_money',
 				'parameters' : [
 					{
 						'location' : 0,
@@ -413,6 +413,28 @@ export class DesignStudioService
 
 
 
+
+	/**
+	 * Get Tech Drawing Menu
+	 */
+	getTechDrawingMenu( )
+	{
+
+		return {
+			'location' : 0,
+			'name' : 'techDoc',
+			'label' : 'Download Technical Docs',
+			'icon' : 'move_to_inbox',
+			'parameters' : [
+				{
+					'location' : 0,
+					'type' : 'makTechDrawings',
+					'buttons' : [
+					]
+				}
+			]
+		}
+	}
 
 
 

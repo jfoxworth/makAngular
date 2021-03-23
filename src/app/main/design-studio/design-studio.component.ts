@@ -142,7 +142,7 @@ export class DesignStudioComponent  {
                                                                 localStorage.getItem('makVersion') !== undefined ? JSON.parse(localStorage.getItem('makVersion')) : '',
                                                                 this.route.snapshot.paramMap.get('projectId') ? this.route.snapshot.paramMap.get('projectId') : '')
     this.versionList.push(this.versionData);
-		
+
 
 		console.log(this.versionData);
 
@@ -376,10 +376,17 @@ export class DesignStudioComponent  {
 		}
 
 
-		// Set the menus for cost and signoff and get the menu locations
-		this.designData.parameterMenus.push(this.DesignStudioService.getCostMenu( this.studioType ));
+		// Set the menus for cost
+		if ( this.projectData.status == 0 )
+		{
+			this.designData.parameterMenus.push(this.DesignStudioService.getCostMenu( this.studioType ));
+		}
 
-
+		// Set the menus to download technical drawings
+		if ( this.projectData.status != 0 )
+		{
+			this.designData.parameterMenus.push(this.DesignStudioService.getTechDrawingMenu( ));
+		}
 
 		// Get and place image URLs for any image selection items
 		for (var c=0; c<this.designData.parameterMenus.length; c++)

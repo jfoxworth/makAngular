@@ -10,20 +10,13 @@
        [ngClass]="{currentItem : currentProject ? project.id==currentProject.id : false}"
        *ngFor="let project of makProjects">
 
-      <td class="mat-subheading-2 w-100">
+      <td class="mat-subheading-2 w-40">
         <mat-icon style="cursor:pointer"
                   class="mr-10 ml-10"
                   matTooltip="Open in design studio"
                   [routerLink]="['/designStudio/project/'+project.id]">
-          color_lens
+          mode_edit
         </mat-icon>
-
-        <mat-icon style="cursor:pointer"
-                  matTooltip="Delete this project"
-                  (click)="deleteProject.emit(project)">
-          cancel
-        </mat-icon>
-
       </td>
 
       <td class="mat-subheading-2 w-200" >
@@ -41,6 +34,15 @@
         <span style="font-weight:bold; margin-right:10px;">Type : {{project.designType}}</span>
         <span style="font-weight:bold; margin-right:10px;">Versions : {{project.versions.length}}</span>
         {{ project.description }}
+      </td>
+
+      <td class="mat-subheading-2 w-40">
+        <mat-icon style="cursor:pointer"
+                  matTooltip="Delete this project"
+                  (click)="deleteProject.emit(project)">
+          cancel
+        </mat-icon>
+
       </td>
 
     </tr>

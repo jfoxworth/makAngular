@@ -29,8 +29,15 @@
     </div>
 
     <div class="link-item"
+         *ngIf="!isLoggedIn"
         [ngClass]="{'currentNav': designArray.includes(route), 'submenu': !designArray.includes(route) }">
       <a [routerLink]="'/catalog'">DESIGN APP</a>
+    </div>
+
+    <div class="link-item"
+         *ngIf="isLoggedIn"
+        [ngClass]="{'currentNav': designArray.includes(route), 'submenu': !designArray.includes(route) }">
+      <a [routerLink]="'/dashboard'">DESIGN APP</a>
     </div>
 
   </div>

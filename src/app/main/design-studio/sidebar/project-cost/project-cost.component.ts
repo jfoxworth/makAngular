@@ -30,43 +30,11 @@ export class ProjectCostComponent implements OnInit {
 	@Input('designData') designData:makDesign;
 	@Input('versionData') versionData:makVersion;
 	@Input('projectData') projectData:makProject;
-  pdfUrl : any;
 
   constructor( private router	: Router,
                private afStorage : AngularFireStorage, ) { }
 
   ngOnInit(): void {
-    this.getPdfUrl();
-  }
-
-
-
-
-	// -----------------------------------------------------------------------------------------------------
-	//
-	// @ GET THE PDF URL
-	//
-	// -----------------------------------------------------------------------------------------------------
-  getPdfUrl()
-  {
-    const myRef = this.afStorage.ref('/initialdesignpdfs/'+this.designData.id+'.pdf');
-    this.pdfUrl=myRef.getDownloadURL()
-  }
-
-
-
-
-	// -----------------------------------------------------------------------------------------------------
-	//
-	// @ THE UPLOAD FOR THE PDF; HOLD UNTIL USER SAVES SIGNOFF
-	//
-	// -----------------------------------------------------------------------------------------------------
-  onUpload(event) {
-
-		let pdfPath = '/initialdesignpdfs/'+this.designData.id+'.pdf';
-		const task = this.afStorage.upload(pdfPath, event.target.files[0]);
-    this.getPdfUrl();
-
   }
 
 

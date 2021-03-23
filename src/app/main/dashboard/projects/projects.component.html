@@ -20,17 +20,18 @@
         <div>
           <mat-icon style="cursor:pointer"
                     class="mr-10 ml-10"
-                    matTooltip="Open projects page"
-                    [routerLink]="['/projects']">
+                    matTooltip="Open in design studio"
+                    [routerLink]="['/designStudio/project/'+pro.id]">
                     mode_edit
           </mat-icon>
 
           <mat-icon style="cursor:pointer"
                     class="mr-10 ml-10"
-                    matTooltip="Open in design studio"
-                    [routerLink]="['/designStudio/project/'+pro.id]">
-                    color_lens
+                    matTooltip="Open projects page"
+                    [routerLink]="['/projects']">
+                    build
           </mat-icon>
+
         </div>
 
         <div class="mr-20">

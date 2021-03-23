@@ -109,6 +109,18 @@
 
 
 
+			<!-- The tech drawing item -->
+			<div *ngIf="valItem['type']=='makTechDrawings'"
+				 	 fxLayoutAlign="center center"
+				 	 fxLayout="column">
+				<mak-tech-drawings [versionData]="versionData"
+													[UserData]="userData"
+													[designData]="designData"
+													[projectData]="projectData">
+				</mak-tech-drawings>
+			</div>
+
+
 
 			<!-- The drop down items -->
 			<div *ngIf="valItem['type']=='dropdown'"
