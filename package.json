@@ -33,7 +33,7 @@
     "@ngrx/store-devtools": "^10.1.0",
     "bufferutil": "^4.0.2",
     "fibers": "^5.0.0",
-    "firebase": "^8.1.2",
+    "firebase": "^10.9.0",
     "html-webpack-plugin": "^2.21.0",
     "jasmine": "^3.6.3",
     "ng5-slider": "^1.2.6",
